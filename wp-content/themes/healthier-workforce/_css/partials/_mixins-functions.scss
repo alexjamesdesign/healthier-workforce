@@ -1,0 +1,245 @@
+/*---------------------------------------------------------------
+    Grid
+--------------------------------------------------------------- */
+
+.grid {
+    width: 100%;
+}
+
+@include bp800 {
+    .grid {
+        float: left;
+    }
+    @for $i from 1 through 12 {
+        $width: percentage($i / 12);
+        .grid#{$i}_12 {
+            width: $width;
+        }
+    }
+}
+
+/*---------------------------------------------------------------
+    Row Machine
+--------------------------------------------------------------- */
+
+@mixin rowMachine($numPerRow, $margin) {
+  width: ((100% - (($numPerRow - 1) * $margin)) / $numPerRow);
+  &:nth-child(n) {
+    margin-bottom: $margin;
+    margin-right: $margin;
+  }
+  &:nth-child(#{$numPerRow}n) {
+    margin-right: 0;
+    margin-bottom: 0;
+  }
+}
+
+
+/*---------------------------------------------------------------
+    Flexbox Mixins
+--------------------------------------------------------------- */
+
+@mixin flexbox {
+	display: -ms-flexbox;
+	display: -webkit-flex;
+    display: flex;
+}
+
+@mixin flexbox-inline {
+	display: -ms-inline-flexbox;
+	display: -webkit-inline-flex;
+    display: inline-flex;
+}
+
+@mixin flex-wrap($value) {
+	-ms-flex-wrap: $value;
+	-webkit-flex-wrap: $value;
+	flex-wrap: $value;
+}
+
+@mixin flex-direction($value) {
+	-ms-flex-direction: $value;
+	-webkit-flex-direction: $value;
+	flex-direction: $value;
+}
+
+@mixin flex-flow($value) {
+	-ms-flex-flow: $value;
+	-webkit-flex-flow: $value;
+	flex-flow: $value;
+}
+
+@mixin flex($value) {
+	-ms-flex: $value;
+	-webkit-flex: $value;
+	flex: $value;
+}
+
+@mixin flex-grow($value) {
+	-ms-flex-grow: $value;
+	-webkit-flex-grow: $value;
+	flex-grow: $value;
+}
+
+@mixin order($value) {
+	-ms-flex-order: $value;
+	-webkit-order: $value;
+	order: $value;
+}
+
+@mixin justify-content($value) {
+
+	@if $value == flex-start { -ms-flex-pack: start; }
+	@elseif $value == flex-end { -ms-flex-pack: end; }
+	@elseif $value == center { -ms-flex-pack: center; }
+	@elseif $value == space-between { -ms-flex-pack: justify; }
+	@elseif $value == space-around { -ms-flex-pack: distribute; }
+
+	-webkit-justify-content: $value;
+	justify-content: $value;
+}
+
+@mixin align-content($value) {
+
+	@if $value == flex-start { -ms-flex-line-pack: start; }
+	@elseif $value == flex-end { -ms-flex-line-pack: end; }
+	@elseif $value == center { -ms-flex-line-pack: center; }
+	@elseif $value == space-between { -ms-flex-line-pack: justify; }
+	@elseif $value == space-around { -ms-flex-line-pack: distribute; }
+	@elseif $value == stretch { -ms-flex-line-pack: stretch; }
+
+	-webkit-align-content: $value;
+	align-content: $value;
+}
+
+@mixin align-items($value) {
+
+	@if $value == flex-start { -ms-flex-align: start; }
+	@elseif $value == flex-end { -ms-flex-align: end; }
+	@elseif $value == center { -ms-flex-align: center; }
+	@elseif $value == baseline { -ms-flex-align: baseline; }
+	@elseif $value == stretch { -ms-flex-align: stretch; }
+
+	-webkit-align-items: $value;
+	align-items: $value;
+}
+
+@mixin align-self($value) {
+
+	@if $value == flex-start { -ms-flex-item-align: start; }
+	@elseif $value == flex-end { -ms-flex-item-align: end; }
+	@elseif $value == center { -ms-flex-item-align: center; }
+	@elseif $value == baseline { -ms-flex-item-align: baseline; }
+	@elseif $value == stretch { -ms-flex-item-align: stretch; }
+
+	-webkit-align-self: $value;
+	align-self: $value;
+}
+
+
+/*---------------------------------------------------------------
+    Strip Unit from SASS Variable (requried for Buckets Grid)
+--------------------------------------------------------------- */
+
+@function strip-unit($number) {
+  @if type-of($number) == 'number' and not unitless($number) {
+    @return $number / ($number * 0 + 1);
+  }
+
+  @return $number;
+}
+
+
+/*---------------------------------------------------------------
+	Bucket Grid
+--------------------------------------------------------------- */
+
+$bucketMargins : 2%;
+
+.buckets {
+
+    ul {
+        list-style: none;
+    }
+
+    li {
+        width: 100%;
+    }
+
+    @include bp480 {
+
+        li {
+            width: 50%;
+        }
+    }
+
+    @include bp800 {
+
+        @for $i from 1 through 8 {
+            $width: percentage((100 / $i) / 100);
+            &.num-#{$i} li {
+                width: $width;
+            }
+        }
+    }
+}
+
+
+$marg : ($bucketMargins / 2);
+$bucketMargins : strip-unit($bucketMargins);
+
+.buckets.in-between,
+.buckets.in-between-cont {
+
+    li {
+        margin-bottom: 2%;
+    }
+
+    @include bp480 {
+
+        li {
+            width: 49%;
+            margin: 0 1% 2%;
+        }
+
+        li:nth-of-type(odd) {
+            margin-left: 0;
+        }
+
+        li:nth-of-type(even) {
+            margin-right: 0;
+        }
+    }
+
+    @include bp800 {
+
+        @for $i from 1 through 8 {
+            $marginsTotal : (($bucketMargins * $i) - $bucketMargins); // Multiply margins by no. of buckets and minus margins for first/last buckets = This equals the total % of all bucket margins
+            $spaceRemaining : (100 - $marginsTotal); // 100% minus the total % taken up by the bucket margins
+            $width: (percentage(($spaceRemaining / $i) / 100));
+            &.num-#{$i} li {
+                width: $width;
+                margin: 0 $marg;
+            }
+        }
+    }
+
+    li:first-of-type {
+        margin-left: 0;
+    }
+
+    li:last-of-type {
+        margin-right: 0;
+    }
+}
+
+.buckets.in-between-cont {
+
+    .container {
+        padding: 0 15px;
+
+        @include bp1200 {
+            padding: 0;
+        }
+    }
+}

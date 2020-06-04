@@ -1,0 +1,1142 @@
+/* Import reset */
+
+@import "partials/_reset.scss";
+
+/* SASS Variables
+--------------------------------------------------------------- */
+
+// Media Queries
+
+$tablet-width   : 480px;
+$desktop-width  : 800px;
+$mid-width         : 1000px;
+$large-width    : 1200px;
+$full-width     : 1600px;
+
+@mixin bp480 {
+  @media (min-width: #{$tablet-width}) {
+    @content;
+  }
+}
+
+@mixin bp800 {
+  @media (min-width: #{$desktop-width}) {
+    @content;
+  }
+}
+
+@mixin bp1000 {
+  @media (min-width: #{$mid-width}) {
+    @content;
+  }
+}
+
+@mixin bp1200 {
+  @media (min-width: #{$large-width}) {
+    @content;
+  }
+}
+
+@mixin bp1600 {
+  @media (min-width: #{$full-width}) {
+    @content;
+  }
+}
+
+// Colours
+
+$noir     : #111;
+$blanc    : #fff;
+
+$logodeepblue : #004666;
+$logomidblue : #0085bd;
+$sandyyellow : #f7d67c;
+$fadedsandyyellow : lighten($sandyyellow,20);
+
+$lightgrey : #f9f6f2;
+$lightoffwhite : #f9f6f2;
+$greyblue : #67828e;
+
+// Typography
+
+$primaryFont   : "proxima-nova";
+
+/* Global
+--------------------------------------------------------------- */
+
+* { margin: 0; padding: 0; }
+
+*, *:before, *:after {
+  -webkit-box-sizing: border-box; 
+  -moz-box-sizing: border-box; 
+  box-sizing: border-box;
+}
+
+body, html { min-height: 101%; }
+
+body {
+    background: $blanc;
+    color: $greyblue;
+    font: 16px/1.5 $primaryFont, sans-serif;
+    font-weight: 300;
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+}
+
+strong {
+    font-weight: 700;
+}
+
+a {
+    transition: all ease 0.3s;
+    color: $logomidblue;
+    &:hover {
+        color: $logodeepblue;
+    }
+}
+
+@import "partials/_mixins-functions.scss";
+@import "partials/_animate.scss";
+
+/* Typography
+--------------------------------------------------------------- */
+
+h1, h2, h3, h4, h5 {
+    margin: 0;
+    font-family: $primaryFont, sans-serif;
+    font-weight: 700;
+    line-height: 1.1em; 
+    color: $logodeepblue;
+}
+
+h1 { font-size: 1.8em; }
+h2 { font-size: 1.6em; }
+h3 { font-size: 1.4em; }
+h4 { font-size: 1.2em; }
+h5 { font-size: 1.1em; }
+
+/* Global Containers
+--------------------------------------------------------------- */
+
+.container {
+    max-width: $full-width;
+    margin: 0 auto;
+    clear: both;
+}
+
+/* Buttons
+--------------------------------------------------------------- */
+
+.btn {
+    color: $noir;
+    padding: 0.5em 0.8em;
+    display: inline-block;
+    text-decoration: none;    
+    transition: 0.3s;
+
+    // Define the button names & colours
+    $btnColors :        noir $noir $blanc,
+    sandyyellow $sandyyellow $logodeepblue,
+    logodeepblue $logodeepblue $blanc,
+    logomidblue $logomidblue $blanc,
+                        blanc $blanc $noir;
+
+    // Loop through colours above and create classes
+    @each $colorOption in $btnColors {
+        &.btn-#{nth($colorOption, 1)} {
+            color: nth($colorOption,3);
+            background: nth($colorOption,2);
+            position: relative;
+            &:after {
+                content: '';
+                display: block;
+                position: absolute;
+                left:100%;
+                top: 0;
+                width: 0;
+                height: 0;
+                border-top: 41px solid nth($colorOption,2);
+                border-right: 20px solid transparent;
+                transition: 0.3s;
+            }
+        }
+    }
+    
+    &:hover {
+        background: darken($logodeepblue,10);
+        color: $blanc;
+
+        &:after {
+            border-top-color: darken($logodeepblue,10);
+        }
+    }
+}
+
+/* Boxes
+--------------------------------------------------------------- */
+
+.box {
+    color: $noir;
+    background: $blanc;
+    padding: 1.5em;
+
+    p {
+        margin-bottom: 1em;        
+    }
+
+    p.title {
+        font-weight: 700;
+        font-size: 1.2em;  
+    }
+
+    p.phone {
+        font-size: 1.2em;
+    }
+
+    // Define the button names & colours
+    $boxColors :
+    sandyyellow $sandyyellow $logodeepblue,
+    fadedsandyyellow $fadedsandyyellow $logodeepblue,
+    lightoffwhite $lightoffwhite $noir,
+    logodeepblue $logodeepblue $blanc,
+    logomidblue $logomidblue $blanc,
+    blanc $blanc $noir;
+
+    // Loop through colours above and create classes
+    @each $colorOption in $boxColors {
+        &.box-#{nth($colorOption, 1)} {
+            background-color: nth($colorOption,2);
+            color: nth($colorOption,3);
+        }
+    }
+}
+
+/* General
+--------------------------------------------------------------- */
+
+.box-padding {
+ //   padding: 1em;
+}
+
+.flexbox800 {
+    @include bp800 {
+        @include flexbox();
+        @include flex-wrap(wrap);
+    }
+}
+
+.centre-content {
+    margin: auto 0;
+}
+
+/* Phone & Navigation Icon Top
+--------------------------------------------------------------- */
+
+$phonenavheight: 40px;
+
+.phone-nav-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: $phonenavheight;
+    background: #eee;    
+    
+    &:after {
+        clear: both;
+        content: '';
+        display: block;
+    }
+
+    .stickyheader-left {
+        float: left;
+        background: $logomidblue;
+        color: $sandyyellow;
+        font-weight: 700;
+        width: 60%;
+        a {
+            color: $sandyyellow;
+        }
+    }
+
+    .stickyheader-right {
+        float: right;
+        width: 40%;
+        .btn {
+            width: 100%;
+        }
+    }
+
+    .stickyheader-btn {
+        display: inline-block;
+        text-decoration: none;
+        padding: 0.5em;
+        text-align: center;
+        &.menu-btn {
+            background: $logodeepblue;
+            color: $blanc;
+        }
+    }
+    
+    @include bp1200 {
+        display: none;
+    }
+}
+
+/* Site Header
+--------------------------------------------------------------- */
+
+.sticky-bar {
+    display: none;
+    @include bp1200 {
+        display: block;
+        position: fixed;
+        top: 0;
+        z-index: 100;
+        left: 0;
+        width: 100%;
+        background: $logodeepblue;
+    }
+
+    nav[role="top-navigation"] {
+        display: inline-block;
+        float: right;
+        ul {
+            list-style: none;
+            display: inline-block;
+            li {
+                display: inline-block;
+                a {
+                    display: inline-block;
+                    color: $blanc;
+                    padding: 0.65em;
+                    text-decoration: none;
+                    border-bottom: 2px solid $logodeepblue;
+                    &:hover {
+                        border-color: $sandyyellow;
+                    }
+                }
+            }
+            .current-menu-item a,
+            .current-menu-parent a {
+                color: $sandyyellow;
+
+                &:hover {
+                    color: $sandyyellow;
+                }
+            }
+        }
+    }
+
+    .phone-top-right {
+        float: right;
+        display: inline-block;
+        padding: 0.5em;
+        background: $sandyyellow;
+        color: $logodeepblue;
+        font-size: 1.2em;
+        a {
+            color: $logodeepblue;
+        }
+    }
+}
+
+header[role="banner"] {
+
+    background: $blanc;
+
+    &:before {
+        /* Pseudo element to push content down */
+        content: '';
+        height: $phonenavheight;
+        display: block;
+
+        @include bp1200 {
+            height: 48px;
+        }
+        
+    }
+
+    &:after {
+        /* Pseudo element to push content down */
+        content: '';
+        clear: both;
+        display: block;
+    }
+
+    img.logo {
+        display: block;
+        width: 100%;
+        max-width: 350px;
+        transition: all ease 0.3s;
+        margin: 0 auto;
+        padding: 1em 0.5em;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    @include bp1200 {
+        background: none;
+        .logo-wrapper {
+            float: left;
+            width: 30%;
+        }
+        img.logo {
+            margin: 0;
+        }
+    }
+
+    .phone-top-right {
+        display: none;
+
+        @include bp800 {
+            float: right;
+            display: block;
+        }
+    }
+
+}
+
+/* Site Navigation
+--------------------------------------------------------------- */
+
+@import "partials/_mmenu.scss";
+
+// Removes FOUC on desktop
+#mmenu:not( .mm-menu ) {
+   display: none;
+}
+
+@media only screen and (max-width: $large-width) {
+    ul.mobile-navigation li.current-menu-item a,
+    ul.mobile-navigation li.current-menu-parent a,
+    ul.sub-menu li.current-menu-item {
+        background: $sandyyellow;
+        color: $logodeepblue;
+    }
+}
+
+/* Desktop Navigation */
+
+nav[role="navigation"] {
+    display: none;
+
+    @include bp1200 {
+        display: inline-block;
+        text-align: right;
+        float: right;
+        width: 70%;
+        font-size: 1.1em;
+
+        li {
+            display: inline;
+            position: relative;
+            text-align: left;
+
+            &.menu-item-has-children > a:after {
+                content: "\f107";
+                position: absolute;
+                bottom: -15px;
+                left: 50%;
+                margin-left: -8px;
+                font: 1em/1 FontAwesome;
+            }
+        }
+
+        .current-menu-item a,
+        .current-menu-parent a {
+            /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f7d67c+0,ffffff+100&0.21+0,0+98 */
+            background: -moz-linear-gradient(top,  rgba(247,214,124,0.21) 0%, rgba(255,254,252,0) 98%, rgba(255,255,255,0) 100%); /* FF3.6-15 */
+            background: -webkit-linear-gradient(top,  rgba(247,214,124,0.21) 0%,rgba(255,254,252,0) 98%,rgba(255,255,255,0) 100%); /* Chrome10-25,Safari5.1-6 */
+            background: linear-gradient(to bottom,  rgba(247,214,124,0.21) 0%,rgba(255,254,252,0) 98%,rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+            filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#36f7d67c', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+
+        }
+
+        a {
+            display: inline-block;
+            text-decoration: none;
+            color: $logodeepblue;
+            padding: 40px 15px;
+            border-bottom: 2px solid transparent;
+            &:hover {
+                border-color: $logodeepblue;
+            }
+
+            span {
+                display: block;
+            }
+
+        }
+
+    }
+
+}
+
+/* Hero
+--------------------------------------------------------------- */
+
+.hero {
+    text-align: center;
+    background-size: cover;
+    background-position: center center;
+    .hero-content {
+        padding: 1em;
+        color: $blanc;
+    }
+
+    p.primary {
+        font-size: 2.3em;
+    }
+    p.secondary {
+        font-size: 1.6em;
+    }
+
+    &.hero-singular {
+        padding: 4em 0;
+        .hero-content {
+            background: rgba($blanc,0.8);
+            color: $logomidblue;
+            max-width: 500px;
+            font-size: 1.4em;
+            margin: 0 auto;
+            p {
+                margin: 0 0 0.5em 0;
+            }
+            img {
+                width: 100%;
+                max-width: 300px;
+                max-height: 140px;
+            }
+
+        }
+    }
+}
+
+
+body.home .index-hero {
+    background-image: url(../_static/images/index-small.jpg);
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: cover;
+    @include bp480 {
+        background-image: url(../_static/images/index-medium.jpg);
+    }
+    @include bp1200 {
+        background-image: url(../_static/images/index-large.jpg);
+    }
+    @include bp1600 {
+        background-image: url(../_static/images/index-x-large.jpg);
+        background-size: auto;
+        background-color: #f0f8fb;
+    }
+}
+
+body.home .index-hero-content {
+    padding: 2em 1em 20em 1em;
+    color: $logomidblue;
+    max-width: 410px;
+    p {
+        margin: 0 0 20px 0;
+    }
+    p.primary {
+        font-size: 2.5em;
+        line-height: 1em;
+    }
+    @include bp800 {
+        padding: 6em 1em 6em 1em;
+    }
+    @include bp1000 {
+        padding: 8em 1em 8em 1em;
+    }
+    @include bp1200 {
+        max-width: 600px;
+        padding: 8em 1em 8em 6em;
+        p.primary {
+            font-size: 3.6em;
+        }
+    }
+    @include bp1600 {
+        max-width: 650px;
+        padding: 9em 1em 9em 6em;
+        p.primary {
+            font-size: 3.8em;
+        }
+    }
+}
+
+/* Buckets
+--------------------------------------------------------------- */
+
+.buckets {
+
+    .container {
+        padding: 0;
+        @include flexbox;
+        @include flex-wrap(wrap);
+    }
+
+    li {
+        display: block;
+        float: left;
+        background-size: cover;
+        background-position: center;
+        @include flexbox;
+        @include flex-wrap(wrap);
+        text-align: center;
+        @include bp480 {
+            @include flex-grow(1);
+        }
+    }
+
+    li:nth-of-type(even) a {
+        background: $logomidblue;
+    }
+
+    @include bp480 {
+        li {
+            border: 1px solid $logomidblue;
+
+        }
+        li:nth-of-type(even) a {
+            background: $logodeepblue;
+        }
+    }
+
+    @include bp800 {
+        li {
+            border: none;
+
+        }
+        li:nth-of-type(even) a {
+            background: $logomidblue;
+        }
+    }
+
+    a {
+        display: block;
+        text-decoration: none;
+        color: #fff;
+        padding: 1em;
+        background: $logodeepblue;
+        width: 100%;
+        @include bp800 {
+            @include flexbox();
+            @include flex-wrap(wrap);
+            @include flex-direction(column);
+            @include align-items(center);
+            @include justify-content(space-between);
+            @include flex-grow(1);
+        }
+    }
+
+    li:nth-of-type(even) a:hover, a:hover {
+        background: darken($logodeepblue,10);
+        @include bp800 {
+            img {
+                -webkit-animation-duration: 1s;
+                animation-duration: 1s;
+                -webkit-animation-fill-mode: both;
+                animation-fill-mode: both;
+                -webkit-animation-name: tada;
+                animation-name: tada;
+            }
+        }
+    }
+
+    .title {
+        display: block;
+        padding: .5em;
+        transition: .3s;
+        font-size: 1.2em;
+        font-weight: 700;
+        color: $sandyyellow;
+        @include bp480 {
+            span {
+                white-space: nowrap;
+            }
+        }
+    }
+
+    .desc {
+        padding: 0 10px;
+        width: 100%;
+    }
+
+    .btn {
+        display: block;
+        margin: 0 10px 10px;
+    }
+
+    &:after {
+        content: '';
+        display: block;
+        clear: both;
+    }
+    img {
+        display: block;
+        transition: .3s;
+        max-width: 70px;
+        margin: 1em auto;
+        @include align-self(flex-end);
+    }
+}
+
+/* Separator
+--------------------------------------------------------------- */
+
+div.separator {
+    clear: both;
+    text-align: center;
+    padding: 2em 0;
+    img {
+        display: block;
+        margin: 0 auto;
+        max-width: 60px;
+    }
+    &.page-icon {
+        background: $logomidblue;
+        padding: 1em 0;
+    }
+}
+
+.independent-image {
+    background-size: cover;
+    background-position: center center;
+    min-height: 220px;
+}
+
+.why-choose-us {
+    p.title {
+        color: $sandyyellow;
+    }
+    ul {
+        list-style: none;
+        li {
+            margin: 0.5em 0;
+        }
+    }
+}
+
+.free-quotation-advice {
+    background: $sandyyellow;
+    color: $logodeepblue;
+}
+
+.map {
+    background-image: url(../_static/images/map.jpg);
+    background-position: -140px center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-align: right;
+    ul {
+        list-style: none;
+        img {
+            max-width: 10px;
+            line-height: 1em;
+            height: auto;
+            margin-right: 5px;
+        }
+    }
+    p.title {
+        color: $sandyyellow;
+    }
+    @include bp480 {
+        background-position: -100px center;
+    }
+    @include bp800 {
+        background-position: -340px center;
+    }
+    @include bp1000 {
+        background-position: -180px center;
+    }
+    @include bp1200 {
+        background-position: left center;
+    }
+    a {
+        color: $sandyyellow;
+    }
+}
+
+.get-in-touch {
+    text-shadow: 1px 1px 1px $logodeepblue;
+    @include bp480 {
+        padding-top: 4em;
+        padding-bottom: 4em;
+        background-image: url(../_static/images/get-in-touch-cta.jpg);
+        background-size: cover;
+        background-position: right center;
+        background-repeat: no-repeat;
+        @include flexbox();
+        .content {
+            max-width: 50%;
+            margin: auto 0;
+        }
+    }
+    .phone {
+        color: $sandyyellow;
+        a {
+        color: $sandyyellow;
+
+        }
+    }
+}
+
+/* Site Content
+--------------------------------------------------------------- */
+
+div[role="main"] {
+
+    p {
+        margin: 1em 0;
+    }
+
+    blockquote {
+        position: relative;
+        padding: 1em 2.65em;
+        text-align: center;
+
+        &:before,
+        &:after {
+            position: absolute;
+            z-index: -1;
+            font-family: FontAwesome;
+            font-size: 2em;
+            opacity: .25;
+        }
+
+        &:before {
+            top: 20px;
+            left: 20px;
+            content: '\f10d';
+        }
+
+        &:after {
+            bottom: 0;
+            right: 0;
+            content: '\f10e';
+        }
+    }
+}
+
+/* Article
+--------------------------------------------------------------- */
+
+article {
+
+    ul {
+        list-style: none;
+        margin: 1em 0;
+    }
+
+    > ul li {
+        &:before {
+            display: inline-block;
+            padding-right: .5em;
+            font-family: FontAwesome;
+            content: url(../_static/images/logo-icon.svg);
+            width: 20px;
+            height: 20px;
+        }    
+    }
+
+    h1 + p {
+        font-size: 1.2em;
+    }
+
+    p {
+        line-height: 1.6em;
+    }
+
+    img {
+        display: block;
+        max-width: 100%;
+
+        @include bp480 {
+            &.left {
+                float: left;
+                margin: .5em .5em .5em 0;
+            }
+
+            &.center {
+                clear: both;
+                margin: 0 auto;
+            }
+
+            &.right {
+                float: right;
+                margin: .5em 0 .5em .5em;
+            }
+        }
+    }
+}
+
+/* Case Studies
+--------------------------------------------------------------- */
+
+.case-study-archive-wrapper {
+    @include flexbox();
+    @include flex-wrap(wrap);
+    @include flex-grow(1);
+}
+
+.case-study-archive {
+    position: relative;
+    padding: 120px 1em 5em 1em;
+
+    @include flexbox();
+    @include flex-wrap(wrap);
+    @include flex-direction(column);
+    @include justify-content(space-between);
+    @include align-items(flex-start);
+
+    &:before {
+        width: 100%;
+        height: 100px;
+        content: '';
+        z-index: -1;
+        display: block;
+        position: absolute;
+        top: 0; left: 0;
+        background-position: right center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    div.logo img {
+        max-width: 300px;
+        max-height: 50px;
+        height: auto;
+        margin: 1em auto;
+        display: block;
+    }
+
+    p {
+        width: 100%;
+    }
+
+    h1 {
+        a {
+            text-decoration: none;
+            color: $logodeepblue;
+        }
+    }
+
+    @include bp800 {
+        padding: 120px 1em 2em 1em;
+
+    }
+
+    a.btn {
+        margin-top: 1em;
+    }
+
+    @include bp800 {
+        width: 50%;
+        @include flex-grow(1);
+        p {
+            max-width: 500px;
+        }
+    }
+
+    @include bp1200 {
+        border-left: 3px solid $lightgrey;
+        background: rgba($blanc,0.7);
+        /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&1+34,0+100 */
+        background: -moz-linear-gradient(left,  rgba(255,255,255,1) 0%, rgba(255,255,255,1) 34%, rgba(255,255,255,0) 100%); /* FF3.6-15 */
+        background: -webkit-linear-gradient(left,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 34%,rgba(255,255,255,0) 100%); /* Chrome10-25,Safari5.1-6 */
+        background: linear-gradient(to right,  rgba(255,255,255,1) 0%,rgba(255,255,255,1) 34%,rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+        filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#00ffffff',GradientType=1 ); /* IE6-9 */
+        padding: 2em 25% 2em 2em;
+        &:before {
+            width: 100%;
+            height: 100%;
+            content: '';
+            z-index: -1;
+            display: block;
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-position: right center;
+            background-size: cover;
+        }
+        div.logo img {
+            margin: 1em 0;
+        }
+    }
+}
+
+.testimonial {
+    background-image: url(../_static/images/quote-marks.png);
+    background-position: 10px 20px;
+    background-repeat: no-repeat;;
+}
+
+.prev-next {
+    clear: both;
+    padding: 1em 0;
+    a {
+        width: 100%;
+        display: block;
+        background: $logomidblue;
+        text-decoration: none;
+        padding: 1em;
+        color: $blanc;
+        &:hover {
+            background: darken($logodeepblue,10)!important;
+        }
+    }
+    .next-posts a {
+        text-align: right;
+        background: $logodeepblue;
+    }
+    @include bp800 {
+        div {
+            width: 50%;
+        }
+    }
+}
+
+/* Aside
+--------------------------------------------------------------- */
+
+aside {
+    
+}
+
+/* Credit Cards
+--------------------------------------------------------------- */
+
+.credit-cards {
+    ul {
+        list-style: none;
+        li {
+            display: inline-block;
+        }
+    }
+    img {
+        width: 100%;
+        max-width: 50px;
+    }
+}
+
+/* Search form
+--------------------------------------------------------------- */
+
+form.search-form {
+    input.search-field, button.search-submit {
+        display: inline-block;
+        border: none;
+        padding: 10px;
+        line-height: 1.3em;
+    }
+    input.search-field, button.search-submit {
+        font-family: "FontAwesome", sans-serif;
+        border: 1px solid #ccc;
+    }
+    button.search-submit {
+        background: $noir;
+        color: $blanc;
+        border: none;
+        border: 1px solid $noir;
+    }
+}
+
+/* Site Footer
+--------------------------------------------------------------- */
+
+footer[role="contentinfo"] {    
+    clear: both;
+    overflow: hidden;
+    text-align: center;
+    background: $greyblue;
+    padding: 1.5em;
+    color: $sandyyellow;
+
+    .grid {
+        margin-bottom: 1em;
+    }
+
+    ul {
+        list-style: none;
+        padding-right: 0.5em;
+    }
+
+    li {
+        display: block;
+    }
+
+    img {
+        max-width: 100%;
+    }
+
+    p.title {
+        font-weight: 700;
+        font-size: 1.2em;
+    }
+
+    a {
+        color: $blanc;
+        text-decoration: none;
+
+        &:hover {
+            color: $logodeepblue;
+        }
+    }
+
+    @include bp800 {
+        text-align: left;
+    }
+
+    a.adtrak img {
+        max-width: 70px;
+        margin-top: 3em;
+    }
+
+    .container {
+        clear: both;
+    }
+}
+
+/* Back to top
+--------------------------------------------------------------- */
+
+#back-top {
+    border-radius: 10px;
+    position:fixed;
+    cursor: pointer;
+    right: 10px;
+    bottom:10px;
+    z-index: 300;
+    opacity: 0.4;
+    text-align: center;
+    background: #fff;
+    padding: 0.3em;
+
+    &:hover {
+        opacity: 1;
+        transition: 0.3s all ease;
+    }
+
+    a {
+        color: #333;
+        text-shadow: 1px 1px 1px #fff;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        
+        i {
+            display: block;
+            font-size: 3rem;
+        }
+    }
+}
+
+// Forms
+@import "partials/_forms.scss";
+// Cookies
+@import "partials/_cookies.scss";
+// Temporarily closed
+@import "partials/_temporarily.closed.scss";

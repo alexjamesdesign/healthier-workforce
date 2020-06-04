@@ -1,0 +1,80 @@
+/* Admin theme for custom dashboard*/
+* {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4 {
+  font: 1em/1em arial, sans-serif;
+  color: #053b66;
+  text-align: left!important;
+  margin: 0!important;
+}
+
+h1 {
+  font-size: 1.6em;
+}
+
+h2 {
+  font-size: 1.4em;
+}
+
+h3 {
+  font-size: 1.2em;
+}
+
+.quick-nav a {
+  
+}
+
+.about-wrap {
+  max-width: none;
+}
+
+.dash {
+  width: 100%;
+}
+
+.about-wrap .about-text {
+  margin: 0;
+}
+
+.dash div {  
+  background: #fff;
+  padding: 1em;
+  margin: 10px 0 10px 0;
+  font: 1.1em/1.6rem arial, sans-serif;
+}
+
+@media only screen and (min-width: 800px) {
+    .dash div {
+      float: left;
+      width: 49%;
+    }
+
+    .dash div:nth-of-type(odd){
+      float: left;
+      margin-right: 2%;
+    }
+}  
+
+  .dash div ol li {
+    font-size: .9rem;
+    line-height: 1.6rem;
+  }
+  .dash div h3 {
+    line-height: 1em;
+    margin: 0;
+  }
+  .dash div h4 {
+    color: #053b66;
+  }
+  .dash div img {
+    display: block;
+    margin: 10px auto;
+  }
+
+span#footer-thankyou,
+#footer-upgrade {
+  display: none; }
+
+/*# sourceMappingURL=admin.css.map */

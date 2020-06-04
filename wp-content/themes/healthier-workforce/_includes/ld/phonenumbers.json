@@ -1,0 +1,76 @@
+{  
+   "locationdynamics":{  
+      "default":{  
+         "area":"The UK",
+         "calltag":"Call us on",
+         "source":{  
+            "organic":{  
+               "computer":"0800 030 6037",
+               "mobile":"0800 030 6037"
+            },
+            "google-adwords":{  
+               "computer":"",
+               "mobile":""
+            }
+         }
+      },
+      "locations":{  
+         "example1":{  
+            "area":"Example 1",
+            "calltag":"Call Example 1 on",
+            "source":{  
+               "organic":{  
+                  "computer":"01234 000 000",
+                  "mobile":""
+               },
+               "google-adwords":{  
+                  "computer":"01234 000 000",
+                  "mobile":""
+               }
+            }
+         },
+         "example2":{  
+            "area":"Example 2",
+            "calltag":"Call Example 2 on",
+            "source":{  
+               "organic":{  
+                  "computer":"",
+                  "mobile":""
+               },
+               "google-adwords":{  
+                  "computer":"",
+                  "mobile":""
+               }
+            }
+         },
+         "the-milky-way":{  
+            "area":"The Milky Way",
+            "calltag":"Call The Milky Way on",
+            "source":{  
+               "organic":{  
+                  "computer":"",
+                  "mobile":""
+               },
+               "google-adwords":{  
+                  "computer":"",
+                  "mobile":""
+               }
+            }
+         }
+      },
+      "log":[  
+         {  
+            "user-name":"",
+            "user-email":"dan.farrow@adtrak.co.uk",
+            "description":"Added in The Milky Way as a test to check PPC numbers",
+            "date":"2015-04-23 11:25:40"
+         },
+         {  
+            "user-name":"",
+            "user-email":"dan.farrow@adtrak.co.uk",
+            "description":"Amending area for The Milky Way",
+            "date":"2015-04-27 07:45:03"
+         }
+      ]
+   }
+}

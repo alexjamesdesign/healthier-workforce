@@ -1,0 +1,16 @@
+
+.cookies {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    padding: .5em 10%;
+    text-align: center;
+    background: $blanc;
+    border-top: 1px solid #ccc;
+    font-size: .75em;
+    color: $noir;
+
+      a:hover {
+        opacity: 0.8;
+      }
+}
