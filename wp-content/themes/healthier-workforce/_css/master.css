@@ -4757,7 +4757,7 @@ nav[role="navigation"] {
       text-align: right;
       float: right;
       width: 80%;
-      font-size: 1.1em; }
+      font-size: 1em; }
       nav[role="navigation"] li {
         display: inline;
         position: relative;
@@ -4786,7 +4786,7 @@ nav[role="navigation"] {
         display: inline-block;
         text-decoration: none;
         color: #004666;
-        padding: 40px 15px;
+        padding: 40px 20px;
         border-bottom: 2px solid transparent; }
         nav[role="navigation"] a:hover {
           border-color: #004666; }
@@ -4807,8 +4807,7 @@ nav[role="navigation"] {
     -o-transition: .3s;
     transition: .3s;
     padding: 0px;
-    background: #004666;
-    display: block; }
+    background: #004666; }
     @media (min-width: 1200px) {
       nav[role="navigation"] .sub-menu {
         width: 550px; } }
@@ -4823,7 +4822,9 @@ nav[role="navigation"] {
     nav[role="navigation"] .sub-menu a {
       display: block;
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      color: #fff; }
+      color: #fff;
+      font-size: 0.9rem;
+      background: #004666; }
       nav[role="navigation"] .sub-menu a:hover {
         color: #66cfff;
         cursor: pointer; }
@@ -4908,6 +4909,51 @@ body.home .index-hero-content {
       padding: 9em 1em 9em 6em; }
       body.home .index-hero-content p.primary {
         font-size: 3.8em; } }
+
+/* Hero USPs
+--------------------------------------------------------------- */
+.hero-usps {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: left;
+  -ms-flex-pack: left;
+  justify-content: left;
+  padding: 20px 0px 0px 0px; }
+  @media (min-width: 800px) {
+    .hero-usps {
+      -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+      -webkit-box-pack: center;
+      -ms-flex-pack: center;
+      justify-content: center; } }
+  .hero-usps li {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: left;
+    -ms-flex-align: left;
+    align-items: left;
+    padding: 10px 20px; }
+    @media (min-width: 800px) {
+      .hero-usps li {
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center; } }
+    .hero-usps li img {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px !important; }
+    .hero-usps li span {
+      color: #fff; }
+
+.page-template-page-home .hero-usps {
+  padding: 0px 0px 20px 0px; }
+  .page-template-page-home .hero-usps li span {
+    color: #004666;
+    font-weight: 700; }
 
 /* Buckets
 --------------------------------------------------------------- */
@@ -5359,6 +5405,8 @@ footer[role="contentinfo"] {
   footer[role="contentinfo"] ul {
     list-style: none;
     padding-right: 0.5em; }
+  footer[role="contentinfo"] .sub-menu {
+    display: none; }
   footer[role="contentinfo"] li {
     display: block; }
   footer[role="contentinfo"] img {

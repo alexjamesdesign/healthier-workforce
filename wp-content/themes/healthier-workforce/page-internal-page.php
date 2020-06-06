@@ -11,7 +11,9 @@
 
         <img class="animated rubberBand" src="<?php echo $logoimage['url']; ?>" />
 
-    <?php endif; ?>
+	<?php endif; ?>
+
+	<?php get_template_part('_parts/theme-parts/hero-usps'); ?>
 
 </div>
 

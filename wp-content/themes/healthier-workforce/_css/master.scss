@@ -428,7 +428,7 @@ nav[role="navigation"] {
         text-align: right;
         float: right;
         width: 80%;
-        font-size: 1.1em;
+        font-size: 1em;
 
         li {
             display: inline;
@@ -459,7 +459,7 @@ nav[role="navigation"] {
             display: inline-block;
             text-decoration: none;
             color: $logodeepblue;
-            padding: 40px 15px;
+            padding: 40px 20px;
             border-bottom: 2px solid transparent;
             &:hover {
                 border-color: $logodeepblue;
@@ -490,7 +490,6 @@ nav[role="navigation"] {
         transition: .3s;
         padding: 0px;
         background: $logodeepblue;
-        display: block;
 
         @include bp1200 {
             width: 550px;
@@ -514,6 +513,8 @@ nav[role="navigation"] {
             display: block;
             border-bottom: 1px solid rgba(255,255,255,.1);
             color: $blanc;
+            font-size: 0.9rem;
+            background: $logodeepblue;
 
             &:hover {
                 color: lighten($logodeepblue,50%);
@@ -628,6 +629,54 @@ body.home .index-hero-content {
         }
     }
 }
+
+/* Hero USPs
+--------------------------------------------------------------- */
+
+.hero-usps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    padding: 20px 0px 0px 0px;
+
+    @include bp800 {
+        flex-wrap: nowrap;
+        justify-content: center;
+    }
+
+    li {
+        display: flex;
+        align-items: left;
+        padding: 10px 20px;
+
+        @include bp800 {
+            align-items: center;
+        }
+
+        img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px!important; 
+        }
+
+        span {
+            color: $blanc;
+        }
+    }
+}
+
+.page-template-page-home {
+    .hero-usps {
+        padding: 0px 0px 20px 0px;
+        li {
+            span {
+                color: $logodeepblue;
+                font-weight: 700;
+            }
+        }
+    }
+}
+
 
 /* Buckets
 --------------------------------------------------------------- */
@@ -1123,6 +1172,10 @@ footer[role="contentinfo"] {
     ul {
         list-style: none;
         padding-right: 0.5em;
+    }
+
+    .sub-menu {
+        display: none;
     }
 
     li {
