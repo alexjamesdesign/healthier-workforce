@@ -381,7 +381,7 @@ header[role="banner"] {
         background: none;
         .logo-wrapper {
             float: left;
-            width: 30%;
+            width: 20%;
         }
         img.logo {
             margin: 0;
@@ -427,7 +427,7 @@ nav[role="navigation"] {
         display: inline-block;
         text-align: right;
         float: right;
-        width: 70%;
+        width: 80%;
         font-size: 1.1em;
 
         li {
@@ -471,6 +471,68 @@ nav[role="navigation"] {
 
         }
 
+    }
+
+    .sub-menu {
+        display: none;
+    }
+
+    .sub-menu {
+        position: absolute;
+        background: $blanc;
+        top: 100%;
+        left: 0;
+        z-index: 100;
+        opacity: 0;
+        visibility: hidden;
+        width: 490px;
+        -webkit-transition: .3s;
+        transition: .3s;
+        padding: 0px;
+        background: $logodeepblue;
+        display: block;
+
+        @include bp1200 {
+            width: 550px;
+        }
+
+        li {
+            width: 50%;
+            float: left;
+
+            &:nth-of-type(odd) {
+                border-right: 1px solid rgba(255,255,255,.1);
+            }
+        }
+
+        .current-menu-item > a {
+            color: $blanc;
+            background: $noir;
+        }
+
+        a {
+            display: block;
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            color: $blanc;
+
+            &:hover {
+                color: lighten($logodeepblue,50%);
+                cursor: pointer;
+            }
+        }
+
+        &:hover {
+            display: block;
+            opacity: 1;
+            visibility: visible;
+        }
+
+    }
+
+    a:hover + .sub-menu {
+        display: block;
+        opacity: 1;
+        visibility: visible;
     }
 
 }
