@@ -82,7 +82,7 @@
 
 	                    <?php the_excerpt(); ?>
 
-	                    <a class="btn btn-logomidblue" href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+	                    <a class="btn btn-logomidblue" href="<?php the_permalink(); ?>">Read More</a>
 
 	                </div>
 

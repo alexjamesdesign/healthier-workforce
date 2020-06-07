@@ -13,6 +13,9 @@
 <script src="https://use.typekit.net/wfr3tiw.js"></script>
 <script>try{Typekit.load({ async: true });}catch(e){}</script>
 <?php /* Include marketing fields */ the_field('google_analytics', 'options'); the_field('schema', 'options'); the_field('kenshoo', 'options'); ?>
+<?php if (strpos($_SERVER['SERVER_NAME'],'alexjamesdesign.co.uk') !== false) : ?>
+<meta name="robots" content="noindex">
+<?php endif; ?>
 </head>
 
 <body <?php body_class( $class ); ?>>
