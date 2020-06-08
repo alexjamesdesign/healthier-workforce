@@ -45,7 +45,7 @@
 
 		<?php if (is_page('contact')) : ?>
 
-			<?php get_template_part('_includes/forms/contact-form'); ?>
+			<?php get_template_part('_includes/forms/contact-form-ninja'); ?>
 
 		<?php endif; ?>
 

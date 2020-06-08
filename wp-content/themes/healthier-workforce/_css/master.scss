@@ -1214,6 +1214,28 @@ footer[role="contentinfo"] {
     }
 }
 
+/* Callback Form
+--------------------------------------------------------------- */
+
+.callback-form-container {
+
+    p.title {
+        font-weight: 700;
+        font-size: 1.8em;  
+        display: block;
+        text-align: center;
+    }
+
+    .callback-form {
+        margin: 0 auto;
+        max-width: 1200px;
+
+        .nf-form-fields-required {
+            text-align: center;
+        }
+    }
+}
+
 /* Back to top
 --------------------------------------------------------------- */
 
@@ -1250,7 +1272,7 @@ footer[role="contentinfo"] {
 }
 
 // Forms
-@import "partials/_forms.scss";
+@import "partials/_forms-ninja.scss";
 // Cookies
 @import "partials/_cookies.scss";
 // Temporarily closed

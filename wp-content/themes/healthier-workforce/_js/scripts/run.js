@@ -32,7 +32,12 @@ jQuery(function ($) {
 			scrollTop: $("header").offset().top
 			}, 750);
 		});
-        
+		
+		// Ninja Edits
+		$(window).load(function(){
+            $('.nf-field-container').unwrap('nf-field');
+        });
+
     });
 });
 

@@ -1,2 +1,2 @@
-// @koala-append "scripts/dependencies.js"
-// @koala-append "scripts/run.js"
+// @prepros-append "scripts/dependencies.js"
+// @prepros-append "scripts/run.js

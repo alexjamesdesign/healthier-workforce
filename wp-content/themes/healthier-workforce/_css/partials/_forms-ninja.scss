@@ -1,0 +1,35 @@
+nf-fields-wrap {
+    display: flex;
+    flex-wrap: wrap;
+
+    nf-field {
+        width: 100%;
+
+        @include bp800 {
+            width: 50%;
+            float: left;
+        }
+        @include bp800 {
+
+            &:nth-of-type(odd) {
+                div {
+                    padding: 0px 3px 0px 0px;
+                }
+            }
+
+            &:nth-of-type(even) {
+                div {
+                    padding: 0px 0px 0px 3px;
+                }
+            }
+
+            &:nth-of-type(6), &:nth-of-type(5) {
+                width: 100%;
+
+                div {
+                    padding: 0;
+                }
+            }
+        }
+    }
+}
