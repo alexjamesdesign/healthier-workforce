@@ -240,7 +240,8 @@ $phonenavheight: 40px;
     left: 0;
     width: 100%;
     height: $phonenavheight;
-    background: #eee;    
+    background: #eee; 
+    z-index: 3000;   
     
     &:after {
         clear: both;
@@ -647,7 +648,7 @@ body.home .index-hero-content {
     li {
         display: flex;
         align-items: left;
-        padding: 10px 20px;
+        padding: 0.8em 1.5em;
 
         @include bp800 {
             align-items: center;
@@ -1218,6 +1219,9 @@ footer[role="contentinfo"] {
 --------------------------------------------------------------- */
 
 .callback-form-container {
+    padding: 2em 1.5em;
+    background: #f9f6f2;
+    color: $logodeepblue;
 
     p.title {
         font-weight: 700;
@@ -1230,8 +1234,16 @@ footer[role="contentinfo"] {
         margin: 0 auto;
         max-width: 1200px;
 
+        nf-fields-wrap {
+            padding: 25px 0px 0px 0px;
+        }
+
         .nf-form-fields-required {
             text-align: center;
+        }
+
+        #nf-field-13 {
+            float: right;
         }
     }
 }

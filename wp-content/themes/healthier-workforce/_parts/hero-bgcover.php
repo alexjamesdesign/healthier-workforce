@@ -242,8 +242,6 @@ if ( is_front_page() ) { ?>
 
 	</div>
 
-	
-
 <?php } ?>
 
 </div><?php /* End index-hero */ ?>

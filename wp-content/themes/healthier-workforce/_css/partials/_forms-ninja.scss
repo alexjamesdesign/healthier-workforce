@@ -1,6 +1,16 @@
 nf-fields-wrap {
     display: flex;
     flex-wrap: wrap;
+    // Callback submit
+    #nf-field-13 {
+        background: $logodeepblue;
+        color: $blanc;
+    }
+    //Contact cubmit
+    #nf-field-4 {
+        background: $blanc;
+        color: $logodeepblue;
+    }
 
     nf-field {
         width: 100%;
