@@ -343,7 +343,6 @@ $phonenavheight: 40px;
 }
 
 header[role="banner"] {
-
     background: $blanc;
 
     &:before {
@@ -379,7 +378,6 @@ header[role="banner"] {
     }
 
     @include bp1200 {
-        background: none;
         .logo-wrapper {
             float: left;
             width: 20%;
@@ -580,7 +578,7 @@ nav[role="navigation"] {
 }
 
 
-body.home .index-hero {
+.index-hero {
     background-image: url(../_static/images/index-small.jpg);
     background-repeat: no-repeat;
     background-position: bottom right;
@@ -598,7 +596,7 @@ body.home .index-hero {
     }
 }
 
-body.home .index-hero-content {
+.index-hero-content {
     padding: 2em 1em 20em 1em;
     color: $logomidblue;
     max-width: 410px;

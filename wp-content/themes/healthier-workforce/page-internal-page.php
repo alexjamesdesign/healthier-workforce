@@ -1,6 +1,7 @@
 <?php
 	// Template Name: Internal Page
-    get_header();
+	get_header();
+	get_template_part('_parts/hero-bgcover');
 ?>
 
 <div class="separator page-icon">
