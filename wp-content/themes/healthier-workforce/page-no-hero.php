@@ -1,6 +1,7 @@
 <?php
 	// Template Name: No Hero
-    get_header();
+	get_header();
+	get_template_part('_parts/hero-bgcover');
 ?>
 <div class="container flexbox800" role="main">
 

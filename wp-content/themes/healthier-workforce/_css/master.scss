@@ -297,6 +297,7 @@ $phonenavheight: 40px;
         left: 0;
         width: 100%;
         background: $logodeepblue;
+        z-index: 3000;
     }
 
     nav[role="top-navigation"] {
@@ -489,6 +490,7 @@ nav[role="navigation"] {
         transition: .3s;
         padding: 0px;
         background: $logodeepblue;
+        z-index: 2000;
 
         @include bp1200 {
             width: 550px;
@@ -540,45 +542,66 @@ nav[role="navigation"] {
 /* Hero
 --------------------------------------------------------------- */
 
+.hero-container {
+    position: relative;
+
+    &:before {
+        content:"";
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        background: $logomidblue;
+        opacity: 0.6;
+    }
+}
+
+.hero-content {
+    z-index: 500;
+}
+
 .hero {
-    text-align: center;
+    text-align: left;
     background-size: cover;
     background-position: center center;
+
+    .container {
+        display: flex;
+        align-items: center;
+    }
+    
     .hero-content {
-        padding: 1em;
         color: $blanc;
-    }
+        padding: 6em 1em;
+        max-width: 700px;
 
-    p.primary {
-        font-size: 2.3em;
-    }
-    p.secondary {
-        font-size: 1.6em;
-    }
+        p.primary {
+            font-size: 2.6em;
+            line-height: 1em;
 
-    &.hero-singular {
-        padding: 4em 0;
-        .hero-content {
-            background: rgba($blanc,0.8);
-            color: $logomidblue;
-            max-width: 500px;
-            font-size: 1.4em;
-            margin: 0 auto;
-            p {
-                margin: 0 0 0.5em 0;
+            @include bp800 {
+                font-size: 3.6em;
+                line-height: 1em;
             }
-            img {
-                width: 100%;
-                max-width: 300px;
-                max-height: 140px;
-            }
+        }
 
+        p.secondary {
+            font-size: 1.0em;
+            line-height: 1.4em;
+            padding: 20px 0px;
+
+            @include bp800 {
+                font-size: 1.2em;
+                line-height: 1.5em;
+                padding: 20px 0px;
+            }
         }
     }
 }
 
 
-.index-hero {
+.hero {
     background-image: url(../_static/images/index-small.jpg);
     background-repeat: no-repeat;
     background-position: bottom right;
@@ -596,35 +619,54 @@ nav[role="navigation"] {
     }
 }
 
-.index-hero-content {
-    padding: 2em 1em 20em 1em;
-    color: $logomidblue;
-    max-width: 410px;
-    p {
-        margin: 0 0 20px 0;
-    }
-    p.primary {
-        font-size: 2.5em;
-        line-height: 1em;
-    }
-    @include bp800 {
-        padding: 6em 1em 6em 1em;
-    }
-    @include bp1000 {
-        padding: 8em 1em 8em 1em;
-    }
-    @include bp1200 {
-        max-width: 600px;
-        padding: 8em 1em 8em 6em;
-        p.primary {
-            font-size: 3.6em;
+.hero-home {
+    .hero-container {
+        &:before {
+            display: none;
         }
     }
-    @include bp1600 {
-        max-width: 650px;
-        padding: 9em 1em 9em 6em;
-        p.primary {
-            font-size: 3.8em;
+    .hero-content {
+        color: $logomidblue;
+        padding: 3em 1em 20em 1em;
+
+        @include bp800 {
+            padding: 6em 1em;
+        }
+    }
+}
+
+.hero-case-study-archive {
+    .hero-container {
+        display: none; 
+    }
+}
+
+.hero-singular {
+    padding: 5em 0;
+
+    .hero-content {
+        text-align: center;
+
+        p {
+            padding: 0px 0px 10px 0px;
+        }
+    }
+}
+
+.hero-case-study {
+    margin: 4em 0;
+
+    .hero-content {
+        background: rgba(255,255,255,0.8);
+        color: #0085bd;
+        max-width: 500px;
+        font-size: 1.4em;
+        margin: 0 auto;
+
+        img {
+            width: 100%;
+            max-width: 300px;
+            max-height: 140px;
         }
     }
 }

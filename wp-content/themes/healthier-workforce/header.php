@@ -42,7 +42,41 @@
 
 	</div>
 
-	<div class="index-hero">
+	<?php
+		global $term;
+
+		if ( is_front_page() || is_singular('locations')) {
+
+			$heroType = "hero-home";
+
+		} elseif(is_page('contact')) {
+
+			$heroType = "hero-contact";
+
+		} elseif ( is_page() && ($post->post_parent)) {
+
+			$heroType = "hero-child";
+
+		} elseif ( is_archive('case-studies')) {
+
+			$heroType = "hero-case-study-archive";
+		
+		} elseif (is_singular('case_studies')) {
+
+			$heroType = "hero-case-study";
+
+		} elseif ( is_home() || is_single()) {
+
+			$heroType = "hero-archive";
+
+		} else {
+
+			$heroType = "hero-parent";
+
+		}
+	?>
+
+	<div class="hero <?php echo $heroType?>">
 
 		<header role="banner">
 

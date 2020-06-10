@@ -1,59 +1,4 @@
-<?php 
-
-/* Home page hero */
-
-if ( is_front_page() ) { ?>
-
-	<div class="container">
-
-		<div class="index-hero-content">
-
-		<?php /* Hero text */ ?>
-
-			<?php if (get_field('hero_primary_line')) : ?>
-
-				<p class="primary"><?php the_field('hero_primary_line'); ?></p>
-				<?php if (get_field('hero_secondary_line')) : ?>
-					<p class="secondary"><?php the_field('hero_secondary_line'); ?></p>
-				<?php endif; ?>
-
-			<?php else : ?>
-
-				<p class="primary"><?php the_title(); ?></p>
-
-			<?php endif; ?>
-
-		<?php /* Hero CTAs */ ?>
-
-		<?php while( has_sub_field('hero_ctas') ): ?>
-
-			<?php
-
-				$displaytext = get_sub_field('display_text');
-				$pagelink = get_sub_field('page_link');
-				$buttonclass = get_sub_field('button_class');
-
-			?>
-
-	 		<a class="<?php echo $buttonclass; ?>" href="<?php echo ($siteurl . get_sub_field('page_link')); ?>">
-
-	 			<?php echo $displaytext; ?>
-
-			</a>
-
-		<?php endwhile; ?>
-
-		</div>	
-
-	</div>
-
-<?php } elseif (is_singular('case_studies')) { ?>
-
-	<?php /* Single news post hero */ ?>
-
-	<div class="hero hero-singular">
-
-	<?php
+<?php
 
 	/* This uses the featured image as a background. Takes the featured image, and applies the different sizes to varying breakpoints. */
 
@@ -72,33 +17,41 @@ if ( is_front_page() ) { ?>
 
 		<style scoped>
 			.hero {
-		      background-image: url(<?php echo $thumb_url_small; ?>);
-		    }
-		    @media (min-width: 600px) {
+				background-image: url(<?php echo $thumb_url_small; ?>);
+			}
+			@media (min-width: 600px) {
 				.hero {
-			       background-image: url(<?php echo $thumb_url; ?>);
-			    }
-		    }
-		    @media (min-width: 1200px) {
+					background-image: url(<?php echo $thumb_url; ?>);
+				}
+			}
+			@media (min-width: 1200px) {
 				.hero {
-			      background-image: url(<?php echo $thumb_url_large; ?>);
-			    }
-		    }
+					background-image: url(<?php echo $thumb_url_large; ?>);
+				}
+			}
 		</style>
 
 	<?php else : ?>
 
 		<style scoped>
 			.hero {
-		      background-color: #eee;
-		    }
+				background-color: #eee;
+			}
 		</style>
 
 	<?php endif; ?>
 
+<?php
+
+ if (is_singular('case_studies')) { ?>
+
+	<?php /* Single news post hero */ ?>
+
+	<div class="hero hero-singular">
+
 		<div class="container">
 
-			<div class="hero-content ">
+			<div class="hero-content">
 
 			<?php /* Hero text */ ?>
 
@@ -137,24 +90,18 @@ if ( is_front_page() ) { ?>
 		</div>
 
 	</div>
-
+	
 
 
 <?php } elseif (is_page('contact') || is_page('contact-us')) { ?>
 
 	<?php /* Contact page hero */ ?>
 
-
-
 <?php } else { ?>
 
-	<?php /* Everything else */ ?>
+	<div class="container hero-container">
 
-	<div class="container">
-
-<div class="index-hero-content">
-
-<?php /* Hero text */ ?>
+	<div class="hero-content">
 
 	<?php if (get_field('hero_primary_line')) : ?>
 
@@ -168,8 +115,6 @@ if ( is_front_page() ) { ?>
 		<p class="primary"><?php the_title(); ?></p>
 
 	<?php endif; ?>
-
-<?php /* Hero CTAs */ ?>
 
 <?php while( has_sub_field('hero_ctas') ): ?>
 
@@ -195,4 +140,4 @@ if ( is_front_page() ) { ?>
 
 <?php } ?>
 
-</div><?php /* End index-hero */ ?>
+</div>
