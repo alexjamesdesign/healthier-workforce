@@ -33,11 +33,6 @@
 
 	<?php else : ?>
 
-		<style scoped>
-			.hero {
-				background-color: #eee;
-			}
-		</style>
 
 	<?php endif; ?>
 
@@ -99,6 +94,8 @@
 
 <?php } else { ?>
 
+	<div class="hero-outer">
+
 	<div class="container hero-container">
 
 	<div class="hero-content">
@@ -134,7 +131,13 @@
 
 <?php endwhile; ?>
 
+<?php if (!is_front_page()) : ?>
+	<a class="btn btn-sandyyellow" href="<?php echo site_url(); ?>/contact">Contact Us</a>
+<?php endif; ?>
+
 </div>	
+
+</div>
 
 </div>
 

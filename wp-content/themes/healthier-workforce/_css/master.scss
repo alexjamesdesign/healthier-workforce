@@ -541,8 +541,7 @@ nav[role="navigation"] {
 
 /* Hero
 --------------------------------------------------------------- */
-
-.hero-container {
+.hero-outer {
     position: relative;
 
     &:before {
@@ -556,6 +555,7 @@ nav[role="navigation"] {
         opacity: 0.6;
     }
 }
+
 
 .hero-content {
     z-index: 500;
@@ -579,20 +579,21 @@ nav[role="navigation"] {
         p.primary {
             font-size: 2.6em;
             line-height: 1em;
+            font-weight: 700;
 
             @include bp800 {
-                font-size: 3.6em;
+                font-size: 3.3em;
                 line-height: 1em;
             }
         }
 
         p.secondary {
-            font-size: 1.0em;
+            font-size: 1.2em;
             line-height: 1.4em;
             padding: 20px 0px;
 
             @include bp800 {
-                font-size: 1.2em;
+                font-size: 1.3em;
                 line-height: 1.5em;
                 padding: 20px 0px;
             }
@@ -606,6 +607,8 @@ nav[role="navigation"] {
     background-repeat: no-repeat;
     background-position: bottom right;
     background-size: cover;
+    background-color: #67828e;
+
     @include bp480 {
         background-image: url(../_static/images/index-medium.jpg);
     }
@@ -620,7 +623,9 @@ nav[role="navigation"] {
 }
 
 .hero-home {
-    .hero-container {
+    .hero-outer {
+        
+
         &:before {
             display: none;
         }
@@ -646,6 +651,7 @@ nav[role="navigation"] {
 
     .hero-content {
         text-align: center;
+        padding: 2em 1em;
 
         p {
             padding: 0px 0px 10px 0px;
