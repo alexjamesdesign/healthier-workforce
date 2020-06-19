@@ -18,6 +18,8 @@
 
 </div>
 
+<?php get_template_part('_parts/theme-parts/callback'); ?>
+
 <div class="container flexbox800" role="main">
 
 	<article class="grid grid6_12 box box-fadedsandyyellow">
@@ -34,16 +36,13 @@
 
 		<?php 
 
-		$thumb_id = get_post_thumbnail_id();
-
-		$thumb_url_array = wp_get_attachment_image_src($thumb_id, 'large', true);
-		$thumb_url = $thumb_url_array[0];
+		$secondaryimage = get_field( 'secondary_image' );
 
 		?>
 
 			<style scoped>
 				.independent-image-1 {
-					background-image: url("<?php echo $thumb_url; ?>"); 
+					background-image: url("<?php echo $secondaryimage['sizes']['large']; ?>"); 
 				}
 			</style>		
 

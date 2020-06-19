@@ -24,7 +24,12 @@
             <?php get_template_part('_parts/theme-parts/social-links'); ?>
         </div>
 
-        <div class="grid grid6_12">
+        <div class="grid grid3_12">
+            <p class="title">Areas We Cover</p>
+            <?php wp_nav_menu( array('menu' => 'Locations', 'menu_class' => '', 'container' => '' )); ?>
+        </div>
+
+        <div class="grid grid3_12">
 
             <p class="title">Healthier Workforce</p>
 
@@ -32,11 +37,11 @@
 
                 <li><a href="<?php echo site_url(); ?>/cookies-privacy-policy/">Cookies &amp; Privacy Policy</a></li>
                 <li>Email: <a href="mailto:<?php the_field('company_email_address', 'option'); ?>"><?php the_field('company_email_address', 'option'); ?></a></li>
-
-
                 <li><i class="fa fa-mobile" aria-hidden="true"></i> <span class="ld-phonenumber"><?php the_field('default_phone_number', 'option'); ?></span></li>
                 <li><?php the_field('company_name', 'option'); ?> is a registered company in England.</li>
                 <li>&copy; <?php the_field('company_name', 'option'); ?> <?php echo date('Y'); ?>. All Rights Reserved</li>
+                <li><a href="<?php echo site_url(); ?>/terms-of-contract">Terms of Contract</a></li>
+
 
             </ul>
 

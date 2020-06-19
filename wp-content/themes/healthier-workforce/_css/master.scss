@@ -284,6 +284,16 @@ $phonenavheight: 40px;
     }
 }
 
+li.social-nav-item {
+    padding: 10px;
+    background-color: lighten($greyblue,5%); 
+    margin-top: 10px;
+
+    @include bp800 {
+        float: left;
+    }
+}
+
 /* Site Header
 --------------------------------------------------------------- */
 
@@ -885,10 +895,33 @@ div.separator {
 
 .map {
     background-image: url(../_static/images/map.jpg);
-    background-position: -140px center;
+    background-position: left bottom;
     background-size: cover;
     background-repeat: no-repeat;
     text-align: right;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: center;
+    padding-top: 3em;
+    padding-bottom: 3em;
+
+    @include bp480 {
+        
+    }
+
+    p {
+        width: 100%;
+
+        &.title {
+            margin-bottom: 0.5em;
+        }
+
+        &.phone {
+            color: $sandyyellow;
+        }
+    }
+
     ul {
         list-style: none;
         img {
@@ -899,20 +932,9 @@ div.separator {
         }
     }
     p.title {
-        color: $sandyyellow;
+        color: $blanc;
     }
-    @include bp480 {
-        background-position: -100px center;
-    }
-    @include bp800 {
-        background-position: -340px center;
-    }
-    @include bp1000 {
-        background-position: -180px center;
-    }
-    @include bp1200 {
-        background-position: left center;
-    }
+
     a {
         color: $sandyyellow;
     }
