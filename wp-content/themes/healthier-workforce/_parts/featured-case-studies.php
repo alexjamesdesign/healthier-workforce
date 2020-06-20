@@ -88,7 +88,9 @@
 
 	            <?php endif; ?>
 
-	                <?php endwhile; ?>
+	            <?php endwhile; ?>
+
+				<?php get_template_part('_parts/sectors-covered-cta'); ?>
 
 	        </div>
 
