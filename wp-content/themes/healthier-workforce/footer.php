@@ -41,6 +41,7 @@
                 <li><?php the_field('company_name', 'option'); ?> is a registered company in England.</li>
                 <li>&copy; <?php the_field('company_name', 'option'); ?> <?php echo date('Y'); ?>. All Rights Reserved</li>
                 <li><a href="<?php echo site_url(); ?>/terms-of-contract">Terms of Contract</a></li>
+                <li><a href="<?php echo site_url(); ?>/environmental-policy">Environmental Policy</a></li>
 
 
             </ul>
