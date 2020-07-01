@@ -292,6 +292,12 @@ li.social-nav-item {
     @include bp800 {
         float: left;
     }
+
+    a {
+        &:after {
+            display: none;
+        }
+    }
 }
 
 /* Site Header
@@ -453,6 +459,12 @@ nav[role="navigation"] {
                 margin-left: -8px;
                 font: 1em/1 FontAwesome;
             }
+            &#menu-item-424 {
+                .sub-menu {
+                    right: 0;
+                    left: initial;
+                }
+            }
         }
 
         .current-menu-item a,
@@ -489,7 +501,7 @@ nav[role="navigation"] {
 
     .sub-menu {
         position: absolute;
-        background: $blanc;
+        background: none;
         top: 100%;
         left: 0;
         z-index: 100;
@@ -499,7 +511,6 @@ nav[role="navigation"] {
         -webkit-transition: .3s;
         transition: .3s;
         padding: 0px;
-        background: $logodeepblue;
         z-index: 2000;
 
         @include bp1200 {
@@ -509,22 +520,19 @@ nav[role="navigation"] {
         li {
             width: 50%;
             float: left;
-
-            &:nth-of-type(odd) {
-                border-right: 1px solid rgba(255,255,255,.1);
-            }
         }
 
         .current-menu-item > a {
             color: $blanc;
-            background: $noir;
+            background: $logomidblue;
         }
 
         a {
             display: block;
+            height: 100%;
             border-bottom: 1px solid rgba(255,255,255,.1);
             color: $blanc;
-            font-size: 0.9rem;
+            font-size: 1em;
             background: $logodeepblue;
 
             &:hover {
@@ -534,7 +542,9 @@ nav[role="navigation"] {
         }
 
         &:hover {
-            display: block;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
             opacity: 1;
             visibility: visible;
         }
@@ -542,7 +552,9 @@ nav[role="navigation"] {
     }
 
     a:hover + .sub-menu {
-        display: block;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: stretch;
         opacity: 1;
         visibility: visible;
     }
@@ -705,6 +717,7 @@ nav[role="navigation"] {
         display: flex;
         align-items: left;
         padding: 0.8em 1.5em;
+        font-size: 1.2em;
 
         @include bp800 {
             align-items: center;
@@ -1336,17 +1349,37 @@ footer[role="contentinfo"] {
         font-size: 1.2em;
     }
 
+    li {
+        color: $blanc;
+    }
+
     a {
         color: $blanc;
         text-decoration: none;
+        position: relative;
+
+        &:after {
+            content: "\f105";
+            position: absolute;
+            top: 2px;
+            right: -12px;
+            margin-left: -8px;
+            font: 1em/1 FontAwesome;
+        }
 
         &:hover {
-            color: $logodeepblue;
+            color: lighten($logodeepblue,60%);
         }
     }
 
     @include bp800 {
         text-align: left;
+    }
+
+    a.adtrak {
+        &:after {
+            display: none;
+        }
     }
 
     a.adtrak img {
