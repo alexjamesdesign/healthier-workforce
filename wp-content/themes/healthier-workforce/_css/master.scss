@@ -682,7 +682,7 @@ nav[role="navigation"] {
 }
 
 .hero-case-study {
-    margin: 4em 0;
+    margin: 0;
 
     .hero-content {
         background: rgba(255,255,255,0.8);
@@ -892,11 +892,12 @@ div.separator {
 .why-choose-us {
     p.title {
         color: $sandyyellow;
+        font-size: 1.4em;
     }
     ul {
         list-style: none;
         li {
-            margin: 0.5em 0;
+            margin: 0px 0px 20px 0px;
         }
     }
 }
@@ -904,6 +905,10 @@ div.separator {
 .free-quotation-advice {
     background: $sandyyellow;
     color: $logodeepblue;
+
+    p.title {
+        font-size: 1.4em;
+    }
 }
 
 .map {
@@ -1032,15 +1037,18 @@ article {
             content: url(../_static/images/logo-icon.svg);
             width: 20px;
             height: 20px;
-        }    
+        } 
+        padding: 0px 0px 20px 0px;   
     }
 
     h1 + p {
         font-size: 1.2em;
+        font-weight: 700;
     }
 
     p {
         line-height: 1.6em;
+        font-size: 1.1em;
     }
 
     img {
