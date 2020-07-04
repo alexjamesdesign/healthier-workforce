@@ -912,21 +912,23 @@ div.separator {
 }
 
 .map {
-    background-image: url(../_static/images/map.jpg);
-    background-position: left bottom;
+    background-image: url(../_static/images/map-mobile.jpg);
+    background-position: -100px bottom;
     background-size: cover;
     background-repeat: no-repeat;
     text-align: right;
     display: flex;
     flex-wrap: wrap;
     align-content: center;
-    justify-content: center;
+    justify-content: flex-end;
     padding-top: 3em;
     padding-bottom: 3em;
 
     @include bp480 {
-        
+        background-position: left bottom;
+        background-image: url(../_static/images/map.jpg);
     }
+
 
     p {
         width: 100%;
@@ -942,6 +944,12 @@ div.separator {
 
     ul {
         list-style: none;
+        margin-bottom: 0.5em;
+
+        li {
+            padding: 2px 0;
+        }
+
         img {
             max-width: 10px;
             line-height: 1em;
