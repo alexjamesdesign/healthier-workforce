@@ -1411,16 +1411,59 @@ footer[role="contentinfo"] {
 /* Callback Form
 --------------------------------------------------------------- */
 
+.callback-hidden {
+    display: none;
+}
+
+.callback-form-show-hide {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+
+    p {
+        display: block;
+        position: relative;
+
+        &:after {
+            content: "\f107";
+            position: absolute;
+            top: 6px;
+            right: -25px;
+            margin-left: -8px;
+            font: 1em/1 FontAwesome;
+        }
+    }
+
+    img:hover {
+        -webkit-animation-duration: 1s;
+        animation-duration: 1s;
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        -webkit-animation-name: tada;
+        animation-name: tada;
+    }
+}
+
 .callback-form-container {
     padding: 2em 1.5em;
     background: #f9f6f2;
     color: $logodeepblue;
+
+    .callback-img {
+        width: 100%;
+        text-align: center;
+    }
 
     p.title {
         font-weight: 700;
         font-size: 1.8em;  
         display: block;
         text-align: center;
+    }
+
+    img {
+        max-width: 70px;
     }
 
     .callback-form {

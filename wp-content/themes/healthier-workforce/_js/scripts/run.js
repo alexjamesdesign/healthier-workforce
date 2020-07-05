@@ -33,10 +33,12 @@ jQuery(function ($) {
 			}, 750);
 		});
 		
-		// Ninja Edits
-		$(window).load(function(){
-            $('.nf-field-container').unwrap('nf-field');
-        });
+		
+		// Toggle Callback
+		$(".callback-form-show-hide").click(function(){
+			$(".callback-hidden").slideToggle();
+			$(".quick-quote .container > p").toggleClass("selected");
+		});
 
     });
 });
