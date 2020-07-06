@@ -2,12 +2,10 @@
 	// Template Name: Home Page
     get_header();
     get_template_part('_parts/hero-bgcover');
-	if (is_front_page()){
-		get_template_part('_parts/theme-parts/buckets');
-		get_template_part('_parts/separator');
-		get_template_part('_parts/theme-parts/hero-usps');
-		get_template_part('_parts/theme-parts/callback');
-	};
+	get_template_part('_parts/theme-parts/buckets');
+	get_template_part('_parts/separator');
+	get_template_part('_parts/theme-parts/hero-usps');
+	get_template_part('_parts/theme-parts/callback');
 ?>
 
 
