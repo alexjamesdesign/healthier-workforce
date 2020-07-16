@@ -178,6 +178,19 @@ function heroPictureFill($sizes, $default) {
 }
 
 /* ========================================================================================================================
+    
+Shortcodes
+
+======================================================================================================================== */
+
+function remote_surveillance( $attr ) {
+    ob_start();
+        get_template_part( '_parts/shortcode-remote-surveillance' );
+    return ob_get_clean();
+}
+add_shortcode( 'remote_surveillance', 'remote_surveillance' );
+
+/* ========================================================================================================================
 
 Show ALT tag for images in Media Library (IM request)
 

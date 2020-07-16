@@ -620,6 +620,12 @@ nav[role="navigation"] {
                 padding: 20px 0px;
             }
         }
+
+        a.btn.btn-corona {
+            display: block;
+            max-width: 320px;
+            margin-top: 10px;
+        }
     }
 }
 
@@ -1047,6 +1053,10 @@ article {
             height: 20px;
         } 
         padding: 0px 0px 20px 0px;   
+
+        a {
+            color: $logodeepblue;
+        }
     }
 
     h1 + p {
@@ -1057,6 +1067,14 @@ article {
     p {
         line-height: 1.6em;
         font-size: 1.1em;
+
+        a {
+            color: $logodeepblue;
+
+            &:hover {
+                color: lighten($logodeepblue,15%);
+            }
+        }
     }
 
     img {
@@ -1490,6 +1508,116 @@ footer[role="contentinfo"] {
         
     }
 }
+
+/* Surveillance Page Template
+--------------------------------------------------------------- */
+
+body.page-template-page-remote-surveillance-page {
+    p {
+        max-width: 950px;
+    }
+}
+
+.surveillance-process {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+ 
+    @include bp800 {
+        flex-wrap: nowrap;
+    }
+
+    .stage {
+        width: 100%;
+        padding: 20px 20px 20px 30px;
+        position: relative;
+
+        .white-box {
+            background: $blanc;
+            color: $logodeepblue;
+            border-radius: 10px;
+            padding: 10px 15px;
+        }
+
+        ul {
+            li {
+                padding: 0px 0px 12px 0px;
+            }
+        }
+
+        @include bp800 {
+            width: 33.3%;
+        }
+
+        &:after {
+            content: '';
+            position: absolute;
+            right: 45%;
+            bottom: -55px;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 50px 0 50px 40px;
+            clear: both;
+            z-index: 2000;
+            transform: rotate(90deg);
+
+            @include bp800 {
+                right: -25px;
+                top: 50px;
+                bottom: auto; 
+                transform: rotate(0deg);  
+            }
+        }
+
+        &.stage-one {
+            background: darken(#0085bd,10%);
+            color: #fff;
+
+            &:after {
+                border-color: transparent transparent transparent darken(#0085bd,10%);
+            }
+        }
+
+        &.stage-two {
+            background: #0085bd;
+            color: #fff;
+
+            &:after {
+                border-color: transparent transparent transparent #0085bd;
+            }
+        }
+
+        &.stage-three {
+            background: lighten(#0085bd,10%);
+            color: #fff;
+
+            &:after {
+                display: none;
+            }
+        }
+
+        p.title {
+            font-size: 1.8em;
+            line-height: 1.4em;
+
+            span {
+                font-weight: 700;
+                display: block;
+            }
+        }
+
+        p.bold {
+            font-weight: 700;
+        }
+
+        img {
+            max-width: 70px;
+            margin-bottom: 10px;
+        }
+    }
+}
+
 
 /* Back to top
 --------------------------------------------------------------- */

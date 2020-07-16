@@ -135,7 +135,11 @@
 	<a class="btn btn-sandyyellow" href="<?php echo site_url(); ?>/contact">Contact Us</a>
 <?php endif; ?>
 
+<?php if( is_page( array('health-surveillance', 'audiometry-hearing-tests', 'drug-alcohol-testing', 'hand-arm-vibration-havs-tests', 'musculoskeletal', 'skin-assessments', 'spirometry-lung-function-tests', 'vision-screening' ) ) ) : ?>
+	<a class="btn btn-corona btn-sandyyellow" href="<?php echo site_url(); ?>/coronavirus-remote-surveillance-process">Coronavirus Health Surveillance Process</a>
 </div>	
+
+<?php endif ; ?>
 
 </div>
 

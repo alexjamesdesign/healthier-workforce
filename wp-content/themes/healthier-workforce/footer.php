@@ -57,8 +57,6 @@
     </div><!--/.container-->
 
     <div class="container">
-
-        <a class="adtrak" href="http://www.adtrak.co.uk"><img src="http://static.adtrak.co.uk/email/201504/svg/adtrak-logo-white.svg" alt="Adtrak" /></a>
         <ul>
         <li><?php the_field('company_name', 'option'); ?> is a registered company in England.</li>
         <li>&copy; <?php the_field('company_name', 'option'); ?> <?php echo date('Y'); ?>. All Rights Reserved</li>
