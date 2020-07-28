@@ -84,5 +84,12 @@ if (get_field('temporarily_closed_message', 'option')) : ?>
     get_template_part('_parts/ld');
 ?>
 
+<script>jQuery( document ).on( 'nfFormReady', function() {
+	nfRadio.channel('forms').on('submit:response', function(form) {
+		ga('send', 'event', 'Form', 'Submit', form.data.settings.title );
+		console.log(form.data.settings.title + ' successfully submitted');
+	});
+});</script>
+
 </body>
 </html>
