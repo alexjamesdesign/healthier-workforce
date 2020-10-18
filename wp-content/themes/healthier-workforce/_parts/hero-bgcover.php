@@ -141,6 +141,8 @@
 
 <?php endif ; ?>
 
+</div>	
+
 </div>
 
 </div>
