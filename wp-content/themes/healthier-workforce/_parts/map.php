@@ -9,4 +9,4 @@
 			<li><i class="fa fa-check"></i> Nottingham</li>
 		</ul>
 
-		<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <strong><span class="ld-phonenumber"><?php the_field('default_phone_number', 'option'); ?></span></strong></p>
+		<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <strong><?php do_action('ald_default'); ?></strong></p>

@@ -16,6 +16,7 @@
 <?php if (strpos($_SERVER['SERVER_NAME'],'alexjamesdesign.co.uk') !== false) : ?>
 <meta name="robots" content="noindex">
 <?php endif; ?>
+<script async src="//275768.tctm.co/t.js"></script>
 </head>
 
 <body <?php body_class( $class ); ?>>
@@ -30,7 +31,7 @@
 
 			<div class="phone-top-right">
 
-		        <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <span class="ld-calltag"><?php the_field('default_phone_tag', 'option'); ?></span> <span class="ld-phonenumber"><?php the_field('default_phone_number', 'option'); ?></span></p>
+		        <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></p>
 
 			</div>
 

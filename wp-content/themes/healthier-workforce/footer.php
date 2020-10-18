@@ -43,7 +43,7 @@
 
                 <li><a href="<?php echo site_url(); ?>/cookies-privacy-policy/">Cookies &amp; Privacy Policy</a></li>
                 <li><a href="mailto:<?php the_field('company_email_address', 'option'); ?>"><?php the_field('company_email_address', 'option'); ?></a></li>
-                <li><i class="fa fa-mobile" aria-hidden="true"></i> <span class="ld-phonenumber"><?php the_field('default_phone_number', 'option'); ?></span></li>
+                <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></li>
                 <li><?php address_stacked(); ?></li>
 
             </ul>
