@@ -8,7 +8,7 @@
     {% if number.insights is not empty %}
         <span class="{{ number.insights}}">  
     {% else %}      
-        
+        <a onClick="" href="tel:{% if cookie == number.location_name %}{{ number.ppc }}{% else %}{{ number.seo }}{% endif %}">
     {% endif %}    
 
     {# Check if cookie is set and show ppc if it is else show the seo number #}

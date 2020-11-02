@@ -3,7 +3,7 @@
 /**
  * Class NF_Abstracts_Field
  */
-abstract class NF_Abstracts_Field
+abstract class NF_Abstracts_Field extends NF_Abstracts_Element
 {
     /**
     * @var string
@@ -146,8 +146,12 @@ abstract class NF_Abstracts_Field
             $field[ 'value' ] = implode( '', $field[ 'value' ] );
         }
 
-        if( isset( $field['required'] ) && 1 == $field['required'] && is_null( trim( $field['value'] ) ) ){
-            $errors[] = 'Field is required.';
+        if( isset( $field['required'] ) && 1 == intval( $field['required'] ) ) {
+            $val = trim( $field['value'] );
+            if( empty( $val ) && '0' !== $val ){
+                $errors['slug'] = 'required-error';
+                $errors['message'] = esc_html__('This field is required.', 'ninja-forms');
+            }
         }
         return $errors;
     }
@@ -206,8 +210,9 @@ abstract class NF_Abstracts_Field
         if( $this->_parent_type ){
             return $this->_parent_type;
         }
+
         // If a type is not set, return 'textbox'
-        return ( get_parent_class() ) ? parent::$_type : 'textbox';
+        return ( get_parent_class() && isset ( parent::$_type ) ) ? parent::$_type : 'textbox';
     }
 
     public function get_settings()
