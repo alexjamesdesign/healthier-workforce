@@ -31,7 +31,17 @@
 
 			<div class="phone-top-right">
 
-		        <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></p>
+			<?php 
+				$ld_location = get_field('location_name');
+				if($ld_location) : ?>
+				
+				<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_single', $ld_location); ?></p>
+
+				<?php else: ?>
+
+				<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></p>
+					
+			<?php endif; ?>
 
 			</div>
 
