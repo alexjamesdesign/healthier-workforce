@@ -1,8 +1,4 @@
-<?php
-	if(!isset($_SESSION)) {
-	    session_start();
-	}
-?><!DOCTYPE html>
+<!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
@@ -35,7 +31,7 @@
 				$ld_location = get_field('location_name');
 				if($ld_location) : ?>
 				
-				<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_single', $ld_location); ?></p>
+				<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_single', $ld_location, false); ?></p>
 
 				<?php else: ?>
 
