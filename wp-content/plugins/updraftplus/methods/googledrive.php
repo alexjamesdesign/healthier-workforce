@@ -33,17 +33,17 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			$state = $parts[0];
 
 			if ('success' == $state) {
-				// If these are set then this is a request from our master app and the auth server has returned these to be saved.
+
 				if (isset($_GET['user_id']) && isset($_GET['access_token'])) {
-					$opts = $this->get_options();
-					$opts['user_id'] = base64_decode($_GET['user_id']);
-					$opts['tmp_access_token'] = base64_decode($_GET['access_token']);
-					// Unset this value if it is set as this is a fresh auth we will set this value in the next step
-					if (isset($opts['expires_in'])) unset($opts['expires_in']);
-					$this->set_options($opts, true);
+					$code = array(
+						'user_id' => $_GET['user_id'],
+						'access_token' => $_GET['access_token']
+					);
+				} else {
+					$code = array();
 				}
 
-				add_action('all_admin_notices', array($this, 'show_authed_admin_success'));
+				$this->do_complete_authentication($state, $code);
 
 			} elseif ('token' == $state) {
 				$this->gdrive_auth_token();
@@ -66,7 +66,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 	 */
 	public function get_supported_features() {
 		// This options format is handled via only accessing options via $this->get_options()
-		return array('multi_options', 'config_templates', 'multi_storage', 'conditional_logic');
+		return array('multi_options', 'config_templates', 'multi_storage', 'conditional_logic', 'manual_authentication');
 	}
 
 	/**
@@ -131,7 +131,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 
 			if (!empty($path)) {
 				$nodes = explode('/', $path);
-				foreach ($nodes as $i => $element) {
+				foreach ($nodes as $element) {
 					$found = array();
 					$sub_items = $this->get_subitems($current_parent_id, 'dir', $element);
 
@@ -152,9 +152,9 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 						reset($found);
 						$current_parent_id = key($found);
 					} elseif (empty($found)) {
-						$ref = new Google_Service_Drive_ParentReference;
+						$ref = new UDP_Google_Service_Drive_ParentReference;
 						$ref->setId($current_parent_id);
-						$dir = new Google_Service_Drive_DriveFile();
+						$dir = new UDP_Google_Service_Drive_DriveFile();
 						$dir->setMimeType('application/vnd.google-apps.folder');
 						$dir->setParents(array($ref));
 						$dir->setTitle($element);
@@ -177,7 +177,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		} catch (Exception $e) {
 			$msg = $e->getMessage();
 			$this->log("id_from_path failure: exception (".get_class($e)."): ".$msg.' (line: '.$e->getLine().', file: '.$e->getFile().')');
-			if (is_a($e, 'Google_Service_Exception') && false !== strpos($msg, 'Invalid json in service response') && function_exists('mb_strpos')) {
+			if (is_a($e, 'UDP_Google_Service_Exception') && false !== strpos($msg, 'Invalid json in service response') && function_exists('mb_strpos')) {
 				// Aug 2015: saw a case where the gzip-encoding was not removed from the result
 				// https://stackoverflow.com/questions/10975775/how-to-determine-if-a-string-was-compressed
 				// @codingStandardsIgnoreLine
@@ -205,7 +205,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		foreach (array_keys($this->multi_directories) as $drive_id) {
 			if (!isset($oldest_reference)) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UndefinedVariable
 				$oldest_id = $drive_id;
-				$oldest_reference = new Google_Service_Drive_ParentReference;
+				$oldest_reference = new UDP_Google_Service_Drive_ParentReference;
 				$oldest_reference->setId($oldest_id);
 				continue;
 			}
@@ -227,7 +227,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 					
 					$this->log("Moving: $title (".$item->getId().") from duplicate folder $drive_id to $oldest_id");
 					
-					$file = new Google_Service_Drive_DriveFile();
+					$file = new UDP_Google_Service_Drive_DriveFile();
 					$file->setParents(array($oldest_reference));
 					
 					$storage->files->patch($item->getId(), $file);
@@ -402,6 +402,10 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		// First, revoke any existing token, since Google doesn't appear to like issuing new ones
 		if (!empty($opts['token']) && !$use_master) $this->gdrive_auth_revoke();
 
+		// Set a flag so we know this authentication is in progress
+		$opts['auth_in_progress'] = true;
+		$this->set_options($opts, true);
+
 		$prefixed_instance_id = ':' . $instance_id;
 		
 		// We use 'force' here for the approval_prompt, not 'auto', as that deals better with messy situations where the user authenticated, then changed settings
@@ -427,6 +431,36 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			$this->log(sprintf(__('The %s authentication could not go ahead, because something else on your site is breaking it. Try disabling your other plugins and switching to a default theme. (Specifically, you are looking for the component that sends output (most likely PHP warnings/errors) before the page begins. Turning off any debugging settings may also help).', ''), 'Google Drive'), 'error');
 		} else {
 			header('Location: https://accounts.google.com/o/oauth2/auth?'.http_build_query($params, null, '&'));
+		}
+	}
+
+	/**
+	 * This function will complete the oAuth flow, if return_instead_of_echo is true then add the action to display the authed admin notice, otherwise echo this notice to page.
+	 *
+	 * @param string  $state              - the state
+	 * @param string  $code               - the oauth code
+	 * @param boolean $return_instead_of_echo - a boolean to indicate if we should return the result or echo it
+	 *
+	 * @return void|string - returns the authentication message if return_instead_of_echo is true
+	 */
+	public function do_complete_authentication($state, $code, $return_instead_of_echo = false) {
+		
+		// If these are set then this is a request from our master app and the auth server has returned these to be saved.
+		if (isset($code['user_id']) && isset($code['access_token'])) {
+			$opts = $this->get_options();
+			$opts['user_id'] = base64_decode($code['user_id']);
+			$opts['tmp_access_token'] = base64_decode($code['access_token']);
+			// Unset this value if it is set as this is a fresh auth we will set this value in the next step
+			if (isset($opts['expires_in'])) unset($opts['expires_in']);
+			// remove our flag so we know this authentication is complete
+			if (isset($opts['auth_in_progress'])) unset($opts['auth_in_progress']);
+			$this->set_options($opts, true);
+		}
+
+		if ($return_instead_of_echo) {
+			return $this->show_authed_admin_success($return_instead_of_echo);
+		} else {
+			add_action('all_admin_notices', array($this, 'show_authed_admin_success'));
 		}
 	}
 
@@ -505,10 +539,14 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		}
 	}
 
-	/***
-	 * Print the dashboard notice that follows a successful authentication
+	/**
+	 * This method will setup the authenticated admin warning, it can either return this or echo it
+	 *
+	 * @param boolean $return_instead_of_echo - a boolean to indicate if we should return the result or echo it
+	 *
+	 * @return void|string - returns the authentication message if return_instead_of_echo is true
 	 */
-	public function show_authed_admin_success() {
+	public function show_authed_admin_success($return_instead_of_echo) {
 
 		global $updraftplus_admin;
 
@@ -545,7 +583,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 				$message .= '</ul>';
 			}
 		} catch (Exception $e) {
-			if (is_a($e, 'Google_Service_Exception')) {
+			if (is_a($e, 'UDP_Google_Service_Exception')) {
 				$errs = $e->getErrors();
 				$message .= __('However, subsequent access attempts failed:', 'updraftplus');
 				if (is_array($errs)) {
@@ -567,11 +605,16 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			}
 		}
 
-		$updraftplus_admin->show_admin_warning(__('Success', 'updraftplus').': '.sprintf(__('you have authenticated your %s account.', 'updraftplus'), __('Google Drive', 'updraftplus')).' '.((!empty($username)) ? sprintf(__('Name: %s.', 'updraftplus'), $username).' ' : '').$message);
-
 		unset($opts['tmp_access_token']);
 		$this->set_options($opts, true);
 
+		$final_message = __('Success', 'updraftplus').': '.sprintf(__('you have authenticated your %s account.', 'updraftplus'), __('Google Drive', 'updraftplus')).' '.((!empty($username)) ? sprintf(__('Name: %s.', 'updraftplus'), $username).' ' : '').$message;
+
+		if ($return_instead_of_echo) {
+			return "<div class='updraftmessage updated'><p>{$final_message}</p></div>";
+		} else {
+			$updraftplus_admin->show_admin_warning($final_message);
+		}
 	}
 
 	/**
@@ -704,7 +747,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 
 		$storage = $this->get_storage();
 
-		if (!empty($storage) && is_object($storage) && is_a($storage, 'Google_Service_Drive')) return $storage;
+		if (!empty($storage) && is_object($storage) && is_a($storage, 'UDP_Google_Service_Drive')) return $storage;
 
 		$opts = $this->get_options();
 
@@ -805,7 +848,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			if (in_array('google_api_php_client_autoload', $spl)) spl_autoload_unregister('google_api_php_client_autoload');
 		}
 
-		if ((!class_exists('UDP_Google_Config') || !class_exists('UDP_Google_Client') || !class_exists('Google_Service_Drive') || !class_exists('Google_Http_Request')) && !function_exists('google_api_php_client_autoload_updraftplus')) {
+		if ((!class_exists('UDP_Google_Config') || !class_exists('UDP_Google_Client') || !class_exists('UDP_Google_Service_Drive') || !class_exists('UDP_Google_Http_Request')) && !function_exists('google_api_php_client_autoload_updraftplus')) {
 			include_once(UPDRAFTPLUS_DIR.'/includes/Google/autoload.php');
 		}
 
@@ -814,10 +857,10 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		}
 
 		$config = new UDP_Google_Config();
-		$config->setClassConfig('Google_IO_Abstract', 'request_timeout_seconds', 60);
+		$config->setClassConfig('UDP_Google_IO_Abstract', 'request_timeout_seconds', 60);
 		// In our testing, $storage->about->get() fails if gzip is not disabled when using the stream wrapper
 		if (!function_exists('curl_version') || !function_exists('curl_exec') || (defined('UPDRAFTPLUS_GOOGLEDRIVE_DISABLEGZIP') && UPDRAFTPLUS_GOOGLEDRIVE_DISABLEGZIP)) {
-			$config->setClassConfig('Google_Http_Request', 'disable_gzip', true);
+			$config->setClassConfig('UDP_Google_Http_Request', 'disable_gzip', true);
 		}
 
 		if (!$use_master) {
@@ -845,14 +888,14 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		$io = $client->getIo();
 		$setopts = array();
 
-		if (is_a($io, 'Google_IO_Curl')) {
+		if (is_a($io, 'UDP_Google_IO_Curl')) {
 			$setopts[CURLOPT_SSL_VERIFYPEER] = UpdraftPlus_Options::get_updraft_option('updraft_ssl_disableverify') ? false : true;
 			if (!UpdraftPlus_Options::get_updraft_option('updraft_ssl_useservercerts')) $setopts[CURLOPT_CAINFO] = UPDRAFTPLUS_DIR.'/includes/cacert.pem';
 			// Raise the timeout from the default of 15
 			$setopts[CURLOPT_TIMEOUT] = 60;
 			$setopts[CURLOPT_CONNECTTIMEOUT] = 15;
 			if (defined('UPDRAFTPLUS_IPV4_ONLY') && UPDRAFTPLUS_IPV4_ONLY) $setopts[CURLOPT_IPRESOLVE] = CURL_IPRESOLVE_V4;
-		} elseif (is_a($io, 'Google_IO_Stream')) {
+		} elseif (is_a($io, 'UDP_Google_IO_Stream')) {
 			$setopts['timeout'] = 60;
 			// We had to modify the SDK to support this
 			// https://wiki.php.net/rfc/tls-peer-verification - before PHP 5.6, there is no default CA file
@@ -862,7 +905,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 
 		$io->setOptions($setopts);
 
-		$storage = new Google_Service_Drive($client);
+		$storage = new UDP_Google_Service_Drive($client);
 		$this->client = $client;
 		$this->set_storage($storage);
 
@@ -878,7 +921,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 					$parents = $resource->getParents();
 					if (is_array($parents) && count($parents)>0) {
 						$parent = array_shift($parents);
-						$parentid = is_a($parent, 'Google_Service_Drive_ParentReference') ? $parent->getId() : false;
+						$parentid = is_a($parent, 'UDP_Google_Service_Drive_ParentReference') ? $parent->getId() : false;
 					} else {
 						$parentid = false;
 					}
@@ -969,13 +1012,13 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 	}
 
 	/**
-	 * Returns array of Google_Service_Drive_DriveFile objects
+	 * Returns array of UDP_Google_Service_Drive_DriveFile objects
 	 *
 	 * @param  string $parent_id This is the Parent ID
 	 * @param  string $type 	 This is the type of file or directory but by default it is set to 'any' unless specified
 	 * @param  string $match 	 This will specify which match is used for the SQL but by default it is set to 'backup_' unless specified
 	 *
-	 * @return array - list of Google_Service_Drive_DriveFile items
+	 * @return array - list of UDP_Google_Service_Drive_DriveFile items
 	 */
 	private function get_subitems($parent_id, $type = 'any', $match = 'backup_') {
 
@@ -1027,7 +1070,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 	 * @param Array        $sizeinfo - unused here
 	 * @return Boolean|String - either a boolean true or an error code string
 	 */
-	public function delete($files, $data = null, $sizeinfo = array()) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
+	public function delete($files, $data = null, $sizeinfo = array()) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $data and $sizeinfo unused
 
 		if (is_string($files)) $files = array($files);
 
@@ -1100,10 +1143,10 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 
 		$local_size = filesize($file);
 
-		$gdfile = new Google_Service_Drive_DriveFile();
+		$gdfile = new UDP_Google_Service_Drive_DriveFile();
 		$gdfile->title  = $basename;
 
-		$ref = new Google_Service_Drive_ParentReference;
+		$ref = new UDP_Google_Service_Drive_ParentReference;
 		$ref->setId($parent_id);
 		$gdfile->setParents(array($ref));
 
@@ -1121,7 +1164,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 
 			$headers = array('content-range' => "bytes */".$local_size);
 
-			$http_request = new Google_Http_Request(
+			$http_request = new UDP_Google_Http_Request(
 				$possible_location[0],
 				'PUT',
 				$headers,
@@ -1178,6 +1221,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 			$this->log("$basename: ".__('Error: Failed to open local file', 'updraftplus'), 'error');
 			return false;
 		}
+		
 		if ($size > 0 && 0 != fseek($handle, $size)) {
 			$this->log("failed to fseek file: $basename, $size");
 			$this->log("$basename (fseek): ".__('Error: Failed to open local file', 'updraftplus'), 'error');
@@ -1189,18 +1233,35 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 		try {
 			while (!$status && !feof($handle)) {
 				$chunk = '';
-				// Google requires chunks of the previous indicated size. Short reads are thus problematic.
+				// Google requires chunks of the previous indicated size. Short reads are thus problematic. (Or does it? Was this just because the content-length header was hard-coded to the chunk size? Should be investigated, to see if we can change chunk size dynamically).
 				while (strlen($chunk) < $chunk_size && !feof($handle)) {
 					$chunk .= fread($handle, $chunk_size - strlen($chunk));
 				}
 				// Do we need any further error handling??
 				$pointer += strlen($chunk);
+				
+				$start_time = microtime(true);
 				$status = $media->nextChunk($chunk);
+
+				unset($chunk);
+				
+				$extra_log = $media->getProgress();
+				
+				if (!$status && $chunk_size < 67108864 && microtime(true) - $start_time < 2.5 && !feof($handle) && $updraftplus->verify_free_memory($chunk_size * 4)) {
+				
+					$memory_usage = round(@memory_get_usage(false)/1048576, 1);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+					$memory_usage2 = round(@memory_get_usage(true)/1048576, 1);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+				
+					$chunk_size = $chunk_size * 2;
+					$extra_log .= ' - increasing chunk size to '.round($chunk_size/1024).' KB';
+					$extra_log .= " - memory usage: $memory_usage / $memory_usage2";
+				}
+				
 				$this->jobdata_set($transkey, array($media->updraftplus_getResumeUri(), $media->getProgress()));
-				$updraftplus->record_uploaded_chunk(round(100*$pointer/$local_size, 1), $media->getProgress(), $file);
+				$updraftplus->record_uploaded_chunk(round(100*$pointer/$local_size, 1), $extra_log, $file);
 			}
 			
-		} catch (Google_Service_Exception $e) {
+		} catch (UDP_Google_Service_Exception $e) {
 			$this->log("ERROR: upload error (".get_class($e)."): ".$e->getMessage().' (line: '.$e->getLine().', file: '.$e->getFile().')');
 			$client->setDefer(false);
 			fclose($handle);
@@ -1293,7 +1354,7 @@ class UpdraftPlus_BackupModule_googledrive extends UpdraftPlus_BackupModule {
 				$pend = round(100*$end/$size, 1);
 				$this->log("Requesting byte range: $existing_size - $end ($pstart - $pend %)");
 
-				$request = $this->client->getAuth()->sign(new Google_Http_Request($gdfile->getDownloadUrl(), 'GET', $headers, null));
+				$request = $this->client->getAuth()->sign(new UDP_Google_Http_Request($gdfile->getDownloadUrl(), 'GET', $headers, null));
 				$http_request = $this->client->getIo()->makeRequest($request);
 				$http_response = $http_request->getResponseHttpCode();
 				if (200 == $http_response || 206 == $http_response) {

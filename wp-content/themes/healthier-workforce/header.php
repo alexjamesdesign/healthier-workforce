@@ -15,7 +15,7 @@
 <script async src="//275768.tctm.co/t.js"></script>
 </head>
 
-<body <?php body_class( $class ); ?>>
+<body <?php body_class(); ?>>
 
 <div class="wrapper">
 

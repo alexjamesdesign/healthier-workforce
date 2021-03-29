@@ -132,6 +132,17 @@ class WPSEO_Admin_Asset_Manager {
 	}
 
 	/**
+	 * Localizes the script.
+	 *
+	 * @param string $handle      The script handle.
+	 * @param string $object_name The object name.
+	 * @param array  $data        The l10n data.
+	 */
+	public function localize_script( $handle, $object_name, $data ) {
+		\wp_localize_script( $this->prefix . $handle, $object_name, $data );
+	}
+
+	/**
 	 * A list of styles that shouldn't be registered but are needed in other locations in the plugin.
 	 *
 	 * @return array
@@ -179,6 +190,17 @@ class WPSEO_Admin_Asset_Manager {
 	}
 
 	/**
+	 * Checks if the given script is enqueued.
+	 *
+	 * @param string $script The script to check.
+	 *
+	 * @return bool True when the script is enqueued.
+	 */
+	public function is_script_enqueued( $script ) {
+		return \wp_script_is( $this->prefix . $script );
+	}
+
+	/**
 	 * Returns the scripts that need to be registered.
 	 *
 	 * @todo Data format is not self-documenting. Needs explanation inline. R.
@@ -187,7 +209,7 @@ class WPSEO_Admin_Asset_Manager {
 	 */
 	protected function scripts_to_be_registered() {
 		$select2_language = 'en';
-		$user_locale      = WPSEO_Language_Utils::get_user_locale();
+		$user_locale      = \get_user_locale();
 		$language         = WPSEO_Language_Utils::get_language( $user_locale );
 
 		if ( file_exists( WPSEO_PATH . "js/dist/select2/i18n/{$user_locale}.js" ) ) {
@@ -211,17 +233,10 @@ class WPSEO_Admin_Asset_Manager {
 				],
 			],
 			[
-				'name' => 'search-appearance',
-				'src'  => 'search-appearance-' . $flat_version,
+				'name' => 'schema-blocks',
+				'src'  => 'schema-blocks-' . $flat_version,
 				'deps' => [
-					'lodash',
-					'wp-api',
-					'wp-element',
-					'wp-i18n',
-					self::PREFIX . 'styled-components',
-					self::PREFIX . 'yoast-components',
-					self::PREFIX . 'replacement-variable-editor',
-					self::PREFIX . 'commons',
+					self::PREFIX . 'schema-blocks-package',
 				],
 			],
 			[
@@ -244,6 +259,8 @@ class WPSEO_Admin_Asset_Manager {
 					'jquery-ui-core',
 					'jquery-ui-progressbar',
 					'wp-api',
+					'wp-data',
+					'yoast-seo-api',
 					self::PREFIX . 'yoast-components',
 					self::PREFIX . 'helpers',
 					self::PREFIX . 'replacement-variable-editor',
@@ -295,6 +312,7 @@ class WPSEO_Admin_Asset_Manager {
 					'wp-i18n',
 					'wp-plugins',
 					'wp-rich-text',
+					'yoast-seo-api',
 					self::PREFIX . 'yoast-components',
 					self::PREFIX . 'legacy-components',
 					self::PREFIX . 'search-metadata-previews',
@@ -312,6 +330,7 @@ class WPSEO_Admin_Asset_Manager {
 					'wp-components',
 					'wp-compose',
 					'wp-element',
+					'yoast-seo-api',
 					self::PREFIX . 'redux',
 					self::PREFIX . 'yoast-components',
 					self::PREFIX . 'legacy-components',
@@ -439,6 +458,7 @@ class WPSEO_Admin_Asset_Manager {
 					self::PREFIX . 'helpers',
 					self::PREFIX . 'legacy-components',
 					self::PREFIX . 'commons',
+					self::PREFIX . 'configuration-wizard-package',
 				],
 			],
 			[
@@ -454,6 +474,22 @@ class WPSEO_Admin_Asset_Manager {
 					self::PREFIX . 'style-guide',
 					self::PREFIX . 'yoast-components',
 					self::PREFIX . 'commons',
+				],
+			],
+			[
+				'name' => 'schema-blocks-package',
+				'src'  => 'yoast/schema-blocks-' . $flat_version,
+				'deps' => [
+					'lodash',
+					'moment',
+					'wp-element',
+					'wp-blocks',
+					'wp-block-editor',
+					'wp-data',
+					'wp-hooks',
+					'wp-components',
+					'wp-i18n',
+					'wp-editor',
 				],
 			],
 			[
@@ -560,6 +596,39 @@ class WPSEO_Admin_Asset_Manager {
 				],
 			],
 			[
+				/**
+				 * Asset exposing Yoast editor modules which are used in Yoast add-ons.
+				 */
+				'name' => 'editor-modules',
+				'src'  => 'editor-modules-' . $flat_version,
+				'deps' => [
+					'lodash',
+					'wp-compose',
+					'wp-data',
+					'wp-element',
+					'wp-i18n',
+					self::PREFIX . 'analysis',
+					self::PREFIX . 'analysis-report',
+					self::PREFIX . 'helpers',
+					self::PREFIX . 'legacy-components',
+					self::PREFIX . 'style-guide',
+					self::PREFIX . 'styled-components',
+					self::PREFIX . 'yoast-components',
+				],
+			],
+			[
+				/**
+				 * Yoast dynamic blocks
+				 */
+				'name' => 'dynamic-blocks',
+				'src'  => 'dynamic-blocks-' . $flat_version,
+				'deps' => [
+					'wp-blocks',
+					'wp-i18n',
+					'wp-server-side-render',
+				],
+			],
+			[
 				// The `@yoast/components` package.
 				'name' => 'yoast-components',
 				'src'  => 'yoast/components-' . $flat_version,
@@ -586,7 +655,6 @@ class WPSEO_Admin_Asset_Manager {
 					self::PREFIX . 'helpers',
 					self::PREFIX . 'yoast-components',
 					self::PREFIX . 'analysis-report',
-					self::PREFIX . 'configuration-wizard-package',
 					self::PREFIX . 'search-metadata-previews',
 					self::PREFIX . 'replacement-variable-editor',
 					self::PREFIX . 'jed',
@@ -721,6 +789,30 @@ class WPSEO_Admin_Asset_Manager {
 				'name' => 'draft-js',
 				'src'  => 'draft-js-' . $flat_version,
 			],
+			[
+				'name'   => 'elementor',
+				'src'    => 'elementor-' . $flat_version,
+				'deps'   => [
+					'jquery',
+					'lodash',
+					'wp-data',
+					'wp-element',
+					'wp-components',
+					'wp-compose',
+					'wp-i18n',
+					'wp-sanitize',
+					'wp-api-fetch',
+					'wp-hooks',
+					'yoast-seo-api',
+					self::PREFIX . 'components',
+					self::PREFIX . 'analysis',
+					self::PREFIX . 'commons',
+					self::PREFIX . 'redux',
+					self::PREFIX . 'select2',
+					self::PREFIX . 'select2-translations',
+				],
+				'footer' => true,
+			],
 		];
 	}
 
@@ -755,6 +847,10 @@ class WPSEO_Admin_Asset_Manager {
 			[
 				'name' => 'alert',
 				'src'  => 'alerts-' . $flat_version,
+			],
+			[
+				'name' => 'badge',
+				'src'  => 'badge-' . $flat_version,
 			],
 			[
 				'name' => 'edit-page',
@@ -831,6 +927,14 @@ class WPSEO_Admin_Asset_Manager {
 				'src'  => 'structured-data-blocks-' . $flat_version,
 				'deps' => [ 'wp-edit-blocks' ],
 			],
+			[
+				'name' => 'schema-blocks',
+				'src'  => 'schema-blocks-' . $flat_version,
+			],
+			[
+				'name' => 'elementor',
+				'src'  => 'elementor-' . $flat_version,
+			],
 		];
 	}
 
@@ -849,18 +953,5 @@ class WPSEO_Admin_Asset_Manager {
 		}
 
 		return $this->asset_location->get_url( $asset, $type );
-	}
-
-	/* ********************* DEPRECATED METHODS ********************* */
-
-	/**
-	 * This function is needed for backwards compatibility with Local SEO 12.5.
-	 *
-	 * @deprecated 12.8
-	 * @codeCoverageIgnore
-	 *
-	 * @return void
-	 */
-	public function register_wp_assets() {
 	}
 }

@@ -36,3 +36,8 @@
 [15-Jul-2019 16:26:14 UTC] PHP Warning:  Use of undefined constant DB_PASSWORD - assumed 'DB_PASSWORD' (this will throw an Error in a future version of PHP) in /home/healthierworkfor/public_html/wp-includes/load.php on line 404
 [15-Jul-2019 16:26:14 UTC] PHP Warning:  Use of undefined constant DB_NAME - assumed 'DB_NAME' (this will throw an Error in a future version of PHP) in /home/healthierworkfor/public_html/wp-includes/load.php on line 404
 [15-Jul-2019 16:26:14 UTC] PHP Warning:  Use of undefined constant DB_HOST - assumed 'DB_HOST' (this will throw an Error in a future version of PHP) in /home/healthierworkfor/public_html/wp-includes/load.php on line 404
+[26-Mar-2021 20:03:15 UTC] PHP Warning:  Creating default object from empty value in /home/iamsiuk/healthier-workforce.co.uk/wp-admin/includes/post.php on line 732
+[26-Mar-2021 21:31:56 UTC] PHP Warning:  Creating default object from empty value in /home/iamsiuk/healthier-workforce.co.uk/wp-admin/includes/post.php on line 732
+[29-Mar-2021 17:16:44 UTC] PHP Warning:  Creating default object from empty value in /home/iamsiuk/healthier-workforce.co.uk/wp-admin/includes/post.php on line 732
+[29-Mar-2021 17:29:55 UTC] PHP Warning:  Creating default object from empty value in /home/iamsiuk/healthier-workforce.co.uk/wp-admin/includes/post.php on line 732
+[29-Mar-2021 18:03:55 UTC] PHP Warning:  Creating default object from empty value in /home/iamsiuk/healthier-workforce.co.uk/wp-admin/includes/post.php on line 732
