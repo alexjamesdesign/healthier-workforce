@@ -46,21 +46,21 @@ function adtrak_footer_admin () {
 }
 add_filter('admin_footer_text', 'adtrak_footer_admin');
 
-add_filter( 'contextual_help', 'adtrak_remove_help', 999, 3 );
-	function adtrak_remove_help($old_help, $screen_id, $screen){
-	    $screen->remove_help_tabs();
-	    return $old_help;
-	}
+// add_filter( 'contextual_help', 'adtrak_remove_help', 999, 3 );
+// 	function adtrak_remove_help($old_help, $screen_id, $screen){
+// 	    $screen->remove_help_tabs();
+// 	    return $old_help;
+// 	}
 
-	function adtrak_replace_howdy( $wp_admin_bar ) {
-		$my_account=$wp_admin_bar->get_node('my-account');
-		$newtitle = str_replace( 'Howdy,', 'Welcome,', $my_account->title );
-		$wp_admin_bar->add_node( array(
-		'id' => 'my-account',
-		'title' => $newtitle,
-		) );
-	}
-add_filter( 'admin_bar_menu', 'adtrak_replace_howdy',25 );
+// 	function adtrak_replace_howdy( $wp_admin_bar ) {
+// 		$my_account=$wp_admin_bar->get_node('my-account');
+// 		$newtitle = str_replace( 'Howdy,', 'Welcome,', $my_account->title );
+// 		$wp_admin_bar->add_node( array(
+// 		'id' => 'my-account',
+// 		'title' => $newtitle,
+// 		) );
+// 	}
+// add_filter( 'admin_bar_menu', 'adtrak_replace_howdy',25 );
 
 function adtrak_admin_bar_links() {
     global $wp_admin_bar;
