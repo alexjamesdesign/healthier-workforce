@@ -7,9 +7,7 @@ if (!defined('UPDRAFTCENTRAL_CLIENT_DIR')) die('No access.');
  */
 class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 
-	protected $switched = false;
-
-	protected $post_type = 'post';
+	private $switched = false;
 
 	/**
 	 * Function that gets called before every action
@@ -45,48 +43,13 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	}
 
 	/**
-	 * Returns the keys and fields names that are associated to a particular module type
-	 *
-	 * @param string $type The type of the module that the current request is processing
-	 *
-	 * @return array
-	 */
-	private function get_state_fields_by_type($type) {
-		$state_fields = array(
-			'post' => array(
-				'validation_fields' => array('publish_posts', 'edit_posts', 'delete_posts'),
-				'items_key' => 'posts',
-				'count_key' => 'posts_count',
-				'list_key' => 'posts',
-				'result_key' => 'get',
-				'error_key' => 'post_state_change_failed'
-			),
-			'page' => array(
-				'validation_fields' => array('publish_pages', 'edit_pages', 'delete_pages'),
-				'items_key' => 'pages',
-				'count_key' => 'pages_count',
-				'list_key' => 'pages',
-				'result_key' => 'get',
-				'error_key' => 'page_state_change_failed'
-			)
-		);
-
-		if (!isset($state_fields[$type])) return array();
-		return $state_fields[$type];
-	}
-
-	/**
 	 * Fetch and retrieves posts based from the submitted parameters
 	 *
 	 * @param array $params Containing all the needed information to filter the results of the current request
 	 * @return array
 	 */
-	public function get($params) {
-
-		$state_fields = $this->get_state_fields_by_type($this->post_type);
-		if (empty($state_fields)) return $this->_generic_error_response('unsupported_type_on_get_posts');
-
-		$error = $this->_validate_capabilities($state_fields['validation_fields']);
+	public function get_posts($params) {
+		$error = $this->_validate_capabilities(array('publish_posts', 'edit_posts', 'delete_posts'));
 		if (!empty($error)) return $error;
 
 		// check paged parameter; if empty set to defaults
@@ -98,7 +61,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 			'posts_per_page' => $numberposts,
 			'paged' => $paged,
 			'offset' => $offset,
-			'post_type' => $this->post_type,
+			'post_type' => 'post',
 			'post_status' => 'publish,private,draft,pending,future',
 		);
 
@@ -106,10 +69,8 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 			$args['s'] = $params['keyword'];
 		}
 
-		if ('post' == $this->post_type) {
-			if (!empty($params['category'])) {
-				$args['cat'] = (int) $params['category'];
-			}
+		if (!empty($params['category'])) {
+			$args['cat'] = (int) $params['category'];
 		}
 
 		if (!empty($params['date'])) {
@@ -156,17 +117,17 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 		}
 
 		$response = array(
-			$state_fields['items_key'] => $posts,
-			'options' => $this->get_options($this->post_type),
+			'posts' => $posts,
+			'options' => $this->get_options(),
 			'info' => $info,
-			$state_fields['count_key'] => $this->get_post_status_counts($this->post_type)
+			'posts_count' => $this->get_post_status_counts('post')
 		);
 
 		// Load any additional information if preload parameter is set. Will only be
 		// requested on initial load of items in UpdraftCentral.
 		if (isset($params['preload']) && $params['preload']) {
 			$timeout = !empty($params['timeout']) ? $params['timeout'] : 30;
-			$response = array_merge($response, $this->get_preload_data($timeout, $this->post_type));
+			$response = array_merge($response, $this->get_preload_data($timeout));
 		}
 
 		return $this->_response($response);
@@ -179,7 +140,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * @param object $obj Any type of complex objects that needs converting (e.g. WP_Taxonomy, WP_Term or WP_User)
 	 * @return stdClass
 	 */
-	protected function trim_object($obj) {
+	private function trim_object($obj) {
 		// To preserve the object's accessibility through its properties we recreate
 		// the object using the stdClass and fill it with the public properties
 		// that will be extracted from the original object ($obj).
@@ -203,50 +164,42 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * Retrieves information that will be preloaded in UC for quick and easy access
 	 * when editing a certain page or post
 	 *
-	 * @param int    $timeout The user-defined timeout from UpdraftCentral
-	 * @param string $type    The type of the module that the current request is processing
-	 *
+	 * @param int $timeout The user-defined timeout from UpdraftCentral
 	 * @return array
 	 */
-	protected function get_preload_data($timeout, $type = 'post') {
-		global $updraftplus, $updraftcentral_host_plugin;
+	private function get_preload_data($timeout) {
+		global $updraftplus;
 
 		if (!function_exists('get_page_templates')) {
 			require_once(ABSPATH.'wp-admin/includes/theme.php');
 		}
 
-		$templates = ('post' == $type) ? get_page_templates(null, 'post') : get_page_templates();
+		$templates = get_page_templates(null, 'post');
 		if (!empty($templates)) {
 			$templates = array_flip($templates);
 			if (!isset($templates['default'])) {
-				$templates['default'] = $updraftcentral_host_plugin->retrieve_show_message('default_template');
+				$templates['default'] = __('Default template', 'updraftplus');
 			}
 		}
 
 		// Preloading elements saves time and avoid unnecessary round trips to fetch
 		// these information individually.
+		$categories = $this->get_categories();
+		$tags = $this->get_tags();
 		$authors = $this->get_authors();
 		$parent_pages = $this->get_parent_pages();
 
-		$data = array(
-			'authors' => $authors['data']['authors'],
-			'parent_pages' => $parent_pages['data']['pages'],
-			'templates' => $templates,
-			'editor_styles' => $this->get_editor_styles($timeout),
-			'wp_version' => $updraftplus->get_wordpress_version()
-		);
-
-		if ('post' == $type) {
-			$categories = $this->get_categories();
-			$tags = $this->get_tags();
-
-			$data['taxonomies'] = $this->get_taxonomies();
-			$data['categories'] = $categories['data'];
-			$data['tags'] = $tags['data'];
-		}
-
 		return array(
-			'preloaded' => json_encode($data)
+			'preloaded' => json_encode(array(
+				'taxonomies' => $this->get_taxonomies(),
+				'categories' => $categories['data'],
+				'tags' => $tags['data'],
+				'authors' => $authors['data']['authors'],
+				'parent_pages' => $parent_pages['data']['pages'],
+				'templates' => $templates,
+				'editor_styles' => $this->get_editor_styles($timeout),
+				'wp_version' => $updraftplus->get_wordpress_version()
+			))
 		);
 	}
 
@@ -257,7 +210,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * @param int    $timeout The user-defined timeout from UpdraftCentral
 	 * @return string
 	 */
-	protected function extract_css_content($style, $timeout) {
+	private function extract_css_content($style, $timeout) {
 
 		$content = '';
 		if (1 === preg_match('~^(https?:)?//~i', $style)) {
@@ -291,7 +244,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * @param string $content The content of the CSS file
 	 * @return string
 	 */
-	protected function filter_url($content) {
+	private function filter_url($content) {
 
 		// Replace with valid URL (absolute)
 		preg_match_all('~url\((.+?)\)~i', $content, $all_matches);
@@ -332,7 +285,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * @param string $path Some relative path to check
 	 * @return string
 	 */
-	protected function resolve_path($path) {
+	private function resolve_path($path) {
 		$dir = trailingslashit(get_stylesheet_directory());
 		// Some relative paths declared within the css file (e.g. only has '../fonts/etc/', called deep down from a subfolder) where parent
 		// subfolder is not articulated needs to be resolve further to get its actual absolute path. Using glob will pinpoint its actual location
@@ -349,7 +302,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * @param int $timeout The user-defined timeout from UpdraftCentral
 	 * @return array()
 	 */
-	protected function get_editor_styles($timeout) {
+	private function get_editor_styles($timeout) {
 		global $editor_styles, $wp_styles;
 		$editing_styles = $loaded = array();
 
@@ -392,12 +345,10 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	/**
 	 * Retrieves the total number of items found under each post statuses
 	 *
-	 * @param string $type The type of the module that the current request is processing
-	 *
 	 * @return array
 	 */
-	protected function get_post_status_counts($type = 'post') {
-		$posts = wp_count_posts($type);
+	private function get_post_status_counts() {
+		$posts = wp_count_posts('post');
 
 		$publish = (int) $posts->publish;
 		$private = (int) $posts->private;
@@ -425,14 +376,12 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * Retrieves a collection of formatted dates found for the given post statuses.
 	 * It will be used as options for the date filter when managing the posts in UpdraftCentral.
 	 *
-	 * @param string $type The type of the module that the current request is processing
-	 *
 	 * @return array
 	 */
-	protected function get_date_options($type = 'post') {
+	private function get_date_options() {
 		global $wpdb;
 
-		$date_options = $wpdb->get_col("SELECT DATE_FORMAT(`post_date`, '%M %Y') as `formatted_post_date` FROM {$wpdb->posts} WHERE `post_type` = '{$type}' AND `post_status` IN ('publish', 'private', 'draft', 'pending', 'future') GROUP BY `formatted_post_date` ORDER BY `post_date` DESC");
+		$date_options = $wpdb->get_col("SELECT DATE_FORMAT(`post_date`, '%M %Y') as `formatted_post_date` FROM {$wpdb->posts} WHERE `post_type` = 'post' AND `post_status` IN ('publish', 'private', 'draft', 'pending', 'future') GROUP BY `formatted_post_date` ORDER BY `post_date` DESC");
 
 		return $date_options;
 	}
@@ -460,7 +409,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 *
 	 * @return array
 	 */
-	protected function get_taxonomies() {
+	private function get_taxonomies() {
 		$taxonomies = get_taxonomies(array(), 'objects');
 		$taxonomies = array_map(array($this, 'map_tax'), $taxonomies);
 
@@ -661,7 +610,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * @param array $post The "Post" object to use when retrieving the information
 	 * @return array
 	 */
-	protected function get_taxonomies_terms($post) {
+	private function get_taxonomies_terms($post) {
 		$taxonomies = get_object_taxonomies($post->post_type, 'objects');
 		$taxonomies = array_map(array($this, 'map_tax'), $taxonomies);
 
@@ -738,16 +687,14 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 				'ss' => date('s', strtotime($post->post_date))
 			);
 
+			$taxonomies = $this->get_taxonomies_terms($post);
 			$sample_permalink = get_sample_permalink($post->ID, $post->post_title, '');
 			$permalink = get_permalink($post->ID);
 			$slug = $post->post_name;
 
 			if (!empty($sample_permalink) && !empty($slug)) {
 				if (isset($sample_permalink[0])) {
-					if (false !== stripos($sample_permalink[0], '%pagename%/') || false !== stripos($sample_permalink[0], '%postname%/')) {
-						$token = (false !== stripos($sample_permalink[0], '%pagename%/')) ? '%pagename%/' : '%postname%/';
-						$permalink = str_replace($token, '', $sample_permalink[0]).$slug;
-					}
+					$permalink = str_replace('%postname%/', '', $sample_permalink[0]).$slug;
 				}
 			}
 
@@ -774,6 +721,10 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 					'post_type_public' => $post_type_obj->public,
 					'post_type_hierarchical' => $post_type_obj->hierarchical,
 					'sample_permalink' => get_sample_permalink($post->ID, $post->post_title, ''),
+					'taxonomy_objects' => $taxonomies['objects'],
+					'taxonomy_names' => $taxonomies['names'],
+					'taxonomy_terms' => $taxonomies['terms'],
+					'taxonomy_caps' => $taxonomies['caps'],
 					'post_password_required' => post_password_required($post),
 					'post_type_supports_authors' => post_type_supports($post->post_type, 'author'),
 					'post_type_supports_comments' => post_type_supports($post->post_type, 'comments'),
@@ -786,59 +737,51 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 				)
 			);
 
-			if ('post' == $post->post_type) {
-				$taxonomies = $this->get_taxonomies_terms($post);
-				$response['misc']['taxonomy_objects'] = $taxonomies['objects'];
-				$response['misc']['taxonomy_names'] = $taxonomies['names'];
-				$response['misc']['taxonomy_terms'] = $taxonomies['terms'];
-				$response['misc']['taxonomy_caps'] = $taxonomies['caps'];
+			if (!function_exists('wp_popular_terms_checklist') || !function_exists('get_terms_to_edit')) {
+				require_once ABSPATH . 'wp-admin/includes/template.php';
+				require_once ABSPATH . 'wp-admin/includes/taxonomy.php';
+			}
 
-				if (!function_exists('wp_popular_terms_checklist') || !function_exists('get_terms_to_edit')) {
-					require_once ABSPATH . 'wp-admin/includes/template.php';
-					require_once ABSPATH . 'wp-admin/includes/taxonomy.php';
+			if (!function_exists('wp_get_post_categories')) {
+				require_once(ABSPATH.WPINC.'/post.php');
+			}
+
+			$categories = wp_get_post_categories($post->ID, array('fields' => 'ids'));
+			if (!is_wp_error($categories)) {
+				$response['misc']['categories'] = empty($categories) ? array() : $categories;
+				$terms_to_edit = get_terms_to_edit($post->ID, 'category');
+				if (!empty($terms_to_edit)) {
+					$response['misc']['categories_list'] = str_replace(',', ', ', $terms_to_edit);
 				}
-	
-				if (!function_exists('wp_get_post_categories')) {
-					require_once(ABSPATH.WPINC.'/post.php');
-				}
-	
-				$categories = wp_get_post_categories($post->ID, array('fields' => 'ids'));
-				if (!is_wp_error($categories)) {
-					$response['misc']['categories'] = empty($categories) ? array() : $categories;
-					$terms_to_edit = get_terms_to_edit($post->ID, 'category');
-					if (!empty($terms_to_edit)) {
-						$response['misc']['categories_list'] = str_replace(',', ', ', $terms_to_edit);
-					}
-	
-					$popular_ids = wp_popular_terms_checklist('category', 0, 10, false);
-					// On WP 3.4 the "wp_terms_checklist" doesn't have an "echo" parameter and will automatically
-					// display the rendered checklist. Therefore, we're going to pull the terms so that all
-					// versions starting from WP 3.4 will pull the content instead of displaying them.
-	
-					ob_start();
-					// In this call we'll have to set the "echo" parameter to true so that later version of WP
-					// will be able to catch and process it.
-					wp_terms_checklist($post->ID, array('taxonomy' => 'category', 'popular_cats' => $popular_ids, 'echo' => true));
-					$popular_checklist = ob_get_contents();
-					ob_end_clean();
-	
-					$response['misc']['categories_checklist'] = $popular_checklist;
-	
-					ob_start();
-					wp_terms_checklist($post->ID, array('taxonomy' => 'category', 'checked_ontop' => 0, 'echo' => true));
-					$quickedit_checklist = ob_get_contents();
-					ob_end_clean();
-	
-					$response['misc']['categories_quickedit_checklist'] = $quickedit_checklist;
-				}
-	
-				$tags = wp_get_post_tags($post->ID, array('fields' => 'ids'));
-				if (!is_wp_error($tags)) {
-					$response['misc']['tags'] = empty($tags) ? array() : $tags;
-					$terms_to_edit = get_terms_to_edit($post->ID, 'post_tag');
-					if (!empty($terms_to_edit)) {
-						$response['misc']['tags_list'] = str_replace(',', ', ', $terms_to_edit);
-					}
+
+				$popular_ids = wp_popular_terms_checklist('category', 0, 10, false);
+				// On WP 3.4 the "wp_terms_checklist" doesn't have an "echo" parameter and will automatically
+				// display the rendered checklist. Therefore, we're going to pull the terms so that all
+				// versions starting from WP 3.4 will pull the content instead of displaying them.
+
+				ob_start();
+				// In this call we'll have to set the "echo" parameter to true so that later version of WP
+				// will be able to catch and process it.
+				wp_terms_checklist($post->ID, array('taxonomy' => 'category', 'popular_cats' => $popular_ids, 'echo' => true));
+				$popular_checklist = ob_get_contents();
+				ob_end_clean();
+
+				$response['misc']['categories_checklist'] = $popular_checklist;
+
+				ob_start();
+				wp_terms_checklist($post->ID, array('taxonomy' => 'category', 'checked_ontop' => 0, 'echo' => true));
+				$quickedit_checklist = ob_get_contents();
+				ob_end_clean();
+
+				$response['misc']['categories_quickedit_checklist'] = $quickedit_checklist;
+			}
+
+			$tags = wp_get_post_tags($post->ID, array('fields' => 'ids'));
+			if (!is_wp_error($tags)) {
+				$response['misc']['tags'] = empty($tags) ? array() : $tags;
+				$terms_to_edit = get_terms_to_edit($post->ID, 'post_tag');
+				if (!empty($terms_to_edit)) {
+					$response['misc']['tags_list'] = str_replace(',', ', ', $terms_to_edit);
 				}
 			}
 
@@ -878,40 +821,36 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * @return array
 	 */
 	public function set_state($params) {
-
-		$state_fields = $this->get_state_fields_by_type($this->post_type);
-		if (empty($state_fields)) return $this->_generic_error_response('unsupported_type_on_set_state');
-
-		$error = $this->_validate_capabilities($state_fields['validation_fields']);
+		$error = $this->_validate_capabilities(array('publish_posts', 'edit_posts', 'delete_posts'));
 		if (!empty($error)) return $error;
 
 		$result = array();
 		if (!empty($params['list'])) {
 			$posts = array();
 			foreach ($params['list'] as $id) {
-				$post = $this->apply_state($id, $params['action'], $this->post_type);
+				$post = $this->apply_state($id, $params['action']);
 				if (!empty($post)) {
 					array_push($posts, $post);
 				}
 			}
 
 			if (!empty($posts)) {
-				$result = array($state_fields['list_key'] => $posts);
+				$result = array('posts' => $posts);
 			}
 		} elseif (!empty($params['id'])) {
-			$post = $this->apply_state($params['id'], $params['action'], $this->post_type);
+			$post = $this->apply_state($params['id'], $params['action']);
 			if (!empty($post)) $result = $post;
 		}
 
 		if (!empty($result)) {
-			$response = $this->get($params);
+			$response = $this->get_posts($params);
 			if (!empty($response['response']) && 'rpcok' === $response['response']) {
-				$result[$state_fields['result_key']] = $response['data'];
+				$result['get_posts'] = $response['data'];
 			}
 
 			return $this->_response($result);
 		} else {
-			return $this->_generic_error_response($state_fields['error_key'], array('action' => $params['action']));
+			return $this->_generic_error_response('post_state_change_failed', array('action' => $params['action']));
 		}
 	}
 
@@ -958,7 +897,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 			return $wrap_response ? $this->_response($data) : $data;
 		} else {
 			$error = array(
-				'message' => $result->get_error_message()
+				'message' => __($result->get_error_message(), 'updraftplus')
 			);
 
 			return $wrap_response ? $this->_generic_error_response('post_add_category_failed', $error) : $error;
@@ -972,7 +911,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * @param array $category_ids A collection of category IDs to assign to the post object
 	 * @return void
 	 */
-	protected function assign_category_to_post($post_id, $category_ids) {
+	private function assign_category_to_post($post_id, $category_ids) {
 		if (!empty($category_ids)) {
 			// Making sure that we have the correct type to use and we
 			// don't have any redundant IDs before saving.
@@ -1023,7 +962,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 			return $wrap_response ? $this->_response($data) : $data;
 		} else {
 			$error = array(
-				'message' => $result->get_error_message()
+				'message' => __($result->get_error_message(), 'updraftplus')
 			);
 
 			return $wrap_response ? $this->_generic_error_response('post_add_tag_failed', $error) : $error;
@@ -1037,7 +976,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 * @param array $tag_ids A collection of tag IDs to assign to the post object
 	 * @return void
 	 */
-	protected function assign_tag_to_post($post_id, $tag_ids) {
+	private function assign_tag_to_post($post_id, $tag_ids) {
 		if (!empty($tag_ids)) {
 			// Making sure that we have the correct type to use and we
 			// don't have any redundant IDs before saving.
@@ -1051,22 +990,13 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	}
 
 	/**
-	 * Saves or updates post/page information based from the submitted data
+	 * Saves or updates page information based from the submitted data
 	 *
 	 * @param array	$params	An array of data that serves as parameters for the given request
 	 * @return array
 	 */
-	public function save($params) {
-		global $updraftcentral_host_plugin;
-
-		$validation_fields = array(
-			'post' => array('publish_posts', 'edit_posts', 'delete_posts'),
-			'page' => array('publish_pages', 'edit_pages', 'delete_pages')
-		);
-
-		if (!isset($validation_fields[$this->post_type])) return $this->_generic_error_response('unsupported_type_on_save_post');
-
-		$error = $this->_validate_capabilities($validation_fields[$this->post_type]);
+	public function save_post($params) {
+		$error = $this->_validate_capabilities(array('publish_posts', 'edit_posts', 'delete_posts'));
 		if (!empty($error)) return $error;
 
 		if (!empty($params['id']) || !empty($params['new'])) {
@@ -1081,13 +1011,12 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 				$args['post_excerpt'] = $params['excerpt'];
 
 			// menu_order
-			if (isset($params['order']))
-				$args['menu_order'] = (int) $params['order'];
+			if (!empty($params['order']))
+				$args['menu_order'] = $params['order'];
 
 			// post_parent
-			if (isset($params['parent'])) {
-				$args['post_parent'] = empty($params['parent']) ? 0 : $params['parent'];
-			}
+			if (!empty($params['parent']))
+				$args['post_parent'] = $params['parent'];
 
 			// post_name
 			if (!empty($params['slug']))
@@ -1155,7 +1084,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 			}
 
 			if (!empty($params['new'])) {
-				$args['post_type'] = $this->post_type;
+				$args['post_type'] = 'post';
 				$post_id = wp_insert_post($args, true);
 			} else {
 				$args['ID'] = $params['id'];
@@ -1186,30 +1115,12 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 				}
 
 				// featured_media
-				if (isset($params['featured_media'])) {
-					if (!empty($params['featured_media'])) {
-						$featured_media = (int) $params['featured_media'];
-						$attach_continue = true;
-	
-						$url = wp_get_attachment_url($featured_media);
-						if (!empty($url) && !empty($params['featured_media_url']) && $url == $params['featured_media_url']) {
-							set_post_thumbnail($post_id, $featured_media);
-							update_post_meta($post_id, 'featured_media_updraftcentral', $params['featured_media']);
-							$attach_continue = false;
-						}
-	
-						if ($attach_continue) {
-							$featured_media_data = !empty($params['featured_media_data']) ? $params['featured_media_data'] : null;
-							$media_id = $this->attach_remote_image($params['featured_media_url'], $featured_media_data, $post_id);
-							if (!empty($media_id)) {
-								// If we have a successful attachment then add reference to UC's media id
-								update_post_meta($post_id, 'featured_media_updraftcentral', $params['featured_media']);
-							}
-						}
-					} else {
-						// Remove featured image.
-						delete_post_meta($post_id, '_thumbnail_id');
-						delete_post_meta($post_id, 'featured_media_updraftcentral');
+				if (!empty($params['featured_media'])) {
+					$featured_media_data = !empty($params['featured_media_data']) ? $params['featured_media_data'] : null;
+					$media_id = $this->attach_remote_image($params['featured_media_url'], $featured_media_data, $post_id);
+					if (!empty($media_id)) {
+						// If we have a successful attachment then add reference to UC's media id
+						update_post_meta($post_id, 'featured_media_updraftcentral', $params['featured_media']);
 					}
 				}
 
@@ -1271,7 +1182,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 
 				if (!empty($params['new'])) {
 					$timeout = !empty($params['timeout']) ? $params['timeout'] : 30;
-					$postdata = array_merge($postdata, $this->get_preload_data($timeout, $this->post_type));
+					$postdata = array_merge($postdata, $this->get_preload_data($timeout));
 				} else {
 					if ($categories_updated || $tags_updated) {
 						$categories = $this->get_categories();
@@ -1284,7 +1195,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 					}
 				}
 
-				$postdata['options'] = $this->get_options($this->post_type);
+				$postdata['options'] = $this->get_options();
 				return $this->_response($postdata);
 			} else {
 				// ERROR: error creating or updating post
@@ -1295,7 +1206,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 			}
 		} else {
 			// ERROR: no id parameter, invalid request
-			return $this->_generic_error_response('post_invalid_request', array('message' => $updraftcentral_host_plugin->retrieve_show_message('parameters_missing')));
+			return $this->_generic_error_response('post_invalid_request', array('message' => __('Expected parameter(s) missing.', 'updraftplus')));
 		}
 	}
 
@@ -1353,7 +1264,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	public function get_parent_pages($params = array()) {
 		// If expected parameters are empty or does not exists then set them to some default values
 		$page = !empty($params['page']) ? (int) $params['page'] : 1;
-		$per_page = !empty($params['per_page']) ? (int) $params['per_page'] : 100;
+		$per_page = !empty($params['per_page']) ? (int) $params['per_page'] : 15;
 		$offset = ($page - 1) * $per_page;
 		$exclude = !empty($params['exclude']) ? $params['exclude'] : array();
 		$order = !empty($params['order']) ? strtoupper($params['order']) : 'ASC';
@@ -1378,8 +1289,8 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 		if (!empty($posts)) {
 			foreach ($posts as $post) {
 				// Get additional information and merge with the response
-				$postdata = $this->get_postdata($post, true);
-				if (!empty($postdata)) array_push($pages, $this->trim_parent_info($postdata));
+				$postdata = $this->get_postdata($post);
+				if (!empty($postdata)) array_push($pages, $postdata);
 			}
 		}
 
@@ -1389,53 +1300,29 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	}
 
 	/**
-	 * Trim down return data for parent pages
-	 *
-	 * @param array $postdata The array containing the data to process
-	 * @return array
-	 */
-	protected function trim_parent_info($postdata) {
-
-		if (isset($postdata['post'])) {
-			$post = json_decode($postdata['post']);
-
-			$page = new stdClass();
-			$page->ID = $post->ID;
-			$page->post_title = $post->post_title;
-			$page->post_parent = $post->post_parent;
-			$page->post_type = $post->post_type;
-			$page->post_status = $post->post_status;
-
-			$postdata['post'] = json_encode($page);
-		}
-
-		return $postdata;
-	}
-
-	/**
 	 * Retrieves pages, templates, authors, categories and tags data that will be
 	 * used as options when displayed on the editor in UpdraftCentral
 	 *
-	 * @param string $type The type of the module that the current request is processing
-	 *
 	 * @return array
 	 */
-	protected function get_options($type = 'post') {
+	private function get_options() {
 		// Primarily used for editor consumption so we don't include trash here. Besides,
 		// trash posts/pages aren't included as parent options.
-		$parent_pages = $this->get_parent_pages();
-		$pages = $parent_pages['data']['pages'];
+		$pages = get_pages(array('post_type' => 'page', 'post_status' => 'publish,private,draft,pending,future'));
 
 		// Add flexibility by letting users filter the default roles and add their own
 		// custom page/post "author" role(s) if need be.
 		$author_roles = apply_filters('updraftcentral_author_roles', array('administrator', 'editor', 'author', 'contributor'));
 		$authors = get_users(array('role__in' => $author_roles));
 
+		$categories = get_categories(array('hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC'));
+		$tags = get_tags(array('hide_empty' => false));
+
 		if (!function_exists('get_page_templates')) {
 			require_once(ABSPATH.'wp-admin/includes/theme.php');
 		}
 
-		$templates = ('post' == $type) ? get_page_templates(null, 'post') : get_page_templates();
+		$templates = get_page_templates(null, 'post');
 		$template_options = array();
 		foreach ($templates as $template => $filename) {
 			$item = array(
@@ -1446,9 +1333,8 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 		}
 
 		$page_options = array();
-		foreach ($pages as $page_item) {
-			if (isset($page_item['post'])) {
-				$page = json_decode($page_item['post']);
+		foreach ($pages as $page) {
+			if ('trash' !== $page->post_status) {
 				$item = array(
 					'id' => $page->ID,
 					'title' => $page->post_title,
@@ -1467,39 +1353,33 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 			$author_options[] = $item;
 		}
 
+		$category_options = array();
+		foreach ($categories as $category) {
+			$item = array(
+				'id' => $category->term_id,
+				'name' => $category->name,
+				'parent' => $category->parent
+			);
+			$category_options[] = $item;
+		}
+
+		$tag_options = array();
+		foreach ($tags as $tag) {
+			$item = array(
+				'id' => $tag->term_id,
+				'name' => $tag->name,
+			);
+			$tag_options[] = $item;
+		}
+
 		$response = array(
 			'page' => $page_options,
 			'author' => $author_options,
 			'template' => $template_options,
-			'date' => $this->get_date_options($type),
+			'category' => $category_options,
+			'tag' => $tag_options,
+			'date' => $this->get_date_options('post'),
 		);
-
-		if ('post' == $type) {
-			$categories = get_categories(array('hide_empty' => false, 'orderby' => 'name', 'order' => 'ASC'));
-			$tags = get_tags(array('hide_empty' => false));
-
-			$category_options = array();
-			foreach ($categories as $category) {
-				$item = array(
-					'id' => $category->term_id,
-					'name' => $category->name,
-					'parent' => $category->parent
-				);
-				$category_options[] = $item;
-			}
-	
-			$tag_options = array();
-			foreach ($tags as $tag) {
-				$item = array(
-					'id' => $tag->term_id,
-					'name' => $tag->name,
-				);
-				$tag_options[] = $item;
-			}
-
-			$response['category'] = $category_options;
-			$response['tag'] = $tag_options;
-		}
 
 		return $response;
 	}
@@ -1509,11 +1389,10 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 *
 	 * @param int    $id     The ID of the current page to work on
 	 * @param string $action The type of change that the current request is going to apply
-	 * @param string $type   The type of the module that the current request is processing
 	 *
 	 * @return array
 	 */
-	protected function apply_state($id, $action, $type = 'post') {
+	private function apply_state($id, $action) {
 		if (empty($id)) return false;
 
 		$post = get_post($id);
@@ -1548,13 +1427,11 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 			$postdata = $this->get_postdata($post);
 			if (!empty($postdata) || $deleted) {
 				$data = $deleted ? $id : $postdata;
-				$result = array(
+				return array(
 					'id' => $id,
-					'previous_status' => $previous_status
+					'previous_status' => $previous_status,
+					'post' => $data
 				);
-
-				$result[$type] = $data;
-				return $result;
 			}
 		}
 
@@ -1570,7 +1447,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 *
 	 * @return integer
 	 */
-	protected function attach_remote_image($image_url, $image_data, $post_id) {
+	private function attach_remote_image($image_url, $image_data, $post_id) {
 		if (empty($image_url) || empty($post_id)) return;
 
 		$image = pathinfo($image_url);
@@ -1626,7 +1503,7 @@ class UpdraftCentral_Posts_Commands extends UpdraftCentral_Commands {
 	 *
 	 * @return array|void
 	 */
-	protected function _validate_capabilities($capabilities) {
+	private function _validate_capabilities($capabilities) {
 		foreach ($capabilities as $capability) {
 			if (!current_user_can($capability)) return $this->_generic_error_response('insufficient_permission');
 		}

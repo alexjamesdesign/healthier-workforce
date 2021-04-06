@@ -5,8 +5,6 @@ namespace WPMailSMTP\Vendor\GuzzleHttp\Psr7;
 use WPMailSMTP\Vendor\Psr\Http\Message\StreamInterface;
 /**
  * Converts Guzzle streams into PHP stream resources.
- *
- * @final
  */
 class StreamWrapper
 {

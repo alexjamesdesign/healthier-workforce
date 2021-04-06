@@ -12,4 +12,6 @@ if ( ! defined( 'WPSEO_VERSION' ) ) {
 	exit();
 }
 
-require WPSEO_PATH . 'admin/views/licenses.php';
+$license_page_manager = new WPSEO_License_Page_Manager();
+$licenses_page        = $license_page_manager->get_license_page();
+require WPSEO_PATH . 'admin/views/' . $licenses_page . '.php';

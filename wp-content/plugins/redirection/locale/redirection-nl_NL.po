@@ -552,7 +552,7 @@ msgstr "500 - Interne serverfout"
 msgid "451 - Unavailable For Legal Reasons"
 msgstr "451 - Toegang geweigerd vanwege juridische redenen"
 
-#: redirection-strings.php:66 matches/language.php:9
+#: matches/language.php:9 redirection-strings.php:66
 msgid "URL and language"
 msgstr "URL en taal"
 
@@ -1259,11 +1259,11 @@ msgstr "Alles doorverwijzen"
 msgid "Count"
 msgstr "Aantal"
 
-#: redirection-strings.php:65 matches/page.php:9
+#: matches/page.php:9 redirection-strings.php:65
 msgid "URL and WordPress page type"
 msgstr "URL en WordPress paginatype"
 
-#: redirection-strings.php:61 matches/ip.php:9
+#: matches/ip.php:9 redirection-strings.php:61
 msgid "URL and IP"
 msgstr "URL en IP"
 
@@ -1372,11 +1372,11 @@ msgstr "De relatieve URL waar vandaan je wilt verwijzen"
 msgid "Add New"
 msgstr "Toevoegen"
 
-#: redirection-strings.php:57 matches/user-role.php:9
+#: matches/user-role.php:9 redirection-strings.php:57
 msgid "URL and role/capability"
 msgstr "URL en rol/capaciteit"
 
-#: redirection-strings.php:62 matches/server.php:9
+#: matches/server.php:9 redirection-strings.php:62
 msgid "URL and server"
 msgstr "URL en server"
 
@@ -1436,15 +1436,15 @@ msgstr "je cache opschonen."
 msgid "If you are using a caching system such as Cloudflare then please read this: "
 msgstr "Gebruik je een caching systeem zoals Cloudflare, lees dan dit: "
 
-#: redirection-strings.php:63 matches/http-header.php:11
+#: matches/http-header.php:11 redirection-strings.php:63
 msgid "URL and HTTP header"
 msgstr "URL en HTTP header"
 
-#: redirection-strings.php:64 matches/custom-filter.php:9
+#: matches/custom-filter.php:9 redirection-strings.php:64
 msgid "URL and custom filter"
 msgstr "URL en aangepast filter"
 
-#: redirection-strings.php:60 matches/cookie.php:7
+#: matches/cookie.php:7 redirection-strings.php:60
 msgid "URL and cookie"
 msgstr "URL en cookie"
 
@@ -2435,7 +2435,7 @@ msgstr "Verwijzingen"
 msgid "User Agent"
 msgstr "User agent"
 
-#: redirection-strings.php:59 matches/user-agent.php:10
+#: matches/user-agent.php:10 redirection-strings.php:59
 msgid "URL and user agent"
 msgstr "URL en user agent"
 
@@ -2444,7 +2444,7 @@ msgstr "URL en user agent"
 msgid "Target URL"
 msgstr "Doel-URL"
 
-#: redirection-strings.php:55 matches/url.php:7
+#: matches/url.php:7 redirection-strings.php:55
 msgid "URL only"
 msgstr "Alleen URL"
 
@@ -2466,7 +2466,7 @@ msgstr "Regex"
 msgid "Referrer"
 msgstr "Verwijzer"
 
-#: redirection-strings.php:58 matches/referrer.php:10
+#: matches/referrer.php:10 redirection-strings.php:58
 msgid "URL and referrer"
 msgstr "URL en verwijzer"
 
@@ -2478,6 +2478,6 @@ msgstr "Uitgelogd"
 msgid "Logged In"
 msgstr "Ingelogd"
 
-#: redirection-strings.php:56 matches/login.php:8
+#: matches/login.php:8 redirection-strings.php:56
 msgid "URL and login status"
 msgstr "URL en inlogstatus"

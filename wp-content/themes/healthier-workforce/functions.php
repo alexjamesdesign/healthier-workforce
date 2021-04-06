@@ -4,6 +4,9 @@
  * @package adtrak_boilerplate
  */
 
+// require('_wp/custom-dash.php');
+// require("_wp/wp-head.php");
+
 
 
 /* ========================================================================================================================
@@ -12,7 +15,7 @@ jQuery
 	
 ======================================================================================================================== */
 
-// wp_enqueue_script('jquery');
+//wp_enqueue_script('jquery');
 
 /* ========================================================================================================================
 	
@@ -391,3 +394,23 @@ function wpdocs_custom_excerpt_length( $length ) {
     return 20;
 }
 add_filter( 'excerpt_length', 'wpdocs_custom_excerpt_length', 999 );
+
+
+/* ========================================================================================================================
+
+Logged in menu
+	
+======================================================================================================================== */
+
+// add_filter( 'if_menu_conditions', 'wpb_new_menu_conditions' );
+ 
+// function wpb_new_menu_conditions( $conditions ) {
+//   $conditions[] = array(
+//     'name'    =>  'If it is Custom Post Type archive', // name of the condition
+//     'condition' =>  function($item) {          // callback - must return TRUE or FALSE
+//       return is_post_type_archive();
+//     }
+//   );
+ 
+//   return $conditions;
+// }

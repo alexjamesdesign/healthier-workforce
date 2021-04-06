@@ -27,7 +27,7 @@ final class NF_Display_Render
         'field-null'
     );
 
-    public static $use_test_values = FALSE;
+    protected static $use_test_values = FALSE;
 
     protected static $form_uses_recaptcha      = array();
     protected static $form_uses_datepicker     = array();
@@ -282,14 +282,12 @@ final class NF_Display_Render
                     if ($default_value) {
                         $settings['value'] = $default_value;
 
-                        if( ! is_array( $default_value ) ) {
-                            ob_start();
-                            do_shortcode( $settings['value'] );
-                            $ob = ob_get_clean();
+                        ob_start();
+                        do_shortcode( $settings['value'] );
+                        $ob = ob_get_clean();
 
-                            if( ! $ob ) {
-                                $settings['value'] = do_shortcode( $settings['value'] );
-                            }
+                        if( ! $ob ) {
+                            $settings['value'] = do_shortcode( $settings['value'] );
                         }
                     }
                 }
@@ -503,14 +501,12 @@ final class NF_Display_Render
                     if ($default_value) {
                         $field['settings']['value'] = $default_value;
 
-                        if( ! is_array( $default_value ) ) {
-                            ob_start();
-                            do_shortcode( $field['settings']['value'] );
-                            $ob = ob_get_clean();
+                        ob_start();
+                        do_shortcode( $field['settings']['value'] );
+                        $ob = ob_get_clean();
 
-                            if( ! $ob ) {
-                                $field['settings']['value'] = do_shortcode( $field['settings']['value'] );
-                            }
+                        if( ! $ob ) {
+                            $field['settings']['value'] = do_shortcode( $field['settings']['value'] );
                         }
                     }
                 }
@@ -580,7 +576,7 @@ final class NF_Display_Render
         }
 
         if( $is_preview || in_array( $form_id, self::$form_uses_datepicker ) ) {
-            wp_enqueue_style( 'nf-flatpickr', $css_dir . 'flatpickr.css', $ver );
+            wp_enqueue_style( 'pikaday-responsive', $css_dir . 'pikaday-package.css', $ver );
             wp_enqueue_script('nf-front-end--datepicker', $js_dir . 'front-end--datepicker.min.js', array( 'jquery', 'nf-front-end' ), $ver );
         }
 
@@ -633,9 +629,6 @@ final class NF_Display_Render
         }
 
         wp_localize_script( 'nf-front-end', 'nfFrontEnd', $data );
-        wp_localize_script( 'nf-front-end', 'nfRepeater', array(
-            'add_repeater_child_field_text' => __( 'Add ', 'ninja-forms' )
-        ));
 
         do_action( 'ninja_forms_enqueue_scripts', array( 'form_id' => $form_id ) );
 
@@ -662,7 +655,7 @@ final class NF_Display_Render
         }
     }
 
-    public static function load_template( $file_name = '' )
+    protected static function load_template( $file_name = '' )
     {
         if( ! $file_name ) return;
 

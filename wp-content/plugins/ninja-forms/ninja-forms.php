@@ -3,7 +3,7 @@
 Plugin Name: Ninja Forms
 Plugin URI: http://ninjaforms.com/?utm_source=Ninja+Forms+Plugin&utm_medium=readme
 Description: Ninja Forms is a webform builder with unparalleled ease of use and features.
-Version: 3.5.3
+Version: 3.4.30
 Author: Saturday Drive
 Author URI: http://ninjaforms.com/?utm_source=Ninja+Forms+Plugin&utm_medium=Plugins+WP+Dashboard
 Text Domain: ninja-forms
@@ -32,12 +32,16 @@ function ninja_forms_three_table_exists(){
 
 if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf2to3' ] ) && ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) ){
 
-    require_once dirname(__FILE__).'/includes/Integrations/LoadLegacy.php';
+    include 'deprecated/ninja-forms.php';
 
-    $legacyLoader = new NF_LoadLegacy();
-    
-    add_action('plugins_loaded',array($legacyLoader,'handle'));
-    
+    register_activation_hook( __FILE__, 'ninja_forms_activation_deprecated' );
+
+    function ninja_forms_activation_deprecated( $network_wide ){
+        include_once 'deprecated/includes/activation.php';
+
+        ninja_forms_activation( $network_wide );
+    }
+
 } else {
 
     include_once 'lib/NF_Upgrade.php';
@@ -55,7 +59,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
          * @since 3.0
          */
 
-        const VERSION = '3.5.3';
+        const VERSION = '3.4.30';
         
         /**
          * @since 3.4.0
@@ -175,11 +179,6 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
          */
         public $tracking;
 
-        /**
-         *
-         * @var NF_Handlers_FieldsetRepeater
-         */
-        public $fieldsetRepeater;
         /**
          * Plugin Settings
          *
@@ -411,11 +410,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
                  */
                 self::$instance->tracking = new NF_Tracking();
 
-                /*
-                 * Fieldset Repeater Handler
-                 */
-                self::$instance->fieldsetRepeater =  new NF_Handlers_FieldsetRepeater();
-                
+
                 self::$instance->submission_expiration_cron = new NF_Database_SubmissionExpirationCron();
 
                 /*
@@ -955,7 +950,7 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
             $a_order = ( isset( $custom_order[ $a ] ) ) ? $custom_order[ $a ] : 9001;
             $b_order = ( isset( $custom_order[ $b ] ) ) ? $custom_order[ $b ] : 9001;
 
-            return intval( $a_order >= $b_order );
+            return $a_order >= $b_order;
         }
 
         /**
@@ -1048,12 +1043,6 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
 
             // Disable "Dev Mode" for new installation.
             Ninja_Forms()->update_setting('builder_dev_mode', 0);
-
-            // Grab our initial add-on feed from api.ninjaforms.com
-            nf_update_marketing_feed();
-
-            // Setup our add-on feed wp cron so that our add-on list is up to date on a weekly basis.
-            nf_marketing_feed_cron_job();
         }
 
         /**
@@ -1314,4 +1303,5 @@ if( get_option( 'ninja_forms_load_deprecated', FALSE ) && ! ( isset( $_POST[ 'nf
             wp_schedule_event( current_time( 'timestamp' ), 'nf-weekly', 'nf_marketing_feed_cron' );
         }
     }
+    add_action( 'wp', 'nf_marketing_feed_cron_job' );
 }

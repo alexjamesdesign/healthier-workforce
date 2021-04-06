@@ -397,7 +397,7 @@ class UpdraftPlus_Temporary_Clone_Status {
 		$uploaded = 0;
 		
 		foreach ($backupable_entities as $key => $info) {
-			foreach ($backup_history as $backup) {
+			foreach ($backup_history as $timestamp => $backup) {
 				if (isset($backup[$key]) && isset($backup[$key.'-size'])) {
 					$sets += count($backup[$key]);
 					$uploaded += $backup[$key.'-size'];

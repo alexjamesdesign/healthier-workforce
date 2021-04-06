@@ -3163,11 +3163,9 @@ function acf_get_attachment( $attachment ) {
 		case 'image':
 			$sizes_id = $attachment->ID;
 			$src = wp_get_attachment_image_src( $attachment->ID, 'full' );
-			if ( $src ) {
-				$response['url'] = $src[0];
-				$response['width'] = $src[1];
-				$response['height'] = $src[2];
-			}
+			$response['url'] = $src[0];
+			$response['width'] = $src[1];
+			$response['height'] = $src[2];
 			break;
 		case 'video':
 			$response['width'] = acf_maybe_get( $meta, 'width', 0 );
@@ -3186,16 +3184,14 @@ function acf_get_attachment( $attachment ) {
 	// Load array of image sizes.
 	if( $sizes_id ) {
 		$sizes = get_intermediate_image_sizes();
-		$sizes_data = array();
+		$data = array();
 		foreach( $sizes as $size ) {
 			$src = wp_get_attachment_image_src( $sizes_id, $size );
-			if ( $src ) {
-				$sizes_data[ $size ] = $src[0];
-				$sizes_data[ $size . '-width' ] = $src[1];
-				$sizes_data[ $size . '-height' ] = $src[2];
-			}
+			$data[ $size ] = $src[ 0 ];
+			$data[ $size . '-width' ] = $src[ 1 ];
+			$data[ $size . '-height' ] = $src[ 2 ];
 		}
-		$response['sizes'] = $sizes_data;
+		$response['sizes'] = $data;
 	}
 	
 	/**
@@ -4826,17 +4822,20 @@ function acf_array_camel_case( $array = array() ) {
 }
 
 /**
- * Returns true if the current screen is using the block editor.
+ * acf_is_block_editor
  *
- * @date 13/12/18
- * @since 5.8.0
+ * Returns true if the current screen uses the block editor.
  *
- * @return bool
+ * @date	13/12/18
+ * @since	5.8.0
+ *
+ * @param	void
+ * @return	bool
  */
 function acf_is_block_editor() {
-	if ( function_exists( 'get_current_screen' ) ) {
+	if( function_exists('get_current_screen') ) {
 		$screen = get_current_screen();
-		if( $screen && method_exists( $screen, 'is_block_editor' ) ) {
+		if( method_exists($screen, 'is_block_editor') ) {
 			return $screen->is_block_editor();
 		}
 	}

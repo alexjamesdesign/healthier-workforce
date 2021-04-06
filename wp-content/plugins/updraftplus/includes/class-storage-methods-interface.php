@@ -351,7 +351,7 @@ class UpdraftPlus_Storage_Methods_Interface {
 
 		global $updraftplus;
 	
-		if (function_exists('set_time_limit')) @set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		@set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 
 		$service = $service_object->get_id();
 		

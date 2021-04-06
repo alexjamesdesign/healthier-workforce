@@ -141,7 +141,9 @@ class Processor {
 			return false;
 		}
 
-		if ( in_array( $mailer, [ 'outlook', 'zoho' ], true ) ) {
+		if ( $mailer === 'gmail' ) {
+			$forced = true;
+		} elseif ( in_array( $mailer, [ 'outlook', 'zoho' ], true ) ) {
 			$sender     = $options->get( $mailer, 'user_details' );
 			$from_email = ! empty( $sender['email'] ) ? $sender['email'] : '';
 			$forced     = true;

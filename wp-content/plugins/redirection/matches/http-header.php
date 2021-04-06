@@ -1,31 +1,11 @@
 <?php
 
-/**
- * Check a HTTP request header
- */
 class Header_Match extends Red_Match {
 	use FromNotFrom_Match;
 
-	/**
-	 * HTTP header name
-	 *
-	 * @var String
-	 */
-	public $name = '';
-
-	/**
-	 * HTTP header value
-	 *
-	 * @var String
-	 */
-	public $value = '';
-
-	/**
-	 * Is this a regex?
-	 *
-	 * @var boolean
-	 */
-	public $regex = false;
+	public $name;
+	public $value;
+	public $regex;
 
 	public function name() {
 		return __( 'URL and HTTP header', 'redirection' );
@@ -70,12 +50,6 @@ class Header_Match extends Red_Match {
 		), $this->get_from_data() );
 	}
 
-	/**
-	 * Load the match data into this instance.
-	 *
-	 * @param String $values Match values, as read from the database (plain text or serialized PHP).
-	 * @return void
-	 */
 	public function load( $values ) {
 		$values = $this->load_data( $values );
 		$this->regex = isset( $values['regex'] ) ? $values['regex'] : false;

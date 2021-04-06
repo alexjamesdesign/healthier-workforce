@@ -44,6 +44,8 @@ class WPSEO_Option_Social extends WPSEO_Option {
 		'twitter_card_type'     => 'summary_large_image',
 		'youtube_url'           => '',
 		'wikipedia_url'         => '',
+		// Form field, but not always available.
+		'fbadminapp'            => '', // Facebook app ID.
 	];
 
 	/**
@@ -54,6 +56,7 @@ class WPSEO_Option_Social extends WPSEO_Option {
 	public $ms_exclude = [
 		/* Privacy. */
 		'pinterestverify',
+		'fbadminapp',
 	];
 
 	/**
@@ -214,6 +217,10 @@ class WPSEO_Option_Social extends WPSEO_Option {
 				case 'opengraph':
 				case 'twitter':
 					$clean[ $key ] = ( isset( $dirty[ $key ] ) ? WPSEO_Utils::validate_bool( $dirty[ $key ] ) : false );
+					break;
+
+				case 'fbadminapp':
+					$this->validate_facebook_app_id( $key, $dirty, $old, $clean );
 					break;
 			}
 		}

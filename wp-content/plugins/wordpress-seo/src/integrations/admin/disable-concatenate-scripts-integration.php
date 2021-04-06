@@ -11,18 +11,14 @@ use Yoast\WP\SEO\Integrations\Integration_Interface;
 class Disable_Concatenate_Scripts_Integration implements Integration_Interface {
 
 	/**
-	 * Returns the conditionals based in which this loadable should be active.
-	 *
-	 * In this case: when on an admin page.
-	 *
-	 * @return array The conditionals.
+	 * @inheritDoc
 	 */
 	public static function get_conditionals() {
 		return [ Admin_Conditional::class ];
 	}
 
 	/**
-	 * Registers an action to disable script concatenation.
+	 * @inheritDoc
 	 */
 	public function register_hooks() {
 		\add_action( 'wp_print_scripts', [ $this, 'disable_concatenate_scripts' ] );

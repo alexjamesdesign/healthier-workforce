@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-http://www.healthier-workforce.co.uk/sitemap_index.xml

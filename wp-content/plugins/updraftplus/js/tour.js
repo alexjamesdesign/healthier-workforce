@@ -1,12 +1,12 @@
 (function ($) {
 
-	$(function() {
+	$('document').ready(function() {
 		/*
 			Plugins page
 			splash screen on activation
 		*/
 
-		$('.updraftplus-welcome .close').on('click', function(e) {
+		$('.updraftplus-welcome .close').click(function(e) {
 			e.preventDefault();
 			$(this).closest('.updraftplus-welcome').remove();
 		});

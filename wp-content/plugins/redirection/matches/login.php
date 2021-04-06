@@ -1,22 +1,8 @@
 <?php
 
-/**
- * Check whether the user is logged in or out
- */
 class Login_Match extends Red_Match {
-	/**
-	 * Target URL when logged in.
-	 *
-	 * @var String
-	 */
-	public $logged_in = '';
-
-	/**
-	 * Target URL when logged out.
-	 *
-	 * @var String
-	 */
-	public $logged_out = '';
+	public $logged_in;
+	public $logged_out;
 
 	public function name() {
 		return __( 'URL and login status', 'redirection' );
@@ -27,10 +13,10 @@ class Login_Match extends Red_Match {
 			return null;
 		}
 
-		return [
+		return array(
 			'logged_in' => isset( $details['logged_in'] ) ? $this->sanitize_url( $details['logged_in'] ) : '',
 			'logged_out' => isset( $details['logged_out'] ) ? $this->sanitize_url( $details['logged_out'] ) : '',
-		];
+		);
 	}
 
 	public function is_match( $url ) {
@@ -54,18 +40,12 @@ class Login_Match extends Red_Match {
 	}
 
 	public function get_data() {
-		return [
+		return array(
 			'logged_in' => $this->logged_in,
 			'logged_out' => $this->logged_out,
-		];
+		);
 	}
 
-	/**
-	 * Load the match data into this instance.
-	 *
-	 * @param String $values Match values, as read from the database (plain text or serialized PHP).
-	 * @return void
-	 */
 	public function load( $values ) {
 		$values = unserialize( $values );
 		$this->logged_in = isset( $values['logged_in'] ) ? $values['logged_in'] : '';

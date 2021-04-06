@@ -26,9 +26,7 @@ class Open_Graph_Conditional implements Conditional {
 	}
 
 	/**
-	 * Returns `true` when the Open Graph feature is enabled.
-	 *
-	 * @returns boolean `true` when the Open Graph feature is enabled.
+	 * @inheritDoc
 	 */
 	public function is_met() {
 		return $this->options->get( 'opengraph' ) === true;

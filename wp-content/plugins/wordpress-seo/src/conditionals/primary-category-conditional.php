@@ -26,11 +26,7 @@ class Primary_Category_Conditional implements Conditional {
 	}
 
 	/**
-	 * Returns `true` when on the frontend,
-	 * or when on the post overview, post edit or new post admin page.
-	 *
-	 * @returns boolean `true` when on the frontend, or when on the post overview,
-	 *          post edit or new post admin page.
+	 * @inheritDoc
 	 */
 	public function is_met() {
 		if ( ! \is_admin() ) {

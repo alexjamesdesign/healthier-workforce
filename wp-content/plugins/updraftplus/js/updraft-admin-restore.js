@@ -13,8 +13,6 @@ jQuery(function($) {
 	var auto_resume_count = 0;
 	var server_500_count = 0;
 
-	$('#updraft-restore-hidethis').remove();
-
 	updraft_restore_command(job_id, action);
 
 	/**

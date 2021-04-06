@@ -62,10 +62,6 @@ class WebPage extends Abstract_Schema_Piece {
 			];
 		}
 
-		if ( ! empty( $this->context->main_entity_of_page ) ) {
-			$data['mainEntity'] = $this->context->main_entity_of_page;
-		}
-
 		$data = $this->helpers->schema->language->add_piece_language( $data );
 		$data = $this->add_potential_action( $data );
 
@@ -105,11 +101,15 @@ class WebPage extends Abstract_Schema_Piece {
 	 * @return bool
 	 */
 	private function add_breadcrumbs() {
-		if ( $this->context->indexable->object_type === 'system-page' && $this->context->indexable->object_sub_type === '404' ) {
+		if ( $this->context->indexable->object_type === 'home-page' || $this->helpers->current_page->is_home_static_page() ) {
 			return false;
 		}
 
-		return true;
+		if ( $this->context->breadcrumbs_enabled ) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

@@ -215,8 +215,7 @@ abstract class CatalogService extends AbstractService
         // Search each service to find The One
         foreach ($catalog->getItems() as $service) {
             if ($service->hasType($this->type) && $service->hasName($this->name)) {
-                $endpoint = $service->getEndpointFromRegion($this->region, $this->regionless);
-                return Endpoint::factory($endpoint, static::SUPPORTED_VERSION, $this->getClient());
+                return Endpoint::factory($service->getEndpointFromRegion($this->region), static::SUPPORTED_VERSION, $this->getClient());
             }
         }
 

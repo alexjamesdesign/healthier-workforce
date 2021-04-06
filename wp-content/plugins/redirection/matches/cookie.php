@@ -1,10 +1,7 @@
 <?php
 
-require_once dirname( __FILE__ ) . '/http-header.php';
+include_once dirname( __FILE__ ) . '/http-header.php';
 
-/**
- * Check that a cookie value exists
- */
 class Cookie_Match extends Header_Match {
 	public function name() {
 		return __( 'URL and cookie', 'redirection' );

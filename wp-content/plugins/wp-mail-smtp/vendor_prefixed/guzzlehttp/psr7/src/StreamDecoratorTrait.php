@@ -5,7 +5,6 @@ namespace WPMailSMTP\Vendor\GuzzleHttp\Psr7;
 use WPMailSMTP\Vendor\Psr\Http\Message\StreamInterface;
 /**
  * Stream decorator trait
- *
  * @property StreamInterface stream
  */
 trait StreamDecoratorTrait

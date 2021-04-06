@@ -9,30 +9,32 @@
             "name": "Jamie Hannaford",
             "email": "jamie.hannaford@rackspace.com",
             "homepage" : "https://github.com/jamiehannaford"
+        },
+        {
+            "name": "Glen Campbell",
+            "email": "glen.campbell@rackspace.com"
+        },
+        {
+            "name": "Shaunak Kashyap",
+            "email": "shaunak.kashyap@rackspace.com",
+            "homepage": "https://github.com/ycombinator"
         }
     ],
     "autoload": {
         "psr-0": {
-            "OpenCloud": ["lib/"]
-        }
-    },
-    "autoload-dev": {
-        "psr-0": {
-            "OpenCloud": ["tests/"]
+            "OpenCloud": ["lib/", "tests/"]
         }
     },
     "require": {
-        "php" : ">=5.4",
+        "php" : ">=5.3.3",
         "guzzle/guzzle" : "~3.8",
-        "psr/log": "~1.0",
-        "mikemccabe/json-patch-php": "~0.1"
+        "psr/log": "~1.0"
     },
     "require-dev" : {
         "phpunit/phpunit": "4.3.*",
-        "phpspec/prophecy": "~1.4",
         "satooshi/php-coveralls": "0.6.*@dev",
         "jakub-onderka/php-parallel-lint": "0.*",
         "fabpot/php-cs-fixer": "1.0.*@dev",
-        "apigen/apigen": "~4.0"
+        "apigen/apigen": "~2.8"
     }
 }

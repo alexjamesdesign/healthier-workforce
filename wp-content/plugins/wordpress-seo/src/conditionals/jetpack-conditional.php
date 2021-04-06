@@ -8,10 +8,7 @@ namespace Yoast\WP\SEO\Conditionals;
 class Jetpack_Conditional implements Conditional {
 
 	/**
-	 * Returns `true` when the Jetpack plugin exists on this
-	 * WordPress installation.
-	 *
-	 * @returns boolean `true` when the Jetpack plugin exists on this WordPress installation.
+	 * @inheritDoc
 	 */
 	public function is_met() {
 		return \class_exists( 'Jetpack' );

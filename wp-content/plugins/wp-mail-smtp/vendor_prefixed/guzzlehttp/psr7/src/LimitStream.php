@@ -4,9 +4,7 @@ namespace WPMailSMTP\Vendor\GuzzleHttp\Psr7;
 
 use WPMailSMTP\Vendor\Psr\Http\Message\StreamInterface;
 /**
- * Decorator used to return only a subset of a stream.
- *
- * @final
+ * Decorator used to return only a subset of a stream
  */
 class LimitStream implements \WPMailSMTP\Vendor\Psr\Http\Message\StreamInterface
 {

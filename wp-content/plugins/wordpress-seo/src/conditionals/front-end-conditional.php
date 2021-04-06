@@ -8,9 +8,7 @@ namespace Yoast\WP\SEO\Conditionals;
 class Front_End_Conditional implements Conditional {
 
 	/**
-	 * Returns `true` when NOT on an admin page.
-	 *
-	 * @returns boolean `true` when NOT on an admin page.
+	 * @inheritDoc
 	 */
 	public function is_met() {
 		return ! \is_admin();

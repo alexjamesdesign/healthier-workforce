@@ -647,15 +647,14 @@ class SMSCampaignsApi
      * @param  \DateTime $endDate Mandatory if startDate is used. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; ) (optional)
      * @param  int $limit Number limitation for the result returned (optional, default to 500)
      * @param  int $offset Beginning point in the list to retrieve from. (optional, default to 0)
-     * @param  string $sort Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed (optional, default to desc)
      *
      * @throws \SendinBlue\Client\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \SendinBlue\Client\Model\GetSmsCampaigns
      */
-    public function getSmsCampaigns($status = null, $startDate = null, $endDate = null, $limit = '500', $offset = '0', $sort = 'desc')
+    public function getSmsCampaigns($status = null, $startDate = null, $endDate = null, $limit = '500', $offset = '0')
     {
-        list($response) = $this->getSmsCampaignsWithHttpInfo($status, $startDate, $endDate, $limit, $offset, $sort);
+        list($response) = $this->getSmsCampaignsWithHttpInfo($status, $startDate, $endDate, $limit, $offset);
         return $response;
     }
     /**
@@ -668,16 +667,15 @@ class SMSCampaignsApi
      * @param  \DateTime $endDate Mandatory if startDate is used. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; ) (optional)
      * @param  int $limit Number limitation for the result returned (optional, default to 500)
      * @param  int $offset Beginning point in the list to retrieve from. (optional, default to 0)
-     * @param  string $sort Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed (optional, default to desc)
      *
      * @throws \SendinBlue\Client\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \SendinBlue\Client\Model\GetSmsCampaigns, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getSmsCampaignsWithHttpInfo($status = null, $startDate = null, $endDate = null, $limit = '500', $offset = '0', $sort = 'desc')
+    public function getSmsCampaignsWithHttpInfo($status = null, $startDate = null, $endDate = null, $limit = '500', $offset = '0')
     {
         $returnType = 'WPMailSMTP\\Vendor\\SendinBlue\\Client\\Model\\GetSmsCampaigns';
-        $request = $this->getSmsCampaignsRequest($status, $startDate, $endDate, $limit, $offset, $sort);
+        $request = $this->getSmsCampaignsRequest($status, $startDate, $endDate, $limit, $offset);
         try {
             $options = $this->createHttpClientOption();
             try {
@@ -724,14 +722,13 @@ class SMSCampaignsApi
      * @param  \DateTime $endDate Mandatory if startDate is used. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; ) (optional)
      * @param  int $limit Number limitation for the result returned (optional, default to 500)
      * @param  int $offset Beginning point in the list to retrieve from. (optional, default to 0)
-     * @param  string $sort Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed (optional, default to desc)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getSmsCampaignsAsync($status = null, $startDate = null, $endDate = null, $limit = '500', $offset = '0', $sort = 'desc')
+    public function getSmsCampaignsAsync($status = null, $startDate = null, $endDate = null, $limit = '500', $offset = '0')
     {
-        return $this->getSmsCampaignsAsyncWithHttpInfo($status, $startDate, $endDate, $limit, $offset, $sort)->then(function ($response) {
+        return $this->getSmsCampaignsAsyncWithHttpInfo($status, $startDate, $endDate, $limit, $offset)->then(function ($response) {
             return $response[0];
         });
     }
@@ -745,15 +742,14 @@ class SMSCampaignsApi
      * @param  \DateTime $endDate Mandatory if startDate is used. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; ) (optional)
      * @param  int $limit Number limitation for the result returned (optional, default to 500)
      * @param  int $offset Beginning point in the list to retrieve from. (optional, default to 0)
-     * @param  string $sort Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed (optional, default to desc)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getSmsCampaignsAsyncWithHttpInfo($status = null, $startDate = null, $endDate = null, $limit = '500', $offset = '0', $sort = 'desc')
+    public function getSmsCampaignsAsyncWithHttpInfo($status = null, $startDate = null, $endDate = null, $limit = '500', $offset = '0')
     {
         $returnType = 'WPMailSMTP\\Vendor\\SendinBlue\\Client\\Model\\GetSmsCampaigns';
-        $request = $this->getSmsCampaignsRequest($status, $startDate, $endDate, $limit, $offset, $sort);
+        $request = $this->getSmsCampaignsRequest($status, $startDate, $endDate, $limit, $offset);
         return $this->client->sendAsync($request, $this->createHttpClientOption())->then(function ($response) use($returnType) {
             $responseBody = $response->getBody();
             if ($returnType === '\\SplFileObject') {
@@ -780,12 +776,11 @@ class SMSCampaignsApi
      * @param  \DateTime $endDate Mandatory if startDate is used. Ending (urlencoded) UTC date-time (YYYY-MM-DDTHH:mm:ss.SSSZ) to filter the sent sms campaigns. Prefer to pass your timezone in date-time format for accurate result ( only available if either &#39;status&#39; not passed and if passed is set to &#39;sent&#39; ) (optional)
      * @param  int $limit Number limitation for the result returned (optional, default to 500)
      * @param  int $offset Beginning point in the list to retrieve from. (optional, default to 0)
-     * @param  string $sort Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed (optional, default to desc)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function getSmsCampaignsRequest($status = null, $startDate = null, $endDate = null, $limit = '500', $offset = '0', $sort = 'desc')
+    protected function getSmsCampaignsRequest($status = null, $startDate = null, $endDate = null, $limit = '500', $offset = '0')
     {
         if ($limit !== null && $limit > 1000) {
             throw new \InvalidArgumentException('invalid value for "$limit" when calling SMSCampaignsApi.getSmsCampaigns, must be smaller than or equal to 1000.');
@@ -815,10 +810,6 @@ class SMSCampaignsApi
         // query params
         if ($offset !== null) {
             $queryParams['offset'] = \WPMailSMTP\Vendor\SendinBlue\Client\ObjectSerializer::toQueryValue($offset);
-        }
-        // query params
-        if ($sort !== null) {
-            $queryParams['sort'] = \WPMailSMTP\Vendor\SendinBlue\Client\ObjectSerializer::toQueryValue($sort);
         }
         // body params
         $_tempBody = null;

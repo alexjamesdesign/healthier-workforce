@@ -14,7 +14,6 @@ final class WP_Block_Pattern_Categories_Registry {
 	/**
 	 * Registered block pattern categories array.
 	 *
-	 * @since 5.5.0
 	 * @var array
 	 */
 	private $registered_categories = array();
@@ -22,7 +21,6 @@ final class WP_Block_Pattern_Categories_Registry {
 	/**
 	 * Container for the main instance of the class.
 	 *
-	 * @since 5.5.0
 	 * @var WP_Block_Pattern_Categories_Registry|null
 	 */
 	private static $instance = null;
@@ -60,8 +58,8 @@ final class WP_Block_Pattern_Categories_Registry {
 	 */
 	public function unregister( $category_name ) {
 		if ( ! $this->is_registered( $category_name ) ) {
-			/* translators: %s: Block pattern name. */
-			$message = sprintf( __( 'Block pattern category "%s" not found.' ), $category_name );
+			/* translators: 1: Block pattern name. */
+			$message = sprintf( __( 'Block pattern category "%1$s" not found.' ), $category_name );
 			_doing_it_wrong( __METHOD__, $message, '5.5.0' );
 			return false;
 		}

@@ -209,6 +209,18 @@ h5 { font-size: 1.1em; }
             color: nth($colorOption,3);
         }
     }
+
+    &--registration{
+        padding-top: 2.5em;
+    }
+    &--no-pad{
+        padding: 0em;
+    }
+}
+/* Registration Plugin
+--------------------------------------------------------------- */
+.rmtab-payment-details{
+    display: none !important;
 }
 
 /* General
@@ -324,6 +336,27 @@ li.social-nav-item {
             display: inline-block;
             li {
                 display: inline-block;
+                position: relative;
+                
+                &.menu-item-has-children > a:after {
+                    content: "\f107";
+                    position: absolute;
+                    bottom: 0;
+                    left: 50%;
+                    margin-left: -8px;
+                    font: 1em/1 FontAwesome;
+                    color: $blanc;
+                }
+                .current-menu-item a,
+                .current-menu-parent a {
+                    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#f7d67c+0,ffffff+100&0.21+0,0+98 */
+                    background: -moz-linear-gradient(top,  rgba(247,214,124,0.21) 0%, rgba(255,254,252,0) 98%, rgba(255,255,255,0) 100%); /* FF3.6-15 */
+                    background: -webkit-linear-gradient(top,  rgba(247,214,124,0.21) 0%,rgba(255,254,252,0) 98%,rgba(255,255,255,0) 100%); /* Chrome10-25,Safari5.1-6 */
+                    background: linear-gradient(to bottom,  rgba(247,214,124,0.21) 0%,rgba(255,254,252,0) 98%,rgba(255,255,255,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+                    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#36f7d67c', endColorstr='#00ffffff',GradientType=0 ); /* IE6-9 */
+
+                }
+
                 a {
                     display: inline-block;
                     color: $blanc;
@@ -334,6 +367,74 @@ li.social-nav-item {
                         border-color: $sandyyellow;
                     }
                 }
+
+                .sub-menu {
+                    display: none;
+                }
+
+                .sub-menu {
+                    position: absolute;
+                    background: none;
+                    top: 100%;
+                    left: 0;
+                    z-index: 100;
+                    opacity: 0;
+                    visibility: hidden;
+                    width: 490px;
+                    -webkit-transition: .3s;
+                    transition: .3s;
+                    padding: 0px;
+                    z-index: 2000;
+
+                    @include bp1200 {
+                        width: 550px;
+                    }
+
+                    li {
+                        width: 50%;
+                        float: left;
+                    }
+
+                    .current-menu-item > a {
+                        color: $blanc;
+                        background: $logomidblue;
+                    }
+
+                    a {
+                        display: block;
+                        height: 100%;
+                        border-bottom: 1px solid rgba(255,255,255,.1);
+                        color: $blanc;
+                        font-size: 1em;
+                        background: $logodeepblue;
+
+                        &:hover {
+                            color: lighten($logodeepblue,50%);
+                            cursor: pointer;
+                        }
+                    }
+
+                    &:hover {
+                        display: flex;
+                        flex-wrap: wrap;
+                        align-items: stretch;
+                        opacity: 1;
+                        visibility: visible;
+                    }
+
+                }
+
+                a:hover + .sub-menu {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-items: stretch;
+                    opacity: 1;
+                    visibility: visible;
+                }
+            }
+            .menu-item-851,.menu-item-861{
+                background: darken($logodeepblue,15);
+                margin-right: -4px;
             }
             .current-menu-item a,
             .current-menu-parent a {
@@ -1043,7 +1144,7 @@ article {
         margin: 1em 0;
     }
 
-    > ul li {
+    ul li {
         &:before {
             display: inline-block;
             padding-right: .5em;

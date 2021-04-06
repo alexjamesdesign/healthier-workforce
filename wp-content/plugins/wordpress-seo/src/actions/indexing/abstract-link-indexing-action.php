@@ -8,7 +8,7 @@ use Yoast\WP\SEO\Models\SEO_Links;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 
 /**
- * Reindexing action for link indexables.
+ * Reindexation action for link indexables.
  */
 abstract class Abstract_Link_Indexing_Action implements Indexation_Action_Interface {
 

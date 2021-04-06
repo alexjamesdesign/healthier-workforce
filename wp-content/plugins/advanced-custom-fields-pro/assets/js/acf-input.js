@@ -5369,7 +5369,7 @@
 		label: __('Value is equal to'),
 		fieldTypes: [ 'text', 'textarea', 'number', 'range', 'email', 'url', 'password' ],
 		match: function( rule, field ){
-			if( acf.isNumeric(rule.value) ) {
+			if( $.isNumeric(rule.value) ) {
 				return isEqualToNumber( rule.value, field.val() );
 			} else {
 				return isEqualTo( rule.value, field.val() );
@@ -5565,8 +5565,8 @@
 				
 				// append					
 				choices.push({
-					id: line[0].trim(),
-					text: line[1].trim()
+					id: $.trim( line[0] ),
+					text: $.trim( line[1] )
 				});
 			});
 			
@@ -6066,7 +6066,7 @@
 	
 	var getPostID = function() {
 		var postID = acf.get('post_id');
-		return acf.isNumeric(postID) ? postID : 0;
+		return $.isNumeric(postID) ? postID : 0;
 	}
 	
 	

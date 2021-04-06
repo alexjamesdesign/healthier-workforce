@@ -1,9 +1,10 @@
 <?php
 
-if (!defined('ABSPATH')) die('No direct access.');
+if (!defined('UPDRAFTPLUS_DIR')) die('No access.');
 
-global $updraftcentral_host_plugin;
-if (!$updraftcentral_host_plugin->is_host_dir_set()) die('No access.');
+if (defined('UPDRAFTCENTRAL_CLIENT_DIR')) return;
+
+define('UPDRAFTCENTRAL_CLIENT_DIR', dirname(__FILE__));
 
 // This file is included during plugins_loaded
 
@@ -17,21 +18,15 @@ class UpdraftCentral_Main {
 	 */
 	public function __construct() {
 
+		// Add the section to the 'advanced tools' page
+		add_action('updraftplus_debugtools_dashboard', array($this, 'debugtools_dashboard'), 20);
 		add_action('udrpc_log', array($this, 'udrpc_log'), 10, 3);
 		
 		add_action('wp_ajax_updraftcentral_receivepublickey', array($this, 'wp_ajax_updraftcentral_receivepublickey'));
 		add_action('wp_ajax_nopriv_updraftcentral_receivepublickey', array($this, 'wp_ajax_updraftcentral_receivepublickey'));
 	
-		// The host plugin's command class is registered in its "plugins_loaded" method (e.g. UpdraftPlus::plugins_loaded()).
-		//
-		// N.B. The new filter "updraftcentral_remotecontrol_command_classes" was introduced on Jan. 2021 and will soon replace the
-		// old filter "updraftplus_remotecontrol_command_classes" (below). This was done in order to synchronize all available filters
-		// and actions related to UpdraftCentral so that we can easily port the UpdraftCentral client code into our other plugins.
-		//
-		// If you happened to use the old filter from any of your projects then you might as well update it with the new filter as the
-		// old filter has already been marked as deprecated, though currently supported as can be seen below but will soon be remove
-		// from this code block.
-		$command_classes = apply_filters('updraftcentral_remotecontrol_command_classes', array(
+		// The 'updraftplus' commands are registered in UpdraftPlus::plugins_loaded()
+		$command_classes = apply_filters('updraftplus_remotecontrol_command_classes', array(
 			'core' => 'UpdraftCentral_Core_Commands',
 			'updates' => 'UpdraftCentral_Updates_Commands',
 			'users' => 'UpdraftCentral_Users_Commands',
@@ -40,13 +35,8 @@ class UpdraftCentral_Main {
 			'plugin' => 'UpdraftCentral_Plugin_Commands',
 			'theme' => 'UpdraftCentral_Theme_Commands',
 			'posts' => 'UpdraftCentral_Posts_Commands',
-			'media' => 'UpdraftCentral_Media_Commands',
-			'pages' => 'UpdraftCentral_Pages_Commands'
+			'media' => 'UpdraftCentral_Media_Commands'
 		));
-	
-		// N.B. This "updraftplus_remotecontrol_command_classes" filter has been marked as deprecated and will be remove after May 2021.
-		// Please see above code comment for further explanation and its alternative.
-		$command_classes = apply_filters('updraftplus_remotecontrol_command_classes', $command_classes);
 	
 		// If nothing was sent, then there is no incoming message, so no need to set up a listener (or CORS request, etc.). This avoids a DB SELECT query on the option below in the case where it didn't get autoloaded, which is the case when there are no keys.
 		if (!empty($_SERVER['REQUEST_METHOD']) && ('GET' == $_SERVER['REQUEST_METHOD'] || 'POST' == $_SERVER['REQUEST_METHOD']) && (empty($_REQUEST['action']) || 'updraft_central' !== $_REQUEST['action']) && empty($_REQUEST['udcentral_action']) && empty($_REQUEST['udrpc_message'])) return;
@@ -64,7 +54,6 @@ class UpdraftCentral_Main {
 	 * Receive a new public key in $_GET, and echo a response. Will die() if called.
 	 */
 	public function wp_ajax_updraftcentral_receivepublickey() {
-		global $updraftcentral_host_plugin;
 	
 		// The actual nonce check is done in the method below
 		if (empty($_GET['_wpnonce']) || empty($_GET['public_key']) || !isset($_GET['updraft_key_index'])) die;
@@ -72,25 +61,25 @@ class UpdraftCentral_Main {
 		$result = $this->receive_public_key();
 		if (!is_array($result) || empty($result['responsetype'])) die;
 		
-		echo '<html><head><title>UpdraftCentral</title></head><body><h1>'.$updraftcentral_host_plugin->retrieve_show_message('updraftcentral_connection').'</h1><h2>'.htmlspecialchars(network_site_url()).'</h2><p>';
+		echo '<html><head><title>UpdraftCentral</title></head><body><h1>'.__('UpdraftCentral Connection', 'updraftplus').'</h1><h2>'.htmlspecialchars(network_site_url()).'</h2><p>';
 		
 		if ('ok' == $result['responsetype']) {
-			$updraftcentral_host_plugin->retrieve_show_message('updraftcentral_connection_successful', true);
+			_e('An UpdraftCentral connection has been made successfully.', 'updraftplus');
 		} else {
-			echo '<strong>'.$updraftcentral_host_plugin->retrieve_show_message('updraftcentral_connection_failed').'</strong><br>';
+			echo '<strong>'.__('A new UpdraftCentral connection has not been made.', 'updraftplus').'</strong><br>';
 			switch ($result['code']) {
 				case 'unknown_key':
-					$updraftcentral_host_plugin->retrieve_show_message('unknown_key', true);
+					_e('The key referred to was unknown.', 'updraftplus');
 					break;
 				case 'not_logged_in':
-					echo $updraftcentral_host_plugin->retrieve_show_message('not_logged_in').' '.$updraftcentral_host_plugin->retrieve_show_message('must_visit_url');
+					echo __('You are not logged into this WordPress site in your web browser.', 'updraftplus').' '.__('You must visit this URL in the same browser and login session as you created the key in.', 'updraftplus');
 					break;
 				case 'nonce_failure':
-					$updraftcentral_host_plugin->retrieve_show_message('security_check', true);
-					$updraftcentral_host_plugin->retrieve_show_message('must_visit_link', true);
+					echo 'Security check. ';
+					_e('You must visit this link in the same browser and login session as you created the key in.', 'updraftplus');
 					break;
 				case 'already_have':
-					$updraftcentral_host_plugin->retrieve_show_message('connection_already_made', true);
+					_e('This connection appears to already have been made.', 'updraftplus');
 					break;
 				default:
 					echo htmlspecialchars(print_r($result, true));
@@ -98,7 +87,7 @@ class UpdraftCentral_Main {
 			}
 		}
 		
-		echo '</p><p><a href="'.UpdraftPlus::get_current_clean_url().'" onclick="window.close();">'.$updraftcentral_host_plugin->retrieve_show_message('close').'</a></p>';
+		echo '</p><p><a href="'.UpdraftPlus::get_current_clean_url().'" onclick="window.close();">'.__('Close...', 'updraftplus').'</a></p>';
 		die;
 	}
 	
@@ -191,7 +180,6 @@ class UpdraftCentral_Main {
 	 * @return array which contains log_contents. If error, Returns array which contains fatal_error flag and fatal_error_message
 	 */
 	public function get_log() {
-		global $updraftcentral_host_plugin;
 	
 		$udrpc_log = get_site_option('updraftcentral_client_log');
 		if (!is_array($udrpc_log)) $udrpc_log = array();
@@ -202,7 +190,7 @@ class UpdraftCentral_Main {
 		rsort($udrpc_log);
 		
 		if (empty($udrpc_log)) {
-			$log_contents = '<em>'.$updraftcentral_host_plugin->retrieve_show_message('nothing_yet_logged').'</em>';
+			$log_contents = '<em>'.__('(Nothing yet logged)', 'updraftplus').'</em>';
 		}
 		
 		foreach ($udrpc_log as $m) {
@@ -227,8 +215,6 @@ class UpdraftCentral_Main {
 	}
 	
 	public function create_key($params) {
-		global $updraftcentral_host_plugin;
-
 		// Use the site URL - this means that if the site URL changes, communication ends; which is the case anyway
 		$user = wp_get_current_user();
 		
@@ -236,7 +222,7 @@ class UpdraftCentral_Main {
 		
 		if ('__updraftpluscom' != $where_send) {
 			$purl = parse_url($where_send);
-			if (empty($purl) || !array($purl) || empty($purl['scheme']) || empty($purl['host'])) return array('error' => $updraftcentral_host_plugin->retrieve_show_message('invalid_url'));
+			if (empty($purl) || !array($purl) || empty($purl['scheme']) || empty($purl['host'])) return array('error' => __('An invalid URL was entered', 'updraftplus'));
 		}
 
 		// ENT_HTML5 exists only on PHP 5.4+
@@ -270,12 +256,12 @@ class UpdraftCentral_Main {
 		if (is_array($created)) {
 			$created['keys_table'] = $this->get_keys_table();
 
-			$created['keys_guide'] = '<h2 class="updraftcentral_wizard_success">'. $updraftcentral_host_plugin->retrieve_show_message('updraftcentral_key_created') .'</h2>';
+			$created['keys_guide'] = '<h2 class="updraftcentral_wizard_success">'. __('UpdraftCentral key created successfully') .'</h2>';
 
 			if ('__updraftpluscom' != $where_send) {
-				$created['keys_guide'] .= '<div class="updraftcentral_wizard_success"><p>'.sprintf($updraftcentral_host_plugin->retrieve_show_message('need_to_copy_key'), '<a href="'.$where_send.'" target="_blank">UpdraftCentral dashboard</a>').'</p><p>'.$updraftcentral_host_plugin->retrieve_show_message('press_add_site_button').'</p><p>'.sprintf($updraftcentral_host_plugin->retrieve_show_message('detailed_instructions'), '<a target="_blank" href="https://updraftplus.com/updraftcentral-how-to-add-a-site/">UpdraftPlus.com</a>').'</p></div>';
+				$created['keys_guide'] .= '<div class="updraftcentral_wizard_success"><p>'.sprintf(__('You now need to copy the key below and enter it at your %s.', 'updraftplus'), '<a href="'.$where_send.'" target="_blank">UpdraftCentral dashboard</a>').'</p><p>'.__('At your UpdraftCentral dashboard you should press the "Add Site" button then paste the key in the input box.', 'updraftplus').'</p><p>'.sprintf(__('Detailed instructions for this can be found at %s', 'updraftplus'), '<a target="_blank" href="https://updraftplus.com/updraftcentral-how-to-add-a-site/">UpdraftPlus.com</a>').'</p></div>';
 			} else {
-				$created['keys_guide'] .= '<div class="updraftcentral_wizard_success"><p>'. sprintf($updraftcentral_host_plugin->retrieve_show_message('control_this_site'), '<a target="_blank" href="https://updraftplus.com/my-account/updraftcentral-remote-control/">UpdraftPlus.com</a>').'</p></div>';
+				$created['keys_guide'] .= '<div class="updraftcentral_wizard_success"><p>'. sprintf(__('You can now control this site via your UpdraftCentral dashboard at %s.', 'updraftplus'), '<a target="_blank" href="https://updraftplus.com/my-account/updraftcentral-remote-control/">UpdraftPlus.com</a>').'</p></div>';
 			}
 		}
 		
@@ -295,7 +281,7 @@ class UpdraftCentral_Main {
 	
 	private function create_remote_control_key($index = false, $extra_info = array(), $post_it = false) {
 
-		global $updraftplus, $updraftcentral_host_plugin;
+		global $updraftplus;
 	
 		$our_keys = UpdraftPlus_Options::get_updraft_option('updraft_central_localkeys');
 		if (!is_array($our_keys)) $our_keys = array();
@@ -327,7 +313,7 @@ class UpdraftCentral_Main {
 		
 		// Normally, key generation takes seconds, even on a slow machine. However, some Windows machines appear to have a setup in which it takes a minute or more. And then, if you're on a double-localhost setup on slow hardware - even worse. It doesn't hurt to just raise the maximum execution time.
 		
-		if (function_exists('set_time_limit')) @set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+		@set_time_limit(UPDRAFTPLUS_SET_TIME_LIMIT);// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
 		
 		$key_size = (empty($extra_info['key_size']) || !is_numeric($extra_info['key_size']) || $extra_info['key_size'] < 512) ? 2048 : (int) $extra_info['key_size'];
 
@@ -371,7 +357,7 @@ class UpdraftCentral_Main {
 				$updraftplus->register_wp_http_option_hooks(false);
 				
 				if (is_wp_error($sent_key) || empty($sent_key)) {
-					$err_msg = sprintf($updraftcentral_host_plugin->retrieve_show_message('attempt_to_register_failed'), (string) $post_it_description);
+					$err_msg = sprintf(__('A key was created, but the attempt to register it with %s was unsuccessful - please try again later.', 'updraftplus'), (string) $post_it_description);
 					if (is_wp_error($sent_key)) $err_msg .= ' '.$sent_key->get_error_message().' ('.$sent_key->get_error_code().')';
 					return array(
 						'r' => $err_msg
@@ -382,7 +368,7 @@ class UpdraftCentral_Main {
 
 				if (!is_array($response) || !isset($response['key_id']) || !isset($response['key_public'])) {
 					return array(
-						'r' => sprintf($updraftcentral_host_plugin->retrieve_show_message('attempt_to_register_failed'), (string) $post_it_description),
+						'r' => sprintf(__('A key was created, but the attempt to register it with %s was unsuccessful - please try again later.', 'updraftplus'), (string) $post_it_description),
 						'raw' => wp_remote_retrieve_body($sent_key)
 					);
 				}
@@ -425,7 +411,7 @@ class UpdraftCentral_Main {
 
 			return array(
 				'bundle' => $local_bundle,
-				'r' => $updraftcentral_host_plugin->retrieve_show_message('key_created_successfully').' '.$updraftcentral_host_plugin->retrieve_show_message('copy_paste_key'),
+				'r' => __('Key created successfully.', 'updraftplus').' '.__('You must copy and paste this key now - it cannot be shown again.', 'updraftplus'),
 			);
 		}
 
@@ -439,7 +425,6 @@ class UpdraftCentral_Main {
 	 * @return String
 	 */
 	public function get_keys_table() {
-		global $updraftcentral_host_plugin;
 	
 		$ret = '';
 		
@@ -447,7 +432,7 @@ class UpdraftCentral_Main {
 		if (!is_array($our_keys)) $our_keys = array();
 
 		if (empty($our_keys)) {
-			$ret .= '<tr><td colspan="2"><em>'.$updraftcentral_host_plugin->retrieve_show_message('no_updraftcentral_dashboards').'</em></td></tr>';
+			$ret .= '<tr><td colspan="2"><em>'.__('There are no UpdraftCentral dashboards that can currently control this site.', 'updraftplus').'</em></td></tr>';
 		}
 		
 		foreach ($our_keys as $i => $key) {
@@ -470,26 +455,26 @@ class UpdraftCentral_Main {
 				}
 				
 			} else {
-				$reconstructed_url = $updraftcentral_host_plugin->retrieve_show_message('unknown');
+				$reconstructed_url = __('Unknown', 'updraftplus');
 			}
 		
 			$name = $key['name'];
 			
 			$user = get_user_by('id', $user_id);
 			
-			$user_display = is_a($user, 'WP_User') ? $user->user_login.' ('.$user->user_email.')' : $updraftcentral_host_plugin->retrieve_show_message('unknown');
+			$user_display = is_a($user, 'WP_User') ? $user->user_login.' ('.$user->user_email.')' : __('Unknown', 'updraftplus');
 			
-			$ret .= '<tr class="updraft_debugrow"><td style="vertical-align:top;">'.htmlspecialchars($name).' ('.htmlspecialchars($i).')</td><td>'.$updraftcentral_host_plugin->retrieve_show_message('access_as_user')." ".htmlspecialchars($user_display)."<br>".$updraftcentral_host_plugin->retrieve_show_message('public_key_sent').' '.htmlspecialchars($reconstructed_url).'<br>';
+			$ret .= '<tr class="updraft_debugrow"><td style="vertical-align:top;">'.htmlspecialchars($name).' ('.htmlspecialchars($i).')</td><td>'.__("Access this site as user:", 'updraftplus')." ".htmlspecialchars($user_display)."<br>".__('Public key was sent to:', 'updraftplus').' '.htmlspecialchars($reconstructed_url).'<br>';
 			
 			if (!empty($key['created'])) {
-				$ret .= $updraftcentral_host_plugin->retrieve_show_message('created').' '.date_i18n(get_option('date_format').' '.get_option('time_format'), $key['created']).'.';
+				$ret .= __('Created:', 'updraftplus').' '.date_i18n(get_option('date_format').' '.get_option('time_format'), $key['created']).'.';
 				if (!empty($key['extra_info']['key_size'])) {
-					$ret .= ' '.sprintf($updraftcentral_host_plugin->retrieve_show_message('key_size'), $key['extra_info']['key_size']).'.';
+					$ret .= ' '.sprintf(__('Key size: %d bits', 'updraftplus'), $key['extra_info']['key_size']).'.';
 				}
 				$ret .= '<br>';
 			}
 			
-			$ret .= '<a href="'.UpdraftPlus::get_current_clean_url().'" data-key_id="'.esc_attr($i).'" class="updraftcentral_key_delete">'.$updraftcentral_host_plugin->retrieve_show_message('delete').'</a></td></tr>';
+			$ret .= '<a href="'.UpdraftPlus::get_current_clean_url().'" data-key_id="'.esc_attr($i).'" class="updraftcentral_key_delete">'.__('Delete...', 'updraftplus').'</a></td></tr>';
 		}
 		
 		
@@ -497,13 +482,13 @@ class UpdraftCentral_Main {
 		?>
 		<div id="updraftcentral_keys_content" style="margin: 10px 0;">
 			<?php if (!empty($our_keys)) { ?>
-				<a href="<?php echo UpdraftPlus::get_current_clean_url(); ?>" class="updraftcentral_keys_show hidden-in-updraftcentral"><?php printf($updraftcentral_host_plugin->retrieve_show_message('manage_keys'), count($our_keys)); ?></a>
+				<a href="<?php echo UpdraftPlus::get_current_clean_url(); ?>" class="updraftcentral_keys_show hidden-in-updraftcentral"><?php printf(__('Manage existing keys (%d)...', 'updraftplus'), count($our_keys)); ?></a>
 			<?php } ?>
 			<table id="updraftcentral_keys_table">
 				<thead>
 					<tr>
-						<th style="text-align:left;"><?php $updraftcentral_host_plugin->retrieve_show_message('key_description', true); ?></th>
-						<th style="text-align:left;"><?php $updraftcentral_host_plugin->retrieve_show_message('details', true); ?></th>
+						<th style="text-align:left;"><?php _e('Key description', 'updraftplus'); ?></th>
+						<th style="text-align:left;"><?php _e('Details', 'updraftplus'); ?></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -525,12 +510,10 @@ class UpdraftCentral_Main {
 	 * @return String - the HTML
 	 */
 	private function create_key_markup() {
-		global $updraftcentral_host_plugin;
-
 		ob_start();
 		?> 
 		<div class="create_key_container"> 
-			<h4 class="updraftcentral_wizard_stage1"> <?php $updraftcentral_host_plugin->retrieve_show_message('connect_to_updraftcentral_dashboard', true); ?></h4>
+			<h4 class="updraftcentral_wizard_stage1"> <?php _e('Connect this site to an UpdraftCentral dashboard found at...', 'updraftplus'); ?></h4> 
 			<table style="width: 100%; table-layout:fixed;"> 
 				<thead></thead> 
 				<tbody>
@@ -539,52 +522,52 @@ class UpdraftCentral_Main {
 							<div class="updraftcentral_wizard_mothership updraftcentral_wizard_option">
 								<label class="button-primary" tabindex="0">
 									<input checked="checked" type="radio" name="updraftcentral_mothership" id="updraftcentral_mothership_updraftpluscom" style="display: none;">
-									UpdraftPlus.Com
+									<?php _e('UpdraftPlus.Com', 'updraftplus');?>
 								</label><br>
-								<div><?php printf($updraftcentral_host_plugin->retrieve_show_message('in_example'), '<a target="_blank" href="https://updraftplus.com/my-account/">'.$updraftcentral_host_plugin->retrieve_show_message('an_account').'</a>'); ?></div>
+								<div><?php printf(__('i.e. if you have %s there', 'updraftplus'), '<a target="_blank" href="https://updraftplus.com/my-account/">'.__('an account', 'updraftplus').'</a>'); ?></div>
 
 							</div>
 							<div class="updraftcentral_wizard_self_hosted_stage1 updraftcentral_wizard_option">
 								<label class="button-primary" tabindex="0">
 									<input type="radio" name="updraftcentral_mothership" id="updraftcentral_mothership_other" style="display: none;">
-									<?php $updraftcentral_host_plugin->retrieve_show_message('self_hosted_dashboard', true);?>
+									<?php _e('Self-hosted dashboard', 'updraftplus');?>
 								</label><br>
-								<div><?php printf($updraftcentral_host_plugin->retrieve_show_message('website_installed'), '<a target="_blank" href="https://wordpress.org/plugins/updraftcentral/">UpdraftCentral</a>'); ?></div>
+								<div><?php printf(__('A website where you have installed %s', 'updraftplus'), '<a target="_blank" href="https://wordpress.org/plugins/updraftcentral/">UpdraftCentral</a>'); ?></div>
 							</div>
 							<div class="updraftcentral_wizard_self_hosted_stage2" style="float:left; clear:left;display:none;">
-								<p style="font-size: 13px;"><?php echo $updraftcentral_host_plugin->retrieve_show_message('enter_url');?></p>
+								<p style="font-size: 13px;"><?php echo __('Enter the URL where your self-hosted install of UpdraftCentral is located:', 'updraftplus');?></p>
 								<p style="font-size: 13px;" id="updraftcentral_wizard_stage1_error"></p>
-								<input disabled="disabled" id="updraftcentral_keycreate_mothership" type="text" size="40" placeholder="<?php $updraftcentral_host_plugin->retrieve_show_message('updraftcentral_dashboard_url', true); ?>" value="">
-								<button type="button" class="button button-primary" id="updraftcentral_stage2_go"><?php $updraftcentral_host_plugin->retrieve_show_message('next', true); ?></button>
+								<input disabled="disabled" id="updraftcentral_keycreate_mothership" type="text" size="40" placeholder="<?php _e('URL for the site of your UpdraftCentral dashboard', 'updraftplus'); ?>" value="">
+								<button type="button" class="button button-primary" id="updraftcentral_stage2_go"><?php _e('Next', 'updraftplus'); ?></button>
 							</div>
 						</td>
 					</tr>
 
 					<tr class="updraft_debugrow updraftcentral_wizard_stage2" style="display: none;">
-						<h4 class="updraftcentral_wizard_stage2" style="display: none;"><?php $updraftcentral_host_plugin->retrieve_show_message('updraftcentral_connection_details', true); ?></h4>
+						<h4 class="updraftcentral_wizard_stage2" style="display: none;"><?php _e('UpdraftCentral dashboard connection details', 'updraftplus'); ?></h4>
 						<td class="updraftcentral_keycreate_description">
-							<?php $updraftcentral_host_plugin->retrieve_show_message('description', true); ?>:
-							<input id="updraftcentral_keycreate_description" type="text" size="20" placeholder="<?php $updraftcentral_host_plugin->retrieve_show_message('enter_description', true); ?>" value="" >
+							<?php _e('Description', 'updraftplus'); ?>:
+							<input id="updraftcentral_keycreate_description" type="text" size="20" placeholder="<?php _e('Enter any description', 'updraftplus'); ?>" value="" >
 						</td>
 					</tr>
 
 					<tr class="updraft_debugrow updraftcentral_wizard_stage2" style="display: none;">
 						<td>
-							<?php $updraftcentral_host_plugin->retrieve_show_message('encryption_key_size', true); ?>
+							<?php _e('Encryption key size:', 'updraftplus'); ?>
 							<select style="" id="updraftcentral_keycreate_keysize">
-								<option value="512"><?php echo sprintf($updraftcentral_host_plugin->retrieve_show_message('bits').' - '.$updraftcentral_host_plugin->retrieve_show_message('easy_to_break'), '512'); ?></option>
-								<option value="1024"><?php echo sprintf($updraftcentral_host_plugin->retrieve_show_message('bits').' - '.$updraftcentral_host_plugin->retrieve_show_message('faster'), '1024'); ?></option>
-								<option value="2048" selected="selected"><?php echo sprintf($updraftcentral_host_plugin->retrieve_show_message('bytes').' - '.$updraftcentral_host_plugin->retrieve_show_message('recommended'), '2048'); ?></option>
-								<option value="4096"><?php echo sprintf($updraftcentral_host_plugin->retrieve_show_message('bits').' - '.$updraftcentral_host_plugin->retrieve_show_message('slower'), '4096'); ?></option>
+								<option value="512"><?php echo sprintf(__('%s bits', 'updraftplus').' - '.__('easy to break, fastest', 'updraftplus'), '512'); ?></option>
+								<option value="1024"><?php echo sprintf(__('%s bits', 'updraftplus').' - '.__('faster (possibility for slow PHP installs)', 'updraftplus'), '1024'); ?></option>
+								<option value="2048" selected="selected"><?php echo sprintf(__('%s bytes', 'updraftplus').' - '.__('recommended', 'updraftplus'), '2048'); ?></option>
+								<option value="4096"><?php echo sprintf(__('%s bits', 'updraftplus').' - '.__('slower, strongest', 'updraftplus'), '4096'); ?></option>
 							</select>
 							<br>
 							<div id="updraftcentral_keycreate_mothership_firewalled_container">
 								<label>
 									<input id="updraftcentral_keycreate_mothership_firewalled" type="checkbox">
-									<?php $updraftcentral_host_plugin->retrieve_show_message('use_alternative_method', true); ?>
-									<a href="<?php echo UpdraftPlus::get_current_clean_url(); ?>" id="updraftcentral_keycreate_altmethod_moreinfo_get"><?php $updraftcentral_host_plugin->retrieve_show_message('more_information', true); ?></a>
+									<?php _e('Use the alternative method for making a connection with the dashboard.', 'updraftplus'); ?>
+									<a href="<?php echo UpdraftPlus::get_current_clean_url(); ?>" id="updraftcentral_keycreate_altmethod_moreinfo_get"><?php _e('More information...', 'updraftplus'); ?></a>
 									<p id="updraftcentral_keycreate_altmethod_moreinfo" style="display:none; border: 1px dotted; padding: 3px; margin: 2px 10px 2px 24px;">
-										<em><?php $updraftcentral_host_plugin->retrieve_show_message('this_is_useful', true);?></em>
+										<em><?php _e('This is useful if the dashboard webserver cannot be contacted with incoming traffic by this website (for example, this is the case if this website is hosted on the public Internet, but the UpdraftCentral dashboard is on localhost, or on an Intranet, or if this website has an outgoing firewall), or if the dashboard website does not have a SSL certificate.');?></em>
 									</p>
 								</label>
 							</div>
@@ -593,12 +576,12 @@ class UpdraftCentral_Main {
 
 					<tr class="updraft_debugrow updraftcentral_wizard_stage2" style="display: none;">
 						<td>
-							<button style="margin-top: 5px;" type="button" class="button button-primary" id="updraftcentral_keycreate_go"><?php $updraftcentral_host_plugin->retrieve_show_message('create', true); ?></button>
+							<button style="margin-top: 5px;" type="button" class="button button-primary" id="updraftcentral_keycreate_go"><?php _e('Create', 'updraftplus'); ?></button>
 						</td>
 					</tr>
 					<tr class="updraft_debugrow updraftcentral_wizard_stage2" style="display: none;">
 						<td>
-							<a id="updraftcentral_stage1_go"><?php $updraftcentral_host_plugin->retrieve_show_message('back', true); ?></a>
+							<a id="updraftcentral_stage1_go"><?php _e('Back...', 'updraftplus'); ?></a>
 						</td>
 					</tr>
 				</tbody>
@@ -614,12 +597,10 @@ class UpdraftCentral_Main {
 	 * @return String - the HTML
 	 */
 	private function get_log_markup() {
-		global $updraftcentral_host_plugin;
-
 		ob_start();
 		?>
 			<div id="updraftcentral_view_log_container" style="margin: 10px 0;">
-				<a href="<?php echo UpdraftPlus::get_current_clean_url(); ?>" id="updraftcentral_view_log"><?php $updraftcentral_host_plugin->retrieve_show_message('view_log_events', true); ?>...</a><br>
+				<a href="<?php echo UpdraftPlus::get_current_clean_url(); ?>" id="updraftcentral_view_log"><?php _e('View recent UpdraftCentral log events', 'updraftplus'); ?>...</a><br>
 				<pre id="updraftcentral_view_log_contents" style="min-height: 110px; padding: 0 4px;">
 				</pre>
 			</div>
@@ -631,18 +612,16 @@ class UpdraftCentral_Main {
 	 * Echo the debug-tools dashboard HTML. Called by the WP action updraftplus_debugtools_dashboard.
 	 */
 	public function debugtools_dashboard() {
-		global $updraftcentral_host_plugin;
-		
 	?>
 		<div class="advanced_tools updraft_central">
-			<h3><?php $updraftcentral_host_plugin->retrieve_show_message('updraftcentral_remote_control', true); ?></h3>
+			<h3><?php _e('UpdraftCentral (Remote Control)', 'updraftplus'); ?></h3>
 			<p>
-				<?php echo $updraftcentral_host_plugin->retrieve_show_message('updraftcentral_description').' <a target="_blank" href="https://updraftcentral.com">'.$updraftcentral_host_plugin->retrieve_show_message('read_more').'</a>'; ?>
+				<?php echo __('UpdraftCentral enables control of your WordPress sites (including management of backups and updates) from a central dashboard.', 'updraftplus').' <a target="_blank" href="https://updraftcentral.com">'.__('Read more about it here.', 'updraftplus').'</a>'; ?>
 			</p>
 			<div style="min-height: 310px;" id="updraftcentral_keys">
 				<?php echo $this->create_key_markup(); ?>
 				<?php echo $this->get_keys_table(); ?>
-				<button style="display: none;" type="button" class="button button-primary" id="updraftcentral_wizard_go"><?php $updraftcentral_host_plugin->retrieve_show_message('create_another_key', true); ?></button>
+				<button style="display: none;" type="button" class="button button-primary" id="updraftcentral_wizard_go"><?php _e('Create another key', 'updraftplus'); ?></button>
 				<?php echo $this->get_log_markup(); ?>
 			</div>
 		</div>

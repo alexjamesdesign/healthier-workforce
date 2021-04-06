@@ -2,8 +2,8 @@
 
 namespace Yoast\WP\SEO\Integrations\Admin;
 
-use Yoast\WP\SEO\Actions\Indexing\Indexable_General_Indexation_Action;
 use Yoast\WP\SEO\Actions\Indexing\Indexable_Indexing_Complete_Action;
+use Yoast\WP\SEO\Actions\Indexing\Indexable_General_Indexation_Action;
 use Yoast\WP\SEO\Actions\Indexing\Indexable_Post_Indexation_Action;
 use Yoast\WP\SEO\Actions\Indexing\Indexable_Post_Type_Archive_Indexation_Action;
 use Yoast\WP\SEO\Actions\Indexing\Indexable_Term_Indexation_Action;
@@ -12,7 +12,6 @@ use Yoast\WP\SEO\Actions\Indexing\Term_Link_Indexing_Action;
 use Yoast\WP\SEO\Conditionals\Get_Request_Conditional;
 use Yoast\WP\SEO\Conditionals\Migrations_Conditional;
 use Yoast\WP\SEO\Conditionals\Yoast_Admin_And_Dashboard_Conditional;
-use Yoast\WP\SEO\Helpers\Indexing_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 
 /**
@@ -23,35 +22,35 @@ use Yoast\WP\SEO\Integrations\Integration_Interface;
 class Background_Indexing_Integration implements Integration_Interface {
 
 	/**
-	 * The post indexing action.
+	 * The post indexation action.
 	 *
 	 * @var Indexable_Post_Indexation_Action
 	 */
 	protected $post_indexation;
 
 	/**
-	 * The term indexing action.
+	 * The term indexation action.
 	 *
 	 * @var Indexable_Term_Indexation_Action
 	 */
 	protected $term_indexation;
 
 	/**
-	 * The post type archive indexing action.
+	 * The post type archive indexation action.
 	 *
 	 * @var Indexable_Post_Type_Archive_Indexation_Action
 	 */
 	protected $post_type_archive_indexation;
 
 	/**
-	 * Represents the general indexing.
+	 * Represents the general indexation.
 	 *
 	 * @var Indexable_General_Indexation_Action
 	 */
 	protected $general_indexation;
 
 	/**
-	 * Represents the indexing completed action.
+	 * Represents the indexation completed action.
 	 *
 	 * @var Indexable_Indexing_Complete_Action
 	 */
@@ -72,11 +71,11 @@ class Background_Indexing_Integration implements Integration_Interface {
 	protected $term_link_indexing_action;
 
 	/**
-	 * Represents the indexing helper.
+	 * The total number of unindexed objects.
 	 *
-	 * @var Indexing_Helper
+	 * @var int
 	 */
-	protected $indexing_helper;
+	protected $total_unindexed;
 
 	/**
 	 * Returns the conditionals based on which this integration should be active.
@@ -101,7 +100,6 @@ class Background_Indexing_Integration implements Integration_Interface {
 	 * @param Indexable_Indexing_Complete_Action            $complete_indexation_action   The complete indexing action.
 	 * @param Post_Link_Indexing_Action                     $post_link_indexing_action    The post indexing action.
 	 * @param Term_Link_Indexing_Action                     $term_link_indexing_action    The term indexing action.
-	 * @param Indexing_Helper                               $indexing_helper              The indexing helper.
 	 */
 	public function __construct(
 		Indexable_Post_Indexation_Action $post_indexation,
@@ -110,8 +108,7 @@ class Background_Indexing_Integration implements Integration_Interface {
 		Indexable_General_Indexation_Action $general_indexation,
 		Indexable_Indexing_Complete_Action $complete_indexation_action,
 		Post_Link_Indexing_Action $post_link_indexing_action,
-		Term_Link_Indexing_Action $term_link_indexing_action,
-		Indexing_Helper $indexing_helper
+		Term_Link_Indexing_Action $term_link_indexing_action
 	) {
 		$this->post_indexation              = $post_indexation;
 		$this->term_indexation              = $term_indexation;
@@ -120,7 +117,6 @@ class Background_Indexing_Integration implements Integration_Interface {
 		$this->complete_indexation_action   = $complete_indexation_action;
 		$this->post_link_indexing_action    = $post_link_indexing_action;
 		$this->term_link_indexing_action    = $term_link_indexing_action;
-		$this->indexing_helper              = $indexing_helper;
 	}
 
 	/**
@@ -136,7 +132,7 @@ class Background_Indexing_Integration implements Integration_Interface {
 	 * @return void
 	 */
 	public function register_shutdown_indexing() {
-		$total = $this->indexing_helper->get_unindexed_count();
+		$total = $this->get_unindexed_count();
 		if ( $total > 0 && $total < $this->get_shutdown_limit() ) {
 			\register_shutdown_function( [ $this, 'index' ] );
 		}
@@ -155,6 +151,24 @@ class Background_Indexing_Integration implements Integration_Interface {
 		$this->post_link_indexing_action->index();
 		$this->term_link_indexing_action->index();
 		$this->complete_indexation_action->complete();
+	}
+
+	/**
+	 * Returns the total number of unindexed objects.
+	 *
+	 * @param int $unindexed_count The total number of unindexed objects.
+	 *
+	 * @return int The total number of unindexed objects.
+	 */
+	protected function get_unindexed_count( $unindexed_count = 0 ) {
+		$unindexed_count += $this->post_indexation->get_total_unindexed();
+		$unindexed_count += $this->term_indexation->get_total_unindexed();
+		$unindexed_count += $this->general_indexation->get_total_unindexed();
+		$unindexed_count += $this->post_type_archive_indexation->get_total_unindexed();
+		$unindexed_count += $this->post_link_indexing_action->get_total_unindexed();
+		$unindexed_count += $this->term_link_indexing_action->get_total_unindexed();
+
+		return $unindexed_count;
 	}
 
 	/**

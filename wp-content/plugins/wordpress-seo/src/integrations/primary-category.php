@@ -14,20 +14,16 @@ use Yoast\WP\SEO\Conditionals\Primary_Category_Conditional;
 class Primary_Category implements Integration_Interface {
 
 	/**
-	 * Returns the conditionals based on which this loadable should be active.
-	 *
-	 * In this case only when on the frontend, the post overview, post edit or new post admin page.
-	 *
-	 * @return array The conditionals.
+	 * @codeCoverageIgnore
+	 * @inheritDoc
 	 */
 	public static function get_conditionals() {
 		return [ Primary_Category_Conditional::class ];
 	}
 
 	/**
-	 * Registers a filter to change a post's primary category.
-	 *
-	 * @return void
+	 * @codeCoverageIgnore
+	 * @inheritDoc
 	 */
 	public function register_hooks() {
 		\add_filter( 'post_link_category', [ $this, 'post_link_category' ], 10, 3 );

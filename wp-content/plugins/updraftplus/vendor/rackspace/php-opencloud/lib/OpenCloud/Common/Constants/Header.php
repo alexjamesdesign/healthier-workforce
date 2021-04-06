@@ -70,5 +70,4 @@ class Header
     const USER_AGENT = 'User-Agent';
     const VARY = 'Vary';
     const VIA = 'Via';
-    const X_OBJECT_MANIFEST = 'X-Object-Manifest';
 }

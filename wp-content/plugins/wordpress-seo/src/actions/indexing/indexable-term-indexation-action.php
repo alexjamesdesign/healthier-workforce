@@ -9,7 +9,7 @@ use Yoast\WP\SEO\Models\Indexable;
 use Yoast\WP\SEO\Repositories\Indexable_Repository;
 
 /**
- * Reindexing action for term indexables.
+ * Reindexation action for term indexables.
  */
 class Indexable_Term_Indexation_Action implements Indexation_Action_Interface {
 

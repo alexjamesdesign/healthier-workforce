@@ -60,9 +60,6 @@
 		 */
 		return this.each(function()
 		{
-			var migrateDeduplicateWarnings = jQuery.migrateDeduplicateWarnings || false;
-			if (settings.development) jQuery.migrateDeduplicateWarnings = false;
-
 			var $object = $( this );
 			var selected = $object.is(':checked');
 			var type = $object.attr('type');
@@ -165,7 +162,7 @@
 			
 			var element = jQuery(create( input_id, aria_label, selected, type, labels_object, use_labels ))
 			
-			element.on('click', function(){
+			element.click(function(){
 				if($object.is(':checked')){
 					$(element).attr('aria-checked', false);
 				}else{
@@ -173,7 +170,7 @@
 				}
 			});
 			
-			element.on('keypress', function(event){
+			element.keypress(function(event){
 				event.preventDefault();
 				if(event.keyCode === 32 || event.keyCode === 13){
 					if($object.is(':checked')){
@@ -206,7 +203,6 @@
 				else
 					label_object.find( "span.labelauty-unchecked" ).width( checked_width );
 			}
-			if (settings.development) jQuery.migrateDeduplicateWarnings = migrateDeduplicateWarnings;
 		});
 	};
 

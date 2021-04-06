@@ -51,13 +51,13 @@ class CreateSmtpEmail implements \WPMailSMTP\Vendor\SendinBlue\Client\Model\Mode
      *
      * @var string[]
      */
-    protected static $swaggerTypes = ['messageId' => 'string', 'messageIds' => 'string[]'];
+    protected static $swaggerTypes = ['messageId' => 'string'];
     /**
      * Array of property to format mappings. Used for (de)serialization
      *
      * @var string[]
      */
-    protected static $swaggerFormats = ['messageId' => null, 'messageIds' => null];
+    protected static $swaggerFormats = ['messageId' => null];
     /**
      * Array of property to type mappings. Used for (de)serialization
      *
@@ -82,19 +82,19 @@ class CreateSmtpEmail implements \WPMailSMTP\Vendor\SendinBlue\Client\Model\Mode
      *
      * @var string[]
      */
-    protected static $attributeMap = ['messageId' => 'messageId', 'messageIds' => 'messageIds'];
+    protected static $attributeMap = ['messageId' => 'messageId'];
     /**
      * Array of attributes to setter functions (for deserialization of responses)
      *
      * @var string[]
      */
-    protected static $setters = ['messageId' => 'setMessageId', 'messageIds' => 'setMessageIds'];
+    protected static $setters = ['messageId' => 'setMessageId'];
     /**
      * Array of attributes to getter functions (for serialization of requests)
      *
      * @var string[]
      */
-    protected static $getters = ['messageId' => 'getMessageId', 'messageIds' => 'getMessageIds'];
+    protected static $getters = ['messageId' => 'getMessageId'];
     /**
      * Array of attributes where the key is the local name,
      * and the value is the original name
@@ -147,7 +147,6 @@ class CreateSmtpEmail implements \WPMailSMTP\Vendor\SendinBlue\Client\Model\Mode
     public function __construct(array $data = null)
     {
         $this->container['messageId'] = isset($data['messageId']) ? $data['messageId'] : null;
-        $this->container['messageIds'] = isset($data['messageIds']) ? $data['messageIds'] : null;
     }
     /**
      * Show all the invalid properties with reasons.
@@ -157,6 +156,9 @@ class CreateSmtpEmail implements \WPMailSMTP\Vendor\SendinBlue\Client\Model\Mode
     public function listInvalidProperties()
     {
         $invalidProperties = [];
+        if ($this->container['messageId'] === null) {
+            $invalidProperties[] = "'messageId' can't be null";
+        }
         return $invalidProperties;
     }
     /**
@@ -188,27 +190,6 @@ class CreateSmtpEmail implements \WPMailSMTP\Vendor\SendinBlue\Client\Model\Mode
     public function setMessageId($messageId)
     {
         $this->container['messageId'] = $messageId;
-        return $this;
-    }
-    /**
-     * Gets messageIds
-     *
-     * @return string[]
-     */
-    public function getMessageIds()
-    {
-        return $this->container['messageIds'];
-    }
-    /**
-     * Sets messageIds
-     *
-     * @param string[] $messageIds messageIds
-     *
-     * @return $this
-     */
-    public function setMessageIds($messageIds)
-    {
-        $this->container['messageIds'] = $messageIds;
         return $this;
     }
     /**

@@ -26,9 +26,7 @@ class Headless_Rest_Endpoints_Enabled_Conditional implements Conditional {
 	}
 
 	/**
-	 * Returns `true` whether the headless REST endpoints have been enabled.
-	 *
-	 * @returns boolean `true` when the headless REST endpoints have been enabled.
+	 * @inheritDoc
 	 */
 	public function is_met() {
 		return $this->options->get( 'enable_headless_rest_endpoints' );

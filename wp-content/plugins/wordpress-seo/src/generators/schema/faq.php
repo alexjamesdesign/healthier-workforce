@@ -20,28 +20,9 @@ class FAQ extends Abstract_Schema_Piece {
 		if ( ! \is_array( $this->context->schema_page_type ) ) {
 			$this->context->schema_page_type = [ $this->context->schema_page_type ];
 		}
-		$this->context->schema_page_type[]  = 'FAQPage';
-		$this->context->main_entity_of_page = $this->generate_ids();
+		$this->context->schema_page_type[] = 'FAQPage';
 
 		return true;
-	}
-
-	/**
-	 * Generate the IDs so we can link to them in the main entity.
-	 *
-	 * @return array
-	 */
-	private function generate_ids() {
-		foreach ( $this->context->blocks['yoast/faq-block'] as $block ) {
-			foreach ( $block['attrs']['questions'] as $index => $question ) {
-				if ( ! isset( $question['jsonAnswer'] ) || empty( $question['jsonAnswer'] ) ) {
-					continue;
-				}
-				$ids[] = [ '@id' => $this->context->canonical . '#' . \esc_attr( $question['id'] ) ];
-			}
-		}
-
-		return $ids;
 	}
 
 	/**
@@ -50,16 +31,29 @@ class FAQ extends Abstract_Schema_Piece {
 	 * @return array $data Our Schema graph.
 	 */
 	public function generate() {
-		$graph = [];
+		$ids             = [];
+		$graph           = [];
+		$number_of_items = 0;
 
 		foreach ( $this->context->blocks['yoast/faq-block'] as $block ) {
 			foreach ( $block['attrs']['questions'] as $index => $question ) {
 				if ( ! isset( $question['jsonAnswer'] ) || empty( $question['jsonAnswer'] ) ) {
 					continue;
 				}
+				$ids[] = [ '@id' => $this->context->canonical . '#' . \esc_attr( $question['id'] ) ];
+				// Index + 1 below so we start at 1 and count from there.
 				$graph[] = $this->generate_question_block( $question, ( $index + 1 ) );
+				++$number_of_items;
 			}
 		}
+
+		$extra_graph_entries = [
+			'@type'            => 'ItemList',
+			'mainEntityOfPage' => [ '@id' => $this->context->main_schema_id ],
+			'numberOfItems'    => $number_of_items,
+			'itemListElement'  => $ids,
+		];
+		\array_unshift( $graph, $extra_graph_entries );
 
 		return $graph;
 	}

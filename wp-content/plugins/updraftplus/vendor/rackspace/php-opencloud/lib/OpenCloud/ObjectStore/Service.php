@@ -59,9 +59,7 @@ class Service extends AbstractService
     }
 
     /**
-     * Return the CDN version of the ObjectStore service.
-     *
-     * @return CDNService CDN version of the ObjectStore service
+     * @return CDNService
      */
     public function getCdnService()
     {
@@ -71,12 +69,8 @@ class Service extends AbstractService
     /**
      * List all available containers.
      *
-     * @param array $filter Array of filter options such as:
-     *
-     * * `limit`: number of results to limit the list to. Optional.
-     * * `marker`: name of container after which to start the list. Optional.
-     * * `end_marker`: name of container before which to end the list. Optional.
-     * @return \OpenCloud\Common\Collection\PaginatedIterator Iterator to list of containers
+     * @param array $filter
+     * @return \OpenCloud\Common\Collection\PaginatedIterator
      */
     public function listContainers(array $filter = array())
     {
@@ -85,26 +79,20 @@ class Service extends AbstractService
     }
 
     /**
-     * Return a new or existing (if name is specified) container.
-     *
-     * @param \stdClass $data Data to initialize container. Optional.
-     * @return Container Container
+     * @param $data
+     * @return Container
      */
     public function getContainer($data = null)
     {
-        if (is_string($data) || is_numeric($data)) {
-            $this->checkContainerName($data);
-        }
-
         return new Container($this, $data);
     }
 
     /**
      * Create a container for this service.
      *
-     * @param string $name    The name of the container
+     * @param       $name     The name of the container
      * @param array $metadata Additional (optional) metadata to associate with the container
-     * @return bool|Container Newly-created Container upon success; false, otherwise
+     * @return bool|static
      */
     public function createContainer($name, array $metadata = array())
     {
@@ -126,9 +114,9 @@ class Service extends AbstractService
     /**
      * Check the validity of a potential container name.
      *
-     * @param string $name Name of container
-     * @return bool True if container name is valid
-     * @throws \OpenCloud\Common\Exceptions\InvalidArgumentError if container name is invalid
+     * @param $name
+     * @return bool
+     * @throws \OpenCloud\Common\Exceptions\InvalidArgumentError
      */
     public function checkContainerName($name)
     {
@@ -157,12 +145,12 @@ class Service extends AbstractService
      * will be ignored. You can create up to 1,000 new containers per extraction request. Also note that only regular
      * files will be uploaded. Empty directories, symlinks, and so on, will not be uploaded.
      *
-     * @param string $path The path to the archive being extracted
-     * @param string|stream $archive The contents of the archive (either string or stream)
+     * @param        $path        The path to the archive being extracted
+     * @param        $archive     The contents of the archive (either string or stream)
      * @param string $archiveType The type of archive you're using {@see \OpenCloud\ObjectStore\Constants\UrlType}
-     * @return \Guzzle\Http\Message\Response HTTP response from API
-     * @throws \OpenCloud\Common\Exceptions\InvalidArgumentError if specifed `$archiveType` is invalid
-     * @throws Exception\BulkOperationException if there are errors with the bulk extract
+     * @return \Guzzle\Http\Message\Response
+     * @throws Exception\BulkOperationException
+     * @throws \OpenCloud\Common\Exceptions\InvalidArgumentError
      */
     public function bulkExtract($path = '', $archive, $archiveType = UrlType::TAR_GZ)
     {
@@ -211,17 +199,17 @@ class Service extends AbstractService
      * and sent as individual requests.
      *
      * @param array $paths The objects you want to delete. Each path needs
-     *                     be formatted as `/{containerName}/{objectName}`. If
-     *                     you are deleting `object_1` and `object_2` from the
-     *                     `photos_container`, the array will be:
+     *                     be formatted as /{containerName}/{objectName}. If
+     *                     you are deleting object_1 and object_2 from the
+     *                     photos_container, the array will be:
      *
      *                     array(
      *                        '/photos_container/object_1',
      *                        '/photos_container/object_2'
      *                     )
      *
-     * @return array[Guzzle\Http\Message\Response] HTTP responses from the API
-     * @throws Exception\BulkOperationException if the bulk delete operation fails
+     * @return array The array of responses from the API
+     * @throws Exception\BulkOperationException
      */
     public function batchDelete(array $paths)
     {
@@ -269,12 +257,7 @@ class Service extends AbstractService
      *
      * @param Container $old Where you're moving files from
      * @param Container $new Where you're moving files to
-     * @param array $options Options to configure the migration. Optional. Available options are:
-     *
-     * * `read.batchLimit`: Number of files to read at a time from `$old` container. Optional; default = 1000.
-     * * `write.batchLimit`: Number of files to write at a time to `$new` container. Optional; default = 1000.
-     * * `read.pageLimit`: Number of filenames to read at a time from `$old` container. Optional; default = 10000.
-     * @return array[Guzzle\Http\Message\Response] HTTP responses from the API
+     * @return array    Of PUT responses
      */
     public function migrateContainer(Container $old, Container $new, array $options = array())
     {

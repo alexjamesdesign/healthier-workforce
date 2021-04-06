@@ -1,17 +1,9 @@
 <?php
 
-/**
- * Match the server URL. Used to match requests for another domain.
- */
 class Server_Match extends Red_Match {
 	use FromNotFrom_Match;
 
-	/**
-	 * Server URL.
-	 *
-	 * @var String
-	 */
-	public $server = '';
+	public $server;
 
 	public function name() {
 		return __( 'URL and server', 'redirection' );
@@ -49,12 +41,6 @@ class Server_Match extends Red_Match {
 		), $this->get_from_data() );
 	}
 
-	/**
-	 * Load the match data into this instance.
-	 *
-	 * @param String $values Match values, as read from the database (plain text or serialized PHP).
-	 * @return void
-	 */
 	public function load( $values ) {
 		$values = $this->load_data( $values );
 		$this->server = isset( $values['server'] ) ? $values['server'] : '';

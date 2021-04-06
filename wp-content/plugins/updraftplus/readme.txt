@@ -2,8 +2,8 @@
 Contributors: Backup with UpdraftPlus, DavidAnderson, DNutbourne, aporter, snightingale, bcrodua
 Tags: backup, restore, database backup, wordpress backup, cloud backup, s3, dropbox, google drive, onedrive, ftp, backups
 Requires at least: 3.2
-Tested up to: 5.7
-Stable tag: 1.16.51
+Tested up to: 5.6
+Stable tag: 1.16.36
 Author URI: https://updraftplus.com
 Donate link: https://david.dw-perspective.org.uk/donate
 License: GPLv3 or later
@@ -12,7 +12,7 @@ Backup and restoration made easy. Complete backups; manual or scheduled (backup 
 
 == Description ==
 
-<a href="https://updraftplus.com">UpdraftPlus</a> simplifies backups and restoration. It is the world's highest ranking and most popular scheduled backup plugin, with over three million currently-active installs. Backup your files and database backups into the cloud and restore with a single click!
+<a href="https://updraftplus.com">UpdraftPlus</a> simplifies backups and restoration. It is the world's highest ranking and most popular scheduled backup plugin, with over two million currently-active installs. Backup your files and database backups into the cloud and restore with a single click!
 
 Backup into the cloud directly to Dropbox, Google Drive, Amazon S3 (or compatible), UpdraftVault, Rackspace Cloud, FTP, DreamObjects, Openstack Swift, and email. The paid version also backs up to Microsoft OneDrive, Microsoft Azure, Google Cloud Storage, Backblaze B2, SFTP, SCP, and WebDAV.
 
@@ -44,7 +44,7 @@ Unlike many other plugins, UpdraftPlus:
 * Backs up to more cloud options than any others
 * Allows you to set up automatic backup schedules, for the ultimate in convenience
 * Is faster, using up fewer server resources
-* Has been tested on over 3 million sites
+* Has been tested on over 1 million sites
 
 On our website, we've got a whole page dedicated to how our Premium version compares with the competition <a href="https://updraftplus.com/comparison-updraftplus-free-updraftplus-premium/">here</a>
 
@@ -91,7 +91,7 @@ Many thanks to the existing translators - listed at: <a href="https://updraftplu
 
 = More premium plugins =
 
-If you are in the market for other WordPress premium plugins (especially WooCommerce addons), then try <a href="https://www.simbahosting.co.uk/s3/shop/">our friends' shop, here</a>.
+If you are in the market for other WordPress premium plugins (especially WooCommerce addons), then try <a href="https://www.simbahosting.co.uk/s3/shop/">our sister shop, here</a>.
 
 For other useful free plugins see <a href="https://profiles.wordpress.org/davidanderson/#content-plugins">our lead developer's profile, here</a>.
 
@@ -167,134 +167,6 @@ Unfortunately not; since this is free software, there’s no warranty and no gua
 The <a href="https://updraftplus.com/news/">UpdraftPlus backup blog</a> is the best place to learn in more detail about any important changes.
 
 N.B. Paid versions of UpdraftPlus Backup / Restore have a version number which is 1 higher in the first digit, and has an extra component on the end, but the changelog below still applies. i.e. changes listed for 1.16.32.x of the free version correspond to changes made in 2.16.32.x of the paid version.
-
-= 1.16.51 - 01/Apr/2021 =
-
-* FIX: Backup before updating dialog was not working on the inline informational pop-up on the Plugins page
-* TWEAK: Refactor how translatable texts are being handled and displayed within the UpdraftCentral client code
-* TWEAK: Fix parameter passing for UpdraftCentral multiplexed request
-* TWEAK: Exclude/skip very large files from the backup operation if the first and second attempt at backing them up didn't succeed
-* TWEAK: Backblaze multi-deletion code did not properly handle files that were already deleted (could abort deletion of others)
-* TWEAK: Replace the table prefix in the constraint name if it is found
-* TWEAK: Don't perform an atomic restore on tables with constraints
-* TWEAK: Add atomic restore support for non-WordPress tables
-
-= 1.16.50 - 16/Mar/2021 =
-
-* TWEAK: Reduce and log memory usage in Google upload methods
-* TWEAK: Catch Dropbox HTTP 401 errors and refresh the access token
-* FIX: An issue with refreshing Dropbox access tokens
-
-= 1.16.49 - 10/Mar/2021 =
-
-* FIX: Don't perform an atomic restore for non-WP-prefix tables backed up (Premium feature) - fixes a bug that resulted in the final table being dropped
-* TWEAK: Dates/times shown in the "next scheduled backup(s)" are now translated into the user's locale
-
-= 1.16.48 - 09/Mar/2021 =
-
-* FEATURE: If needed database permissions are available then perform an atomic restore to improve chances of successfully restoring the database
-* FEATURE: Added the ability to manually complete authentication with Google Drive (Avoids issues where security modules/plugins break the authentication flow)
-* FEATURE: Added the ability to manually complete authentication with OneDrive (Avoids issues where security modules/plugins break the authentication flow)
-* FEATURE: Google Drive and Google Cloud now allow boosting chunk size for faster transfers
-* FIX: Files/Directories Exclusion not saving correctly when adding numeric directory/file names into the exclusion list
-* FIX: Different PHP versions generate different suffixes length in the temporary ZIP filename resulting in a chance of overlapping runs
-* FIX: an issue with mysqldump password character escaping
-* TWEAK: Avoid unnecessary database writes caused by redundant jobdata updating during backup of files
-* TWEAK: Add "anywhere in their names" syntax option to the exclusion UI
-* TWEAK: Bump the requirement for the S3 enhanced module, and for using the official AWS SDK, up to PHP 5.5 (in preparation for updating the SDK version later)
-* TWEAK: Fix a bug of report emails for incremental backups displaying incorrectly in many email apps
-* TWEAK: Update Select2 library to version 4.1.0-rc.0 to work around deprecated jQuery isFunction
-* TWEAK: Update jQuery-serializeJSON library to version 3.2.0 to work around deprecated jQuery isArray
-* TWEAK: Handle hosts that have disabled some of the PHP functions thus causing a fatal error on PHP 8
-* TWEAK: Correct under-calculation of used memory in verify_free_memory()
-* TWEAK: Fix (inconsequential to this point) double-use of identifier for SQL statement type
-* TWEAK: Remove some compatibility code in Dropbox downloading pertaining to a folder selection bug eliminated ~8 years ago.
-* TWEAK: Remove unneeded sub-site tables when performing a restoration/migration (Multisite)
-* TWEAK: Improve the exclusion UI by adding new "wildcards" option thus allowing the user to add a set of patterns for excluding files/directories
-* TWEAK: Integration of the new files that were previously added for abstracting UpdraftCentral's client code
-* TWEAK: Excluded items (Files or Folders) that are not readable should not trigger a warning about being unreadable
-* TWEAK: Fix some RTL CSS issues
-* TWEAK: OneDrive 4xx error reporting
-* TWEAK: Update the Dropbox SDK to use refresh tokens (long lived token support ends September 2021)
-* TWEAK: implement a multi-delete capabiltiy when deleting from Backblaze
-* TWEAK: On UpdraftClone display the image ID in the advanced tools tab for easier debugging
-* TWEAK: Make it more clear in the restore log that we are starting an AJAX restore
-* TWEAK: The download backup HTML so that there is only one download button per archive type
-
-= 1.16.47 - 25/Jan/2021 =
-
-* FEATURE: added the ability to anonymise personal data in database backups from the "Backup Now" dialog (Premium / add-on)
-* FEATURE: Add page management module for UpdraftCentral
-* FIX: 1.16.42 Introduced a regression (truncation) when listing files from Dropbox when there were multiple pages of results
-* TWEAK: Force host-style bucket access when backing up via S3 generic to Alibabacloud
-* TWEAK: Remove unneeded Google SDK files from our fork of the SDK taking the size from 6MB to 800KB
-* TWEAK: Incorrect jQuery UI dialog extended filename
-* TWEAK: Change some class names to improve compatibility with other plugins using the Google SDK and auto-loading their version unconditionally
-* TWEAK: Update the delete file Dropbox API call to version 2
-* TWEAK: Change the S3 test settings form names to match the saved setting names
-* TWEAK: Check the Content-Type on the response from an S3-compatible provider slightly less strictly, improving compatibility with at least one otherwise-working implementation
-* TWEAK: Update the Dropbox SDK to use scopes
-* TWEAK: Handle hosts that have removed disk_free_space() (now that on PHP 8 disabling functions removes them)
-
-= 1.16.46 - 05/Jan/2021 =
-
-* FIX: Prevent some deprecation-related errors when backing up to some remote storage locations in PHP 8
-* FIX: Adding new remote storage instance (Premium) doesn't bring up the UI
-* TWEAK: Fix some modal dialog alignment/resizing issues
-
-= 1.16.45 - 04/Jan/2021 =
-
-* FIX: Prevent some fatal errors due to language behaviour changes when running under PHP 8
-* TWEAK: Replace deprecated calls to jQuery fn.focus(), fn.ready(), fn.submit(), fn.click() and fn.blur() methods in internal libraries
-* TWEAK: Replace deprecated calls to jQuery (:first) and (:eq) pseudo-classes in internal libraries
-* TWEAK: Prevent several PHP deprecation log notices on PHP 8
-* TWEAK: Rename some further classes in our fork of the Google SDK to prevent conflicts
-* TWEAK: When running under cron, do not combine schedules when there are no schedules
-* TWEAK: Revert a jQuery change in 1.16.44 which made notices on the 'updates' page appear multiple times.
-
-= 1.16.43 - 17/Dec/2020 =
-
-* TWEAK: Replace deprecated calls to jQuery.trim(), jQuery.fn.change(), jQuery.fn.bind(), jQuery.fn.unbind(), jQuery.fn.keyup(), jQuery.fn.removeAttr() and `jQuery.fn.removeProp() in internal libraries
-* TWEAK: Reduce excessive vertical margin above the header within Autobackup dialog box
-* TWEAK: Improve user experience in the case of some rare UpdraftVault conditions
-* TWEAK: Fix the exclude fields, which were unable to switch their mode from read-only to edit mode
-* TWEAK: Added new files needed for abstracting UpdraftCentral's client code
-* TWEAK: Update the review notice
-* TWEAK: When attempting to delete a Backblaze file and discovering it does not exist, do not log that as an error (presumably already deleted)
-* TWEAK: Fetch history log data in the popup using AJAX, instead of using embedded data attributes.
-* TWEAK: Be less quick to switch to PclZip when BinZip has not completed the job
-
-= 1.16.42 - 10/Dec/2020 =
-
-* FEATURE: Added the ability to manually complete authentication with Dropbox (Avoids issues where security modules/plugins break the authentication flow)
-* TWEAK: Replace BlockUI's deprecated jQuery functions and/or shorthand events with the appropriate method accordingly
-* TWEAK: Replace /2/files/search Dropbox API calls with /2/files/search_v2
-* TWEAK: Replace Labelauty's deprecated jQuery functions and/or shorthand events with the appropriate method accordingly
-* TWEAK: Fix broken multiple range selection's highlighters due to the absence of jquery-migrate in the WordPress core on version 5.5
-* TWEAK: Add the latest jQuery UI CSS framework for compatibility with WordPress 5.6 and all ongoing versions of WordPress
-* TWEAK: Add support for PHP 8.0 in UpdraftClone
-* TWEAK: Prevent a couple of PHP coding notices on PHP 8.0
-* TWEAK: Tweak in the backing up of tables to reduce PHP memory use when working with very long row contents
-* TWEAK: Prevent a PHP warning when starting a backup
-* TWEAK: Fix a UI issue in the "send backup to remote site" options
-
-= 1.16.41 - 27/Nov/2020 =
-
-* TWEAK: Don't repeat sending the 'upload_complete' command to a remotesend destination after it succeeded the first time
-* TWEAK: Update the udrpc library
-* TWEAK: In UpdraftClone, delay the temporary_clone_ready_for_restore signal until the browser connection is closed (preventing a loss of response)
-
-= 1.16.40 - 25/Nov/2020 =
-
-* TWEAK: Cycle Dropbox API client ID (old one has been cycled and no longer works)
-
-= 1.16.37 - 23/Nov/2020 =
-
-* FIX: Scheduled backups to remote storage not being correctly sent in 1.16.35/36 in the absence of the "More Storage" add-on
-* TWEAK: Wording tweak to clarify the effect of the conditional logic settings
-* TWEAK: Add a warning to the restore page to inform the user if JavaScript is broken and as a result the restore won't start
-* TWEAK: Replace intval() with casting to (int)
-* TWEAK: If the first fetch from a table failed, then the algorithm to fetch fewer rows failed to reduce the fetch size more than once
 
 = 1.16.36 - 20/Nov/2020 =
 
@@ -1282,4 +1154,4 @@ Reliance upon any non-English translation is at your own risk; UpdraftPlus can g
 We recognise and thank those mentioned at https://updraftplus.com/acknowledgements/ for code and/or libraries used and/or modified under the terms of their open source licences.
 
 == Upgrade Notice ==
-* 1.16.51: Various tweaks and fixes, including relating to atomic table restores.
+* 1.16.36: Many and various small improvements and fixes, including a fix and mitigation to a backup corruption issue on the term_relationships table in 1.16.30-34. A strongly recommended update for all.

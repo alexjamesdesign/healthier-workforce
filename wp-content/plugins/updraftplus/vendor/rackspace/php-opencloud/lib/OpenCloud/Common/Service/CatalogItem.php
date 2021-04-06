@@ -134,18 +134,16 @@ class CatalogItem
     /**
      * Using a standard data object, extract its endpoint.
      *
-     * @param string $region
-     * @param bool   $isRegionless
-     *
+     * @param $region
      * @return mixed
      * @throws \OpenCloud\Common\Exceptions\EndpointError
      */
-    public function getEndpointFromRegion($region, $isRegionless = false)
+    public function getEndpointFromRegion($region)
     {
         foreach ($this->endpoints as $endpoint) {
             // Return the endpoint if it is regionless OR if the endpoint's
             // region matches the $region supplied by the caller.
-            if ($isRegionless || !isset($endpoint->region) || $endpoint->region == $region) {
+            if (!isset($endpoint->region) || $endpoint->region == $region) {
                 return $endpoint;
             }
         }

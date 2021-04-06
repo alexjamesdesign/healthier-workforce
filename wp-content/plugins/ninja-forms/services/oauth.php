@@ -35,10 +35,6 @@ class OAuth
 
   public function setup() {
     add_action( 'wp_ajax_nf_oauth', function(){
-      // Does the current user have admin privileges
-      if (!current_user_can(apply_filters('ninja_forms_admin_all_forms_capabilities', 'manage_options'))) {
-        return;
-      }
       wp_die( json_encode( [
         'data' => [
           'connected' => ( $this->client_id ),
@@ -84,7 +80,7 @@ class OAuth
       return;
     }
 
-    if( ! wp_verify_nonce( $_REQUEST['nonce'], 'nf-oauth-connect' ) ) return;
+    // wp_verify_nonce( $_REQUEST['nonce'], 'nf-oauth-connect' );
 
     if( ! isset( $_GET[ 'client_id' ] ) ) return;
 
@@ -108,8 +104,6 @@ class OAuth
     if (!current_user_can('manage_options')) {
       return;
     }
-
-    if( ! wp_verify_nonce( $_REQUEST['nonce'], 'nf-oauth-disconnect' ) ) return;
 
     do_action( 'ninja_forms_oauth_disconnect' );
 

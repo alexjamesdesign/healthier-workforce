@@ -170,9 +170,6 @@ class CreateDoiContact implements \WPMailSMTP\Vendor\SendinBlue\Client\Model\Mod
         if ($this->container['templateId'] === null) {
             $invalidProperties[] = "'templateId' can't be null";
         }
-        if ($this->container['redirectionUrl'] === null) {
-            $invalidProperties[] = "'redirectionUrl' can't be null";
-        }
         return $invalidProperties;
     }
     /**

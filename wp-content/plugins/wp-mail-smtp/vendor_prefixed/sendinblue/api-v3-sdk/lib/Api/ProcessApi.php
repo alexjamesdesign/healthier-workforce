@@ -280,15 +280,14 @@ class ProcessApi
      *
      * @param  int $limit Number limitation for the result returned (optional, default to 10)
      * @param  int $offset Beginning point in the list to retrieve from. (optional, default to 0)
-     * @param  string $sort Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed (optional, default to desc)
      *
      * @throws \SendinBlue\Client\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return \SendinBlue\Client\Model\GetProcesses
      */
-    public function getProcesses($limit = '10', $offset = '0', $sort = 'desc')
+    public function getProcesses($limit = '10', $offset = '0')
     {
-        list($response) = $this->getProcessesWithHttpInfo($limit, $offset, $sort);
+        list($response) = $this->getProcessesWithHttpInfo($limit, $offset);
         return $response;
     }
     /**
@@ -298,16 +297,15 @@ class ProcessApi
      *
      * @param  int $limit Number limitation for the result returned (optional, default to 10)
      * @param  int $offset Beginning point in the list to retrieve from. (optional, default to 0)
-     * @param  string $sort Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed (optional, default to desc)
      *
      * @throws \SendinBlue\Client\ApiException on non-2xx response
      * @throws \InvalidArgumentException
      * @return array of \SendinBlue\Client\Model\GetProcesses, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getProcessesWithHttpInfo($limit = '10', $offset = '0', $sort = 'desc')
+    public function getProcessesWithHttpInfo($limit = '10', $offset = '0')
     {
         $returnType = 'WPMailSMTP\\Vendor\\SendinBlue\\Client\\Model\\GetProcesses';
-        $request = $this->getProcessesRequest($limit, $offset, $sort);
+        $request = $this->getProcessesRequest($limit, $offset);
         try {
             $options = $this->createHttpClientOption();
             try {
@@ -351,14 +349,13 @@ class ProcessApi
      *
      * @param  int $limit Number limitation for the result returned (optional, default to 10)
      * @param  int $offset Beginning point in the list to retrieve from. (optional, default to 0)
-     * @param  string $sort Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed (optional, default to desc)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getProcessesAsync($limit = '10', $offset = '0', $sort = 'desc')
+    public function getProcessesAsync($limit = '10', $offset = '0')
     {
-        return $this->getProcessesAsyncWithHttpInfo($limit, $offset, $sort)->then(function ($response) {
+        return $this->getProcessesAsyncWithHttpInfo($limit, $offset)->then(function ($response) {
             return $response[0];
         });
     }
@@ -369,15 +366,14 @@ class ProcessApi
      *
      * @param  int $limit Number limitation for the result returned (optional, default to 10)
      * @param  int $offset Beginning point in the list to retrieve from. (optional, default to 0)
-     * @param  string $sort Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed (optional, default to desc)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getProcessesAsyncWithHttpInfo($limit = '10', $offset = '0', $sort = 'desc')
+    public function getProcessesAsyncWithHttpInfo($limit = '10', $offset = '0')
     {
         $returnType = 'WPMailSMTP\\Vendor\\SendinBlue\\Client\\Model\\GetProcesses';
-        $request = $this->getProcessesRequest($limit, $offset, $sort);
+        $request = $this->getProcessesRequest($limit, $offset);
         return $this->client->sendAsync($request, $this->createHttpClientOption())->then(function ($response) use($returnType) {
             $responseBody = $response->getBody();
             if ($returnType === '\\SplFileObject') {
@@ -401,12 +397,11 @@ class ProcessApi
      *
      * @param  int $limit Number limitation for the result returned (optional, default to 10)
      * @param  int $offset Beginning point in the list to retrieve from. (optional, default to 0)
-     * @param  string $sort Sort the results in the ascending/descending order of record creation. Default order is **descending** if &#x60;sort&#x60; is not passed (optional, default to desc)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    protected function getProcessesRequest($limit = '10', $offset = '0', $sort = 'desc')
+    protected function getProcessesRequest($limit = '10', $offset = '0')
     {
         if ($limit !== null && $limit > 50) {
             throw new \InvalidArgumentException('invalid value for "$limit" when calling ProcessApi.getProcesses, must be smaller than or equal to 50.');
@@ -424,10 +419,6 @@ class ProcessApi
         // query params
         if ($offset !== null) {
             $queryParams['offset'] = \WPMailSMTP\Vendor\SendinBlue\Client\ObjectSerializer::toQueryValue($offset);
-        }
-        // query params
-        if ($sort !== null) {
-            $queryParams['sort'] = \WPMailSMTP\Vendor\SendinBlue\Client\ObjectSerializer::toQueryValue($sort);
         }
         // body params
         $_tempBody = null;

@@ -18,9 +18,9 @@ class Images extends Base_Images {
 	protected $open_graph_image;
 
 	/**
-	 * Sets the helpers.
+	 * @required
 	 *
-	 *  @required
+	 * Sets the helpers.
 	 *
 	 * @codeCoverageIgnore - Is handled by DI-container.
 	 *

@@ -28,14 +28,14 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 	/**
 	 * Get FTP object with parameters set
 	 *
-	 * @param  String  $server 			 Specify Server
-	 * @param  String  $user 			 Specify Username
-	 * @param  String  $pass 			 Specify Password
-	 * @param  Boolean $disable_ssl		 Indicate whether to disable SSL
-	 * @param  Boolean $disable_verify	 Indicate whether to disable verifiction
-	 * @param  Boolean $use_server_certs Indicate whether to use server certificates
-	 * @param  Boolean $passive 		 Indicate whether to use passive FTP mode
-	 * @return Array
+	 * @param  string  $server 			 Specify Server
+	 * @param  string  $user 			 Specify Username
+	 * @param  string  $pass 			 Specify Password
+	 * @param  boolean $disable_ssl		 Indicate whether to disable SSL
+	 * @param  boolean $disable_verify	 Indicate whether to disable verifiction
+	 * @param  boolean $use_server_certs Indicate whether to use server certificates
+	 * @param  boolean $passive 		 Indicate whether to use passive FTP mode
+	 * @return array
 	 */
 	private function getFTP($server, $user, $pass, $disable_ssl = false, $disable_verify = true, $use_server_certs = false, $passive = true) {
 
@@ -219,7 +219,7 @@ class UpdraftPlus_BackupModule_ftp extends UpdraftPlus_BackupModule {
 	 * @param Array $sizeinfo - unused here
 	 * @return Boolean|String - either a boolean true or an error code string
 	 */
-	public function delete($files, $ftparr = array(), $sizeinfo = array()) {// phpcs:ignore VariableAnalysis.CodeAnalysis.VariableAnalysis.UnusedVariable -- $sizeinfo unused
+	public function delete($files, $ftparr = array(), $sizeinfo = array()) {// phpcs:ignore Generic.CodeAnalysis.UnusedFunctionParameter.Found
 
 		global $updraftplus;
 		if (is_string($files)) $files = array($files);

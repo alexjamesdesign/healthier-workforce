@@ -3,15 +3,15 @@
 namespace Yoast\WP\SEO\Integrations\Admin;
 
 use Yoast\WP\SEO\Conditionals\Admin_Conditional;
-use Yoast\WP\SEO\Config\Indexing_Reasons;
 use Yoast\WP\SEO\Helpers\Current_Page_Helper;
-use Yoast\WP\SEO\Helpers\Indexing_Helper;
+use Yoast\WP\SEO\Helpers\Date_Helper;
 use Yoast\WP\SEO\Helpers\Notification_Helper;
+use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Helpers\Product_Helper;
 use Yoast\WP\SEO\Helpers\Short_Link_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
-use Yoast\WP\SEO\Presenters\Admin\Indexing_Failed_Notification_Presenter;
 use Yoast\WP\SEO\Presenters\Admin\Indexing_Notification_Presenter;
+use Yoast\WP\SEO\Presenters\Admin\Indexing_Failed_Notification_Presenter;
 use Yoast_Notification;
 use Yoast_Notification_Center;
 
@@ -29,38 +29,30 @@ class Indexing_Notification_Integration implements Integration_Interface {
 
 	/**
 	 * Represents the reason that the indexing process failed and should be tried again.
-	 *
-	 * @deprecated 15.3
 	 */
-	const REASON_INDEXING_FAILED = Indexing_Reasons::REASON_INDEXING_FAILED;
+	const REASON_INDEXING_FAILED = 'indexing_failed';
 
 	/**
 	 * Represents the reason that the permalink settings are changed.
-	 *
-	 * @deprecated 15.3
 	 */
-	const REASON_PERMALINK_SETTINGS = Indexing_Reasons::REASON_PERMALINK_SETTINGS;
+	const REASON_PERMALINK_SETTINGS = 'permalink_settings_changed';
 
 	/**
 	 * Represents the reason that the category base is changed.
-	 *
-	 * @deprecated 15.3
 	 */
-	const REASON_CATEGORY_BASE_PREFIX = Indexing_Reasons::REASON_CATEGORY_BASE_PREFIX;
-
-	/**
-	 * Represents the reason that the tag base is changed.
-	 *
-	 * @deprecated 15.3
-	 */
-	const REASON_TAG_BASE_PREFIX = Indexing_Reasons::REASON_TAG_BASE_PREFIX;
+	const REASON_CATEGORY_BASE_PREFIX = 'category_base_changed';
 
 	/**
 	 * Represents the reason that the home url option is changed.
-	 *
-	 * @deprecated 15.3
 	 */
-	const REASON_HOME_URL_OPTION = Indexing_Reasons::REASON_HOME_URL_OPTION;
+	const REASON_HOME_URL_OPTION = 'home_url_option_changed';
+
+	/**
+	 * The indexing integration.
+	 *
+	 * @var Indexing_Tool_Integration
+	 */
+	protected $indexing_integration;
 
 	/**
 	 * The Yoast notification center.
@@ -68,6 +60,13 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	 * @var Yoast_Notification_Center
 	 */
 	protected $notification_center;
+
+	/**
+	 * The options helper.
+	 *
+	 * @var Options_Helper
+	 */
+	protected $options_helper;
 
 	/**
 	 * The product helper.
@@ -84,6 +83,13 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	protected $page_helper;
 
 	/**
+	 * The date helper.
+	 *
+	 * @var Date_Helper
+	 */
+	protected $date_helper;
+
+	/**
 	 * The short link helper.
 	 *
 	 * @var Short_Link_Helper
@@ -98,36 +104,35 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	protected $notification_helper;
 
 	/**
-	 * The indexing helper.
+	 * Prominent_Words_Notifier constructor.
 	 *
-	 * @var Indexing_Helper
-	 */
-	protected $indexing_helper;
-
-	/**
-	 * Indexing_Notification_Integration constructor.
-	 *
-	 * @param Yoast_Notification_Center $notification_center The notification center.
-	 * @param Product_Helper            $product_helper      The product helper.
-	 * @param Current_Page_Helper       $page_helper         The current page helper.
-	 * @param Short_Link_Helper         $short_link_helper   The short link helper.
-	 * @param Notification_Helper       $notification_helper The notification helper.
-	 * @param Indexing_Helper           $indexing_helper     The indexing helper.
+	 * @param Indexing_Tool_Integration $indexing_integration The indexing integration.
+	 * @param Yoast_Notification_Center $notification_center  The notification center.
+	 * @param Options_Helper            $options_helper       The options helper.
+	 * @param Product_Helper            $product_helper       The product helper.
+	 * @param Current_Page_Helper       $page_helper          The current page helper.
+	 * @param Date_Helper               $date_helper          The date helper.
+	 * @param Short_Link_Helper         $short_link_helper    The short link helper.
+	 * @param Notification_Helper       $notification_helper  The notification helper.
 	 */
 	public function __construct(
+		Indexing_Tool_Integration $indexing_integration,
 		Yoast_Notification_Center $notification_center,
+		Options_Helper $options_helper,
 		Product_Helper $product_helper,
 		Current_Page_Helper $page_helper,
+		Date_Helper $date_helper,
 		Short_Link_Helper $short_link_helper,
-		Notification_Helper $notification_helper,
-		Indexing_Helper $indexing_helper
+		Notification_Helper $notification_helper
 	) {
-		$this->notification_center = $notification_center;
-		$this->product_helper      = $product_helper;
-		$this->page_helper         = $page_helper;
-		$this->short_link_helper   = $short_link_helper;
-		$this->notification_helper = $notification_helper;
-		$this->indexing_helper     = $indexing_helper;
+		$this->indexing_integration = $indexing_integration;
+		$this->notification_center  = $notification_center;
+		$this->options_helper       = $options_helper;
+		$this->product_helper       = $product_helper;
+		$this->page_helper          = $page_helper;
+		$this->date_helper          = $date_helper;
+		$this->short_link_helper    = $short_link_helper;
+		$this->notification_helper  = $notification_helper;
 	}
 
 	/**
@@ -142,7 +147,7 @@ class Indexing_Notification_Integration implements Integration_Interface {
 			\add_action( 'admin_init', [ $this, 'maybe_cleanup_notification' ] );
 		}
 
-		if ( $this->indexing_helper->has_reason() ) {
+		if ( $this->options_helper->get( 'indexing_reason' ) ) {
 			\add_action( 'admin_init', [ $this, 'maybe_create_notification' ] );
 		}
 
@@ -183,15 +188,11 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	public function maybe_cleanup_notification() {
 		$notification = $this->notification_center->get_notification_by_id( self::NOTIFICATION_ID );
 
-		if ( $notification === null ) {
+		if ( $notification === null || $this->should_show_notification() ) {
 			return;
 		}
 
-		if ( $this->should_show_notification() ) {
-			return;
-		}
-
-		$this->notification_center->remove_notification_by_id( self::NOTIFICATION_ID );
+		$this->notification_center->remove_notification( $notification );
 	}
 
 	/**
@@ -200,13 +201,13 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	 * @return bool If the notification should be shown.
 	 */
 	protected function should_show_notification() {
-		// Don't show a notification if the indexing has already been started earlier.
-		if ( $this->indexing_helper->get_started() > 0 ) {
+		// Don't show a notification if the indexation has already been started earlier.
+		if ( $this->options_helper->get( 'indexation_started' ) > 0 ) {
 			return false;
 		}
 
 		// Never show a notification when nothing should be indexed.
-		return $this->indexing_helper->get_filtered_unindexed_count() > 0;
+		return $this->indexing_integration->get_unindexed_count() > 0;
 	}
 
 	/**
@@ -215,7 +216,7 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	 * @return Yoast_Notification The notification to show.
 	 */
 	protected function notification() {
-		$reason = $this->indexing_helper->get_reason();
+		$reason = $this->options_helper->get( 'indexing_reason', '' );
 
 		$presenter = $this->get_presenter( $reason );
 
@@ -238,11 +239,11 @@ class Indexing_Notification_Integration implements Integration_Interface {
 	 * @return Indexing_Failed_Notification_Presenter|Indexing_Notification_Presenter
 	 */
 	protected function get_presenter( $reason ) {
-		if ( $reason === Indexing_Reasons::REASON_INDEXING_FAILED ) {
+		if ( $reason === self::REASON_INDEXING_FAILED ) {
 			$presenter = new Indexing_Failed_Notification_Presenter( $this->product_helper );
 		}
 		else {
-			$total_unindexed = $this->indexing_helper->get_filtered_unindexed_count();
+			$total_unindexed = $this->indexing_integration->get_unindexed_count();
 			$presenter       = new Indexing_Notification_Presenter( $this->short_link_helper, $total_unindexed, $reason );
 		}
 

@@ -214,10 +214,6 @@ class WPSEO_Meta {
 				'type'          => null,
 				'default_value' => '0',
 			],
-			'zapier_trigger_sent' => [
-				'type'          => null,
-				'default_value' => '0',
-			],
 		],
 	];
 
@@ -1022,7 +1018,7 @@ class WPSEO_Meta {
 		 * In that case there's no use for an additional query as we already know
 		 * that the keyword has been used multiple times before.
 		 */
-		if ( YoastSEO()->helpers->product->is_premium() && count( $post_ids ) < 2 ) {
+		if ( WPSEO_Utils::is_yoast_seo_premium() && count( $post_ids ) < 2 ) {
 			$query = [
 				'meta_query'     => [
 					[

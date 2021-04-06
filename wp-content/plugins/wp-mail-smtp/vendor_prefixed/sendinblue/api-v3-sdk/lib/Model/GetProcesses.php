@@ -157,6 +157,9 @@ class GetProcesses implements \WPMailSMTP\Vendor\SendinBlue\Client\Model\ModelIn
     public function listInvalidProperties()
     {
         $invalidProperties = [];
+        if ($this->container['count'] === null) {
+            $invalidProperties[] = "'count' can't be null";
+        }
         return $invalidProperties;
     }
     /**

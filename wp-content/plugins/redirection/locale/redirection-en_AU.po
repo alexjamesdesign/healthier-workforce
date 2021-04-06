@@ -552,7 +552,7 @@ msgstr "500 - Internal Server Error"
 msgid "451 - Unavailable For Legal Reasons"
 msgstr "451 - Unavailable For Legal Reasons"
 
-#: redirection-strings.php:66 matches/language.php:9
+#: matches/language.php:9 redirection-strings.php:66
 msgid "URL and language"
 msgstr "URL and language"
 
@@ -1259,11 +1259,11 @@ msgstr "Redirect All"
 msgid "Count"
 msgstr "Count"
 
-#: redirection-strings.php:65 matches/page.php:9
+#: matches/page.php:9 redirection-strings.php:65
 msgid "URL and WordPress page type"
 msgstr "URL and WordPress page type"
 
-#: redirection-strings.php:61 matches/ip.php:9
+#: matches/ip.php:9 redirection-strings.php:61
 msgid "URL and IP"
 msgstr "URL and IP"
 
@@ -1372,11 +1372,11 @@ msgstr "The relative URL you want to redirect from"
 msgid "Add New"
 msgstr "Add New"
 
-#: redirection-strings.php:57 matches/user-role.php:9
+#: matches/user-role.php:9 redirection-strings.php:57
 msgid "URL and role/capability"
 msgstr "URL and role/capability"
 
-#: redirection-strings.php:62 matches/server.php:9
+#: matches/server.php:9 redirection-strings.php:62
 msgid "URL and server"
 msgstr "URL and server"
 
@@ -1436,15 +1436,15 @@ msgstr "clearing your cache."
 msgid "If you are using a caching system such as Cloudflare then please read this: "
 msgstr "If you are using a caching system such as Cloudflare then please read this: "
 
-#: redirection-strings.php:63 matches/http-header.php:11
+#: matches/http-header.php:11 redirection-strings.php:63
 msgid "URL and HTTP header"
 msgstr "URL and HTTP header"
 
-#: redirection-strings.php:64 matches/custom-filter.php:9
+#: matches/custom-filter.php:9 redirection-strings.php:64
 msgid "URL and custom filter"
 msgstr "URL and custom filter"
 
-#: redirection-strings.php:60 matches/cookie.php:7
+#: matches/cookie.php:7 redirection-strings.php:60
 msgid "URL and cookie"
 msgstr "URL and cookie"
 
@@ -2435,7 +2435,7 @@ msgstr "Redirections"
 msgid "User Agent"
 msgstr "User Agent"
 
-#: redirection-strings.php:59 matches/user-agent.php:10
+#: matches/user-agent.php:10 redirection-strings.php:59
 msgid "URL and user agent"
 msgstr "URL and user agent"
 
@@ -2444,7 +2444,7 @@ msgstr "URL and user agent"
 msgid "Target URL"
 msgstr "Target URL"
 
-#: redirection-strings.php:55 matches/url.php:7
+#: matches/url.php:7 redirection-strings.php:55
 msgid "URL only"
 msgstr "URL only"
 
@@ -2466,7 +2466,7 @@ msgstr "Regex"
 msgid "Referrer"
 msgstr "Referrer"
 
-#: redirection-strings.php:58 matches/referrer.php:10
+#: matches/referrer.php:10 redirection-strings.php:58
 msgid "URL and referrer"
 msgstr "URL and referrer"
 
@@ -2478,6 +2478,6 @@ msgstr "Logged Out"
 msgid "Logged In"
 msgstr "Logged In"
 
-#: redirection-strings.php:56 matches/login.php:8
+#: matches/login.php:8 redirection-strings.php:56
 msgid "URL and login status"
 msgstr "URL and login status"
