@@ -432,7 +432,7 @@ li.social-nav-item {
                     visibility: visible;
                 }
             }
-            .menu-item-851,.menu-item-861{
+            .menu-item-851,.menu-item-861,.menu-item-849{
                 background: darken($logodeepblue,15);
                 margin-right: -4px;
             }
@@ -1757,6 +1757,7 @@ body.page-template-page-remote-surveillance-page {
 
 // Forms
 @import "partials/_forms-ninja.scss";
+@import "partials/_forms.scss";
 // Cookies
 @import "partials/_cookies.scss";
 // Temporarily closed
