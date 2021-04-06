@@ -131,7 +131,7 @@
 
 <?php endwhile; ?>
 
-<?php if (!is_front_page()) : ?>
+<?php if (!is_front_page() && !is_page('associates') && !is_page('management-referral')) : ?>
 	<a class="btn btn-sandyyellow" href="<?php echo site_url(); ?>/contact">Contact Us</a>
 <?php endif; ?>
 
