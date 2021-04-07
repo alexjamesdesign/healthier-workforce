@@ -102,7 +102,12 @@
 
 	<?php if (get_field('hero_primary_line')) : ?>
 
-		<p class="primary"><?php the_field('hero_primary_line'); ?></p>
+		<?php if ( (isset($_COOKIE['area']) && $_COOKIE['area'] !='uk') && get_field('location') == 'Yes' || (isset($_GET['a']) && $_GET['a'] !='uk') && get_field('location') == 'Yes' ) : ?>
+			<p class="primary"><?php the_field('hero_primary_line'); ?><span> in <?php echo do_action('ctm_location'); ?></span></p>
+		<?php else: ?>
+			<p class="primary"><?php the_field('hero_primary_line'); ?></p>
+		<?php endif; ?>
+
 		<?php if (get_field('hero_secondary_line')) : ?>
 			<p class="secondary"><?php the_field('hero_secondary_line'); ?></p>
 		<?php endif; ?>
