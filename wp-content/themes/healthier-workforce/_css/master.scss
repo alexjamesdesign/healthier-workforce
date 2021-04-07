@@ -1144,7 +1144,7 @@ article {
         margin: 1em 0;
     }
 
-    ul li {
+    > ul li{
         &:before {
             display: inline-block;
             padding-right: .5em;
@@ -1157,6 +1157,17 @@ article {
 
         a {
             color: $logodeepblue;
+        }
+    }
+
+    .list li{
+        &:before {
+            display: inline-block;
+            padding-right: .5em;
+            font-family: FontAwesome;
+            content: url(../_static/images/logo-icon.svg);
+            width: 20px;
+            height: 20px;
         }
     }
 
