@@ -48,12 +48,12 @@
 
                 <li><a href="<?php echo site_url(); ?>/cookies-privacy-policy/">Cookies &amp; Privacy Policy</a></li>
                 <li><a href="mailto:<?php the_field('company_email_address', 'option'); ?>"><?php the_field('company_email_address', 'option'); ?></a></li>
-                <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></li>
+                
 
                 <?php if ( (isset($_COOKIE['area']) && $_COOKIE['area'] !='uk') || (isset($_GET['a']) && $_GET['a'] !='uk') ): ?>
-
+                    <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo do_action('ctm_location'); ?> <?php do_action('ald_default'); ?></li>
                 <?php else: ?>
-                    
+                    <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></li>
                     <li><?php address_stacked(); ?></li>
                 <?php endif; ?>
                 
