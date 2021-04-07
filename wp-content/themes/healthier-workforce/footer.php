@@ -24,16 +24,21 @@
             <?php get_template_part('_parts/theme-parts/social-links'); ?>
         </div>
 
-        <div class="grid grid3_12">
-            <p class="title">Areas We Cover</p>
-            <?php wp_nav_menu( array('menu' => 'Locations', 'menu_class' => '', 'container' => '' )); ?>
-            <ul>
-                <li>London</li>
-                <li>Manchester</li>
-                <li>Nottingham</li>
-                <li>Liverpool</li>
-            </ul>  
-        </div>
+        <?php if ( (isset($_COOKIE['area']) && $_COOKIE['area'] !='uk') || (isset($_GET['a']) && $_GET['a'] !='uk') ): ?>
+
+        <?php else: ?>
+            
+            <div class="grid grid3_12">
+                <p class="title">Areas We Cover</p>
+                <?php wp_nav_menu( array('menu' => 'Locations', 'menu_class' => '', 'container' => '' )); ?>
+                <ul>
+                    <li>London</li>
+                    <li>Manchester</li>
+                    <li>Nottingham</li>
+                    <li>Liverpool</li>
+                </ul>  
+            </div>
+        <?php endif; ?>
 
         <div class="grid grid3_12">
 
@@ -44,7 +49,14 @@
                 <li><a href="<?php echo site_url(); ?>/cookies-privacy-policy/">Cookies &amp; Privacy Policy</a></li>
                 <li><a href="mailto:<?php the_field('company_email_address', 'option'); ?>"><?php the_field('company_email_address', 'option'); ?></a></li>
                 <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></li>
-                <li><?php address_stacked(); ?></li>
+
+                <?php if ( (isset($_COOKIE['area']) && $_COOKIE['area'] !='uk') || (isset($_GET['a']) && $_GET['a'] !='uk') ): ?>
+
+                <?php else: ?>
+                    
+                    <li><?php address_stacked(); ?></li>
+                <?php endif; ?>
+                
 
             </ul>
 
