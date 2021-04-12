@@ -4,9 +4,9 @@
 ?>
 <div class="container flexbox800" role="main">
 
-	<div class="grid grid12_12 flexbox800">
+	<div class="grid grid12_12 flexbox800 bg-white box">
 
-		<article class="grid grid12_12 box">
+		<article class="grid grid12_12">
 
 			<?php if ( have_posts() ) while ( have_posts() ) : the_post(); ?>
 

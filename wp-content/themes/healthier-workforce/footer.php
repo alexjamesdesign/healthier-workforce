@@ -38,6 +38,7 @@
                     <li>Liverpool</li>
                 </ul>  
             </div>
+            
         <?php endif; ?>
 
         <div class="grid grid3_12">
@@ -62,9 +63,8 @@
 
         </div>
 
-        <ul class="grid grid3_12">
+       
 
-        </ul>
         
     </div><!--/.container-->
 
