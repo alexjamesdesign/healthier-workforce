@@ -124,14 +124,19 @@ form {
 		li{
 			width: 100%;
 			display: flex !important;
-			@include align-items(center);
+			@include align-items(flex-start);
 			@include justify-content(flex-start);
 
-			@include bp480{
+
+			@include bp1000{
 				width: 50%;
 			}
 			label{
 				width: 100%;
+				padding-right: 10px
+			}
+			input[type=checkbox]{
+				margin-top: 5px;
 			}
 		}
 	}
