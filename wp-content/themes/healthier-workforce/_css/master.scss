@@ -226,6 +226,21 @@ h5 { font-size: 1.1em; }
 .bg-white{
     background: $blanc;
 }
+
+.rmagic .rm-user-name{
+    font-size: 1.5em !important;
+}
+
+.rmagic .rm-user-card img{
+    display: none !important;
+}
+
+.rmagic .rm-user-card .rm-user-name{
+    padding: 30px 0px 0px 0px !important;
+}
+.rm-user-name-subtitle{
+    padding: 20px 0px 0px 0px !important;
+}
 /* General
 --------------------------------------------------------------- */
 
