@@ -64,8 +64,6 @@
 
 					<h2>Management Application Form</h2>
 
-					<p>Please ensure this form is completed fully to assist the Occupational Health Advisor/Physician in providing you with a comprehensive report. </p>
-
 					<?php echo do_shortcode("[RM_Form id='4']"); ?>
 
 				</div>
@@ -74,10 +72,11 @@
 
 				<div class="grid grid12_12 box box--registration">
 
+					<article>
 					<?php the_field("secondary_content"); ?>
 
 					<?php echo do_shortcode("[RM_Form id='3']"); ?>
-
+					</article>
 				</div>
 
 			<?php } ?>
