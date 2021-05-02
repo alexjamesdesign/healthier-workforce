@@ -40,6 +40,12 @@ jQuery(function ($) {
 			$(".quick-quote .container > p").toggleClass("selected");
 		});
 
+		$( ".page-template-page-management-form .rm-user-row h2" ).replaceWith( "<h2>Your Management Referrals</h2>" );
+		//$( ".page-template-page-management-form .rmtab-registration" ).text( 'Management Referrals' );
+
+
+
+
     });
 });
 
