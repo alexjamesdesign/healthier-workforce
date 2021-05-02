@@ -62,7 +62,7 @@
 
 				<div class="grid grid12_12 box box--registration">
 
-					<h2>Assoicate Application Form</h2>
+					<h2>Join our successful team by completing the information below</h2>
 
 					<?php echo do_shortcode("[RM_Form id='2']"); ?>
 
