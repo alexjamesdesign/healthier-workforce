@@ -12,7 +12,16 @@
 
 				<?php the_content(); ?>
 
+
+				
+				<?php if( current_user_can('Management')){ ?>
+					<a href="/management-referral/" class="btn btn-sandyyellow">Make another management referral</a>
+				<?php } ?>
+					
+
 			<?php endwhile; ?>
+
+
 
 		</article>
 
