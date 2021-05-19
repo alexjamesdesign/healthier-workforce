@@ -28,7 +28,7 @@
 			<div class="phone-top-right">
 
 			<?php 
-				$ld_location = get_field('location_name');
+				$ld_location = get_field('location');
 				if($ld_location) : ?>
 
 					<?php if ( ( do_shortcode('[ctm_set]') )) : ?>
