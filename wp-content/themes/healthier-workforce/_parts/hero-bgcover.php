@@ -102,7 +102,7 @@
 
 	<?php if (get_field('hero_primary_line')) : ?>
 
-		<?php if ( (isset($_COOKIE['area']) && $_COOKIE['area'] !='uk') && get_field('location') == 'Yes' || (isset($_GET['a']) && $_GET['a'] !='uk') && get_field('location') == 'Yes' ) : ?>
+		<?php if ( ( do_shortcode('[ctm_set]') && get_field('location') == 'Yes' )) : ?>
 			<p class="primary"><?php the_field('hero_primary_line'); ?><span> in <?php echo do_action('ctm_location'); ?></span></p>
 		<?php else: ?>
 			<p class="primary"><?php the_field('hero_primary_line'); ?></p>

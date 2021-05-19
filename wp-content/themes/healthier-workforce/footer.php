@@ -24,7 +24,7 @@
             <?php get_template_part('_parts/theme-parts/social-links'); ?>
         </div>
 
-        <?php if ( (isset($_COOKIE['area']) && $_COOKIE['area'] !='uk') || (isset($_GET['a']) && $_GET['a'] !='uk') ): ?>
+        <?php if ( ( do_shortcode('[ctm_set]') )) : ?>
 
         <?php else: ?>
             
@@ -51,7 +51,7 @@
                 <li><a href="mailto:<?php the_field('company_email_address', 'option'); ?>"><?php the_field('company_email_address', 'option'); ?></a></li>
                 
 
-                <?php if ( (isset($_COOKIE['area']) && $_COOKIE['area'] !='uk') || (isset($_GET['a']) && $_GET['a'] !='uk') ): ?>
+                <?php if ( ( do_shortcode('[ctm_set]') )) : ?>
                     <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo do_action('ctm_location'); ?> <?php do_action('ald_default'); ?></li>
                 <?php else: ?>
                     <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></li>

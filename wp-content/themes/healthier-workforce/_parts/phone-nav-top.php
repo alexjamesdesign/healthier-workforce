@@ -7,7 +7,7 @@
         <span class="stickyheader-left stickyheader-btn"><i class="fa fa-mobile location-page-number" aria-hidden="true"></i> 
         
 
-            <?php if ( (isset($_COOKIE['area']) && $_COOKIE['area'] !='uk') || (isset($_GET['a']) && $_GET['a'] !='uk')) : ?>
+            <?php if ( ( do_shortcode('[ctm_set]') )) : ?>
                 <?php echo do_action('ctm_location'); ?> <?php do_action('ald_single', $ld_location, false); ?>
             <?php else: ?>
                 <?php do_action('ald_single', $ld_location, false); ?>
@@ -18,7 +18,7 @@
 	<?php else: ?>
 
         <span class="stickyheader-left stickyheader-btn"><i class="fa fa-mobile" aria-hidden="true"></i> 
-            <?php if ( (isset($_COOKIE['area']) && $_COOKIE['area'] !='uk') || (isset($_GET['a']) && $_GET['a'] !='uk')) : ?>
+            <?php if ( ( do_shortcode('[ctm_set]') )) : ?>
                 <?php echo do_action('ctm_location'); ?> <?php do_action('ald_default'); ?>
             <?php else: ?>
                 <?php do_action('ald_default'); ?>
