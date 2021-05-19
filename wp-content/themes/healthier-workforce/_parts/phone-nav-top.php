@@ -1,7 +1,7 @@
 <div class="phone-nav-top Fixed">
 
     <?php 
-	$ld_location = get_field('location_name');
+	$ld_location = get_field('location');
 	if($ld_location) : ?>
 
         <span class="stickyheader-left stickyheader-btn"><i class="fa fa-mobile location-page-number" aria-hidden="true"></i> 
