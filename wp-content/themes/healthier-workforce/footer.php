@@ -23,23 +23,19 @@
             <?php wp_nav_menu( array('menu' => 'Top Nav', 'menu_class' => '', 'container' => '' )); ?>
             <?php get_template_part('_parts/theme-parts/social-links'); ?>
         </div>
-
-        <?php if ( ( do_shortcode('[ctm_set]') )) : ?>
-
-        <?php else: ?>
+ 
             
-            <div class="grid grid3_12">
-                <p class="title">Areas We Cover</p>
-                <?php wp_nav_menu( array('menu' => 'Locations', 'menu_class' => '', 'container' => '' )); ?>
-                <ul>
-                    <li>London</li>
-                    <li>Manchester</li>
-                    <li>Nottingham</li>
-                    <li>Liverpool</li>
-                </ul>  
-            </div>
+        <div class="grid grid3_12">
+            <p class="title">Areas We Cover</p>
+            <?php wp_nav_menu( array('menu' => 'Locations', 'menu_class' => '', 'container' => '' )); ?>
+            <ul>
+                <li>London</li>
+                <li>Manchester</li>
+                <li>Nottingham</li>
+                <li>Liverpool</li>
+            </ul>  
+        </div>
             
-        <?php endif; ?>
 
         <div class="grid grid3_12">
 
@@ -51,12 +47,16 @@
                 <li><a href="mailto:<?php the_field('company_email_address', 'option'); ?>"><?php the_field('company_email_address', 'option'); ?></a></li>
                 
 
+                
+
                 <?php if ( ( do_shortcode('[ctm_set]') )) : ?>
-                    <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo do_action('ctm_location'); ?> <?php do_action('ald_default'); ?></li>
-                <?php else: ?>
-                    <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></li>
+	                <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default', true, true); ?></li>
+                    <li><br /><?php address_stacked(); ?></li>
+
+				<?php elseif ( ( !do_shortcode('[ctm_set]') )) : ?>
+	                <li><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></li>
                     <li><?php address_stacked(); ?></li>
-                <?php endif; ?>
+	            <?php endif; ?>
                 
 
             </ul>
@@ -93,7 +93,7 @@ if (get_field('temporarily_closed_message', 'option')) : ?>
 
 <?php 
     wp_footer(); 
-    get_template_part('_parts/ld');
+    
 ?>
 
 <script>jQuery( document ).on( 'nfFormReady', function() {

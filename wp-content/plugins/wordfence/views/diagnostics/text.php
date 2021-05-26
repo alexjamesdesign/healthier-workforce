@@ -57,7 +57,7 @@ foreach ($diagnostic->getResults() as $title => $tests):
 endforeach;
 ?>
 
-## <?php _e('IP Detection', 'wordfence') ?>: <?php _e('Methods of detecting a visitor\'s IP address.', 'wordfence') ?> ##
+## <?php esc_html_e('IP Detection', 'wordfence') ?>: <?php esc_html_e('Methods of detecting a visitor\'s IP address.', 'wordfence') ?> ##
 
 <?php
 $howGet = wfConfig::get('howGetIPs', false);
@@ -114,7 +114,7 @@ echo wfHelperString::plainTextTable($table) . "\n\n";
 
 ?>
 
-## <?php _e('WordPress Settings', 'wordfence') ?>: <?php _e('WordPress version and internal settings/constants.', 'wordfence') ?> ##
+## <?php esc_html_e('WordPress Settings', 'wordfence') ?>: <?php esc_html_e('WordPress version and internal settings/constants.', 'wordfence') ?> ##
 
 <?php
 require(ABSPATH . 'wp-includes/version.php');
@@ -167,7 +167,7 @@ $wordPressValues = array(
 	'IMAGE_EDIT_OVERWRITE'           => array('description' => __('Overwrite image edits when restoring the original', 'wordfence'), 'value' => (defined('IMAGE_EDIT_OVERWRITE') && IMAGE_EDIT_OVERWRITE ? __('Yes', 'wordfence') : __('No', 'wordfence'))),
 	'FORCE_SSL_ADMIN'                => array('description' => __('Force SSL for administrative logins', 'wordfence'), 'value' => (defined('FORCE_SSL_ADMIN') && FORCE_SSL_ADMIN ? __('Yes', 'wordfence') : __('No', 'wordfence'))),
 	'WP_HTTP_BLOCK_EXTERNAL'         => array('description' => __('Block external URL requests', 'wordfence'), 'value' => (defined('WP_HTTP_BLOCK_EXTERNAL') && WP_HTTP_BLOCK_EXTERNAL ? __('Yes', 'wordfence') : __('No', 'wordfence'))),
-	'WP_ACCESSIBLE_HOSTS'            => __('Whitelisted hosts', 'wordfence'),
+	'WP_ACCESSIBLE_HOSTS'            => __('Allowlisted hosts', 'wordfence'),
 	'WP_AUTO_UPDATE_CORE'            => array('description' => __('Automatic WP Core updates', 'wordfence'), 'value' => defined('WP_AUTO_UPDATE_CORE') ? (is_bool(WP_AUTO_UPDATE_CORE) ? (WP_AUTO_UPDATE_CORE ? __('Everything', 'wordfence') : __('None', 'wordfence')) : WP_AUTO_UPDATE_CORE) : __('Default', 'wordfence')),
 	'WP_PROXY_HOST'                  => array('description' => __('Hostname for a proxy server', 'wordfence'), 'value' => defined('WP_PROXY_HOST') ? WP_PROXY_HOST : __('(not set)', 'wordfence')),
 	'WP_PROXY_PORT'                  => array('description' => __('Port for a proxy server', 'wordfence'), 'value' => defined('WP_PROXY_PORT') ? WP_PROXY_PORT : __('(not set)', 'wordfence')),
@@ -217,7 +217,7 @@ echo wfHelperString::plainTextTable($table) . "\n\n";
 
 ?>
 
-## <?php _e('WordPress Plugins', 'wordfence') ?>: <?php _e('Status of installed plugins.', 'wordfence') ?> ##
+## <?php esc_html_e('WordPress Plugins', 'wordfence') ?>: <?php esc_html_e('Status of installed plugins.', 'wordfence') ?> ##
 
 <?php
 
@@ -255,7 +255,7 @@ echo wfHelperString::plainTextTable($table) . "\n\n";
 
 ?>
 
-## <?php _e('Must-Use WordPress Plugins', 'wordfence') ?>: <?php _e('WordPress "mu-plugins" that are always active, including those provided by hosts.', 'wordfence') ?> ##
+## <?php esc_html_e('Must-Use WordPress Plugins', 'wordfence') ?>: <?php esc_html_e('WordPress "mu-plugins" that are always active, including those provided by hosts.', 'wordfence') ?> ##
 
 <?php
 
@@ -293,7 +293,7 @@ echo wfHelperString::plainTextTable($table) . "\n\n";
 
 ?>
 
-## <?php _e('Drop-In WordPress Plugins', 'wordfence') ?>: <?php _e('WordPress "drop-in" plugins that are active.', 'wordfence') ?> ##
+## <?php esc_html_e('Drop-In WordPress Plugins', 'wordfence') ?>: <?php esc_html_e('WordPress "drop-in" plugins that are active.', 'wordfence') ?> ##
 
 <?php
 
@@ -329,7 +329,7 @@ echo wfHelperString::plainTextTable($table) . "\n\n";
 
 ?>
 
-## <?php _e('Themes', 'wordfence') ?>: <?php _e('Status of installed themes.', 'wordfence') ?> ##
+## <?php esc_html_e('Themes', 'wordfence') ?>: <?php esc_html_e('Status of installed themes.', 'wordfence') ?> ##
 
 <?php
 
@@ -372,7 +372,7 @@ echo wfHelperString::plainTextTable($table) . "\n\n";
 
 ?>
 
-## <?php _e('Cron Jobs', 'wordfence') ?>: <?php _e('List of WordPress cron jobs scheduled by WordPress, plugins, or themes.', 'wordfence') ?> ##
+## <?php esc_html_e('Cron Jobs', 'wordfence') ?>: <?php esc_html_e('List of WordPress cron jobs scheduled by WordPress, plugins, or themes.', 'wordfence') ?> ##
 
 <?php
 $cron = _get_cron_array();
@@ -399,7 +399,7 @@ echo wfHelperString::plainTextTable($table) . "\n\n";
 
 ?>
 
-## <?php _e('Database Tables', 'wordfence') ?>: <?php _e('Database table names, sizes, timestamps, and other metadata.', 'wordfence') ?> ##
+## <?php esc_html_e('Database Tables', 'wordfence') ?>: <?php esc_html_e('Database table names, sizes, timestamps, and other metadata.', 'wordfence') ?> ##
 
 <?php
 global $wpdb;
@@ -452,7 +452,7 @@ if ($q) {
 		if ($hasAll) {
 			_e('All Tables Exist', 'wordfence');
 		} else {
-			printf(__('Tables missing (prefix %s, %s): %s', 'wordfence'), wfDB::networkPrefix(), wfSchema::usingLowercase() ? __('lowercase', 'wordfence') : __('regular case', 'wordfence'), implode(', ', $missingTables));
+			printf(/* translators: 1. WordPress table prefix. 2. Wordfence tables. */ __('Tables missing (prefix %1$s, %2$s): %s', 'wordfence'), wfDB::networkPrefix(), wfSchema::usingLowercase() ? __('lowercase', 'wordfence') : __('regular case', 'wordfence'), implode(', ', $missingTables));
 		}
 		echo "\n";
 	}
@@ -497,7 +497,7 @@ echo wfHelperString::plainTextTable($table) . "\n\n";
 
 ?>
 
-## <?php _e('Log Files', 'wordfence') ?>: <?php _e('PHP error logs generated by your site, if enabled by your host.', 'wordfence') ?> ##
+## <?php esc_html_e('Log Files', 'wordfence') ?>: <?php esc_html_e('PHP error logs generated by your site, if enabled by your host.', 'wordfence') ?> ##
 
 <?php
 
@@ -550,7 +550,7 @@ echo wfHelperString::plainTextTable($table) . "\n\n";
 
 ?>
 
-## <?php _e('Scan Issues', 'wordfence') ?> ##
+## <?php esc_html_e('Scan Issues', 'wordfence') ?> ##
 
 <?php
 

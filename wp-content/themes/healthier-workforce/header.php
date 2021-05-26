@@ -12,7 +12,7 @@
 <?php if (strpos($_SERVER['SERVER_NAME'],'alexjamesdesign.co.uk') !== false) : ?>
 <meta name="robots" content="noindex">
 <?php endif; ?>
-<script async src="//275768.tctm.co/t.js"></script>
+<!-- <script async src="//275768.tctm.co/t.js"></script> -->
 </head>
 
 <body <?php body_class(); ?>>
@@ -27,9 +27,11 @@
 
 			<div class="phone-top-right">
 
-			<?php 
-				$ld_location = get_field('location');
-				if($ld_location) : ?>
+			<?php if (is_singular('locations')) { ?>
+				<?php 
+				
+				$ld_location = get_field('location_name');
+				if($ld_location) { ?>
 
 					<?php if ( ( do_shortcode('[ctm_set]') )) : ?>
 		                <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo do_action('ctm_location'); ?> <?php do_action('ald_single', $ld_location, false); ?></p>
@@ -37,17 +39,18 @@
 		                <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_single', $ld_location, false); ?></p>
 		            <?php endif; ?>
 
-				<?php else: ?>
+				<?php } ?>
 
+			<?php } else { ?>
 				
 
 				<?php if ( ( do_shortcode('[ctm_set]') )) : ?>
-	                <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo do_action('ctm_location'); ?> <?php do_action('ald_default'); ?></p>
-	            <?php else: ?>
+	                <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default', true, true); ?></p>
+				<?php elseif ( ( !do_shortcode('[ctm_set]') )) : ?>
 	                <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></p>
 	            <?php endif; ?>
 					
-			<?php endif; ?>
+			<?php } ?>
 
 			</div>
 

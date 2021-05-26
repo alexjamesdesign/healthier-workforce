@@ -73,6 +73,7 @@ class wfSupportController {
 	const ITEM_FIREWALL_WAF_OPTION_MASK_LOGIN_ERRORS = 'firewall-waf-option-mask-login-errors';
 	const ITEM_FIREWALL_WAF_OPTION_PREVENT_ADMIN_REGISTRATION = 'firewall-waf-option-prevent-admin-registration';
 	const ITEM_FIREWALL_WAF_OPTION_PREVENT_AUTHOR_SCAN = 'firewall-waf-option-prevent-author-scan';
+	const ITEM_FIREWALL_WAF_OPTION_DISABLE_APPLICATION_PASSWORDS = 'firewall-waf-option-disable-application-passwords';
 	const ITEM_FIREWALL_WAF_OPTION_BLOCK_BAD_POST = 'firewall-waf-option-block-bad-post';
 	const ITEM_FIREWALL_WAF_OPTION_CUSTOM_BLOCK_TEXT = 'firewall-waf-option-custom-block-text';
 	const ITEM_FIREWALL_WAF_OPTION_CHECK_PASSWORD = 'firewall-waf-option-check-password';
@@ -167,7 +168,8 @@ class wfSupportController {
 	const ITEM_DIAGNOSTICS_OPTION_SSL_VERIFICATION = 'diagnostics-option-ssl-verification';
 	const ITEM_DIAGNOSTICS_OPTION_DISABLE_PHP_INPUT = 'diagnostics-option-disable-php-input';
 	const ITEM_DIAGNOSTICS_OPTION_BETA_TDF = 'diagnostics-option-beta-tdf';
-	
+	const ITEM_DIAGNOSTICS_OPTION_WORDFENCE_TRANSLATIONS = 'diagnostics-option-wordfence-translations';
+
 	const ITEM_MODULE_LOGIN_SECURITY = 'module-login-security';
 	const ITEM_MODULE_LOGIN_SECURITY_2FA = 'module-login-security-2fa';
 	const ITEM_MODULE_LOGIN_SECURITY_CAPTCHA = 'module-login-security-captcha';
@@ -254,6 +256,7 @@ class wfSupportController {
 			case self::ITEM_FIREWALL_WAF_OPTION_MASK_LOGIN_ERRORS:
 			case self::ITEM_FIREWALL_WAF_OPTION_PREVENT_ADMIN_REGISTRATION:
 			case self::ITEM_FIREWALL_WAF_OPTION_PREVENT_AUTHOR_SCAN:
+			case self::ITEM_FIREWALL_WAF_OPTION_DISABLE_APPLICATION_PASSWORDS:
 			case self::ITEM_FIREWALL_WAF_OPTION_BLOCK_BAD_POST:
 			case self::ITEM_FIREWALL_WAF_OPTION_CUSTOM_BLOCK_TEXT:
 			case self::ITEM_FIREWALL_WAF_OPTION_CHECK_PASSWORD:
@@ -348,7 +351,8 @@ class wfSupportController {
 			case self::ITEM_DIAGNOSTICS_OPTION_SSL_VERIFICATION:
 			case self::ITEM_DIAGNOSTICS_OPTION_DISABLE_PHP_INPUT:
 			case self::ITEM_DIAGNOSTICS_OPTION_BETA_TDF:
-				
+			case self::ITEM_DIAGNOSTICS_OPTION_WORDFENCE_TRANSLATIONS:
+
 			case self::ITEM_MODULE_LOGIN_SECURITY:
 			case self::ITEM_MODULE_LOGIN_SECURITY_2FA:
 			case self::ITEM_MODULE_LOGIN_SECURITY_CAPTCHA:

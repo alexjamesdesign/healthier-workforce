@@ -263,7 +263,7 @@ class LDController extends Controller
                 echo $number->location_label;
             }
         } else {
-            echo 'UK';
+            echo 'the UK';
         }
 
         $content = ob_get_contents();

@@ -102,9 +102,9 @@
 
 	<?php if (get_field('hero_primary_line')) : ?>
 
-		<?php if ( ( do_shortcode('[ctm_set]') && get_field('location') == 'Yes' )) : ?>
+		<?php if  ( do_shortcode('[ctm_set]') && get_field('location') == 'Yes' ) : ?>
 			<p class="primary"><?php the_field('hero_primary_line'); ?><span> in <?php echo do_action('ctm_location'); ?></span></p>
-		<?php else: ?>
+		<?php else : ?>
 			<p class="primary"><?php the_field('hero_primary_line'); ?></p>
 		<?php endif; ?>
 

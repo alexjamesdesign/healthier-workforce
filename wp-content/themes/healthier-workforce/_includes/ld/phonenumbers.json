@@ -9,54 +9,54 @@
                "mobile":"0800 030 6037"
             },
             "google-adwords":{  
-               "computer":"",
-               "mobile":""
+               "computer":"0800 030 6037",
+               "mobile":"0800 030 6037"
             }
          }
       },
       "locations":{  
-         "example1":{  
-            "area":"Example 1",
-            "calltag":"Call Example 1 on",
+         "wolverhampton":{  
+            "area":"Wolverhampton",
+            "calltag":"Call Wolverhampton on",
             "source":{  
                "organic":{  
-                  "computer":"01234 000 000",
-                  "mobile":""
+                  "computer":"0800 030 6037",
+                  "mobile":"0800 030 6037"
                },
                "google-adwords":{  
-                  "computer":"01234 000 000",
-                  "mobile":""
+                  "computer":"0800 030 6037",
+                  "mobile":"0800 030 6037"
                }
             }
          },
-         "example2":{  
-            "area":"Example 2",
-            "calltag":"Call Example 2 on",
+         "birmingham":{  
+            "area":"Birmingham",
+            "calltag":"Call Birmingham on",
             "source":{  
                "organic":{  
-                  "computer":"",
-                  "mobile":""
+                  "computer":"0800 030 6037",
+                  "mobile":"0800 030 6037"
                },
                "google-adwords":{  
-                  "computer":"",
-                  "mobile":""
+                  "computer":"0800 030 6037",
+                  "mobile":"0800 030 6037"
                }
             }
          },
-         "the-milky-way":{  
-            "area":"The Milky Way",
-            "calltag":"Call The Milky Way on",
+         "bristol":{  
+            "area":"Bristol",
+            "calltag":"Call Bristol on",
             "source":{  
                "organic":{  
-                  "computer":"",
-                  "mobile":""
+                  "computer":"0800 030 6037",
+                  "mobile":"0800 030 6037"
                },
                "google-adwords":{  
-                  "computer":"",
-                  "mobile":""
+                  "computer":"0800 030 6037",
+                  "mobile":"0800 030 6037"
                }
             }
-         }
+         },
       },
       "log":[  
          {  
