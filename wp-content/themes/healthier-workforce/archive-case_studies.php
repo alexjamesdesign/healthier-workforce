@@ -88,7 +88,7 @@
             <?php else : ?>
 
             <div <?php post_class(); ?> id="post-<?php the_ID(); ?>">
-                <h1>No news posts found</h1>
+                <h1>No news posts found (news)</h1>
                 <p>There are currently no news posts, please check back soon for updates.</p>
             </div>
 

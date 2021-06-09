@@ -1,5 +1,7 @@
 <?php
 
+	global $term;
+
 	/* This uses the featured image as a background. Takes the featured image, and applies the different sizes to varying breakpoints. */
 
 	$thumb_id = get_post_thumbnail_id();
@@ -91,6 +93,40 @@
 <?php } elseif (is_page('contact') || is_page('contact-us')) { ?>
 
 	<?php /* Contact page hero */ ?>
+
+<?php } elseif (is_tax('resource_centre')) {
+
+/* -----------------------------------------------------------------
+Taxonomy
+----------------------------------------------------------------- */
+
+?>
+
+<div class="hero no-bg resources">
+	<div class="container">
+		<div class="hero-content fadeLeft fadeLeft__4">
+			<h1><?php single_term_title(); ?></h1>
+			<p><?php echo term_description(); ?></p>
+		</div>
+	</div>
+</div>
+
+<?php } elseif (is_post_type_archive('resource_centre')) {
+
+/* -----------------------------------------------------------------
+Resource centre
+----------------------------------------------------------------- */
+
+?>
+
+<div class="hero no-bg resources">
+	<div class="container">
+		<div class="hero-content fadeLeft fadeLeft__4">
+			<h1>Resource Centre</h1>
+		</div>
+	</div>
+</div>
+
 
 <?php } else { ?>
 
