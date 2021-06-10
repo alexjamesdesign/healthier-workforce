@@ -4,7 +4,7 @@
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta http-equiv="x-ua-compatible" content="IE=Edge"> 
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title><?php wp_title('&raquo;','true','right'); ?><?php bloginfo('name'); ?></title>
+<title><?php wp_title('&raquo;','true','right'); ?></title>
 <?php wp_head(); ?>
 <script src="https://use.typekit.net/wfr3tiw.js"></script>
 <script>try{Typekit.load({ async: true });}catch(e){}</script>
