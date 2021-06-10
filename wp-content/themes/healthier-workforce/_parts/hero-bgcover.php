@@ -123,6 +123,7 @@ Resource centre
 	<div class="container">
 		<div class="hero-content fadeLeft fadeLeft__4">
 			<h1>Resource Centre</h1>
+			<p class="secondary">Welcome to our information hub. Guides, advice, FAQs and much more are just a few clicks away.</p>
 		</div>
 	</div>
 </div>

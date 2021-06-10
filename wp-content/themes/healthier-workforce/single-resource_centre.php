@@ -15,7 +15,7 @@
 
                 <div class="post-info">
 
-                    <?php the_category('&middot;'); ?> &middot; <?php echo get_the_date(); ?>
+					<span><?php the_terms( $post->ID, 'resource_centre_taxonomy'); ?></span> &middot; <span><?php echo get_the_date(); ?></span>
 
                 </div>
 
