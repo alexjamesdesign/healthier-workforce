@@ -1948,6 +1948,91 @@ body.page-template-page-remote-surveillance-page {
     }
 }
 
+// Accordion
+
+.accordion-container {
+    width: 100%;
+    padding: 50px 0 70px 0;
+    background: #fdf4dc;
+}
+
+.accordion-container .title {
+    font-size: 1.8em;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    font-family: "proxima-nova", sans-serif;
+    font-weight: 700;
+    line-height: 1.1em;
+    color: #004666;
+    clear: both;
+}
+
+.accordion-container .sub-title {
+    margin: 0 auto;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.accordion p {
+    padding: 0px 0px 10px 0px;
+}
+
+.accordion-content {
+    display: none;
+    padding: 15px 20px 30px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background: #fff;
+    width: 100%;
+}
+
+.accordion-content ul {
+    padding: 0px 25px;
+}
+
+.accordion-item {
+    cursor: pointer; 
+    width: 100%;
+    display: block;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 10px 25px;
+    background: $logodeepblue;
+    color: #fff;
+    border-bottom: 1px solid #fdf4dc;
+    text-decoration: none;
+
+    &:hover {
+        color: #ddd;
+    }
+}
+
+p.active .accordion-item {
+    font-weight: bold; /* Style for active accordion item */
+}
+
+/* Add a chevron icon to accordion items */
+.accordion-item::after {
+    content: '\25B8'; /* Unicode for a right-pointing chevron */
+    display: inline-block;
+    margin-left: 5px; /* Adjust as needed */
+    transition: transform 0.3s ease; /* Add a smooth transition for animation */
+    transform: rotate(90deg);
+}
+
+/* Rotate the chevron icon when accordion item parent is active */
+.accordion-item.active::after {
+    transform: rotate(-90deg);
+}
+
+.accordion-content {
+    a {
+        text-decoration: underline;
+        color: $logomidblue;
+    }
+}
+
 
 /* Back to top
 --------------------------------------------------------------- */

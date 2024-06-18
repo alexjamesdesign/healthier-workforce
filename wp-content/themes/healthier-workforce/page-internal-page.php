@@ -93,6 +93,28 @@
 
 <?php get_template_part('_parts/separator'); ?>
 
+<?php if (get_field('faqs')) : ?>
+
+<div class="container accordion-container">
+
+	<p class="title">FAQs</p>
+	<p class="sub-title">Frequently asked questions about <?php echo the_title(); ?></p>
+
+	<div class="accordion flexbox800">
+
+		<?php while( has_sub_field('faqs') ): ?>
+			
+			<a class="accordion-item" href="/cctv-drainage-survey/"><?php the_sub_field('question'); ?></a>
+			<div class="accordion-content"><?php the_sub_field('answer'); ?></div>
+
+		<?php endwhile; ?>
+
+	</div>
+
+</div>
+
+<?php endif; ?>
+
 <div class="container flexbox800">
 
 	<?php if (is_page('sickness-absence-management')) : ?>
@@ -124,6 +146,8 @@
 	</div>
 
 </div><!-- /.main-->
+
+
 
 <?php get_template_part('_parts/separator'); ?>
 	

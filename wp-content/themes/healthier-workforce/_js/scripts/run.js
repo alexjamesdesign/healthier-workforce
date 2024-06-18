@@ -1,5 +1,42 @@
 jQuery(function ($) {
     $(document).ready(function() {
+		// Accordion
+		$('.accordion-item').click(function(event) { 
+			event.preventDefault();
+			var $accordionContent = $(this).next('.accordion-content');
+			$(this).toggleClass('active');
+			$accordionContent.slideToggle();
+			
+			// Close other open accordions
+			$('.accordion-content').not($accordionContent).slideUp();
+			$('.accordion-item').not(this).removeClass('active');
+		});
+	
+		// Close all accordion items except the first one by default
+		$('.accordion-item').not(':first').removeClass('active').next('.accordion-content').hide();
+	
+		$('.read-more-content').each(function() {
+			var $content = $(this);
+			var $button = $content.next('.read-more-button');
+			var isHidden = true;
+		
+			$button.click(function(event) {
+				event.preventDefault(); // Prevent default button action (link following)
+				if (isHidden) {
+					$content.fadeIn(900, function() {
+						$button.text('Read Less');
+					});
+				} else {
+					$content.fadeOut(600, function() {
+						$button.text('Read More');
+					});
+				}
+				isHidden = !isHidden;
+			});
+		
+			$content.hide(); // Initially hide the content
+		});
+
 		// Adtrak Cookies
 
 		$('body').adtrakCookies();
