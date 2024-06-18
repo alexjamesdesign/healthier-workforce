@@ -4,13 +4,16 @@ Plugin Name: Duplicate Page
 Plugin URI: https://wordpress.org/plugins/duplicate-page/
 Description: Duplicate Posts, Pages and Custom Posts using single click.
 Author: mndpsingh287
-Version: 4.3
+Version: 4.5.3
 Author URI: https://profiles.wordpress.org/mndpsingh287/
 License: GPLv2
 Text Domain: duplicate-page
 */
 if (!defined('DUPLICATE_PAGE_PLUGIN_DIRNAME')) {
     define('DUPLICATE_PAGE_PLUGIN_DIRNAME', plugin_basename(dirname(__FILE__)));
+}
+if (!defined('DUPLICATE_PAGE_PLUGIN_VERSION')) {
+    define('DUPLICATE_PAGE_PLUGIN_VERSION', '4.5.3');
 }
 if (!class_exists('duplicate_page')):
     class duplicate_page
@@ -25,10 +28,14 @@ if (!class_exists('duplicate_page')):
             add_action('admin_menu', array(&$this, 'duplicate_page_options_page'));
             add_filter('plugin_action_links', array(&$this, 'duplicate_page_plugin_action_links'), 10, 2);
             add_action('admin_action_dt_duplicate_post_as_draft', array(&$this, 'dt_duplicate_post_as_draft'));
+            
             add_filter('post_row_actions', array(&$this, 'dt_duplicate_post_link'), 10, 2);
             add_filter('page_row_actions', array(&$this, 'dt_duplicate_post_link'), 10, 2);
             if (isset($opt['duplicate_post_editor']) && $opt['duplicate_post_editor'] == 'gutenberg') {
                 add_action('admin_head', array(&$this, 'duplicate_page_custom_button_guten'));
+            } elseif(isset($opt['duplicate_post_editor']) && $opt['duplicate_post_editor'] == 'all'){
+                add_action('admin_head', array(&$this, 'duplicate_page_custom_button_guten'));
+                add_action('post_submitbox_misc_actions', array(&$this, 'duplicate_page_custom_button_classic'));
             } else {
                 add_action('post_submitbox_misc_actions', array(&$this, 'duplicate_page_custom_button_classic'));
             }
@@ -36,7 +43,7 @@ if (!class_exists('duplicate_page')):
             add_action('init', array(&$this, 'duplicate_page_load_text_domain'));
             add_action('wp_ajax_mk_dp_close_dp_help', array($this, 'mk_dp_close_dp_help'));
         }
-
+       
         /*
         * Localization - 19-dec-2016
         */
@@ -51,25 +58,24 @@ if (!class_exists('duplicate_page')):
         public function duplicate_page_install()
         {
             $defaultsettings = array(
-                                             'duplicate_post_status' => 'draft',
-                                             'duplicate_post_redirect' => 'to_list',
-                                             'duplicate_post_suffix' => '',
-                                             'duplicate_post_editor' => 'classic',
-                                             );
+                'duplicate_post_status' => 'draft',
+                'duplicate_post_redirect' => 'to_list',
+                'duplicate_post_suffix' => '',
+                'duplicate_post_editor' => 'classic',
+            );
             $opt = get_option('duplicate_page_options');
-            if (!$opt['duplicate_post_status']) {
+            if (!isset($opt['duplicate_post_status'])) {
                 update_option('duplicate_page_options', $defaultsettings);
             }
         }
-
         /*
         Action Links
         */
         public function duplicate_page_plugin_action_links($links, $file)
         {
             if ($file == plugin_basename(__FILE__)) {
-                $duplicate_page_links = '<a href="'.get_admin_url().'options-general.php?page=duplicate_page_settings">'.__('Settings', 'duplicate-page').'</a>';
-                $duplicate_page_donate = '<a href="https://www.webdesi9.com/donate/?plugin=duplicate-page" title="Donate Now" target="_blank" style="font-weight:bold">'.__('Donate', 'duplicate-page').'</a>';
+                $duplicate_page_links = '<a href="'.esc_url(get_admin_url()).'options-general.php?page=duplicate_page_settings">'.__('Settings', 'duplicate-page').'</a>';
+                $duplicate_page_donate = '<a href="https://www.webdesi9.com/donate/?plugin=duplicate-page" title="'.__('Donate Now','duplicate-page').'" target="_blank" style="font-weight:bold">'.__('Donate', 'duplicate-page').'</a>';
                 array_unshift($links, $duplicate_page_donate);
                 array_unshift($links, $duplicate_page_links);
             }
@@ -103,21 +109,50 @@ if (!class_exists('duplicate_page')):
            /*
            * get Nonce value
            */
-           $nonce = $_REQUEST['nonce'];
+           $nonce = sanitize_text_field($_REQUEST['nonce']);
             /*
             * get the original post id
             */
+           
            $post_id = (isset($_GET['post']) ? intval($_GET['post']) : intval($_POST['post']));
-
-           if(wp_verify_nonce( $nonce, 'dt-duplicate-page-'.$post_id) && current_user_can('edit_posts')) {
-           // verify Nonce  
+           $post = get_post($post_id);
+           $current_user_id = get_current_user_id();
+           if(wp_verify_nonce( $nonce, 'dt-duplicate-page-'.$post_id)) {
+            if (current_user_can('manage_options') || current_user_can('edit_others_posts')) {
+              $this->duplicate_edit_post($post_id);
+            }
+            else if (current_user_can('contributor') && $current_user_id == $post->post_author){
+                $this->duplicate_edit_post($post_id, 'pending');
+            }
+            else if (current_user_can('edit_posts') && $current_user_id == $post->post_author ){
+              $this->duplicate_edit_post($post_id);
+            }
+            else {
+                wp_die(__('Unauthorized Access.','duplicate-page'));
+			}
+          }
+         
+          else {
+            wp_die(__('Security check issue, Please try again.','duplicate-page'));
+          } 
+          
+        }
+        /**
+         * Duplicate edit post
+         */
+        public function duplicate_edit_post($post_id,$post_status_update='')
+        {
             global $wpdb;
             $opt = get_option('duplicate_page_options');
-            $suffix = isset($opt['duplicate_post_suffix']) && !empty($opt['duplicate_post_suffix']) ? ' -- '.$opt['duplicate_post_suffix'] : '';
-            $post_status = !empty($opt['duplicate_post_status']) ? $opt['duplicate_post_status'] : 'draft';
-            $redirectit = !empty($opt['duplicate_post_redirect']) ? $opt['duplicate_post_redirect'] : 'to_list';
-            if (!(isset($_GET['post']) || isset($_POST['post']) || (isset($_REQUEST['action']) && 'dt_duplicate_post_as_draft' == $_REQUEST['action']))) {
-                wp_die('No post to duplicate has been supplied!');
+            $suffix = isset($opt['duplicate_post_suffix']) && !empty($opt['duplicate_post_suffix']) ? ' -- '.esc_attr($opt['duplicate_post_suffix']) : '';
+                if($post_status_update == ''){
+                    $post_status = !empty($opt['duplicate_post_status']) ? esc_attr($opt['duplicate_post_status']) : 'draft';
+                }else{
+                    $post_status =  $post_status_update;
+                }
+            $redirectit = !empty($opt['duplicate_post_redirect']) ? esc_attr($opt['duplicate_post_redirect']) : 'to_list';
+            if (!(isset($_GET['post']) || isset($_POST['post']) || (isset($_REQUEST['action']) && 'dt_duplicate_post_as_draft' == sanitize_text_field($_REQUEST['action'])))) {
+                wp_die(__('No post to duplicate has been supplied!','duplicate-page'));
             }
             $returnpage = '';            
             /*
@@ -143,7 +178,6 @@ if (!class_exists('duplicate_page')):
                      'post_author' => $new_post_author,
                      'post_content' => (isset($opt['duplicate_post_editor']) && $opt['duplicate_post_editor'] == 'gutenberg') ? wp_slash($post->post_content) : $post->post_content,
                      'post_excerpt' => $post->post_excerpt,
-                     //'post_name' => $post->post_name,
                      'post_parent' => $post->post_parent,
                      'post_password' => $post->post_password,
                      'post_status' => $post_status,
@@ -156,10 +190,14 @@ if (!class_exists('duplicate_page')):
                 * insert the post by wp_insert_post() function
                 */
                 $new_post_id = wp_insert_post($args);
+	            if(is_wp_error($new_post_id)){
+		            wp_die(__($new_post_id->get_error_message(),'duplicate-page'));
+	            }
+               
                 /*
                 * get all current post terms ad set them to the new post draft
                 */
-                $taxonomies = get_object_taxonomies($post->post_type);
+                $taxonomies = array_map('sanitize_text_field',get_object_taxonomies($post->post_type));
                 if (!empty($taxonomies) && is_array($taxonomies)):
                  foreach ($taxonomies as $taxonomy) {
                      $post_terms = wp_get_object_terms($post_id, $taxonomy, array('fields' => 'slugs'));
@@ -169,46 +207,58 @@ if (!class_exists('duplicate_page')):
                 /*
                 * duplicate all post meta
                 */
-                    $post_meta_infos = $wpdb->get_results("SELECT meta_key, meta_value FROM $wpdb->postmeta WHERE post_id=$post_id");
-				 if (count($post_meta_infos)!=0) {
-				     $sql_query = "INSERT INTO $wpdb->postmeta (post_id, meta_key, meta_value) ";
-				     foreach ($post_meta_infos as $meta_info) {
-                        $meta_key = sanitize_text_field($meta_info->meta_key);
-                        $meta_value = addslashes($meta_info->meta_value);
-                        $sql_query_sel[]= "SELECT $new_post_id, '$meta_key', '$meta_value'";
+                $post_meta_keys = get_post_custom_keys( $post_id );
+                if(!empty($post_meta_keys)){
+                    foreach ( $post_meta_keys as $meta_key ) {
+                        $meta_values = get_post_custom_values( $meta_key, $post_id );
+                        foreach ( $meta_values as $meta_value ) {
+                            $meta_value = maybe_unserialize( $meta_value );
+                            update_post_meta( $new_post_id, $meta_key, wp_slash( $meta_value ) );
                         }
-                        $sql_query.= implode(" UNION ALL ", $sql_query_sel);
-                        $wpdb->query($sql_query);
-					} 
+                    }
+                }
+                   
+                /**
+                 * Elementor compatibility fixes
+                 */
+                 if(is_plugin_active( 'elementor/elementor.php' )){
+                        $css = Elementor\Core\Files\CSS\Post::create( $new_post_id );
+                        $css->update();
+                 } 
                 /*
                 * finally, redirecting to your choice
                 */
-                if ($post->post_type != 'post'):
-                       $returnpage = '?post_type='.$post->post_type;
-                endif;
-                if (!empty($redirectit) && $redirectit == 'to_list'):
-                        wp_redirect(admin_url('edit.php'.$returnpage)); elseif (!empty($redirectit) && $redirectit == 'to_page'):
-                        wp_redirect(admin_url('post.php?action=edit&post='.$new_post_id)); else:
-                        wp_redirect(admin_url('edit.php'.$returnpage));
-                endif;
-                exit;
-            } else {
-                wp_die('Error! Post creation failed, could not find original post: '.$post_id);
+                if ($post->post_type != 'post'){
+                    $returnpage = '?post_type='.$post->post_type;
+                }
+                if (!empty($redirectit) && $redirectit == 'to_list'){
+                    wp_redirect(esc_url_raw(admin_url('edit.php'.$returnpage))); 
+                } elseif (!empty($redirectit) && $redirectit == 'to_page'){
+                    wp_redirect(esc_url_raw(admin_url('post.php?action=edit&post='.$new_post_id))); 
+                } else {
+                    wp_redirect(esc_url_raw(admin_url('edit.php'.$returnpage)));
+                }
+             exit;
+            } 
+            else {
+                wp_die(__('Error! Post creation failed, could not find original post: ','duplicate-page').$post_id);
             }
-          } else {
-            wp_die('Security check issue, Please try again.');
           }
-        }
 
         /*
          * Add the duplicate link to action list for post_row_actions
          */
         public function dt_duplicate_post_link($actions, $post)
         {
+			// Skip acf-field-group post type
+			if($post->post_type == 'acf-field-group'){
+				return $actions;
+			}
+
             $opt = get_option('duplicate_page_options');
-            $post_status = !empty($opt['duplicate_post_status']) ? $opt['duplicate_post_status'] : 'draft';
+            $post_status = !empty($opt['duplicate_post_status']) ? esc_attr($opt['duplicate_post_status']) : 'draft';
             if (current_user_can('edit_posts')) {
-                $actions['duplicate'] = '<a href="admin.php?action=dt_duplicate_post_as_draft&amp;post='.$post->ID.'&amp;nonce='.wp_create_nonce( 'dt-duplicate-page-'.$post->ID ).'" title="'.__('Duplicate this as '.$post_status, 'duplicate-page').'" rel="permalink">'.__('Duplicate This', 'duplicate-page').'</a>';
+                $actions['duplicate'] = isset($post) ? '<a href="admin.php?action=dt_duplicate_post_as_draft&amp;post='.intval($post->ID).'&amp;nonce='.wp_create_nonce( 'dt-duplicate-page-'.intval($post->ID) ).'" title="'.__('Duplicate this as ', 'duplicate-page').$post_status.'" rel="permalink">'.__('Duplicate This', 'duplicate-page').'</a>' : '';
             }
             
             return $actions;
@@ -221,13 +271,15 @@ if (!class_exists('duplicate_page')):
         {
             global $post;
             $opt = get_option('duplicate_page_options');
-            $post_status = !empty($opt['duplicate_post_status']) ? $opt['duplicate_post_status'] : 'draft';
+            $post_status = !empty($opt['duplicate_post_status']) ? esc_attr($opt['duplicate_post_status']) : 'draft';
             $html = '<div id="major-publishing-actions">';
             $html .= '<div id="export-action">';
-            $html .= '<a href="admin.php?action=dt_duplicate_post_as_draft&amp;post='.$post->ID.'&amp;nonce='.wp_create_nonce( 'dt-duplicate-page-'.$post->ID ).'" title="Duplicate this as '.$post_status.'" rel="permalink">'.__('Duplicate This', 'duplicate-page').'</a>';
+            $html .= isset($post) ? '<a href="admin.php?action=dt_duplicate_post_as_draft&amp;post='.intval($post->ID).'&amp;nonce='.wp_create_nonce( 'dt-duplicate-page-'.$post->ID ).'" title="'.__('Duplicate this as ','duplicate-page').$post_status.'" rel="permalink">'.__('Duplicate This', 'duplicate-page').'</a>' :'';
             $html .= '</div>';
             $html .= '</div>';
-            echo $html;
+            $content = apply_filters('wpautop', $html);
+            $content = str_replace(']]>', ']]>', $content);
+            echo $content;
         }
 
         /*
@@ -238,45 +290,19 @@ if (!class_exists('duplicate_page')):
             global $post;
             if ($post) {
                 $opt = get_option('duplicate_page_options');
-                $post_status = !empty($opt['duplicate_post_status']) ? $opt['duplicate_post_status'] : 'draft';
-                if (isset($opt['duplicate_post_editor']) && $opt['duplicate_post_editor'] == 'gutenberg') {
-                    ?>
-             <style>
-             .duplicate_page_link_guten {
-                text-align: center;
-                margin-top: 15px;
-             }
-             .duplicate_page_link_guten a {
-                text-decoration: none;
-                display: block;
-                height: 30px;
-                line-height: 28px;
-                padding: 0 12px 2px;
-                border-color: #ccc;
-                background: #f7f7f7;
-                box-shadow: inset 0 -1px 0 #ccc;
-                border-radius: 3px;
-                border-width: 1px;
-                border-style: solid;
-            }
-            .duplicate_page_link_guten a:hover {
-                background: #fafafa;
-                border-color: #999;
-                box-shadow: inset 0 -1px 0 #999;
-            }
-             </style>       
-             <script>
-              jQuery(window).load(function(e){
-                var dp_post_id = "<?php echo $post->ID; ?>";
-                var dtnonce = "<?php echo wp_create_nonce( 'dt-duplicate-page-'.$post->ID );?>"; 
-                var dp_post_title = "Duplicate this as <?php echo $post_status; ?>";
-                var dp_duplicate_link = '<div class="duplicate_page_link_guten">';
-                    dp_duplicate_link += '<a href="admin.php?action=dt_duplicate_post_as_draft&amp;post='+dp_post_id+'&amp;nonce='+dtnonce+'" title="'+dp_post_title+'">Duplicate This</a>';
-                    dp_duplicate_link += '</div>';
-                jQuery('.edit-post-post-status').append(dp_duplicate_link);
-                });
-              </script>
-            <?php
+                $post_status = !empty($opt['duplicate_post_status']) ? esc_attr($opt['duplicate_post_status']) : 'draft';
+                if (isset($opt['duplicate_post_editor']) && ($opt['duplicate_post_editor'] == 'gutenberg' || $opt['duplicate_post_editor'] == 'all')) {
+                    wp_enqueue_style('dp-main-style', plugin_dir_url(__FILE__) . 'css/dp_gutenberg.css');
+                    wp_register_script( "dt_duplicate_post_script", plugins_url( '/js/editor-script.js', __FILE__ ), array( 'wp-edit-post', 'wp-plugins', 'wp-i18n', 'wp-element' ), DUPLICATE_PAGE_PLUGIN_VERSION);
+                    wp_localize_script( 'dt_duplicate_post_script', 'dt_params', array(
+                        'dp_post_id' => intval($post->ID),
+                        'dtnonce' => wp_create_nonce( 'dt-duplicate-page-'.intval($post->ID)),
+                        'dp_post_text' => __("Duplicate This",'duplicate-page'),
+                        'dp_post_title'=> __('Duplicate this as ','duplicate-page').$post_status,
+                        'dp_duplicate_link' => "admin.php?action=dt_duplicate_post_as_draft"
+                        )
+                    );        
+                    wp_enqueue_script( 'dt_duplicate_post_script' );
                 }
             }
         }
@@ -288,7 +314,7 @@ if (!class_exists('duplicate_page')):
         {
             global $wp_admin_bar, $post;
             $opt = get_option('duplicate_page_options');
-            $post_status = !empty($opt['duplicate_post_status']) ? $opt['duplicate_post_status'] : 'draft';
+            $post_status = !empty($opt['duplicate_post_status']) ? esc_attr($opt['duplicate_post_status']) : 'draft';
             $current_object = get_queried_object();
             if (empty($current_object)) {
                 return;
@@ -299,8 +325,8 @@ if (!class_exists('duplicate_page')):
                 $wp_admin_bar->add_menu(array(
                 'parent' => 'edit',
                 'id' => 'duplicate_this',
-                'title' => __('Duplicate This as '.$post_status.'', 'duplicate-page'),
-                'href' => admin_url().'admin.php?action=dt_duplicate_post_as_draft&amp;post='.$post->ID.'&amp;nonce='.wp_create_nonce( 'dt-duplicate-page-'.$post->ID )
+                'title' => __('Duplicate This as ', 'duplicate-page').$post_status,
+                'href' => isset($post) ? esc_url_raw(admin_url().'admin.php?action=dt_duplicate_post_as_draft&amp;post='.intval($post->ID).'&amp;nonce='.wp_create_nonce( 'dt-duplicate-page-'.intval($post->ID))) :'',
                 ));
             }
         }
@@ -309,21 +335,26 @@ if (!class_exists('duplicate_page')):
          * Redirect function
         */
         public static function dp_redirect($url)
-        {
-            echo '<script>window.location.href="'.$url.'"</script>';
+        {        
+            $web_url = esc_url_raw($url);
+            wp_register_script( 'dp-setting-redirect', '');
+            wp_enqueue_script( 'dp-setting-redirect' );
+            wp_add_inline_script(
+            'dp-setting-redirect',
+            ' window.location.href="'.$web_url.'" ;'
+        );
         }
         /*
          Load Help Desk
         */
-        public function load_help_desk()
-        {
+        public function load_help_desk() {
             $mkcontent = '';
-            $mkcontent .= '<div class="dpmrs">';
+            $mkcontent .= '<div class="dpmrs" style="display:none;">';
             $mkcontent .= '<div class="l_dpmrs">';
             $mkcontent .= '';
             $mkcontent .= '</div>';
             $mkcontent .= '<div class="r_dpmrs">';
-            $mkcontent .= '<a class="close_dp_help fm_close_btn" href="javascript:void(0)" data-ct="rate_later" title="close">X</a><strong>Duplicate Page</strong><p>We love and care about you. Our team is putting maximum efforts to provide you the best functionalities. It would be highly appreciable if you could spend a couple of seconds to give a Nice Review to the plugin to appreciate our efforts. So we can work hard to provide new features regularly :)</p><a class="close_dp_help fm_close_btn_1" href="javascript:void(0)" data-ct="rate_later" title="Remind me later">Later</a> <a class="close_dp_help fm_close_btn_2" href="https://wordpress.org/support/plugin/duplicate-page/reviews/?filter=5" data-ct="rate_now" title="Rate us now" target="_blank">Rate Us</a> <a class="close_dp_help fm_close_btn_3" href="javascript:void(0)" data-ct="rate_never" title="Not interested">Never</a>';
+            $mkcontent .= '<a class="close_dp_help fm_close_btn" href="javascript:void(0)" data-ct="rate_later" title="'.__('close','duplicate-page').'">X</a><strong>'.__('Duplicate Page','duplicate-page').'</strong><p>'.__('We love and care about you. Our team is putting maximum efforts to provide you the best functionalities. It would be highly appreciable if you could spend a couple of seconds to give a Nice Review to the plugin to appreciate our efforts. So we can work hard to provide new features regularly :)','duplicate-page').'</p><a class="close_dp_help fm_close_btn_1" href="javascript:void(0)" data-ct="rate_later" title="'.__('Remind me later','duplicate-page').'">'.__('Later','duplicate-page').'</a> <a class="close_dp_help fm_close_btn_2" href="https://wordpress.org/support/plugin/duplicate-page/reviews/?filter=5" data-ct="rate_now" title="'.__('Rate us now','duplicate-page').'" target="_blank">'.__('Rate Us','duplicate-page').'</a> <a class="close_dp_help fm_close_btn_3" href="javascript:void(0)" data-ct="rate_never" title="'.__('Not interested','duplicate-page').'">'.__('Never','duplicate-page').'</a>';
             $mkcontent .= '</div></div>';
             if (false === ($mk_dp_close_dp_help_c = get_option('mk_fm_close_fm_help_c'))) {
                 echo apply_filters('the_content', $mkcontent);
@@ -332,15 +363,9 @@ if (!class_exists('duplicate_page')):
         /*
          Close Help
         */
-        public function mk_dp_close_dp_help()
-        {
-            $what_to_do = sanitize_text_field($_POST['what_to_do']);
-            $expire_time = 15;
-            if ($what_to_do == 'rate_now' || $what_to_do == 'rate_never') {
-                $expire_time = 365;
-            } elseif ($what_to_do == 'rate_later') {
-                $expire_time = 15;
-            }
+        public function mk_dp_close_dp_help() {
+            $nonce = sanitize_text_field($_REQUEST['nonce']);
+            if (wp_verify_nonce($nonce, 'nc_help_desk')) {
             if (false === ($mk_fm_close_fm_help_c = get_option('mk_fm_close_fm_help_c'))) {
                 $set = update_option('mk_fm_close_fm_help_c', 'done');
                 if ($set) {
@@ -351,6 +376,9 @@ if (!class_exists('duplicate_page')):
             } else {
                 echo 'ac';
             }
+        }else {
+            echo 'ac';
+        }
             die;
         }
         /*
@@ -359,8 +387,11 @@ if (!class_exists('duplicate_page')):
         public function custom_assets() {
             wp_enqueue_style( 'duplicate-page', plugins_url( '/css/duplicate_page.css', __FILE__ ) );
             wp_enqueue_script( 'duplicate-page', plugins_url( '/js/duplicate_page.js', __FILE__ ) );
+            wp_localize_script( 'duplicate-page', 'dt_params', array(
+                'ajax_url' => admin_url( 'admin-ajax.php'),
+                'nonce' => wp_create_nonce( 'nc_help_desk' ))
+            );
         }
     }
 new duplicate_page();
 endif;
-?>

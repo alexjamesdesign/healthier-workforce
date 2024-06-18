@@ -1,5 +1,6 @@
 <?php
 define('WORDFENCE_EPOCH', 1312156800);
+define('WORDFENCE_FEEDBACK_EPOCH', 1704213261);
 define('WORDFENCE_API_VERSION', '2.26');
 define('WORDFENCE_API_URL_SEC', 'https://noc1.wordfence.com/');
 define('WORDFENCE_API_URL_NONSEC', 'http://noc1.wordfence.com/');
@@ -30,3 +31,5 @@ if (!defined('WORDFENCE_SCAN_MIN_EXECUTION_TIME')) { define('WORDFENCE_SCAN_MIN_
 if (!defined('WORDFENCE_SCAN_MAX_INI_EXECUTION_TIME')) { define('WORDFENCE_SCAN_MAX_INI_EXECUTION_TIME', 90); }
 if (!defined('WORDFENCE_ALLOW_DIRECT_MYSQLI')) { define('WORDFENCE_ALLOW_DIRECT_MYSQLI', true); }
 if (!defined('WORDFENCE_NOC3_FAILED_BACKOFF_TIME')) { define('WORDFENCE_NOC3_FAILED_BACKOFF_TIME', 60); }
+if (!defined('WORDFENCE_WWW_BASE_URL'))
+	define('WORDFENCE_WWW_BASE_URL', 'https://www.wordfence.com/');

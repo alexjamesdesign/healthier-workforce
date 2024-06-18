@@ -1,9 +1,11 @@
 === Ninja Forms Contact Form - The Drag and Drop Form Builder for WordPress ===
 Contributors: wpninjasllc, kstover, jameslaws, kbjohnson90, klhall1987, krmoorhouse, jmcelhaney, wpnzach, ericwindhamsd
 Tags: forms, contact form, email form, form builder, custom form, pdf form, registration form, payment form, login form, contact me, signature form, upload form, file upload form, conditional form, feedback form, appointment form, quote form, survey form, contact button, signup form, form plugin, contact form plugin, subscription form, email subscription form, newsletter form, donation form, booking form, quote request form, multi page form, conditional logic form, subscription form, application form, employment verification form, star rating form, rating form, event form, mailchimp form, campaign monitor form, constant contact form, mailpoet form, aweber form, cleverreach form, emma form, convertkit form, active campaign form, salesforce form, zoho form, capsule form, insightly form, pipelinedeals form, onepagecrm form
-Requires at least: 5.3
-Tested up to: 5.5
-Stable tag: 3.4.30
+
+Requires at least: 6.0
+Tested up to: 6.3.1
+Stable tag: 3.6.31
+
 License: GPLv2 or later
 
 The 100% beginner friendly WordPress form builder. Drag & drop form fields to build beautiful, professional contact forms in minutes.
@@ -64,9 +66,9 @@ The core Ninja Forms WordPress form builder is 100% free, always. Build complex 
 * Developer friendly
 
 = Ninja Forms Add-on Features =
-As your needs grow, Ninja Forms will grow with you. Select just the individual [features](https://ninjaforms.com/add-ons/?utm_source=Ninja+Forms+Plugin&utm_medium=readme) you need as you need them, or [become a member today](https://ninjaforms.com/pricing/?utm_source=Ninja+Forms+Plugin&utm_medium=readme) with a plan that meets your needs and your budget! Take your WordPress forms farther! 
+As your needs grow, Ninja Forms will grow with you. Select just the individual [features](https://ninjaforms.com/add-ons/?utm_source=Ninja+Forms+Plugin&utm_medium=readme) you need as you need them, or [become a member today](https://ninjaforms.com/pricing/?utm_source=Ninja+Forms+Plugin&utm_medium=readme) with a plan that meets your needs and your budget! Take your WordPress forms farther!
 
-* [Layout & Styles](https://ninjaforms.com/extensions/layout-styles/?utm_source=Ninja+Forms+Plugin&utm_medium=readme) 
+* [Layout & Styles](https://ninjaforms.com/extensions/layout-styles/?utm_source=Ninja+Forms+Plugin&utm_medium=readme)
 * [Conditional Logic](https://ninjaforms.com/extensions/conditional-logic/?utm_source=Ninja+Forms+Plugin&utm_medium=readme)
 * [Multi-Part Forms](https://ninjaforms.com/extensions/multi-part-forms/?utm_source=Ninja+Forms+Plugin&utm_medium=readme)
 * [File Uploads](https://ninjaforms.com/extensions/file-uploads/?utm_source=Ninja+Forms+Plugin&utm_medium=readme)
@@ -112,7 +114,7 @@ Don’t see a feature you need for Ninja Forms? Just have a question about your 
 
 == Notes ==
 
-Ninja Forms is a 100% beginner friendly WordPress form builder, appropriate for complete beginners all the way to seasoned WordPress developers. We don’t just say it, we stand by it. [Our support team](https://ninjaforms.com/contact/?utm_source=Ninja+Forms+Plugin&utm_medium=readme) is standing by to help you realize your site’s potential anywhere your forms are concerned. 
+Ninja Forms is a 100% beginner friendly WordPress form builder, appropriate for complete beginners all the way to seasoned WordPress developers. We don’t just say it, we stand by it. [Our support team](https://ninjaforms.com/contact/?utm_source=Ninja+Forms+Plugin&utm_medium=readme) is standing by to help you realize your site’s potential anywhere your forms are concerned.
 
 Not sure if you can build the forms you need? Wondering if forms are the answer to do the thing you or your clients need to make happen? [Reach out](https://ninjaforms.com/contact/?utm_source=Ninja+Forms+Plugin&utm_medium=readme)! Our dedicated, professional support team is happy to help however we can, and answer any questions you might have!
 
@@ -238,7 +240,7 @@ The Ninja Forms drag and drop form builder for WordPress makes it very easy to b
 * OnePageCRM form
 
 = Can I integrate Ninja Forms with my email marketing service, CRM, or other favorite service? =
-Almost certainly. The Ninja Forms builder integrates directly with over a dozen [email marketing and CRM services](https://ninjaforms.com/add-ons/?utm_source=Ninja+Forms+Plugin&utm_medium=readme) including MailChimp, Constant Contact, Active Campaign, Salesforce, Insightly, Zoho, and many more. 
+Almost certainly. The Ninja Forms builder integrates directly with over a dozen [email marketing and CRM services](https://ninjaforms.com/add-ons/?utm_source=Ninja+Forms+Plugin&utm_medium=readme) including MailChimp, Constant Contact, Active Campaign, Salesforce, Insightly, Zoho, and many more.
 
 Ninja Forms also integrates with 1,000+ other popular services through our [Zapier integration](https://ninjaforms.com/extensions/zapier/?utm_source=Ninja+Forms+Plugin&utm_medium=readme). Some of the more popular services that we see our users integrate flawlessly with include:
 * Hubspot CRM
@@ -302,14 +304,466 @@ This section describes how to install the plugin and get it working.
 5. Beautiful Forms Every Time!
 
 == Upgrade Notice ==
+= 3.6.31 (19 September 2023)
 
-= 3.4.30 (22 September 2020) =
+* Bug Fixes: *
+- Fixes form not displaying and form stuck on processing from jQuery trim() failure on non-string
+
+* Other: *
+- Remove old promotions banner
+
+== Changelog ==
+= 3.6.31 (19 September 2023)
+
+* Bug Fixes: *
+- Fixes form not displaying and form stuck on processing from jQuery trim() failure on non-string
+
+* Other: *
+- Remove old promotions banner
+
+= 3.6.30 (14 September 2023)
+
+* Bug Fixes: *
+- Form should now submit properly if submit button label and processing label match.
+- Ensure forms display on themes using wp_localize_script
+
+* Other: *
+- Remove support for NF 2.9
+- JS dependency updates: update to React 18, WordPress block editor/scripts/server side render/i18n, babel-jest, core-js
+
+= 3.6.29 (16 August 2023)
+
+*Bug fixes:*
+* Fix submission retrieval error missing submissions within time stamp on date
+* Ensure 7.4-required functionality doesn't trigger warnings
+
+*Other:*
+* Update library for autonumeric, WP scripts
+* Update tested up to, now 6.3 was 6.2.2
+
+= 3.6.28 (06 July 2023)
+
+*Bug fixes:*
+* Correct issue that prevented form deletion
+
+= 3.6.27 (04 July 2023)
+
+*Bug fixes:*
+* Use static call for class name for PHP 7 support 
+
+= 3.6.26 (04 July 2023)
+
+*Other:*
+* Ensure minimum required version on packages
+
+*Security Enhancements:*
+* Prevent unauthorized download of submission
+* Prevent scripts in dashboard field labels; responsibly reported by Sayandeep Dutta
+* Prevent front-facing label scripts; responsibly reported by Jonathon Zamora & WordPress.org
+* Prevent excess extra data through automated form submission
+* Prevent override access where not permitted
+
+= 3.6.25 (14 June 2023)
+*Bug Fixes:*
+- Remove duplicate radio bubble on opionated styles mobile
+- Restrict delete file route to uploads directory
+
+*Other:*
+ - Bump @wordpress/jest-preset-default from 10.9.0 to 11.4.0 #6579
+ -  Bump core-js from 3.30.1 to 3.30.2 #6578
+ - Bump axe-core from 4.7.0 to 4.7.1 #6577
+ - Bump @wordpress/components from 23.9.0 to 24.0.0 #6576
+ - Bump @babel/core from 7.21.5 to 7.21.8 #6575
+ - Prototype Pollution in lodash
+ - Regular Expression Denial of Service in trim
+ - glob-parent before 5.1.2 vulnerable to Regular Expression Denial of Service in enclosure regex
+ - Uncontrolled Resource Consumption in trim-newlines
+ - Inefficient Regular Expression Complexity in nth-check
+
+= 3.6.24 (12 May 2023)
+*Bug Fixes:*
+- Prevent bypass of required field with modified data
+- Prevent datepicker to break the view when set with 0 minutes increment
+- Prevent Submit button to double submit a form
+
+= 3.6.23 (26 April 2023)
+*Bug Fixes:*
+- Ensure HTML fields load merge data
+- Add fieldset repeater uploads to CSV and emails
+
+= 3.6.22 (20 April 2023)
+*Bug Fixes:*
+- Prevent possible XSS vulnerability
+
+= 3.6.21 (12 April 2023)
+*Bug Fixes:*
+- Ensure cron_interval value is integer
+- Ensure option definition value has fallback value
+- Ensure cache update process doesn't break on errant stored data
+- Replace deprecated use of self in callable
+- Use form Id to filter field searches for faster response
+
+= 3.6.20 (14 March 2023)
+*Bug Fixes:*
+- Error management in Repeater fieldsets (fields inside repeater fieldsets now respond to frontend validation)
+- Display repeater field data in HTML field via merge tags
+- Include Repeater data in CSVs when the repeater wasn't repeated
+- Display repeater data in retrigger email actions (and its CSV)
+- Display Correct repeater child fields labels in emails
+- Display repeater description on form
+- Ensure correct rendering of date field in repeaters
+- CSVs now display repeaters data as one row for each fieldset
+
+*Fixes for extensions:*
+- Save progress display repeater field without errors
+- Multi-part compatibility display repeater field, with merge tags and data saved correctly
+
+= 3.6.19 (22 February 2023)
+*Bug Fixes:*
+- Migrate/update jBox library
+- Ensure language filter results are passed to downstream filters
+- Prevent non-string math error
+
+*Other:*
+- Add version checks for extensions
+
+= 3.6.18 (16 February 2023)
+*Bug Fixes:*
+- Prevent deprecated warning null preg_match_all
+- Ensure empty form does not throw error on preview
+- Ensure array for currency doesn't throw fatal error
+- Declare previously undeclared properties (PHP 8)
+- Prevent undefined array key error
+- Ensure missing key in recaptcha field doesn't fail
+
+= 3.6.17 (8 February 2023)
+*Bug Fixes:*
+- Ensure HTML injected in label is sanitized
+- Correct typo in date format for option DD/MM/YYYY
+- Ensure GMT offset setting does not prevent submissions page display
+- Prevent deprecated notice on empty merge tag "other"
+- Prevent deprecated notice for jsonSerialize
+- Prevent deprecated notice for passing null value
+
+= 3.6.16 (18 January 2023)
+*Bug Fixes:*
+  * Import buffer class to re-enable download as PDF
+*Other Enhancements:*
+  * Add code coverage reporting
+  
+= 3.6.15 (10 January 2023) =
+*Bug Fixes:*
+  * Resolves add-on manager fatal error
+  * Prevents image in HTML loading error for WP 6.1
+  * Correct multiple accessibility warnings
+  * Enables empty step in number field
+  * Enables default zero value
+*Other Enhancements:*
+  * Update 'tested to'
+  * Set resolutions to prevent vulnerable child dependencies
+  
+= 3.6.14 (2 September 2022) =
+*Bug Fixes:*
+  * Fixes an issue with trailing commas
+  * Fixes an issue for some users on PHP7.4 and below.
+*Other Enhancements:*
+  * Update 'tested to'
+
+= 3.6.13 (30 August 2022) =
+*Bug Fixes:*
+  * Prevent object wakeup in unserialize
+  * Correct errant variable name is submissions check
+*Other Enhancements:*
+  * Smart suggestions for extensions
+  * Update 'tested to'
+
+= 3.6.12 (22 June 2022) =
+*Bug Fixes:*
+  * Fixed naming collision with reCaptcha cookie check
+  * HTML re-enabled in field labels for users with correct capabilities
+  * Removed orphaned repeater field setting from advanced settings
+  * Fixed form imports for non-UTF-8 encoded files
+
+= 3.6.11 (14 June 2022) =
+*Security Enhancements*
+  * Apply more strict sanitization to merge tag values
+
+= 3.6.10 (07 June 2022) =
+*Bug Fixes:*
+  * Retrigger emails from Submissions page if form only has 1 Email Action
+  * Invalid Date message triggered by Date Picker Field
+  * Typo in Delete Form popup
+  * Importing a form sets the Step value of any Number field to 1, regardless of the Export value
+  * Front End Checkbox/Radio lists are not keyboard accessible
+  * Form Preview Page does not work in themes that enable full site editor
+  * Public link not working in some themes
+  * Checkbox Fields with a checked calc value of 0 evaluate to 1 in JS
+  * Activating Layouts & Styles removes merge tags from email actions until the form is republished
+  * Trigger error when cookies for reCaptcha v3 were not allowed ( Implemented with hooks )
+  * Submissions page select dates filter restored
+
+*Security Enhancements*
+  * Improve escaping on field template labels and values [reported responsibly](https://ninjaforms.com/security) by Ryan at WP Scan
+  * Improve sanitization of label values
+  * Improve authorization check for field imports
+
+= 3.6.9 (24 March 2022) =
+*Bug Fixes:*
+Restore "Download All Submissions" functionality
+
+= 3.6.8 (14 March 2022)
+
+*Bug Fixes:*
+Correct Repeatable Fieldset CSV output, was Array Array Array
+Add "Trash" view to React submissions page
+Fix broken submission view when Date field added to converted CF form
+
+*Security Enhancements*
+Remove CSV temp files stored in publicly accessible location, [reported responsibly](https://ninjaforms.com/security) by Agence Web Coheractio - Paris at https://www.coheractio.com
+
+= 3.6.7 (30 November 2021)
+
+*Bug Fixes:*
+
+  * Fix Danish/Finnish language halts submissions page display
+  * Exclude confirm field from submission data
+  * Scroll list fields to prevent extremely tall rows
+  * Correctly display checkbox value in submission table
+  * Fix PHP warning on column control
+  * Remove note, html, submit, confirm fields from CSV export
+  * Use set date format on CSV export
+  * Prevent XSS in form title
+
+= 3.6.6 (15 November 2021)
+
+*Bug Fixes:*
+
+  * Rename 'store submission' to record submission'
+  * Enable extra data column headers in CSV export
+  * Use admin labels in tables and export
+
+= 3.6.5 (04 November 2021)
+
+*Bug Fixes:*
+
+* Ensure submission column selections are remembered for next viewing
+* Ensure date time is properly displayed in submission popup editor
+* Display calculations metabox in submissions
+* Add temporary submissions page rollback option
+* Fix failing search results on submissions page
+* Ensure checkbox displays correct value, not always 'checked'
+
+= 3.6.4 (25 October 2021)
 
 *Bugs:*
 
-* Resolved an issue that was causing a fatal error on sites running PHP 5.6 or older.
+* Prevent data timeout error by reducing size of initial submission request
+* Prevent SQL injection from field key
+* Prevent overwriting of ConvertKit action name during import
+* Ensure forms that don't have email actions appear in submission page list
 
-== Changelog ==
+= 3.6.3 (18 October 2021)
+
+*Bugs:*
+
+* Update submission link on form dashboard
+* Check for CF database before adding CF data source
+
+= 3.6.2 (12 October 2021)
+
+*Bugs:*
+
+* Ensure submissions appear when timezone setting puts submission ahead of current timestamp
+
+= 3.6.1 (11 October 2021)
+
+*Bugs:*
+
+* Move sequence id from submission editing to metadata
+* Use correct popup for autogenerate Add New modals
+
+*Changes:*
+
+* Ignore build files from commit
+
+= 3.6.0 (04 October 2021)
+
+*Changes:*
+
+* Enable display of Caldera Forms submissions in Ninja Forms submission table
+
+*Bugs:*
+
+* Prevent `button` field from being used through search function
+
+= 3.5.8.4 (14 June 2022) =
+*Security Enhancements*
+  * Apply more strict sanitization to merge tag values
+
+= 3.5.8.3 (22 September 2021)
+
+*Bugs:*
+
+* Ensure sanitized values enables spaces between classNames
+
+= 3.5.8.2 (21 September 2021)
+
+*Bugs:*
+
+* Ensure cached value of form is stored with sanitized value
+
+= 3.5.8.1 (15 September 2021)
+
+*Bugs:*
+
+* Resolved security vulnerability of admin+ stored XSS on form design
+
+= 3.5.8 (07 September 2021)
+
+*Bugs:*
+
+* Resolved security vulnerability in the submissions route.   Responsibly reported by Chloe Chamberland at Wordfence.
+* Resolved an issue that rarely caused submission to fail on forms containing a multiselect field.
+
+*Changes:*
+
+* Updated several of our build dependency packages.
+* Automated build and deploy to SVN.
+
+= 3.5.7 (5 July 2021) =
+
+*Bugs:*
+
+* Resolved an error that was causing the plugin to crash on sites using a PHP version below 7.0.
+
+= 3.5.6 (29 June 2021) =
+
+*Bugs:*
+
+* Bulk resend email should now properly populate the email subject line instead of using a default value.
+* Repeatable fieldset data should now display properly in the submission block.
+* Corrected an issue that was preventing forms from displaying when repeatable fieldsets contained a date field, a rich text enabled paragraph field, or a field with a custom mask.
+* When set, the submission limit should now be properly enforced on submissions made via forms loaded before the limit was reached.
+* Move to trash should once more be available in the bulk actions on the submissions page.
+
+= 3.5.5 (07 June 2021) =
+
+*Changes:*
+
+* Added support for Google Recaptcha V3.
+* Added a new option to resend email actions from the submissions table.
+* Added the ability to export multiple form submission CSVs at once.
+* Escape query args for enhanced security - _Responsibly reported by Erwan at WP Scan_
+
+*Bugs:*
+
+* Fixed a bug that caused an extra : to be shown in the date field on older forms.
+* Fixed a bug with field settings that caused some settings to not show when they should have.
+* Multiple Recaptchas on the same page should work properly.
+
+= 3.5.4 (21 April 2021) =
+
+*Changes:*
+
+* The Date Field is now the Date/Time Field. This field now allows for Date, Time, and Date & Time selection.
+
+*Bugs:*
+
+* Fixed a bug that caused ReCaptcha fields to fail if more than one appeared on the page.
+* Fixed a conflict with iThemes that was causing a fatal error.
+
+= 3.5.3 (1 April 2021) =
+
+*Changes:*
+
+* Final deprecation phase of Ninja Forms 2.9x codebase.
+
+= 3.5.2 (24 March 2021) =
+
+*Changes:*
+
+* Removed some legacy settings that were no longer required for new installs.
+
+*Bugs:*
+
+* Resolved an issue that was causing errors when Array values were used in API requests.
+* The Ninja Forms block should now fill the entire width of the block editor.
+* Fixed an error that was causing a depreciated method warning when using the classic editor.
+* Forms should now display again in Internet Explorer 11.
+* Resolved an issue that was causing the Ninja Forms dashboard to crash if there was an issue with wp_cron.
+* Fixed some PHP warnings related to our checkbox list field.
+
+= 3.5.1 (17 February 2021) =
+
+*Bugs:*
+
+* Resolved an issue that was always causing required checkbox list fields to throw a required error on submission.
+* The Ninja Forms block should now properly display the form in the page editor if WordPress has been installed in a subdirectory.
+* Cleaned up a few notices and warnings that were displaying on sites running PHP 8.
+
+= 3.5.0 (15 February 2021) =
+
+*Changes:*
+
+* Repeatable Fieldsets have arrived! For a quick look at how to get those setup, check out our [new documenation](https://ninjaforms.com/docs/field-types/#repeater) for them.
+
+*Bugs:*
+
+* Our block editor code should now only load on pages where it is actually needed, leading to less page load time in the admin dashboard.
+
+= 3.4.34.2 (14 June 2022) =
+*Security Enhancements*
+  * Apply more strict sanitization to merge tag values
+
+= 3.4.34.1 (8 February 2021) =
+
+*Security:*
+
+* Added a missing permissions check in our services connection manager [reported responsibly](https://ninjaforms.com/security) by Chloe Chamberland at Wordfence.
+* Patched a potential XSS vulnerability in our querystring merge tag.
+* Added a missing filter that should have been excluding some personal information fields from the CSV attachment on Email Actions.
+
+= 3.4.34 (25 January 2021) =
+
+*Bugs:*
+
+* Forms should once again load properly in Internet Explorer 11.
+* Single checkbox fields should now properly display their values in the submission table.
+* Updated our dashboard styling to resolve an issue where some translations were resulting in action buttons being obscured.
+* Restored drag and drop functionality for adding fields in the form builder.
+
+*Security:*
+
+* Patched a couple of vulnerabilities in our services oAuth controller [reported responsibly](https://ninjaforms.com/security) by Chloe Chamberland at Wordfence.
+
+= 3.4.33 (9 December 2020) =
+
+*Bugs:*
+
+* Cleaned up a few conflicts with WordPress version 5.6.
+  * Toggle switches in the form builder should now be working as expected.
+  * Pre-selected options for lists should now persist properly in the form builder.
+  * Element styling of some buttons should properly reflect the active or inactive status of the button.
+
+= 3.4.32 (16 November 2020) =
+
+*Bugs:*
+
+* Patched an issue with our new date field library that was causing it to display improperly on some mobile devices.
+
+= 3.4.31 (12 November 2020) =
+
+*Changes:*
+
+* Our date field library has been updated! For you developer types out there, we’ve switched from pikaday to flatpickr.
+* Updated some of our form builder scripts in preparation for WordPress 5.6.
+
+*Bugs:*
+
+* Fixed a visual issue that sometimes allowed the Ninja Forms Dashboard view to extend beyond the width of the browser window.
+* Resolved an error that sometimes caused an error message to appear when loading the Dashboard for the first time on a new installation.
+* Resolved an error in our termslist field that caused the form builder to crash if you opened a form that was previously mapped to a term that had been deleted.
+* Resolved an error that was sometimes causing PDF exports or emails with PDF attachments to fail.
 
 = 3.4.30 (22 September 2020) =
 
@@ -362,6 +816,13 @@ This section describes how to install the plugin and get it working.
 *Bugs:*
 
 * Resolved an issue that sometimes caused the merge tag menu to not open properly in the form builder.
+
+= 3.4.26 (25 August 2020) =
+
+*Bugs:*
+
+* Sites with WP_DEBUG enabled should no longer display a deprecated parent error on PHP version 7.4.
+* Resolved an issue that was preventing our Screen Options settings from being saved on the submissions page.
 
 = 3.4.25 (12 August 2020) =
 
@@ -668,6 +1129,10 @@ This section describes how to install the plugin and get it working.
 * Implemented a new import process, which should be more reliable with large form imports.
 * Upgraded our data structure to reduce loading times for forms and the form builder.
 
+= 3.3.21.4 (14 June 2022) =
+*Security Enhancements*
+  * Apply more strict sanitization to merge tag values
+
 = 3.3.21.3 (10 January 2019) =
 
 *Security:*
@@ -789,7 +1254,7 @@ This section describes how to install the plugin and get it working.
 
 *Changes:*
 
-* Added the abililty to have no default value for Country and State fields. 
+* Added the abililty to have no default value for Country and State fields.
 * Added the Indian Rupee to the list of available currencies
 * Removed unnecessary comments from the main field template
 
@@ -864,10 +1329,10 @@ This section describes how to install the plugin and get it working.
 
 *Changes:*
 
-* Fields now display admin labels (if they exist) instead of labels in the store submission action settings.
+* Fields now display admin labels (if they exist) instead of labels in the record submission action settings.
 * Added a tooltip to the value section of list fields, giving details about allowed characters.
 * List field merge tags can now be configured to show labels instead of values by appending ":label" to the merge tag.
-* The store submissions action can now be configured to remove submissions that exceed a defined timeframe.
+* The record submission action can now be configured to remove submissions that exceed a defined timeframe.
 * Added a confirm modal to field deletion to prevent accidental removal of data.
 
 = 3.3.4 (11 June 2018) =
@@ -892,13 +1357,13 @@ This section describes how to install the plugin and get it working.
 
 *Bugs:*
 
-* Fields that do not actually save data should no longer appear in the include/exclude fields list for the store submission action.
+* Fields that do not actually save data should no longer appear in the include/exclude fields list for the record submission action.
 * Improved performance of our Add Form modal in the post editor.
 * Resolved an issue that sometimes caused the Submissions page to display as a white screen.
 
 *Changes:*
 
-* (GDPR) Fields excluded by the store submission action will now show their values as (redacted) in the edit submission screen, rather than displaying nothing.
+* (GDPR) Fields excluded by the record submission action will now show their values as (redacted) in the edit submission screen, rather than displaying nothing.
 * (GDPR) The delete data request action now includes a setting to specify anonimization of Ninja Forms data, rather than full deletion.
 * (GDPR) Fields now have a setting to specify if they are personally identifiable data.
 * Registered a cleanup process to take care of some outdated and unnecessary data we have been storing in various data records.
@@ -922,13 +1387,17 @@ This section describes how to install the plugin and get it working.
 
 *Changes:*
 
-* Individual fields can now be excluded from the store submission action.
+* Individual fields can now be excluded from the record submission action.
 * (GDPR) The delete data request action can now be added to a form, allowing your users to request deletion of their Ninja Forms submissions.
 * (GDPR) The export data request action can now be added to a form, allowing your users to request a record of their Ninja Forms submissions.
 * (GDPR) Added templates for data removal and data export requests.
 * (GDPR) Added a suggested privacy policy content block for the use of Ninja Forms.
 * (GDPR) We've updated our Ninja Forms opt-in/opt-out behavior for anonymous usage statistics.
 * (Developers) We've added a layout of our database structure to our public repository.
+
+= 3.2.28 (14 June 2022) =
+*Security Enhancements*
+  * Apply more strict sanitization to merge tag values
 
 = 3.2.27 (11 May 2018) =
 
@@ -1195,26 +1664,26 @@ This section describes how to install the plugin and get it working.
 
 *Bugs:*
 
-* Required field validation should now work properly with the Layout and Styles add-on. 
+* Required field validation should now work properly with the Layout and Styles add-on.
 * The email action now removes extra comma separators from email settings like(To, BCC, CC, reply-to, and from address').
 * The date range on the submissions table will now show the correct submissions for the selected dates.
 * Fixed a bug that was causing form imports with extra characters at the beginning to break.
-* Forms that fail to load on the front-end will now remove the loading animation from the page. 
-* Calculations will display correctly on the front end in HTML fields if the Save Progress add-on is active on sites. 
+* Forms that fail to load on the front-end will now remove the loading animation from the page.
+* Calculations will display correctly on the front end in HTML fields if the Save Progress add-on is active on sites.
 * The decimal setting in calculations will no longer break if non-numeric values are input into them.
-* Unique fields will no longer try to validate deleted submissions. 
+* Unique fields will no longer try to validate deleted submissions.
 * Country fields should now be sorted alphabetically in non-English languages.
-* Calculations decimal setting now defaults to 2 decimal places if the setting is left empty. 
-* Fixed "This is not a required field" to read "This IS a required field" in Spanish locales. 
-* Added translatable text for the (of) in the input limit text. 
+* Calculations decimal setting now defaults to 2 decimal places if the setting is left empty.
+* Fixed "This is not a required field" to read "This IS a required field" in Spanish locales.
+* Added translatable text for the (of) in the input limit text.
 
 *Changes:*
 
-* Created a merge tag for custom user meta. This will allow users to do things like pre-populate fields with custom user meta. 
+* Created a merge tag for custom user meta. This will allow users to do things like pre-populate fields with custom user meta.
 * Added placeholder for date field.
-* We now have currency support for South African Rand(ZAR). 
-* Added support for setting number of rows shown on a multi-select list on the front end. 
-* Created a confirm field. This will allow users to map another field on their form to it and will validate the input on the front end with the field it is mapped to. 
+* We now have currency support for South African Rand(ZAR).
+* Added support for setting number of rows shown on a multi-select list on the front end.
+* Created a confirm field. This will allow users to map another field on their form to it and will validate the input on the front end with the field it is mapped to.
 * Added a new merge tag for submission time. This will display the time the form was submitted.
 * Added WordPress filter to disable all Ninja Forms in app sales banners.
 * The merge tag selector can now be used in the body of HTML fields.
@@ -1258,6 +1727,10 @@ This section describes how to install the plugin and get it working.
 * Basic error logging has been added to Ninja Forms; the "Get Help" page will now show the most recently recorded errors.
 * Added a setting for changing stat opt-in tracking.
 * License activation errors will now show more detail.
+
+= 3.1.10 (14 June 2022) =
+*Security Enhancements*
+  * Apply more strict sanitization to merge tag values
 
 = 3.1.9 (04 August 2017) =
 
@@ -1417,6 +1890,10 @@ This section describes how to install the plugin and get it working.
 * Fixed several PHP notices.
 * After successful submission, the page should only scroll to the success message if it is not fully visible.
 * Inline email validation should work properly for longer email domains, i.e. @liverpool.ac.uk
+
+= 3.0.34.2 (14 June 2022) =
+*Security Enhancements*
+  * Apply more strict sanitization to merge tag values
 
 = 3.0.34.1 (25 April 2017) =
 

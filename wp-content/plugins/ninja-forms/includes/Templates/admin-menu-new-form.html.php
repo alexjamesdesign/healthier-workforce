@@ -72,10 +72,15 @@
 
 <script id="tmpl-nf-advanced-main-content" type="text/template">
     <div>
-        <div class="child-view-container"></div>
+        <div class="child-view-container installed"></div>
+        <div class="sub-section-header" style="display:none; clear:both; width:100%; padding-bottom: 20px;">
+            <h4 style="text-align:center;">Additional Settings</h4>
+            <hr />
+        </div>
+        <div class="child-view-container available"></div>
         <# if(1 != nfAdmin.devMode){ #>
             <div style="clear:both;padding-top:100px;padding:20px;opacity:.5;text-align:center;">
-                For more technical features, <a href="<?php echo add_query_arg('page', 'nf-settings', admin_url('admin.php')); ?>#ninja_forms[builder_dev_mode]">enable Developer Mode</a>.
+                For more technical features, <a href="<?php echo esc_url( add_query_arg('page', 'nf-settings', admin_url('admin.php') ) ); ?>#ninja_forms[builder_dev_mode]">enable Developer Mode</a>.
             </div>
         <# } #>
     </div>
@@ -93,7 +98,7 @@
     {{{ data.label }}}
 </script>
 <script id="tmpl-nf-merge-tag-box-tag" type="text/template">
-    <span data-tag="{{{data.tag}}}">{{{ data.label }}} <small>{{{data.tag}}}</small></span>
+    <span data-tag="{{{data.tag}}}">{{{ _.escape( data.label ) }}} <small>{{{data.tag}}}</small></span>
 </script>
 <script id="tmpl-nf-merge-tag-box-filter" type="text/template">
     <input type="text" placeholder="Search for merge tags" >
@@ -199,6 +204,12 @@
     </div>
 </script>
 
+<script id="tmpl-nf-repeater-content-fields-empty" type="text/template">
+    <div class="nf-fields-empty">
+        <p><?php esc_html_e( 'Drag and drop new fields from the right to create a repeatable set of fields.', 'ninja-forms' ); ?></p>
+    </div>
+</script>
+
 <script id="tmpl-nf-main-content-actions-empty" type="text/template">
     <tr>
         <td colspan="4">
@@ -215,7 +226,7 @@
         <div style="position:absolute;top:0;right:0;bottom:0;left:0;z-index:2;"></div>
 
         <div class="nf-item-controls"></div>
-        
+
         <div class="nf-placeholder-label">
             {{{ data.renderIcon() }}}
             <span class="nf-field-label">{{{ _.escape( data.label ) }}} {{{ data.renderRequired() }}}</span>
@@ -242,6 +253,17 @@
 </script>
 
 <script id="tmpl-nf-action-table" type="text/template">
+    <div>
+        <div>
+            <div colspan="4" style="text-align: center;">
+                <a class="nf-secondary-control nf-open-drawer" title="Add new action" href="#" data-drawerid="addAction">
+                    <i class="fa fa-plus" data-drawerid="addAction" aria-hidden="true"></i>
+
+                    <span data-drawerid="addAction"><?php esc_html_e( 'Add new action', 'ninja-forms' ); ?></span>
+                </a>
+            </div>
+        </div>
+    </div>
     <table id="nf-table-display" class="nf-actions-table">
         <thead>
             <tr>
@@ -370,7 +392,7 @@
 </script>
 
 <script id="tmpl-nf-add-saved-field" type="text/template">
-    <input type="text" placeholder="Saved Field Name" value="{{{ data.label }}}">
+    <input type="text" placeholder="Saved Field Name" value="{{{ _.escape( data.label ) }}}">
     <span class="add-button"></span>
 </script>
 
@@ -413,8 +435,8 @@
 </script>
 
 <script id="tmpl-nf-drawer-field-type-button" type="text/template">
-    <div class="nf-field-type-button nf-field-type-draggable {{{ data.savedField() }}}" data-id="{{{ data.id }}}">
-        <div class="nf-item" data-id="{{{ data.id }}}" tabindex="0"><span class="fa fa-{{{ data.icon }}}" data-id="{{{ data.id }}}"></span>{{{ data.nicename }}}</div>
+    <div class="nf-field-type-button {{{ (data.availableField()) ? '' : 'nf-field-type-draggable' }}} {{{ data.savedField() }}} {{{ data.availableField() }}}" data-id="{{{ data.id }}}">
+        <div class="nf-item {{{ data.availableField() }}}" data-id="{{{ data.id }}}" tabindex="0"><span class="fa fa-{{{ data.icon }}}" data-id="{{{ data.id }}}"></span>{{{ data.nicename }}}</div>
     </div>
 </script>
 
@@ -506,7 +528,7 @@
 </script>
 
 <script id="tmpl-nf-merge-tags-item" type="text/template">
-    <a href="#" title="{{{ data.label }}}" tabindex="1" class="{{{ data.renderClasses() }}}">{{{ _.escape( data.label ) }}}</a>
+    <a href="#" title="{{{ _.escape( data.label ) }}}" tabindex="1" class="{{{ data.renderClasses() }}}">{{{ _.escape( data.label ) }}}</a>
 </script>
 
 <!-- Field Settings Templates -->
@@ -794,11 +816,11 @@ Label Three
     </div>
     <#
         var columns = data.getColumns();
-        
+
         if ( 'undefined' != typeof columns.label ) {
         #>
              <div>
-                <input type="text" class="setting" value="{{{ data.label }}}" data-id="label">
+                <input type="text" class="setting" value="{{{ _.escape( data.label ) }}}" data-id="label">
             </div>
             <#
         }
@@ -846,11 +868,11 @@ Label Three
         if ( 'undefined' != typeof columns.label ) {
         #>
              <div>
-                <input type="text" class="setting" value="{{{ data.label }}}" data-id="label">
+                <input type="text" class="setting" value="{{{ _.escape( data.label ) }}}" data-id="label">
             </div>
             <#
         }
-        
+
     #>
     <#
         if ( 'undefined' != typeof columns.value ) {
@@ -863,7 +885,7 @@ Label Three
             <#
         }
     #>
-                <input type="text" class="setting" value="{{{ data.value }}}" data-id="value">
+                <input type="text" class="setting" value="{{{ _.escape( data.value ) }}}" data-id="value">
             </div>
     <#
         if ( 'undefined' != typeof columns.calc ) {
@@ -888,7 +910,7 @@ Label Three
         <span class="dashicons dashicons-dismiss nf-delete"></span>
     </div>
     <br/>
-    
+
     <div class='has-merge-tags' style='margin-left:40px;padding:0px 15px;width:45%;display:inline-block;'>
         <label style="width:95%;text-transform:none;font-size:12px;">
             <span><?php esc_html_e('Image', 'ninja-forms'); ?></span><br/>
@@ -906,7 +928,7 @@ Label Three
         }
     #>
     </div>
-    <hr style="border-top: 1px solid #ccc;" />       
+    <hr style="border-top: 1px solid #ccc;" />
 </script>
 
 <script id="tmpl-nf-edit-setting-html" type="text/template">
@@ -987,6 +1009,33 @@ Label Three
 	<div>
 		<span class="dashicons dashicons-dismiss nf-delete"></span>
 	</div>
+</script>
+
+<script id="tmpl-nf-builder-field-date" type="text/template">
+    <# if ( 'time_only' != data.date_mode ) { #>
+
+    <input id="nf-field-{{{ data.id }}}" name="nf-field-{{{ data.id }}}" aria-invalid="false" aria-describedby="nf-error-{{{ data.id }}}" class="{{{ data.renderClasses() }}} nf-element" type="text" value="{{{ data.value }}}" {{{ data.renderPlaceholder() }}} {{{ data.maybeDisabled() }}}
+           aria-labelledby="nf-label-field-{{{ data.id }}}"
+
+            {{{ data.maybeRequired() }}}
+    >
+    <# } #>
+    <# if ( data.maybeRenderTime() ) { #>
+        <div class="nf-realistic-field-mimic">
+            <div style="float:left;">
+                <select class="hour">
+                    {{{ data.renderHourOptions() }}}
+                </select>
+            </div>
+            <div style="float:left;">
+                <select class="minute">
+                    {{{ data.renderMinuteOptions() }}}
+                </select>
+            </div>
+            {{{ data.maybeRenderAMPM() }}}
+            <div style="clear:both;"></div>
+        </div>
+    <# } #>
 </script>
 
 <?php do_action( 'ninja_forms_builder_templates' ); ?>

@@ -1,0 +1,11 @@
+.temporarily-closed {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	padding: 0.5em;
+	background: red;
+	color: #fff;
+	text-decoration: blink;
+}

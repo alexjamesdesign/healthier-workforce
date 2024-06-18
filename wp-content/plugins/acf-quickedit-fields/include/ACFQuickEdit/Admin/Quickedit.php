@@ -32,6 +32,15 @@ class Quickedit extends EditFeature {
 	/**
 	 *	@inheritdoc
 	 */
+	public function load_field( $field ) {
+		return wp_parse_args( $field, [
+			'allow_quickedit'		=> false,
+		]);
+	}
+
+	/**
+	 *	@inheritdoc
+	 */
 	public function init_fields() {
 
 		parent::init_fields();
@@ -46,17 +55,19 @@ class Quickedit extends EditFeature {
 	/**
 	 *	@action quick_edit_custom_box
 	 */
-	function display_quick_edit( $wp_column_slug, $post_type ) {
+	public function display_quick_edit( $wp_column_slug, $post_type ) {
 
 		if ( $this->did_render ) {
 			return;
 		}
 
 		$column = str_replace(' qef-thumbnail','', $wp_column_slug );
-		printf(
-			'<input type="hidden" name="_wp_http_referer" value="%s" />',
-			esc_attr( wp_unslash( $_SERVER['REQUEST_URI'] ) )
-		);
+		if ( isset( $_SERVER['REQUEST_URI'] ) ) {
+			printf(
+				'<input type="hidden" name="_wp_http_referer" value="%s" />',
+				esc_attr( wp_unslash( $_SERVER['REQUEST_URI'] ) ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+			);
+		}
 		foreach ( $this->fieldsets as $field_group_key => $fields ) {
 
 			$field_group = acf_get_field_group( $field_group_key );
@@ -86,10 +97,15 @@ class Quickedit extends EditFeature {
 	/**
 	 *	@inheritdoc
 	 */
-	protected function get_save_data() {
+	protected function get_save_data( $post_id ) {
 		// fall back to $_POST['acf']
 		return null;
 	}
 
-
+	/**
+	 *	@inheritdoc
+	 */
+	protected function is_saving() {
+		return isset( $_POST['action'] ) && in_array( $_POST['action'], ['inline-save','inline-save-tax'] );
+	}
 }

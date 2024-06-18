@@ -31,7 +31,7 @@ class Woocommerce_Permalinks implements Integration_Interface {
 	/**
 	 * Constructor.
 	 *
-	 * @param Indexable_Helper $indexable_helper
+	 * @param Indexable_Helper $indexable_helper Indexable Helper.
 	 */
 	public function __construct( Indexable_Helper $indexable_helper ) {
 		$this->indexable_helper = $indexable_helper;
@@ -63,11 +63,11 @@ class Woocommerce_Permalinks implements Integration_Interface {
 	/**
 	 * Resets the indexables for WooCommerce based on the changed permalink fields.
 	 *
-	 * @param array $old The old value.
-	 * @param array $new The new value.
+	 * @param array $old_value The old value.
+	 * @param array $new_value The new value.
 	 */
-	public function reset_woocommerce_permalinks( $old, $new ) {
-		$changed_options = \array_diff( $old, $new );
+	public function reset_woocommerce_permalinks( $old_value, $new_value ) {
+		$changed_options = \array_diff( $old_value, $new_value );
 
 		if ( \array_key_exists( 'product_base', $changed_options ) ) {
 			$this->indexable_helper->reset_permalink_indexables( 'post', 'product' );
@@ -92,8 +92,6 @@ class Woocommerce_Permalinks implements Integration_Interface {
 
 	/**
 	 * Retrieves the taxonomies based on the attributes.
-	 *
-	 * @codeCoverageIgnore
 	 *
 	 * @return array The taxonomies.
 	 */

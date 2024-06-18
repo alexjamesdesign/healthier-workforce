@@ -8,10 +8,62 @@
 <?php wp_head(); ?>
 <script src="https://use.typekit.net/wfr3tiw.js"></script>
 <script>try{Typekit.load({ async: true });}catch(e){}</script>
-<?php /* Include marketing fields */ the_field('google_analytics', 'options'); the_field('schema', 'options'); the_field('kenshoo', 'options'); ?>
-<?php if (strpos($_SERVER['SERVER_NAME'],'alexjamesdesign.co.uk') !== false) : ?>
-<meta name="robots" content="noindex">
-<?php endif; ?>
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-80484431-1', 'auto');
+ga('require', 'displayfeatures');
+ga('require', 'linkid', 'linkid.js');
+  ga('send', 'pageview');
+</script>
+<meta name="google-site-verification" content="yLnj_B5DVAB3ZwUsA-3kIhqbEO2ilzYK47EPye7Pi3I" />
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-R58ZRXT50S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-R58ZRXT50S');
+</script>
+
+<script type="application/ld+json">
+
+// Business name, address, opening hours, logo social profiles
+
+{
+  "@context" : "http://schema.org",
+  "@type": "Organization",
+  "name" : "Healthier Workforce",
+  "logo" : "https://www.healthier-workforce.co.uk/wp-content/themes/healthier-workforce/_static/images/logo.svg",
+  "url": "https://www.healthier-workforce.co.uk",
+      "sameAs" : 
+  [ 
+    "https://plus.google.com/+"
+  ],
+    "description": "Healthier Workforce provides professional services which help improve and motivate your employees. We operate in many areas including Essex, Chelmsford and Colchester."
+}
+
+</script>
+
+ <script type="application/ld+json">
+
+ 	// Colloquial site name - for mobile SERPs
+{  
+    "@context" : "http://schema.org",
+       "@type" : "WebSite",
+       "name" : "Healthier Workforce",
+       "url" : "https://www.healthier-workforce.co.uk"
+}
+
+</script>
+
+
 <!-- <script async src="//275768.tctm.co/t.js"></script> -->
 </head>
 
@@ -25,38 +77,41 @@
 
 		<div class="container">
 
+			<?php get_template_part('_parts/notification'); ?>
+
 			<div class="phone-top-right">
 
-			<?php if (is_singular('locations')) { ?>
-				<?php 
-				
-				$ld_location = get_field('location_name');
-				if($ld_location) { ?>
+			<?php 
+			$ld_location = get_field('location_name');
+			if($ld_location) : ?>
+			
 
-					<?php if ( ( do_shortcode('[ctm_set]') )) : ?>
-		                <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo do_action('ctm_location'); ?> <?php do_action('ald_single', $ld_location, false); ?></p>
-		            <?php else: ?>
-		                <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_single', $ld_location, false); ?></p>
-		            <?php endif; ?>
+				<?php if ( ( do_shortcode('[ctm_set]') )) : ?>
+					<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo ucfirst($ld_location); ?> <?php do_action('ald_single', $ld_location, false); ?></p>
+				<?php else: ?>
+					<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_single', $ld_location, false); ?></p>
+				<?php endif; ?>
 
-				<?php } ?>
 
-			<?php } else { ?>
+			<?php else : ?>
 				
 
 				<?php if ( ( do_shortcode('[ctm_set]') )) : ?>
-	                <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default', true, true); ?></p>
-				<?php elseif ( ( !do_shortcode('[ctm_set]') )) : ?>
-	                <p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></p>
-	            <?php endif; ?>
+					<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php echo do_action('ctm_location'); ?> <?php do_action('ald_default'); ?></p>
+				<?php else: ?>
+					<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <?php do_action('ald_default'); ?></p>
+				<?php endif; ?>
+
 					
-			<?php } ?>
+			<?php endif; ?>
 
 			</div>
 
 			<nav role="top-navigation">
 				<?php wp_nav_menu( array('menu' => 'Top Nav', 'menu_class' => "main-navigation", 'container' => '' )); ?>
 			</nav>
+			
+			
 
 		</div>
 
@@ -96,7 +151,7 @@
 		}
 	?>
 
-	<div class="hero <?php echo $heroType?>">
+	<div class="hero lazyload <?php echo $heroType?>">
 
 		<header role="banner">
 

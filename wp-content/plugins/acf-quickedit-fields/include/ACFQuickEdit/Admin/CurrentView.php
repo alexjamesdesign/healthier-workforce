@@ -18,25 +18,30 @@ use ACFQuickEdit\Fields;
 
 class CurrentView extends Core\Singleton {
 
+	/** @var array */
 	private $_available_field_groups = null;
 
-	private $object_kind = null; // post, term, user
+	/** @var string post|term|user */
+	private $object_kind = null;
 
-	private $object_type = null; // post, term, user
+	/** @var string <post_type>|<taxonomy>*/
+	private $object_type = null;
 
-	private $screen_param = []; // post_type|taxonomy
+	/** @var array */
+	private $screen_param = [];
 
+	/** @var array */
 	private $field_group_filter = null;
 
+	/** @var array */
 	private $field_to_group = [];
 
 	/**
+	 *	Setup object_kind, screen_param and object_type
+	 *
 	 *	@inheritdoc
 	 */
 	protected function __construct() {
-		/**
-		 *	Setup object_kind, screen_param and object_type
-		 */
 		if ( wp_doing_ajax() ) {
 			// get content type by $_REQUEST['action']
 
@@ -135,7 +140,6 @@ class CurrentView extends Core\Singleton {
 		return $this->object_type;
 	}
 
-
 	/**
 	 *	Calculate field group filter for current screen
 	 *
@@ -156,9 +160,15 @@ class CurrentView extends Core\Singleton {
 					$filtered_type = substr( $filtered_type, strpos( $filtered_type, ':' ) + 1 );
 					$this->field_group_filter['attachment'] = $filtered_type;
 
-				} else if ( in_array( $param, [ 'cat', 'tag' ] ) && ! empty( $value ) ) {
+				} else if ( in_array( $param, [ 'tag' ] ) && ! empty( $value ) ) {
 					// post_category
 					$this->field_group_filter['post_taxonomy'] = sprintf( 'post_%s:%s', $param, $value );
+
+				} else if ( 'category_name' === $param ) {
+					$this->field_group_filter['post_category'] = sprintf( 'category:%s', $value );
+
+				} else if ( ( 'cat' === $param ) && ( $cat = get_category($value) ) ) {
+					$this->field_group_filter['post_category'] = sprintf( 'category:%s', $cat->slug );
 
 				} else if ( taxonomy_exists( $param ) && ! empty( $value ) ) {
 					// post_taxonomy => <taxo>:<term_slug>
@@ -166,21 +176,21 @@ class CurrentView extends Core\Singleton {
 
 				} else if ( 'taxonomy' === $param && ! empty( $value ) ) {
 					$this->field_group_filter['taxonomy'] = $value;
+
 				} else if ( 'role' === $param && ! empty( $value ) ) {
-					//*
-					$this->field_group_filter[] = [ 'user_form' => 'all', 'user_role' => $value ];
-					$this->field_group_filter[] = [ 'user_form' => 'edit', 'user_role' => $value ];
-					/*/
-					$this->field_group_filter[] = array( 'user_role' => $value );
-					//*/
+					$this->field_group_filter['user_form'] = 'all';
+					$this->field_group_filter['user_form'] = 'edit';
+					$this->field_group_filter['user_role'] = $value;
+
 				}
 			}
 
 			if ( 'user' === $this->object_kind && ! count( $this->field_group_filter ) ) {
-				$this->field_group_filter[] = [ 'user_form' => 'all' ];
-				$this->field_group_filter[] = [ 'user_form' => 'edit' ];
+				$this->field_group_filter['user_form'] = 'all';
+				$this->field_group_filter['user_form'] = 'edit';
 			}
 
+			add_filter( 'acf/location/rule_match/post_category', [ $this, 'match_post_category' ], 11, 3 );
 			add_filter( 'acf/location/rule_match/post_taxonomy', [ $this, 'match_post_taxonomy' ], 11, 3 );
 			add_filter( 'acf/location/rule_match/post_format', [ $this, 'match_post_format' ], 11, 3 );
 			add_filter( 'acf/location/rule_match/post_status', [ $this, 'match_post_status' ], 11, 3 );
@@ -194,10 +204,6 @@ class CurrentView extends Core\Singleton {
 		[ 'post_type' => 'post', 'taxonomy' => 'post_tag' ] --> matches post type OR Taxo
 		[ [ 'post_type' => 'post', 'taxonomy' => 'post_tag' ] ] --> matches post type AND Taxo
 		*/
-
-		// if ( $this->is_assoc( $this->field_group_filter ) && count( $this->field_group_filter ) > 1 ) {
-		// 	$this->field_group_filter = array( $this->field_group_filter );
-		// }
 
 		return apply_filters( 'acf_quick_edit_fields_group_filter', $this->field_group_filter );
 	}
@@ -214,14 +220,14 @@ class CurrentView extends Core\Singleton {
 
 		$fields = [];
 
-		foreach ( $groups as $field_group ) {
-			$group_fields = acf_get_fields( $field_group );
+		foreach ( $groups as $field_group_key ) {
+			$group_fields = acf_get_fields( $field_group_key );
 
 			$group_fields = $this->filter_fields( $query, $group_fields );
 
 			foreach ( $group_fields as $field )  {
 				// map to group
-				$this->field_to_group[ $field['key'] ] = $field_group;
+				$this->field_to_group[ $field['key'] ] = $field_group_key;
 
 			}
 			$fields = array_merge( $fields, $group_fields );
@@ -276,13 +282,17 @@ class CurrentView extends Core\Singleton {
 
 			$filters = $this->get_fieldgroup_filter();
 
-			$this->_available_field_groups = acf_get_field_groups( $filters );
+			$this->_available_field_groups = array_map(
+				function( $group ) {
+					return $group['key'];
+				},
+				acf_get_field_groups( $filters )
+			);
 
 		}
 
 		return $this->_available_field_groups;
 	}
-
 
 	/**
 	 *	Whether an arrays has string keys
@@ -298,7 +308,6 @@ class CurrentView extends Core\Singleton {
 		return count( array_filter( array_keys( $arr ), 'is_string' ) ) > 0;
 	}
 
-
 	/**
 	 *	Get field group of field
 	 *
@@ -307,13 +316,28 @@ class CurrentView extends Core\Singleton {
 	 */
 	public function get_group_of_field( $field ) {
 		if ( isset( $this->field_to_group[ $field['key'] ] ) ) {
-			return $this->field_to_group[ $field['key'] ];
+			return acf_get_store( 'field-groups' )->get( $this->field_to_group[ $field['key'] ] );
 		}
 	}
 
 	/**
-	 *	@filter 'acf/location/rule_match/post_taxonomy'
 	 *	@return boolean Whether a field group rule matches
+	 *	@filter 'acf/location/rule_match/post_category'
+	 */
+	function match_post_category( $match, $rule, $screen ) {
+
+		if ( isset( $screen['post_category'] ) ) {
+
+			// WP categories
+
+			return $rule['operator'] == '==' && $rule['value'] == $screen['post_category'];
+
+		}
+		return $match;
+	}
+	/**
+	 *	@return boolean Whether a field group rule matches
+	 *	@filter 'acf/location/rule_match/post_taxonomy'
 	 */
 	function match_post_taxonomy( $match, $rule, $screen ) {
 
@@ -328,8 +352,8 @@ class CurrentView extends Core\Singleton {
 	}
 
 	/**
-	 *	@filter 'acf/location/rule_match/post_format'
 	 *	@return boolean Whether a field group rule matches
+	 *	@filter 'acf/location/rule_match/post_format'
 	 */
 	function match_post_format( $match, $rule, $screen ) {
 
@@ -342,8 +366,8 @@ class CurrentView extends Core\Singleton {
 	}
 
 	/**
-	 *	@filter 'acf/location/rule_match/post_status'
 	 *	@return boolean Whether a field group rule matches
+	 *	@filter 'acf/location/rule_match/post_status'
 	 */
 	function match_post_status( $match, $rule, $options ) {
 
@@ -356,8 +380,8 @@ class CurrentView extends Core\Singleton {
 	}
 
 	/**
-	 *	@filter 'acf/location/rule_match/attachment'
 	 *	@return boolean Whether a field group rule matches
+	 *	@filter 'acf/location/rule_match/attachment'
 	 */
 	function match_attachment( $match, $rule, $options ) {
 		if ( isset( $screen['attachment'] ) ) {
@@ -365,9 +389,6 @@ class CurrentView extends Core\Singleton {
 		}
 		return $match;
 	}
-
-
-
 
 	/**
 	 *	Set screen params from http referer (prefer _wp_http_referer)
@@ -378,27 +399,27 @@ class CurrentView extends Core\Singleton {
 		$url = false;
 		$filter = [];
 		if ( isset( $_REQUEST['_wp_http_referer'] ) ) {
-			$url = wp_unslash( $_REQUEST['_wp_http_referer'] );
+			$url = wp_unslash( $_REQUEST['_wp_http_referer'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		} else if ( isset( $_SERVER['HTTP_REFERER'] ) ) {
-			$url = wp_unslash( $_SERVER['HTTP_REFERER'] );
+			$url = wp_unslash( $_SERVER['HTTP_REFERER'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 		}
 
 		if ( $url ) {
-			parse_str( parse_url( $url, PHP_URL_QUERY ), $filter );
+			$query = parse_url( $url, PHP_URL_QUERY );
+			if ( is_string( $query ) ) {
+				parse_str( parse_url( $url, PHP_URL_QUERY ), $filter );
+			}
 		}
 
 		return $filter;
 	}
 
 	/**
-	*	Set screen params from $_GET
-	*
+	 *	Set screen params from $_GET
+	 *
 	 *	@return array $_GET-Params
 	 */
 	private function get_params() {
 		return $_GET;
 	}
-
-
-
 }

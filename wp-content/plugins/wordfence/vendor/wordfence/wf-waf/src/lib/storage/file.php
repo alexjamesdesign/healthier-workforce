@@ -17,8 +17,7 @@ class wfWAFStorageFile implements wfWAFStorageInterface {
 			return true;
 		}
 		
-		$sapi = @php_sapi_name();
-		if ($sapi == "cli") {
+		if (wfWAFUtils::isCli()) {
 			return false;
 		}
 		return true;
@@ -850,7 +849,7 @@ class wfWAFStorageFile implements wfWAFStorageInterface {
 	private function serializeRow($row) {
 		foreach ($this->rowsToB64 as $index) {
 			if (array_key_exists($index, $row)) {
-				$row[$index] = base64_encode($row[$index]);
+				$row[$index] = base64_encode((string) $row[$index]);
 			}
 		}
 		$row = wfWAFUtils::json_encode($row);
@@ -870,7 +869,7 @@ class wfWAFStorageFile implements wfWAFStorageInterface {
 			if (is_array($json)) {
 				foreach ($this->rowsToB64 as $index) {
 					if (array_key_exists($index, $json)) {
-						$json[$index] = base64_decode($json[$index]);
+						$json[$index] = base64_decode((string) $json[$index]);
 					}
 				}
 				return $json;

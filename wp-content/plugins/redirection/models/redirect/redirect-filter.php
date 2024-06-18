@@ -1,13 +1,27 @@
 <?php
 
+/**
+ * Filter the redirects
+ */
 class Red_Item_Filters {
+	/**
+	 * List of filters
+	 *
+	 * @var array
+	 */
 	private $filters = [];
 
+	/**
+	 * Constructor
+	 *
+	 * @param Array $filter_params Filters.
+	 */
 	public function __construct( $filter_params ) {
 		global $wpdb;
 
 		foreach ( $filter_params as $filter_by => $filter ) {
-			$filter = trim( $filter );
+			$filter = trim( sanitize_text_field( $filter ) );
+			$filter_by = sanitize_text_field( $filter_by );
 
 			if ( $filter_by === 'status' ) {
 				if ( $filter === 'enabled' ) {
@@ -54,6 +68,11 @@ class Red_Item_Filters {
 		}
 	}
 
+	/**
+	 * Get the filters as sanitized SQL.
+	 *
+	 * @return string
+	 */
 	public function get_as_sql() {
 		if ( count( $this->filters ) > 0 ) {
 			return 'WHERE ' . implode( ' AND ', $this->filters );

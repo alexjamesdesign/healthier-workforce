@@ -24,7 +24,6 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 		
 		if (!defined('UPDRAFTCENTRAL_COMMAND') && $backup_count <= count($backup_history) - 1) {
 			$backup_history = array_slice($backup_history, 0, $backup_count, true);
-		} else {
 			$show_paging_actions = true;
 		}
 		
@@ -65,7 +64,7 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 					<label class="screen-reader-text"><?php _e('Select All'); ?></label><input type="checkbox">
 				</td>
 				<?php endif; ?>
-				<td class="updraft_existingbackup_date " data-rawbackup="<?php echo $rawbackup;?>" data-label="<?php _e('Backup date', 'updraftplus');?>">
+				<td class="updraft_existingbackup_date " data-nonce="<?php echo wp_create_nonce("updraftplus-credentialtest-nonce"); ?>" data-timestamp="<?php echo $key; ?>" data-label="<?php _e('Backup date', 'updraftplus');?>">
 					<div tabindex="0" class="backup_date_label">
 						<?php
 							echo $date_label;
@@ -152,7 +151,7 @@ $image_folder_url = UPDRAFTPLUS_URL.'/images/icons/';
 		<?php } ?>	
 
 	</tbody>
-	<?php if (!$show_paging_actions) : ?>
+	<?php if ($show_paging_actions) : ?>
 	<tfoot>
 		<tr class="updraft_existing_backups_page_actions">
 			<td colspan="4" style="text-align: center;">

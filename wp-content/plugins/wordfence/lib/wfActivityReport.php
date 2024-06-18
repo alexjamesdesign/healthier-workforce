@@ -446,13 +446,14 @@ SQL
 		}
 
 		$country = wfUtils::IP2Country($ip_address);
-
+		
+		$ipHex = wfDB::binaryValueToSQLHex($ip_bin);
 		$wpdb->query($wpdb->prepare(<<<SQL
 INSERT INTO $blocked_table (IP, countryCode, blockCount, unixday, blockType)
-VALUES (%s, %s, 1, $unixday_insert, %s)
+VALUES ({$ipHex}, %s, 1, $unixday_insert, %s)
 ON DUPLICATE KEY UPDATE blockCount = blockCount + 1
 SQL
-			, $ip_bin, $country, $type));
+			, $country, $type));
 	}
 
 	/**
@@ -504,7 +505,7 @@ SQL
 		$success = true;
 		if (is_string($email_addresses)) { $email_addresses = explode(',', $email_addresses); }
 		foreach ($email_addresses as $email) {
-			$uniqueContent = str_replace('<!-- ##UNSUBSCRIBE## -->', sprintf(/* translators: URL to the WordPress admin panel. */ __('No longer an administrator for this site? <a href="%s" target="_blank">Click here</a> to stop receiving security alerts.', 'wordfence'), wfUtils::getSiteBaseURL() . '?_wfsf=removeAlertEmail&jwt=' . wfUtils::generateJWT(array('email' => $email))), $content);
+			$uniqueContent = str_replace('<!-- ##UNSUBSCRIBE## -->', wp_kses(sprintf(/* translators: URL to the WordPress admin panel. */ __('No longer an administrator for this site? <a href="%s" target="_blank">Click here</a> to stop receiving security alerts.', 'wordfence'), wfUtils::getSiteBaseURL() . '?_wfsf=removeAlertEmail&jwt=' . wfUtils::generateJWT(array('email' => $email))), array('a'=>array('href'=>array(), 'target'=>array()))), $content);
 			if (!wp_mail($email, sprintf(/* translators: 1. Site URL. 2. Localized date. */ __('Wordfence activity for %1$s on %2$s', 'wordfence'), date_i18n(get_option('date_format')), $shortSiteURL), $uniqueContent, 'Content-Type: text/html')) {
 				$success = false;
 			}

@@ -6,6 +6,7 @@
 final class NF_Display_Preview
 {
     protected $form_id = '';
+    protected $_form_id = '';
 
     public function __construct()
     {
@@ -20,7 +21,9 @@ final class NF_Display_Preview
         remove_filter( 'the_excerpt', 'wpautop' );
         add_filter('the_content', array( $this, 'the_content' ), 9001 );
         add_filter('get_the_excerpt', array( $this, 'the_content' ) );
-        add_filter('template_include', array( $this, 'template_include' ) );
+        //switched from template_include to template redirect filter hook to work with block-based (FSE) themes
+        add_filter('template_redirect', array( $this, 'template_include' ) );
+
         add_filter('post_thumbnail_html', array( $this, 'post_thumbnail_html' ) );
     }
 
@@ -38,7 +41,7 @@ final class NF_Display_Preview
 
         $form_title = Ninja_Forms()->form( $this->_form_id )->get()->get_setting( 'title' );
 
-        return $form_title . " " . esc_html__( 'Preview', 'ninja-forms' );
+        return esc_html( $form_title ) . " " . esc_html__( 'Preview', 'ninja-forms' );
     }
 
     /**
@@ -66,11 +69,16 @@ final class NF_Display_Preview
     }
 
     /**
-     * @return string
+     * Locate_template will be loaded using second argument of the get_query_templates() function
+     * First argument will be prefixed with _template to create a hook
+     * @return void
      */
     function template_include()
     {
-        return locate_template( array( 'page.php', 'single.php', 'index.php' ) );
+      $templates = array( 'page.php', 'single.php', 'index.php');
+      include( get_query_template('ninja-forms', $templates) );
+
+      exit;
     }
 
     function post_thumbnail_html() {

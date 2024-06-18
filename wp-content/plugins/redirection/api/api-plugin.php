@@ -31,7 +31,7 @@ class Redirection_Api_Plugin extends Redirection_Api_Route {
 			$this->get_route( WP_REST_Server::ALLMETHODS, 'route_test', [ $this, 'permission_callback_manage' ] ),
 		) );
 
-		register_rest_route( $namespace, '/plugin/database', array(
+		register_rest_route( $namespace, '/plugin/data', array(
 			$this->get_route( WP_REST_Server::EDITABLE, 'route_database', [ $this, 'permission_callback_manage' ] ),
 			'args' => [
 				'upgrade' => [
@@ -40,6 +40,7 @@ class Redirection_Api_Plugin extends Redirection_Api_Route {
 					'enum' => array(
 						'stop',
 						'skip',
+						'retry',
 					),
 				],
 			],
@@ -66,7 +67,7 @@ class Redirection_Api_Plugin extends Redirection_Api_Route {
 		if ( isset( $params['name'] ) && isset( $params['value'] ) ) {
 			global $wpdb;
 
-			$fixer->save_debug( $params['name'], $params['value'] );
+			$fixer->save_debug( sanitize_text_field( $params['name'] ), sanitize_text_field( $params['value'] ) );
 
 			$groups = intval( $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}redirection_groups" ), 10 );
 			if ( $groups === 0 ) {
@@ -109,7 +110,7 @@ class Redirection_Api_Plugin extends Redirection_Api_Route {
 		$upgrade = false;
 
 		if ( isset( $params['upgrade'] ) && in_array( $params['upgrade'], [ 'stop', 'skip' ], true ) ) {
-			$upgrade = $params['upgrade'];
+			$upgrade = sanitize_text_field( $params['upgrade'] );
 		}
 
 		// Check upgrade

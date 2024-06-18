@@ -12,6 +12,8 @@ class Columns extends Feature {
 
 	private $_prev_request_uri = false;
 
+	private $_wp_column_weights = [];
+
 	/**
 	 *	@inheritdoc
 	 */
@@ -26,7 +28,16 @@ class Columns extends Feature {
 		return 'show_column';
 	}
 
-
+	/**
+	 *	@inheritdoc
+	 */
+	public function load_field( $field ) {
+		return wp_parse_args( $field, [
+			'show_column'			=> false,
+			'show_column_weight'	=> 1000,
+			'show_column_sortable'	=> false,
+		]);
+	}
 
 	/**
 	 *	@inheritdoc
@@ -84,7 +95,7 @@ class Columns extends Feature {
 			}
 			if ( $is_sortable ) {
 				// posts
-				add_action( 'pre_get_posts', [ $this, 'parse_query' ] );
+				$this->init_meta_query();
 			}
 		} else if ( 'term' == $content_kind ) {
 
@@ -108,10 +119,11 @@ class Columns extends Feature {
 			}
 			if ( $is_sortable ) {
 				// terms
-				add_action( 'parse_term_query', [ $this, 'parse_term_query' ] );
+				$this->init_meta_query();
 			}
 
 		} else if ( 'user' == $content_kind ) {
+
 			$cols_hook		= "manage_users_columns";
 			$sortable_hook	= "manage_users_sortable_columns";
 			$display_hook	= "manage_users_custom_column";
@@ -124,7 +136,7 @@ class Columns extends Feature {
 				];
 			}
 			if ( $is_sortable ) {
-				add_filter( 'pre_get_users', [ $this, 'pre_get_users' ] );
+				$this->init_meta_query();
 			}
 		}
 
@@ -137,6 +149,7 @@ class Columns extends Feature {
 			if ( $is_sortable ) {
 				add_filter( $sortable_hook, [ $this, 'add_sortable_columns' ] );
 			}
+			add_filter('admin_body_class', [ $this, 'add_admin_body_class' ] );
 		}
 
 		foreach ( $cols_filters as $filter ) {
@@ -160,6 +173,13 @@ class Columns extends Feature {
 		}
 	}
 
+	/**
+	 *	@filter admin_body_class
+	 */
+	public function add_admin_body_class( $classes ) {
+		$classes .= ' has-acf-qef-columns';
+		return $classes;
+	}
 
 	/**
 	 *	@filter manage_posts_columns
@@ -179,12 +199,13 @@ class Columns extends Feature {
 	 *	@filter manage_{$post_type}_posts_columns
 	 */
 	public function move_date_to_end($defaults) {
-	    $date = $defaults['date'];
-	    unset($defaults['date']);
-	    $defaults['date'] = $date;
-	    return $defaults;
+		if ( isset( $defaults['date'] ) ) {
+			$date = $defaults['date'];
+			unset($defaults['date']);
+			$defaults['date'] = $date;
+		}
+		return $defaults;
 	}
-
 
 	/**
 	 * @filter manage_posts_columns
@@ -271,61 +292,48 @@ class Columns extends Feature {
 	}
 
 	/**
-	 *	@action pre_get_posts
+	 *	@inheritdoc
 	 */
-	public function parse_query( $query ) {
+	protected function get_meta_query( $wp_query = null ) {
 
-		if ( ( $by = $query->get('orderby') ) && ( $meta_query = $this->get_meta_query( $by ) ) ) {
+		$meta_query = parent::get_meta_query( $wp_query );
 
-			$query->set( 'meta_key', "" );
-			$query->set( 'meta_query', $meta_query );
-
+		if ( ! isset( $wp_query->query_vars['orderby'] ) || !( $by = $wp_query->query_vars['orderby']) ) {
+			return $meta_query;
 		}
-	}
-	/**
-	 *	@action parse_term_query
-	 */
-	public function parse_term_query( $query ) {
-
-		if ( ( $by = $query->query_vars['orderby'] ) && ( $meta_query = $this->get_meta_query( $by ) ) ) {
-			$query->query_vars['meta_key'] = '';
-			$query->query_vars['meta_query'] = $meta_query;
+		if ( ! isset( $this->fields[ $by ] ) ) {
+			return $meta_query;
 		}
-	}
-
-	/**
-	 *	@action pre_get_users
-	 */
-	public function pre_get_users( $query ) {
-		if ( ( $by = $query->query_vars['orderby'] ) && ( $meta_query = $this->get_meta_query( $by ) ) ) {
-			$query->query_vars['meta_query'] = $meta_query;
-		}
-	}
-
-
-
-	private function get_meta_query( $by ) {
-		$meta_query = null;
-		if ( isset( $this->fields,  $this->fields[ $by ] ) ) {
-			$sortable = $this->fields[ $by ]->is_sortable();
-			if ( is_string( $sortable ) ) {
-				$type_query = [ 'type' => strtoupper( $sortable ) ];
-			} else {
-				$type_query = [];
-			}
-			$meta_query = [
-				'relation'	=> 'OR',
-				$by => [
-					'key'		=> $by,
-					'compare'	=> 'NOT EXISTS',
-				] + $type_query,
-				[
-					'key'		=> $by,
-					'compare'	=> 'EXISTS',
-				] + $type_query,
-			];
+		if ( isset( $meta_query['relation'] ) && 'AND' === $meta_query['relation'] ) {
+			$meta_query[] = $this->get_meta_query_args( $by );
+		} else {
+			$meta_query = $this->get_meta_query_args( $by );
 		}
 		return $meta_query;
+	}
+
+	/**
+	 *	@return array
+	 */
+	private function get_meta_query_args( $by ) {
+
+		$sortable = $this->fields[ $by ]->is_sortable();
+		if ( is_string( $sortable ) ) {
+			$type_query = [ 'type' => strtoupper( $sortable ) ];
+		} else {
+			$type_query = [];
+		}
+		return [
+			'relation'	=> 'OR',
+			$by => [
+				'key'		=> $by,
+				'compare'	=> 'NOT EXISTS',
+			] + $type_query,
+			[
+				'key'		=> $by,
+				'compare'	=> 'EXISTS',
+			] + $type_query,
+		];
 	}
 
 	/**
@@ -395,10 +403,9 @@ class Columns extends Feature {
 		$object = get_term( $object_id );
 
 		if ( $object ) {
-
 			return $this->filter_field_column( $content, $wp_column_slug , sprintf( '%s_%s', $object->taxonomy, $object_id ) );
-
 		}
+
 		return $content;
 	}
 
@@ -415,7 +422,6 @@ class Columns extends Feature {
 	}
 
 	/**
-	 *
 	 *	@param string $wp_column_slug
 	 *	@param string $object_id
 	 *	@return string

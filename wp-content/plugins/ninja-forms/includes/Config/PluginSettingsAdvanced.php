@@ -54,6 +54,13 @@ return apply_filters( 'ninja_forms_plugin_settings_advanced', array(
         'label' => esc_html__( 'Form Builder "Dev Mode"', 'ninja-forms' ),
     ),
 
+    'load_legacy_submissions' => array(
+        'id'    => 'load_legacy_submissions',
+        'type'  => 'checkbox',
+        'label' => esc_html__( 'Show Legacy Submissions Page', 'ninja-forms' ),
+        'desc'  => sprintf( esc_html__( 'This setting is used to see the "old" submissions page. If you are experiencing issues with your submissions page, please notify us at %s.%sPlease refresh your settings page after saving this setting before navigating to the submissions page.' ), '<a href="https://ninjaforms.com/contact" target="_blank">https://ninjaforms.com/contact</a>', '<br /><br />' ),
+    ),
+
     /*
      |--------------------------------------------------------------------------
      | Tracking Opt-in
@@ -94,20 +101,6 @@ return apply_filters( 'ninja_forms_plugin_settings_advanced', array(
         ),
         'desc'  => esc_html__( 'Use default Ninja Forms styling conventions.', 'ninja-forms' ),
         'value' => ''
-    ),
-
-    /*
-    |--------------------------------------------------------------------------
-    | Rollback to v2.9.x
-    |--------------------------------------------------------------------------
-    */
-
-    'downgrade' => array(
-        'id'    => 'downgrade',
-        'type'  => 'html',
-        'html'  => '<div id="nfDowngrade" class="button">' . esc_html__( 'Downgrade', 'ninja-forms' ) . '</div>',
-        'label' => esc_html__( 'Downgrade to v2.9.x', 'ninja-forms' ),
-        'desc'  => esc_html__( 'Downgrade to the most recent 2.9.x release.', 'ninja-forms' ) . '<br /><div style="color: red">' . esc_html__( 'IMPORTANT: All 3.0 data will be removed.', 'ninja-forms' ) . '<br />' . esc_html__( 'Please export any forms or submissions you do not want to be lost during this process.', 'ninja-forms' ) . '</div>',
     ),
 
     'trash_expired_submissions' => array(

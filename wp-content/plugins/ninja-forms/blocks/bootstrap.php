@@ -92,21 +92,25 @@ add_action('init', function () {
  * Localize data for blocks
  */
 add_action('admin_enqueue_scripts', function () {
-    //Get all forms, to base form selector on.
-    $formsBuilder = (new NinjaForms\Blocks\DataBuilder\FormsBuilderFactory)->make();
-    $forms = $formsBuilder->get();
-    if (!empty($forms)) {
-        //Escape for use in JavaScript
-        foreach ($forms as $key => $form) {
-            $forms[$key] = [
-                'formID' => absint($form['formID']),
-                'formTitle' => esc_textarea($form['formTitle'])
-            ];
+    //Conditionally load data for Blocks
+    $screen = get_current_screen();
+    if( is_null( $screen ) ) return;
+    if( ! $screen->is_block_editor() ) return;
+        //Get all forms, to base form selector on.
+        $formsBuilder = (new NinjaForms\Blocks\DataBuilder\FormsBuilderFactory)->make();
+        $forms = $formsBuilder->get();
+        if (!empty($forms)) {
+            //Escape for use in JavaScript
+            foreach ($forms as $key => $form) {
+                $forms[$key] = [
+                    'formID' => absint($form['formID']),
+                    'formTitle' => esc_textarea($form['formTitle'])
+                ];
+            }
         }
-    }
     wp_localize_script('ninja-forms/form', 'nfFormsBlock', [
         'forms' => $forms,//array keys escaped above
-        'siteUrl' => esc_url_raw(site_url()),
+        'homeUrl' => esc_url_raw( home_url() ), //URL to serve the iFrame that displays the form in blocks editor
         'previewToken' => wp_create_nonce('nf_iframe' )
     ]);
 });
@@ -211,7 +215,7 @@ add_action( 'wp_head', function () {
             }
         }
 
-        $js_dir  = Ninja_Forms::$url . 'assets/js/min/';
+        $js_lib_dir  = Ninja_Forms::$url . 'assets/js/lib/';
 
         $form_id = absint( $_GET[ 'nf_preview_form' ] );
         // Style below: update width and height for particular form
@@ -240,7 +244,7 @@ add_action( 'wp_head', function () {
         // register our script to target the form iFrame in page builder
         wp_register_script(
             'ninja-forms-block-setup',
-            $js_dir . 'blockFrameSetup.js',
+            $js_lib_dir . 'blockFrameSetup.js',
             array( 'underscore', 'jquery' )
         );
 

@@ -22,6 +22,7 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
 
         // Catch Contact Form 7 reCAPTCHA conflict.
         add_filter( 'nf_admin_notices', array( $this, 'ninja_forms_cf7_notice' ) );
+
     }
 
     public function body_class( $classes )
@@ -150,7 +151,7 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
             $allow_tel = 0;
         }
 
-	    wp_enqueue_script( 'jBox', Ninja_Forms::$url . 'assets/js/lib/jBox.min.js', array( 'jquery' ) );
+	    wp_enqueue_script( 'jBox', Ninja_Forms::$url . 'assets/js/min/jBox.min.js', array( 'jquery' ) );
         wp_enqueue_style( 'nf-combobox', Ninja_Forms::$url . 'assets/css/combobox.css' );
 	    wp_enqueue_style( 'jBox', Ninja_Forms::$url . 'assets/css/jBox.css' );
         wp_register_script( 'ninja_forms_admin_menu_settings', Ninja_Forms::$url . 'assets/js/admin-settings.js', array( 'jquery' ), FALSE, TRUE );
@@ -167,11 +168,6 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
             'nonce'         => wp_create_nonce( "ninja_forms_settings_nonce" ),
             'batchNonce'   => wp_create_nonce( 'ninja_forms_batch_nonce' ),
             'i18n'          => array(
-                'downgradeMessage'                 => esc_html__( 'Are you sure you want to downgrade?', 'ninja-forms' ),
-                'downgradeWarningMessage'          => esc_html__( 'You WILL lose any forms or submissions created on this version of Ninja Forms.', 'ninja-forms' ),
-                'downgradeConfirmMessage'          => esc_html__( 'Type ', 'ninja-forms' ) . '<span style="color: red";>' . 'DOWNGRADE' . "</span>" . esc_html__( ' to confirm.', 'ninja-forms' ),
-                'downgradeButtonPrimary'           => esc_html__( 'Downgrade', 'ninja-forms'),
-                'downgradeButtonSecondary'         => esc_html__( 'Cancel', 'ninja-forms' ),
                 'trashExpiredSubsMessage'          => esc_html__( 'Are you sure you want to trash all expired submissions?', 'ninja-forms' ),
                 'trashExpiredSubsButtonPrimary'    => esc_html__( 'Trash', 'ninja-forms' ),
                 'trashExpiredSubsButtonSecondary'  => esc_html__( 'Cancel', 'ninja-forms' ),
@@ -193,11 +189,6 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
             'nonce'         => wp_create_nonce( "ninja_forms_settings_nonce" ),
             'batchNonce'   => wp_create_nonce( 'ninja_forms_batch_nonce' ),
             'i18n'          => array(
-                'downgradeMessage'                 => esc_html__( 'Are you sure you want to downgrade?', 'ninja-forms' ),
-                'downgradeWarningMessage'          => esc_html__( 'You WILL lose any forms or submissions created on this version of Ninja Forms.', 'ninja-forms' ),
-                'downgradeConfirmMessage'          => esc_html__( 'Type ', 'ninja-forms' ) . '<span style="color: red";>' . 'DOWNGRADE' . "</span>" . esc_html__( ' to confirm.', 'ninja-forms' ),
-                'downgradeButtonPrimary'           => esc_html__( 'Downgrade', 'ninja-forms'),
-                'downgradeButtonSecondary'         => esc_html__( 'Cancel', 'ninja-forms' ),
                 'trashExpiredSubsMessage'          => esc_html__( 'Are you sure you want to trash all expired submissions?', 'ninja-forms' ),
                 'trashExpiredSubsButtonPrimary'    => esc_html__( 'Trash', 'ninja-forms' ),
                 'trashExpiredSubsButtonSecondary'  => esc_html__( 'Cancel', 'ninja-forms' ),

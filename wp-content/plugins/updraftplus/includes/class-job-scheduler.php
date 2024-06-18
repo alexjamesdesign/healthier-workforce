@@ -101,7 +101,7 @@ class UpdraftPlus_Job_Scheduler {
 		$updraft_dir = $updraftplus->backups_dir_location();
 		if (file_exists($updraft_dir.'/deleteflag-'.$updraftplus->nonce.'.txt')) {
 			$updraftplus->log("User request for abort: backup job will be immediately halted");
-			@unlink($updraft_dir.'/deleteflag-'.$updraftplus->nonce.'.txt');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged
+			@unlink($updraft_dir.'/deleteflag-'.$updraftplus->nonce.'.txt');// phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- Silenced to suppress errors that may arise because of the method.
 			$updraftplus->backup_finish(true, true, true);
 			die;
 		}
@@ -186,7 +186,7 @@ class UpdraftPlus_Job_Scheduler {
 
 		global $updraftplus;
 	
-		$resume_interval = max(intval($updraftplus->jobdata_get('resume_interval')), (0 === $howmuch) ? 120 : 300);
+		$resume_interval = max((int) $updraftplus->jobdata_get('resume_interval'), (0 === $howmuch) ? 120 : 300);
 
 		if (empty($updraftplus->newresumption_scheduled) && $due_to_overlap) {
 			$updraftplus->log('A new resumption will be scheduled to prevent the job ending');

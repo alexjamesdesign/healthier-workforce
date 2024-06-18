@@ -38,7 +38,6 @@ abstract class Feature extends Core\Singleton {
 	 */
 	protected function __construct() {
 
-	//	$this->core = Core\Core::instance();
 		$this->admin = Admin::instance();
 
 		if ( wp_doing_ajax() ) {
@@ -46,7 +45,104 @@ abstract class Feature extends Core\Singleton {
 		} else {
 			add_action( 'current_screen', [ $this, 'init_fields' ] );
 		}
+
+		add_filter( 'acf/load_field', [ $this, 'load_field' ] );
+
 		parent::__construct();
+	}
+
+
+	/**
+	 *	@filter acf/load_field
+	 */
+	 abstract public function load_field( $field );
+
+	/**
+	 *	@param string $content_kind
+	 */
+	public function init_meta_query() {
+
+		$content_kind = CurrentView::instance()->get_object_kind();
+
+		if ( 'post' === $content_kind && ! has_action( 'pre_get_posts', [ $this, 'parse_query' ] ) ) {
+
+			add_action( 'pre_get_posts', [ $this, 'parse_query' ] );
+
+		} else if ( 'term' === $content_kind && ! has_action( 'parse_term_query', [ $this, 'parse_term_query' ] ) ) {
+
+			add_action( 'parse_term_query', [ $this, 'parse_term_query' ] );
+
+		} else if ( 'user' === $content_kind && ! has_filter( 'pre_get_users', [ $this, 'pre_get_users' ] )  ) {
+
+			add_filter( 'pre_get_users', [ $this, 'pre_get_users' ] );
+
+		}
+
+	}
+
+	/**
+	 *	@action pre_get_posts
+	 */
+	public function parse_query( $query ) {
+
+		if ( $meta_query = $this->get_meta_query( $query ) ) {
+
+			$query->set( 'meta_key', "" );
+			$query->set( 'meta_query', $meta_query );
+
+		}
+	}
+
+	/**
+	 *	@action parse_term_query
+	 */
+	public function parse_term_query( $query ) {
+
+		// Note: WP_Term_Query does not have a get() method.
+		if ( $meta_query = $this->get_meta_query( $query ) ) {
+			$query->query_vars['meta_key'] = '';
+			$query->query_vars['meta_query'] = $meta_query;
+		}
+	}
+
+	/**
+	 *	@action pre_get_users
+	 */
+	public function pre_get_users( $query ) {
+
+		// Note: WP_User_Query does not have a get() method.
+		if ( $meta_query = $this->get_meta_query( $query ) ) {
+			$query->query_vars['meta_query'] = $meta_query;
+		}
+	}
+
+	/**
+	 *	@param string $by Column to sort on
+	 */
+	protected function get_meta_query( $wp_query = null ) {
+
+		if ( ! isset( $_REQUEST['meta_query'] ) ) {
+			if ( ! is_null( $wp_query ) && isset( $wp_query->query_vars['meta_query'] ) ) {
+				return $wp_query->query_vars['meta_query'];
+			} else {
+				return [];
+			}
+		}
+
+		$meta_query = wp_unslash( $_REQUEST['meta_query'] );
+
+		$meta_query = array_filter( $meta_query, function($clause) {
+			if ( ! is_array( $clause ) ) {
+				return true;
+			}
+			$clause = wp_parse_args( $clause, [ 'value' => '' ] );
+			return $clause['value'] !== '';
+		} );
+		if ( 1 === count( $meta_query ) && isset( $meta_query['relation'] ) ) {
+			$meta_query = [];
+		}
+
+		return apply_filters( 'acf_qef_meta_query_request', $meta_query );
 	}
 
 	/**
@@ -58,7 +154,6 @@ abstract class Feature extends Core\Singleton {
 	 *	@return string
 	 */
 	abstract function get_fieldgroup_option();
-
 
 	/**
 	 *	@return bool
@@ -84,38 +179,20 @@ abstract class Feature extends Core\Singleton {
 		return isset( $types[ $type ] ) && $types[ $type ][ $this->get_type() ];
 	}
 
-
-	/**
-	 *	@param	array	$field_group	ACF Field Group
-	 *	@return	array
-	 */
-	protected function acf_get_fields( $field_group ) {
-		$return_fields = [];
-		if ( $acf_fields = acf_get_fields( $field_group ) ) {
-			foreach ( $acf_fields as $field ) {
-				if ( $field['type'] === 'group' ) {
-					$return_fields = array_merge( $return_fields, $field['sub_fields'] );
-				} else {
-					$return_fields[] = $field;
-				}
-			}
-
-		}
-		return $return_fields;
-
-	}
-
 	/**
 	 *	@return boolean
 	 *	@action admin_init
 	 */
 	public function init_fields() {
-		// action admin_init
+
 		$current_view = CurrentView::instance();
 
 		if ( ! in_array( $current_view->get_object_kind(), ['post','term','user'] ) ) {
 			return false;
 		}
+
+		$field_store = acf_get_store( 'fields' );
+
 
 		$fields_query = [];
 		$fields_query[ $this->get_fieldgroup_option() ] = true;
@@ -127,14 +204,15 @@ abstract class Feature extends Core\Singleton {
 			if ( ! $this->supports( $field[ 'type' ] ) ) {
 				continue;
 			}
-			$field_object = Fields\Field::getFieldObject( $field );
-			$this->add_field( $field_object->get_meta_key(), $field_object, false );
+
+			$field = $this->load_field( $field );
+			$field_store->set( $field['key'], $field );
+
+			if ( $field_object = Fields\Field::getFieldObject( $field ) ) {
+				$this->add_field( $field_object->get_meta_key(), $field_object, false );
+			}
 		}
 
 		return $this->is_active();
-
 	}
-
-
-
 }

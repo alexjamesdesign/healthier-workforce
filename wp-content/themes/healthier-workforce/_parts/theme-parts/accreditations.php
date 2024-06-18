@@ -1,8 +1,14 @@
 <?php if (get_field('tf_accreditations', 'option')) : ?>
 
-	<div class="accreditations">
+	<div class="accreditations container">
 
-		<p class="title"><?php the_field('accreditations_title', 'option') ?></p>
+		<?php
+			$accreditations_title = get_field('accreditations_title', 'option');
+			
+			if ($accreditations_title) {
+				echo '<p class="title">' . $accreditations_title . '</p>';
+			}
+		?>
 
 		<ul>
 
@@ -11,7 +17,7 @@
 				<?php
 
 					$image = get_sub_field('accreditation_logo');
-					$size = 'thumbnail';
+					$size = 'medium';
 					$thumb = $image['sizes'][ $size ];
 
 				?>

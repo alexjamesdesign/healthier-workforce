@@ -6,6 +6,7 @@ use wpdb;
 use Yoast\WP\SEO\Builders\Indexable_Hierarchy_Builder;
 use Yoast\WP\SEO\Conditionals\Migrations_Conditional;
 use Yoast\WP\SEO\Helpers\Permalink_Helper;
+use Yoast\WP\SEO\Helpers\Post_Type_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 use Yoast\WP\SEO\Models\Indexable;
 use Yoast\WP\SEO\Repositories\Indexable_Hierarchy_Repository;
@@ -54,6 +55,13 @@ class Indexable_Ancestor_Watcher implements Integration_Interface {
 	protected $permalink_helper;
 
 	/**
+	 * The post type helper.
+	 *
+	 * @var Post_Type_Helper
+	 */
+	protected $post_type_helper;
+
+	/**
 	 * Sets the needed dependencies.
 	 *
 	 * @param Indexable_Repository           $indexable_repository           The indexable repository.
@@ -61,19 +69,22 @@ class Indexable_Ancestor_Watcher implements Integration_Interface {
 	 * @param Indexable_Hierarchy_Repository $indexable_hierarchy_repository The indexable hierarchy repository.
 	 * @param wpdb                           $wpdb                           The wpdb object.
 	 * @param Permalink_Helper               $permalink_helper               The permalink helper.
+	 * @param Post_Type_Helper               $post_type_helper               The post type helper.
 	 */
 	public function __construct(
 		Indexable_Repository $indexable_repository,
 		Indexable_Hierarchy_Builder $indexable_hierarchy_builder,
 		Indexable_Hierarchy_Repository $indexable_hierarchy_repository,
 		wpdb $wpdb,
-		Permalink_Helper $permalink_helper
+		Permalink_Helper $permalink_helper,
+		Post_Type_Helper $post_type_helper
 	) {
 		$this->indexable_repository           = $indexable_repository;
 		$this->indexable_hierarchy_builder    = $indexable_hierarchy_builder;
 		$this->wpdb                           = $wpdb;
 		$this->indexable_hierarchy_repository = $indexable_hierarchy_repository;
 		$this->permalink_helper               = $permalink_helper;
+		$this->post_type_helper               = $post_type_helper;
 	}
 
 	/**
@@ -84,7 +95,7 @@ class Indexable_Ancestor_Watcher implements Integration_Interface {
 	}
 
 	/**
-	 * Returns the conditionals based in which this loadable should be active.
+	 * Returns the conditionals based on which this loadable should be active.
 	 *
 	 * @return array
 	 */
@@ -105,7 +116,8 @@ class Indexable_Ancestor_Watcher implements Integration_Interface {
 			return false;
 		}
 
-		if ( $indexable->permalink === $indexable_before->permalink ) {
+		// If the permalink was null it means it was reset instead of changed.
+		if ( $indexable->permalink === $indexable_before->permalink || \is_null( $indexable_before->permalink ) ) {
 			return false;
 		}
 
@@ -113,7 +125,6 @@ class Indexable_Ancestor_Watcher implements Integration_Interface {
 		$child_indexables    = $this->indexable_repository->find_by_ids( $child_indexable_ids );
 
 		\array_walk( $child_indexables, [ $this, 'update_hierarchy_and_permalink' ] );
-
 		if ( $indexable->object_type === 'term' ) {
 			$child_indexables_for_term = $this->get_children_for_term( $indexable->object_id, $child_indexables );
 
@@ -138,7 +149,7 @@ class Indexable_Ancestor_Watcher implements Integration_Interface {
 		// Removes the objects that are already present in the children.
 		$existing_post_indexables = \array_filter(
 			$child_indexables,
-			function( $indexable ) {
+			static function( $indexable ) {
 				return $indexable->object_type === 'post';
 			}
 		);
@@ -169,10 +180,12 @@ class Indexable_Ancestor_Watcher implements Integration_Interface {
 	 * @param Indexable $indexable The indexable to update the hierarchy and permalink for.
 	 */
 	protected function update_hierarchy_and_permalink( $indexable ) {
-		$this->indexable_hierarchy_builder->build( $indexable );
+		if ( \is_a( $indexable, Indexable::class ) ) {
+			$this->indexable_hierarchy_builder->build( $indexable );
 
-		$indexable->permalink = $this->permalink_helper->get_permalink_for_indexable( $indexable );
-		$indexable->save();
+			$indexable->permalink = $this->permalink_helper->get_permalink_for_indexable( $indexable );
+			$indexable->save();
+		}
 	}
 
 	/**
@@ -184,7 +197,7 @@ class Indexable_Ancestor_Watcher implements Integration_Interface {
 	 * @return array List with object ids for the term.
 	 */
 	protected function get_object_ids_for_term( $term_id, $child_indexables ) {
-		$filter_terms = function( $child ) {
+		$filter_terms = static function( $child ) {
 			return $child->object_type === 'term';
 		};
 

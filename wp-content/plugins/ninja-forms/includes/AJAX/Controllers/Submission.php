@@ -100,8 +100,11 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
          * back to the form.
          */
         if ( $is_maintenance ) {
-            $this->_errors[ 'form' ][] = apply_filters( 'nf_maintenance_message', esc_html__( 'This form is currently undergoing maintenance. Please ', 'ninja-forms' )
-                . '<a href="' . $_SERVER[ 'HTTP_REFERER' ] . '">' . esc_html__( 'click here ', 'ninja-forms' ) . '</a>' . esc_html__( 'to reload the form and try again.', 'ninja-forms' )  ) ;
+            $message = sprintf(
+                esc_html__( 'This form is currently undergoing maintenance. Please %sclick here%s to reload the form and try again.', 'ninja-forms' )
+                ,'<a href="' . $_SERVER[ 'HTTP_REFERER' ] . '">', '</a>'
+            );
+            $this->_errors[ 'form' ][] = apply_filters( 'nf_maintenance_message', $message  ) ;
             $this->_respond();
         }
 
@@ -122,6 +125,15 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
 
         // Add Field Keys to _form_data
         if(! $this->is_preview()){
+
+            // Make sure we don't have any field ID mismatches.
+            foreach( $this->_form_data[ 'fields' ] as $id => $settings ){
+                if( $id != $settings[ 'id' ] ){
+                    $this->_errors[ 'fields' ][ $id ] = esc_html__( 'The submitted data is invalid.', 'ninja-forms' );
+                    $this->_respond();
+                }
+            }
+
             $form_fields = Ninja_Forms()->form($this->_form_id)->get_fields();
             foreach ($form_fields as $id => $field) {
                 $this->_form_data['fields'][$id]['key'] = $field->get_setting('key');
@@ -202,6 +214,12 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
         foreach( $form_fields as $key => $field ){
 
             if( is_object( $field ) ) {
+
+                //Process Merge tags on Repeater fields values
+                if( $field->get_setting('type' )=== "repeater" ){
+                    $this->process_repeater_fields_merge_tags( $field );
+                }
+
                 $field = array(
                     'id' => $field->get_id(),
                     'settings' => $field->get_settings()
@@ -243,14 +261,37 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
             // Flatten the field array.
             $field = array_merge( $field, $field[ 'settings' ] );
 
+            /** Prepare Fields in repeater for Validation and Process */
+            if( $field["type"] === "repeater" ){
+                foreach( $field["value"] as $index => $child_field_value ){
+                    foreach( $field['fields'] as $i => $child_field ) {
+                        if(strpos($index, $child_field['id']) !== false){
+                            $field['value'][$index] = array_merge($child_field, $child_field_value);
+                        }
+                    }
+                }
+            }
             /** Validate the Field */
             if( $validate_fields && ! isset( $this->_data[ 'resume' ] ) ){
-                $this->validate_field( $field );
+                if( $field["type"] === "repeater" ){
+                    foreach( $field["value"] as  $index => $child_field ){
+                        $this->validate_field( $field["value"][$index] );
+                    }
+                } else {
+                    $this->validate_field( $field );
+                }
+                 
             }
 
             /** Process the Field */
             if( ! isset( $this->_data[ 'resume' ] ) ) {
-                $this->process_field($field);
+                if( $field["type"] === "repeater" ){
+                    foreach( $field["value"] as $index => $child_field ){
+                        $this->process_field( $field["value"][$index] );
+                    }
+                } else {
+                    $this->process_field($field);
+                }
             }
             $field = array_merge( $field, $this->_form_data[ 'fields' ][ $field_id ] );
 
@@ -314,7 +355,7 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
             LEFT JOIN `$wpdb->postmeta` AS m
             ON p.ID = m.post_id
             WHERE m.meta_key = '_form_id'
-            AND m.meta_value = $form_id
+            AND m.meta_value = $this->_form_id
             AND p.post_status = 'publish'");
             if ( intval( $result->count ) >= intval( $this->_data[ 'settings' ][ 'sub_limit_number' ] ) ) {
                 $this->_errors[ 'form' ][] = $this->_data[ 'settings' ][ 'sub_limit_msg' ];
@@ -461,7 +502,7 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
                 }
             }
 
-//            $this->_data[ 'actions' ][ $type ][] = $action;
+            // $this->_data[ 'actions' ][ $type ][] = $action;
 
             $this->maybe_halt( $action[ 'id' ] );
         }
@@ -496,7 +537,7 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
 
         if( ! method_exists( $field_class, 'process' ) ) return;
 
-        if( $data = $field_class->process( $field_settings, $this->_form_data ) ){
+        if( $data = $field_class->process( $field_settings, $this->_form_data )  ){
             $this->_form_data = $data;
         }
     }
@@ -609,5 +650,22 @@ class NF_AJAX_Controllers_Submission extends NF_Abstracts_Controller
         header( 'Content-Type: application/json' );
         // Call the parent method.
         parent::_respond();
+    }
+
+     /**
+     * Process fields merge tags for fields inside a repeater fieldset
+     * 
+     * @param object $field The Repeater Fieldset
+     * 
+     */
+    protected function process_repeater_fields_merge_tags( $field ){
+        //Compare the Repeater field passed calling the function with the array of fields values from the submission object
+        foreach( $this->_form_data['fields'][$field->get_id()]['value'] as $id => $data ){
+            //Check if field is a Repeater Field
+            if( Ninja_Forms()->fieldsetRepeater->isRepeaterFieldByFieldReference($id) && !empty($data['value']) && is_string($data['value']) ) {
+                //Merge tags in the Repeater Field Sub Fields values
+                $this->_form_data['fields'][$field->get_id()]['value'][$id]['value'] = apply_filters( 'ninja_forms_merge_tags', $data['value'] );
+            } 
+        }
     }
 }

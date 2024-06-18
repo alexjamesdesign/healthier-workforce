@@ -1,10 +1,10 @@
-=== If Menu - Visibility control for Menu Items ===
-Contributors: andreiigna
+=== If Menu - Visibility control for Menus ===
+Contributors: andreiigna, elenalyrd
 Tags: menu, visibility, rules, roles, hide, if, nav menu, show, display
 Requires at least: 5
-Tested up to: 5.6
+Tested up to: 6.2
 Requires PHP: 5.6
-Stable tag: trunk
+Stable tag: 0.17.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -12,17 +12,19 @@ Display tailored menu items to each visitor with visibility rules
 
 == Description ==
 
-Control what menu items your site's visitors see, based on visibility rules. Here are a few examples:
+Control what menu items your site's visitors see, with visibility rules. Here are a few examples:
 
 * Display a menu item only if `User is logged in`
-* Hide menu items if `Device is mobile`
-* Display menu items for `Admins and Editors`
+* Hide menus if `Device is mobile`
+* Display menus for `Admins and Editors`
 * Hide Login or Register links for `Logged in Users`
-* Display menu items for `Users from US or UK`
-* Display menu items only for `Customers with active membership`
-* Display menu items for visitors browsing with `Language English or Spanish`
+* Display menus for `Users from US or UK`
+* Display menus only for `Customers with active membership`
+* Display menus for visitors browsing with `Language English or Spanish`
 
-The plugin is easy to use, each menu item will have a new option “Change menu item visibility” which will enable the selection of visibility rules (example in Screenshots).
+After the plugin is enabled, each menu item will have a new option “Change menu item visibility” which will enable the selection of visibility rules.
+
+Check the examples in screenshots or try it here → [demos.layered.store](https://demos.layered.store)
 
 ## Features
 
@@ -32,7 +34,7 @@ The plugin is easy to use, each menu item will have a new option “Change menu 
   * Page type `Front page` `Single page` `Single post`
   * Is Archive page (year, category, search results, etc)
   * Visitor device `Is Mobile`
-* Advanced visibility rules - requires Premium plan
+* Advanced visibility rules - requires [More Visibility Rules Add-on](https://layered.store/plugins/more-visibility-rules)
   * Visitor location - detect visitor's Country
   * Visitor language - detect visitor's selected Language
   * WooCommerce Subscriptions - Display menus for users with active subscription
@@ -43,11 +45,53 @@ The plugin is easy to use, each menu item will have a new option “Change menu 
 * Multiple rules - mix multiple rules for a menu item visibility
   * show if `User is logged in` AND `Device is mobile`
   * show if `User is Admin` AND `Is front page`
-* Support for adding your custom rules
-
-Example of adding a custom visibility rule is described in the FAQ section.
+* Support for [adding your custom rules](https://wordpress.org/plugins/if-menu/#how%20can%20i%20add%20a%20custom%20visibility%20rule%20for%20menu%20items%3F)
 
 == Frequently Asked Questions ==
+
+= Show or hide menus if user is logged in =
+
+One of the most popular uses of the plugin is to show the "Register/Login" menu for non-logged-in users, and "Your account" for logged-in users.
+
+To enable this for "Register/Login" menu, follow these steps:
+1. Go to WordPress Admin on your website -> Appearance -> Menus
+2. Expand the menu item for "Register" or "Login" page
+3. Enable the option "Enable visibility rules"
+4. Choose the rule "Hide if user logged in"
+
+For showing the "Your account page", follow these steps:
+1. Go to WordPress Admin on your website -> Appearance -> Menus
+2. Expand the menu item for "Your account page" page
+3. Enable the option "Enable visibility rules"
+4. Choose the rule "Show if user logged in"
+
+![image info](https://ps.w.org/if-menu/assets/screenshot-2.png)
+
+= Mix multiple visibility rules =
+
+Multiple visibility rules can be used at once, like so:
+
+For showing a menu item only for admins on desktop:
+1. Go to WordPress Admin on your website -> Appearance -> Menus
+2. Expand the menu item you want
+3. Enable the option "Enable visibility rules"
+4. Choose the rule "Show if user is Administrator"
+5. Click the "+" button at the end of the visibility rule, and change to "AND"
+6. On the newly added row, choose "Hide if device is mobile"
+
+For showing a menu item for Admins or users with an active subscription:
+1. Go to WordPress Admin on your website -> Appearance -> Menus
+2. Expand the menu item you want
+3. Enable the option "Enable visibility rules"
+4. Choose the rule "Show if user is Administrator"
+5. Click the "+" button at the end of the visibility rule, and change to "OR"
+6. On the newly added row, choose "Show if Has active subscription __"
+
+To remove an extra visibility rule:
+1. Go to WordPress Admin on your website -> Appearance -> Menus
+2. Expand the menu item with multiple visibility rules
+3. Click on the "AND" / "OR" buttons at end of visibility option
+4. Change to "+"
 
 = If Menu is broken, no visibility rules are available =
 
@@ -95,7 +139,7 @@ function my_new_menu_conditions($conditions) {
 
 = Where can I find conditional functions? =
 
-WordPress provides [a lot of functions](http://codex.wordpress.org/Conditional_Tags) which can be used to create custom rules for almost any combination that a theme/plugin developer can think of.
+WordPress provides [a lot of functions](https://developer.wordpress.org/themes/references/list-of-conditional-tags/) which can be used to create custom rules for almost any combination that a theme/plugin developer can think of.
 
 == Screenshots ==
 
@@ -104,6 +148,15 @@ WordPress provides [a lot of functions](http://codex.wordpress.org/Conditional_T
 3. Example of visibility rules
 
 == Changelog ==
+
+= 0.17.0 - 26 Mar 2023 =
+* Fixed - Broken Access Control
+* Fixed - Check if callbacks are valid for Conditions
+
+= 0.16.3 - 26 June 2022 =
+* Added - More usage examples in plugin FAQs section
+* Updated - WordPress v6 compatibility
+* Updated - Integration with Restrict Content Pro plugin is improved
 
 = 0.16.2 - 17 January 2020 =
 * Fixed - Error shown about the registered REST Api endpoint
@@ -120,149 +173,3 @@ WordPress provides [a lot of functions](http://codex.wordpress.org/Conditional_T
 = 0.15 - 2 July 2019 =
 * Updated - Texts & styles for If Menu settings page
 * Fixed - PHP error that may appear for Visibility Rules saved before If Menu v0.9
-
-= 0.14 - 2 May 2019 =
-* Added - "User registration is allowed" visibility rule
-* Updated - Improved support for setting multiple visibility rules, without `eval` function from PHP
-* Updated - Show Membership Levels from "WishList Member" plugin
-* Updated - Compatibility with WordPress 5.2
-
-= 0.13 - 8 April 2019 =
-* Updated - Compatiblity with latest WordPress version
-* Updated - Texts & more info about Premium plan
-* Added - Visibility rule - User has expired Subscription, integration with [Restrict Content Pro](https://restrictcontentpro.com/) plugin
-* Updated - Visibility rule - Restrict Content Pro Membership shows Level number
-
-= 0.12.2 - 3 September 2018 =
-* Fixed - PHP error blocking page load (function formatting language names)
-
-= 0.12 - 3 September 2018 =
-* Added - Visiblity rule - Detect visitor's selected language
-* Updated - Link to Support Request email
-* Fixed - Better check for Premium plan after purchase (was not enabled in some cases)
-
-= 0.11 - 23 Jul 2018 =
-* Fixed - Blank page on "Appearance -> Menus"
-* Fixed - Better compatitility with themes / plugins
-
-= 0.10 - 8 May 2018 =
-* Added - Visibility rule - User has Subscription Level, integration with [Restrict Content Pro](https://restrictcontentpro.com/) plugin
-* Fixed - Display all WooCommerce Membership plans and save the visibility rule
-* Fixed - Small render artifact in menu item title
-
-= 0.9 - 21 April 2018 =
-*This version requires PHP version to be at least 5.4*
-* Added - Visibility rule - Customer has active membership, integration with [WooCommerce Memberships](https://woocommerce.com/products/woocommerce-memberships/) plugin
-* Added - Visibility rule - Customer has active Job Manager Listing Subscription, integration with [Listing Payments for WP Job Manager](https://astoundify.com/products/wp-job-manager-listing-payments/) plugin
-* Added - Option to disable menu item filtering in Admin panel
-* Updated - Texts and notices
-
-= 0.8.3 =
-*Release Date - 22 February 2018*
-
-* Fixed - Support for PHP <= 5.3, fixes error
-
-= 0.8.2 =
-*Release Date - 20 February 2018*
-
-* Fixed - Support for older visibilty rule names, fixes PHP warning
-
-= 0.8.1 =
-*Release Date - 20 February 2018*
-
-* Fixed - Better options checking, fixes PHP warning
-
-= 0.8 =
-*Release Date - 19 February 2018*
-
-* Added - Visibility rules with multiple options. Requires Premium plan
-* Added - Visibility rule - User country
-* Added - Visibility rule - Is Super Admin on MultiSite
-* Added - Visibility rule - User is in Group, integration with [Groups](https://wordpress.org/plugins/groups/) plugin
-* Added - Visibility rule - User has subscription, integration with [WooCommerce Subscriptions](https://woocommerce.com/products/woocommerce-subscriptions/) plugin
-* Added - Visibility rule - User has active membership plan, integration with [WooCommerce Memberships](https://woocommerce.com/products/woocommerce-memberships/) plugin
-* Added - Visibility rule - User membership level, integration with [WishList Member](https://member.wishlistproducts.com/) plugin
-* Updated - Better conflict detection for Nav_Menu Walker
-* Fixed - translation strings & function used
-
-= 0.7 =
-*Release Date - 18 September 2017*
-
-* Enhancement - Nicer styling for visibility rules
-* Added - Peek option - Let admins preview hidden menu items
-* Added - Settings page
-
-= 0.6.3 =
-*Release Date - 17 August 2017*
-
-* New visibility rule - Language Is RTL
-* Fix - Single rule works on servers with Eval disabled
-
-= 0.6.2 =
-*Release Date - 8 August 2017*
-
-* Fix - Backwards compatibility with PHP < 5.4
-
-= 0.6.1 =
-*Release Date - 7 August 2017*
-
-* Improvement - Change labels & texts for easier use
-* Improvement - Better compatibility with latest versions of WordPress
-* Improvement - Better compatibility with translation plugins
-* Fix - Detection for conflict with other plugins
-
-= 0.6 =
-*Release Date - 27 August 2016*
-
-* Improvement - Dynamic conditions based on default & custom user roles (added by plugins or themes) [thanks Daniele](https://wordpress.org/support/topic/feature-request-custom-roles)
-* Improvement - Grouped conditions by User, Page or other types
-* Fix - Filter menu items in admin section
-* Fix - Better menu items filter saving code
-
-= 0.5 =
-*Release Date - 20 August 2016*
-
-* Improvement - Support for WordPress 4.6
-* Feature - New condition checking logged in user for current site in Multi Site [requested here](https://wordpress.org/support/topic/multi-site-user-is-logged-in-conditi
-on)
-* Feature - Added support for multi conditions [thanks for this ideea](https://wordpress.org/support/topic/more-than-one-condition-operators-1)
-* Improvement - RO & DE translations
-
-= 0.4.1 =
-*Release Date - 13 December 2015*
-
-* Fix - Fixes [issue](https://wordpress.org/support/topic/cant-add-items-to-menu-with-plugin-enabled) with adding new menu items
-
-= 0.4 =
-*Release Date - 29 November 2015*
-
-* Improved compatibility with other plugins/themes using a [shared action hook for menu item fields](https://core.trac.wordpress.org/ticket/18584#comment:37)
-* Enhancement - show visibility status in menu item titles
-
-= 0.3 =
-
-* Plugin icon
-* Set as compatible with WordPress 4
-
-= 0.2.1 =
-
-Minor fixes
-
-* [Fix](https://twitter.com/joesegal/status/480386235249082368) - Editing menus - show/hide conditions when adding new item (thanks [Joseph Segal](https://twitter.com/joesegal))
-
-= 0.2 =
-
-Update for compatibility with newer versions of WordPress
-
-* [Feature](http://wordpress.org/support/topic/new-feature-power-to-the-conditions) - access to menu item object in condition callback (thanks [BramNL](http://wordpress.org/support/profile/bramnl))
-* [Fix](http://wordpress.org/support/topic/save-is-requested-before-leaving-menu-page) - alert for leaving page even if no changes were made for menus (thanks [Denny](http://wordpress.org/support/profile/ddahly))
-* Fix - update method in `Walker_Nav_Menu_Edit` to be compatible with newer version of WP
-* [Fix](http://wordpress.org/support/topic/bugfix-for-readmetxt) - example in Readme (thanks [BramNL](http://wordpress.org/support/profile/bramnl))
-
-= 0.1 =
-* Plugin release. Included basic menu conditional statements
-
-== Upgrade Notice ==
-
-= 0.9 =
-Starting with If Menu v0.9, PHP version is required to be at least 5.4. Make sure the PHP version on your site is higher than this before upgrading

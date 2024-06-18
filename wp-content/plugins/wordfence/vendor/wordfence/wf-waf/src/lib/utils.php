@@ -184,6 +184,40 @@ class wfWAFUtils {
 		return is_array($data) ? array_map('wfWAFUtils::_json_decode_object_helper', $data) : $data;
 	}
 
+	public static function json_encode_limited($data, $limit, $truncatable) {
+		$json = self::json_encode($data);
+		$size = strlen($json);
+		if ($size > $limit) {
+			$json = null;
+			$minimalData = $data;
+			foreach ($minimalData as $key => &$value) {
+				if (in_array($key, $truncatable)) {
+					$value = '';
+				}
+			}
+			$minimumSize = strlen(self::json_encode($minimalData));
+			if ($minimumSize <= $limit) {
+				$excess = $size - $limit;
+				foreach ($truncatable as $field) {
+					if (!array_key_exists($field, $data))
+						continue;
+					$value = $data[$field];
+					if (is_string($value)) {
+						$originalLength = strlen($value);
+						$truncatedLength = max(0, $originalLength - $excess);
+						$excess -= ($originalLength - $truncatedLength);
+						$data[$field] = substr($value, 0, $truncatedLength);
+					}
+					if ($excess === 0) {
+						$json = self::json_encode($data);
+						break;
+					}
+				}
+			}
+		}
+		return $json;
+	}
+
 	/**
 	 * Compare two strings in constant time. It can leak the length of a string.
 	 *
@@ -713,7 +747,7 @@ class wfWAFUtils {
 
 	public static function doNotCache() {
 		header("Pragma: no-cache");
-		header("Cache-Control: no-cache, must-revalidate, private");
+		header("Cache-Control: no-cache, must-revalidate, private, max-age=0");
 		header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); //In the past
 		if (!defined('DONOTCACHEPAGE')) { define('DONOTCACHEPAGE', true); }
 		if (!defined('DONOTCACHEDB')) { define('DONOTCACHEDB', true); }
@@ -1064,20 +1098,19 @@ class wfWAFUtils {
 			$offset = wfWAF::getInstance()->getStorageEngine()->getConfig('timeoffset_ntp', false, 'synced');
 			if ($offset === false) {
 				$offset = wfWAF::getInstance()->getStorageEngine()->getConfig('timeoffset_wf', false, 'synced');
-				if ($offset === false) { $offset = 0; }
 			}
 		}
 		catch (Exception $e) {
 			//Ignore
 		}
-		return time() + $offset;
+		return time() + ((int) $offset);
 	}
 
 	/**
 	 * @param $file
 	 * @return array|bool
 	 */
-	public static function extractCredentialsWPConfig($file) {
+	public static function extractCredentialsWPConfig($file, &$return = array()) {
 		$configContents = file_get_contents($file);
 		$tokens = token_get_all($configContents);
 		$tokens = array_values(array_filter($tokens, 'wfWAFUtils::_removeUnneededTokens'));
@@ -1097,10 +1130,16 @@ class wfWAFUtils {
 						!is_array($startParenToken) && $startParenToken === '(' &&
 						is_array($constantNameToken) && token_name($constantNameToken[0]) === 'T_CONSTANT_ENCAPSED_STRING' &&
 						!is_array($commaToken) && $commaToken === ',' &&
-						is_array($constantValueToken) && token_name($constantValueToken[0]) === 'T_CONSTANT_ENCAPSED_STRING' &&
+						is_array($constantValueToken) && in_array(token_name($constantValueToken[0]), array('T_CONSTANT_ENCAPSED_STRING', 'T_STRING')) &&
 						!is_array($endParenToken) && $endParenToken === ')'
 					) {
-						$parsedConstants[self::substr($constantNameToken[1], 1, -1)] = self::substr($constantValueToken[1], 1, -1);
+						if (token_name($constantValueToken[0]) === 'T_STRING') {
+							$value = defined($constantValueToken[1]) ? constant($constantValueToken[1]) : null;
+						}
+						else {
+							$value = self::substr($constantValueToken[1], 1, -1);
+						}
+						$parsedConstants[self::substr($constantNameToken[1], 1, -1)] = $value;
 					}
 				}
 				if (token_name($token[0]) === 'T_VARIABLE') {
@@ -1116,20 +1155,38 @@ class wfWAFUtils {
 			}
 		}
 
+		$optionalConstants = array(
+			'flags' => 'MYSQL_CLIENT_FLAGS'
+		);
 		$constants = array(
 			'user'      => 'DB_USER',
 			'pass'      => 'DB_PASSWORD',
 			'database'  => 'DB_NAME',
 			'host'      => 'DB_HOST',
-			'charset'   => 'DB_CHARSET',
-			'collation' => 'DB_COLLATE',
+			'charset'   => array('constant' => 'DB_CHARSET', 'default' => ''),
+			'collation' => array('constant' => 'DB_COLLATE', 'default' => ''),
 		);
-		$return = array();
+		$constants += $optionalConstants;
 		foreach ($constants as $key => $constant) {
-			if (array_key_exists($constant, $parsedConstants)) {
+			unset($defaultValue);
+			if (is_array($constant)) {
+				$defaultValue = $constant['default'];
+				$constant = $constant['constant'];
+			}
+			
+			if (array_key_exists($key, $return)) {
+				continue;
+			}
+			else if (array_key_exists($constant, $parsedConstants)) {
 				$return[$key] = $parsedConstants[$constant];
-			} else {
-				return false;
+			}
+			else if (!array_key_exists($key, $optionalConstants)){
+				if (isset($defaultValue)) {
+					$return[$key] = $defaultValue;
+				}
+				else {
+					return ($return = false);
+				}
 			}
 		}
 
@@ -1153,7 +1210,7 @@ class wfWAFUtils {
 		$result = preg_match($pattern, $return['host'], $matches);
 
 		if (1 !== $result) {
-			return false;
+			return ($return = false);
 		}
 
 		foreach (array('host', 'port') as $component) {
@@ -1162,10 +1219,12 @@ class wfWAFUtils {
 			}
 		}
 
-		if (array_key_exists('$table_prefix', $parsedVariables)) {
-			$return['tablePrefix'] = $parsedVariables['$table_prefix'];
-		} else {
-			return false;
+		if (!array_key_exists('tablePrefix', $return)) {
+			if (array_key_exists('$table_prefix', $parsedVariables)) {
+				$return['tablePrefix'] = $parsedVariables['$table_prefix'];
+			} else {
+				return ($return = false);
+			}
 		}
 		return $return;
 	}
@@ -1177,6 +1236,14 @@ class wfWAFUtils {
 			));
 		}
 		return true;
+	}
+
+	public static function isVersionBelow($target, $compared) {
+		return $compared === null || version_compare($compared, $target, '<');
+	}
+	
+	public static function isCli() {
+		return (@php_sapi_name()==='cli') || !array_key_exists('REQUEST_METHOD', $_SERVER);
 	}
 }
 }

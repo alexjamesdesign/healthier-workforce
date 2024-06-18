@@ -6,6 +6,7 @@
 abstract class NF_Abstracts_BatchProcess
 {
     protected $_db;
+    protected $_flag;
 
     /**
      * Array that holds data we're sending back to the JS front-end.
@@ -21,8 +22,12 @@ abstract class NF_Abstracts_BatchProcess
     public function __construct( $data = array() )
     {
         //Bail if we aren't in the admin.
-        if ( ! is_admin() )
+        if ( ! is_admin() ||
+             ! is_user_logged_in() ||
+             ! current_user_can( apply_filters('ninja_forms_admin_all_forms_capabilities', 'manage_options') ) )
+        {
             return false;
+        }
 
         global $wpdb;
 
@@ -44,7 +49,9 @@ abstract class NF_Abstracts_BatchProcess
      */
     public function init()
     {
-        if ( ! get_option( 'nf_doing_' . $this->_slug ) ) {
+        $this->_flag = 'nf_doing_' . $this->_slug;
+
+        if ( ! $this->flag( $this->_flag, 'check' ) ) {
             // Run the startup process.
             $this->startup();
         } else {
@@ -55,7 +62,7 @@ abstract class NF_Abstracts_BatchProcess
         // Determine how many steps this will take.
         $this->response[ 'step_total' ] = $this->get_steps();
 
-        add_option( 'nf_doing_' . $this->_slug, true );
+        $this->flag( $this->_flag, 'add' );
 
         // Run processing
         $this->process();
@@ -91,7 +98,7 @@ abstract class NF_Abstracts_BatchProcess
      * Function to run any setup steps necessary to begin processing for steps after the first.
      *
      * @since 3.4.0
-     * @return  void 
+     * @return  void
      */
     public function restart()
     {
@@ -106,7 +113,7 @@ abstract class NF_Abstracts_BatchProcess
      * If this method isn't overwritten by a child, it defaults to 1.
      *
      * @since 3.4.0
-     * @return  int 
+     * @return  int
      */
     public function get_steps()
     {
@@ -115,12 +122,12 @@ abstract class NF_Abstracts_BatchProcess
 
     /**
      * Adds an error to the response object.
-     * 
+     *
      * @param $slug (String) The slug for this error code.
      * @param $msg (String) The error message to be displayed.
      * @param $type (String) warning or fatal, depending on the error.
      *                       Defaults to warning.
-     * 
+     *
      * @since 3.4.11
      */
     public function add_error( $slug, $msg, $type = 'warning' )
@@ -140,7 +147,7 @@ abstract class NF_Abstracts_BatchProcess
      * Function to cleanup any lingering temporary elements of a batch process after completion.
      *
      * @since 3.4.0
-     * @return  void 
+     * @return  void
      */
     public function cleanup()
     {
@@ -158,12 +165,12 @@ abstract class NF_Abstracts_BatchProcess
      * Responds to the JS front-end.
      *
      * @since 3.4.0
-     * @return  void 
+     * @return  void
      */
     public function batch_complete()
     {
         // Delete our options.
-        delete_option( 'nf_doing_' . $this->_slug );
+        $this->flag( $this->_flag, 'remove' );
         // Tell our JS that we're done.
         $this->response[ 'batch_complete' ] = true;
 
@@ -177,7 +184,7 @@ abstract class NF_Abstracts_BatchProcess
      * Used in child methods to stop processing the current step an dmove to the next.
      *
      * @since 3.4.0
-     * @return  void 
+     * @return  void
      */
     public function next_step()
     {
@@ -188,10 +195,10 @@ abstract class NF_Abstracts_BatchProcess
 
     /**
      * Method that encodes $this->response and sends the data to the front-end.
-     * 
+     *
      * @since 3.4.0
      * @updated 3.4.11
-     * @return  void 
+     * @return  void
      */
     public function respond()
     {
@@ -201,6 +208,27 @@ abstract class NF_Abstracts_BatchProcess
 
         echo wp_json_encode( $this->response );
         wp_die();
+    }
+
+    /**
+     * Method to check or modify our processor flag.
+     *
+     * @since 3.5.0
+     * @param $flag (String) The flag to check
+     * @param $action (String) The type of interaction to be performed
+     * @return Mixed
+     */
+    public function flag( $flag, $action )
+    {
+        switch($action) {
+            case 'add':
+                return add_option($flag, true);
+            case 'remove':
+                return delete_option($flag);
+            default:
+                // Default to 'check'.
+                return get_option($flag);
+        }
     }
 
 }

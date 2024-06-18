@@ -8,7 +8,7 @@
  */
 function nf_register_step_processing_page() {
     // Register our admin page
-    $admin_page = add_submenu_page( NULL, esc_html__( 'Ninja Forms Processing', 'ninja-forms' ), esc_html__( 'Processing', 'ninja-forms' ), apply_filters( 'ninja_forms_admin_menu_capabilities', 'manage_options' ), 'nf-processing', 'nf_output_step_processing_page' );
+    $admin_page = add_submenu_page( 'options.php', esc_html__( 'Ninja Forms Processing', 'ninja-forms' ), esc_html__( 'Processing', 'ninja-forms' ), apply_filters( 'ninja_forms_admin_menu_capabilities', 'manage_options' ), 'nf-processing', 'nf_output_step_processing_page' );
 
     add_action( 'admin_print_styles-' . $admin_page, 'nf_step_processing_css' );
     add_action( 'admin_print_styles-' . $admin_page, 'nf_step_processing_js' );
@@ -23,7 +23,7 @@ add_action( 'admin_menu', 'nf_register_step_processing_page' );
  * @return void
  */
 function nf_step_processing_css() {
-    wp_enqueue_style( 'jquery-smoothness', Ninja_Forms::$url .'deprecated/css/smoothness/jquery-smoothness.css');
+    wp_enqueue_style( 'jquery-smoothness', Ninja_Forms::$url .'lib/Legacy/jquery-smoothness.css');
 }
 
 /**
@@ -34,7 +34,7 @@ function nf_step_processing_css() {
  */
 function nf_step_processing_js() {
     wp_enqueue_script( 'nf-processing',
-        Ninja_Forms::$url . 'deprecated/assets/js/dev/step-processing.js',
+        Ninja_Forms::$url . 'lib/Legacy/step-processing.js',
         array( 'jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-datepicker', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-progressbar' ) );
 
     $step_labels = apply_filters( 'nf_step_processing_labels', array(
@@ -69,7 +69,7 @@ function nf_step_processing_js() {
  * @return void
  */
 function nf_output_step_processing_page() {
-    $page_title = isset ( $_REQUEST['title'] ) ? urldecode( esc_html ( $_REQUEST['title'] ) ) : esc_html__( 'Ninja Forms - Processing', 'ninja-forms' );
+    $page_title = nfExtractPageTitle( $_REQUEST['title'] ) ;
     ?>
     <style>
         .ui-progressbar {
@@ -151,4 +151,16 @@ function nf_output_step_processing_page() {
     </div>
 
     <?php
+}
+
+/**
+ * Extract page title from given input
+ *
+ * @param string $title
+ * @return string
+ */
+function nfExtractPageTitle($title){
+    $return = isset ( $title ) ?  esc_html ( urldecode($title ) ) : esc_html__( 'Ninja Forms - Processing', 'ninja-forms' );
+
+    return $return;
 }

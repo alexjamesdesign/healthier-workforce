@@ -2,22 +2,21 @@
 
 namespace Yoast\WP\SEO\Integrations\Admin;
 
+use WPSEO_Addon_Manager;
 use WPSEO_Admin_Asset_Manager;
-use Yoast\WP\SEO\Actions\Indexing\Indexable_General_Indexation_Action;
-use Yoast\WP\SEO\Actions\Indexing\Indexable_Post_Indexation_Action;
-use Yoast\WP\SEO\Actions\Indexing\Indexable_Post_Type_Archive_Indexation_Action;
-use Yoast\WP\SEO\Actions\Indexing\Indexable_Term_Indexation_Action;
-use Yoast\WP\SEO\Actions\Indexing\Post_Link_Indexing_Action;
-use Yoast\WP\SEO\Actions\Indexing\Term_Link_Indexing_Action;
 use Yoast\WP\SEO\Conditionals\Migrations_Conditional;
 use Yoast\WP\SEO\Conditionals\No_Tool_Selected_Conditional;
 use Yoast\WP\SEO\Conditionals\Yoast_Tools_Page_Conditional;
 use Yoast\WP\SEO\Helpers\Indexable_Helper;
-use Yoast\WP\SEO\Helpers\Options_Helper;
+use Yoast\WP\SEO\Helpers\Indexing_Helper;
+use Yoast\WP\SEO\Helpers\Product_Helper;
 use Yoast\WP\SEO\Helpers\Short_Link_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
+use Yoast\WP\SEO\Presenters\Admin\Indexing_Error_Presenter;
 use Yoast\WP\SEO\Presenters\Admin\Indexing_List_Item_Presenter;
+use Yoast\WP\SEO\Routes\Importing_Route;
 use Yoast\WP\SEO\Routes\Indexing_Route;
+use Yoast\WP\SEO\Services\Importing\Importable_Detector_Service;
 
 /**
  * Class Indexing_Tool_Integration. Bridge to the Javascript indexing tool on Yoast SEO Tools page.
@@ -48,53 +47,39 @@ class Indexing_Tool_Integration implements Integration_Interface {
 	protected $short_link_helper;
 
 	/**
-	 * Represents the options helper.
+	 * Represents the indexing helper.
 	 *
-	 * @var Options_Helper
+	 * @var Indexing_Helper
 	 */
-	protected $options_helper;
+	protected $indexing_helper;
 
 	/**
-	 * The post indexation action.
+	 * The addon manager.
 	 *
-	 * @var Indexable_Post_Indexation_Action
+	 * @var WPSEO_Addon_Manager
 	 */
-	protected $post_indexation;
+	protected $addon_manager;
 
 	/**
-	 * The term indexation action.
+	 * The product helper.
 	 *
-	 * @var Indexable_Term_Indexation_Action
+	 * @var Product_Helper
 	 */
-	protected $term_indexation;
+	protected $product_helper;
 
 	/**
-	 * The post type archive indexation action.
+	 * The Importable Detector service.
 	 *
-	 * @var Indexable_Post_Type_Archive_Indexation_Action
+	 * @var Importable_Detector_Service
 	 */
-	protected $post_type_archive_indexation;
+	protected $importable_detector;
 
 	/**
-	 * The post link indexing action.
+	 * The Importing Route class.
 	 *
-	 * @var Post_Link_Indexing_Action
+	 * @var Importing_Route
 	 */
-	protected $post_link_indexing_action;
-
-	/**
-	 * The term link indexing action.
-	 *
-	 * @var Term_Link_Indexing_Action
-	 */
-	protected $term_link_indexing_action;
-
-	/**
-	 * Represents the general indexation.
-	 *
-	 * @var Indexable_General_Indexation_Action
-	 */
-	protected $general_indexation;
+	protected $importing_route;
 
 	/**
 	 * Returns the conditionals based on which this integration should be active.
@@ -112,46 +97,40 @@ class Indexing_Tool_Integration implements Integration_Interface {
 	/**
 	 * Indexing_Integration constructor.
 	 *
-	 * @param WPSEO_Admin_Asset_Manager                     $asset_manager                The admin asset manager.
-	 * @param Indexable_Helper                              $indexable_helper             The indexable helper.
-	 * @param Short_Link_Helper                             $short_link_helper            The short link helper.
-	 * @param Options_Helper                                $options_helper               The options helper.
-	 * @param Indexable_Post_Indexation_Action              $post_indexation              The post indexing action.
-	 * @param Indexable_Term_Indexation_Action              $term_indexation              The term indexing action.
-	 * @param Indexable_Post_Type_Archive_Indexation_Action $post_type_archive_indexation The post type archive indexing action.
-	 * @param Indexable_General_Indexation_Action           $general_indexation           The general indexing action.
-	 * @param Post_Link_Indexing_Action                     $post_link_indexing_action    The post indexing action.
-	 * @param Term_Link_Indexing_Action                     $term_link_indexing_action    The term indexing action.
+	 * @param WPSEO_Admin_Asset_Manager   $asset_manager       The admin asset manager.
+	 * @param Indexable_Helper            $indexable_helper    The indexable helper.
+	 * @param Short_Link_Helper           $short_link_helper   The short link helper.
+	 * @param Indexing_Helper             $indexing_helper     The indexing helper.
+	 * @param WPSEO_Addon_Manager         $addon_manager       The addon manager.
+	 * @param Product_Helper              $product_helper      The product helper.
+	 * @param Importable_Detector_Service $importable_detector The importable detector.
+	 * @param Importing_Route             $importing_route     The importing route.
 	 */
 	public function __construct(
 		WPSEO_Admin_Asset_Manager $asset_manager,
 		Indexable_Helper $indexable_helper,
 		Short_Link_Helper $short_link_helper,
-		Options_Helper $options_helper,
-		Indexable_Post_Indexation_Action $post_indexation,
-		Indexable_Term_Indexation_Action $term_indexation,
-		Indexable_Post_Type_Archive_Indexation_Action $post_type_archive_indexation,
-		Indexable_General_Indexation_Action $general_indexation,
-		Post_Link_Indexing_Action $post_link_indexing_action,
-		Term_Link_Indexing_Action $term_link_indexing_action
+		Indexing_Helper $indexing_helper,
+		WPSEO_Addon_Manager $addon_manager,
+		Product_Helper $product_helper,
+		Importable_Detector_Service $importable_detector,
+		Importing_Route $importing_route
 	) {
-		$this->asset_manager                = $asset_manager;
-		$this->indexable_helper             = $indexable_helper;
-		$this->short_link_helper            = $short_link_helper;
-		$this->options_helper               = $options_helper;
-		$this->post_indexation              = $post_indexation;
-		$this->term_indexation              = $term_indexation;
-		$this->post_type_archive_indexation = $post_type_archive_indexation;
-		$this->general_indexation           = $general_indexation;
-		$this->post_link_indexing_action    = $post_link_indexing_action;
-		$this->term_link_indexing_action    = $term_link_indexing_action;
+		$this->asset_manager       = $asset_manager;
+		$this->indexable_helper    = $indexable_helper;
+		$this->short_link_helper   = $short_link_helper;
+		$this->indexing_helper     = $indexing_helper;
+		$this->addon_manager       = $addon_manager;
+		$this->product_helper      = $product_helper;
+		$this->importable_detector = $importable_detector;
+		$this->importing_route     = $importing_route;
 	}
 
 	/**
 	 * Register hooks.
 	 */
 	public function register_hooks() {
-		\add_action( 'wpseo_tools_overview_list_items', [ $this, 'render_indexing_list_item' ], 10 );
+		\add_action( 'wpseo_tools_overview_list_items_internal', [ $this, 'render_indexing_list_item' ], 10 );
 		\add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_scripts' ], 10 );
 	}
 
@@ -166,13 +145,15 @@ class Indexing_Tool_Integration implements Integration_Interface {
 		$this->asset_manager->enqueue_style( 'monorepo' );
 
 		$data = [
-			'disabled'  => ! $this->indexable_helper->should_index_indexables(),
-			'amount'    => $this->get_unindexed_count(),
-			'firstTime' => ( $this->options_helper->get( 'indexing_first_time', true ) === true ),
-			'restApi'   => [
-				'root'      => \esc_url_raw( \rest_url() ),
-				'endpoints' => $this->get_endpoints(),
-				'nonce'     => \wp_create_nonce( 'wp_rest' ),
+			'disabled'                    => ! $this->indexable_helper->should_index_indexables(),
+			'amount'                      => $this->indexing_helper->get_filtered_unindexed_count(),
+			'firstTime'                   => ( $this->indexing_helper->is_initial_indexing() === true ),
+			'errorMessage'                => $this->render_indexing_error(),
+			'restApi'                     => [
+				'root'                => \esc_url_raw( \rest_url() ),
+				'indexing_endpoints'  => $this->get_indexing_endpoints(),
+				'importing_endpoints' => $this->get_importing_endpoints(),
+				'nonce'               => \wp_create_nonce( 'wp_rest' ),
 			],
 		];
 
@@ -183,37 +164,31 @@ class Indexing_Tool_Integration implements Integration_Interface {
 		 */
 		$data = \apply_filters( 'wpseo_indexing_data', $data );
 
-		\wp_localize_script( WPSEO_Admin_Asset_Manager::PREFIX . 'indexation', 'yoastIndexingData', $data );
+		$this->asset_manager->localize_script( 'indexation', 'yoastIndexingData', $data );
 	}
 
 	/**
-	 * Returns the total number of unindexed objects.
+	 * The error to show if optimization failed.
 	 *
-	 * @param int $unindexed_count The total number of unindexed indexables.
-	 *
-	 * @return int The total number of unindexed objects.
+	 * @return string The error to show if optimization failed.
 	 */
-	public function get_unindexed_indexables_count( $unindexed_count = 0 ) {
-		$unindexed_count += $this->post_indexation->get_total_unindexed();
-		$unindexed_count += $this->term_indexation->get_total_unindexed();
-		$unindexed_count += $this->general_indexation->get_total_unindexed();
-		$unindexed_count += $this->post_type_archive_indexation->get_total_unindexed();
-		$unindexed_count += $this->post_link_indexing_action->get_total_unindexed();
-		$unindexed_count += $this->term_link_indexing_action->get_total_unindexed();
+	protected function render_indexing_error() {
+		$presenter = new Indexing_Error_Presenter(
+			$this->short_link_helper,
+			$this->product_helper,
+			$this->addon_manager
+		);
 
-		return $unindexed_count;
+		return $presenter->present();
 	}
 
 	/**
-	 * Returns the total number of unindexed objects and applies a filter for third party integrations.
+	 * Determines if the site has a valid Premium subscription.
 	 *
-	 * @param int $unindexed_count The total number of unindexed objects.
-	 *
-	 * @return int The total number of unindexed objects.
+	 * @return bool If the site has a valid Premium subscription.
 	 */
-	public function get_unindexed_count( $unindexed_count = 0 ) {
-		$unindexed_count = $this->get_unindexed_indexables_count( $unindexed_count );
-		return \apply_filters( 'wpseo_indexing_get_unindexed_count', $unindexed_count );
+	protected function has_valid_premium_subscription() {
+		return $this->addon_manager->has_valid_subscription( WPSEO_Addon_Manager::PREMIUM_SLUG );
 	}
 
 	/**
@@ -229,11 +204,11 @@ class Indexing_Tool_Integration implements Integration_Interface {
 	}
 
 	/**
-	 * Retrieves a list of the endpoints to use.
+	 * Retrieves a list of the indexing endpoints to use.
 	 *
 	 * @return array The endpoints.
 	 */
-	protected function get_endpoints() {
+	protected function get_indexing_endpoints() {
 		$endpoints = [
 			'prepare'            => Indexing_Route::FULL_PREPARE_ROUTE,
 			'terms'              => Indexing_Route::FULL_TERMS_ROUTE,
@@ -250,5 +225,23 @@ class Indexing_Tool_Integration implements Integration_Interface {
 		$endpoints['complete'] = Indexing_Route::FULL_COMPLETE_ROUTE;
 
 		return $endpoints;
+	}
+
+	/**
+	 * Retrieves a list of the importing endpoints to use.
+	 *
+	 * @return array The endpoints.
+	 */
+	protected function get_importing_endpoints() {
+		$available_actions   = $this->importable_detector->detect_importers();
+		$importing_endpoints = [];
+
+		foreach ( $available_actions as $plugin => $types ) {
+			foreach ( $types as $type ) {
+				$importing_endpoints[ $plugin ][] = $this->importing_route->get_endpoint( $plugin, $type );
+			}
+		}
+
+		return $importing_endpoints;
 	}
 }
