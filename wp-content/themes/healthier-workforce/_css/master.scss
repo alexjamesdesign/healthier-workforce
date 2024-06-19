@@ -1974,6 +1974,11 @@ body.page-template-page-remote-surveillance-page {
     margin-bottom: 20px;
 }
 
+.accordion {
+    max-width: 800px; 
+    margin: 0 auto;
+}
+
 .accordion p {
     padding: 0px 0px 10px 0px;
 }
@@ -1981,7 +1986,6 @@ body.page-template-page-remote-surveillance-page {
 .accordion-content {
     display: none;
     padding: 15px 20px 30px 20px;
-    max-width: 800px;
     margin: 0 auto;
     background: #fff;
     width: 100%;
@@ -1995,7 +1999,6 @@ body.page-template-page-remote-surveillance-page {
     cursor: pointer; 
     width: 100%;
     display: block;
-    max-width: 800px;
     margin: 0 auto;
     padding: 10px 25px;
     background: $logodeepblue;
