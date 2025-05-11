@@ -1687,6 +1687,20 @@ footer[role="contentinfo"] {
     padding: 1.5em;
     color: $sandyyellow;
 
+    #menu-locations {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+
+        li {
+            width: 100%;
+
+            @include bp800 {
+                width: 25%;
+            }
+        }
+    }
+
     .grid {
         margin-bottom: 1em;
     }
@@ -2080,3 +2094,8 @@ p.active .accordion-item {
 // Temporarily closed
 @import "partials/_temporarily.closed.scss";
 @import "partials/_news.scss";
+@import "partials/_packages.scss";
+
+html {
+    scroll-behavior: smooth;
+}

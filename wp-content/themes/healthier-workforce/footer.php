@@ -27,17 +27,9 @@
             </ul>
             <?php get_template_part('_parts/theme-parts/social-links'); ?>
         </div>
- 
-            
-        <div class="grid grid3_12">
-            <p class="title">Areas We Cover</p>
-            <?php wp_nav_menu( array('menu' => 'Locations', 'menu_class' => '', 'container' => '' )); ?>
-            <ul>
-            </ul>  
-        </div>
             
 
-        <div class="grid grid3_12">
+        <div class="grid grid6_12">
 
             <p class="title">Healthier Workforce</p>
 
@@ -59,11 +51,15 @@
             </ul>
 
         </div>
-
-       
-
         
     </div><!--/.container-->
+
+    <div class="container">
+        <div class="grid grid12_12">
+            <p class="title">Areas We Cover</p>
+            <?php wp_nav_menu( array('menu' => 'Locations', 'menu_class' => '', 'container' => '' )); ?>
+        </div>
+    </div>
 
     <div class="container">
         <ul>

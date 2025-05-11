@@ -1,4 +1,0 @@
-[04-Feb-2023 17:47:44 Europe/London] PHP Fatal error:  Uncaught Error: Call to undefined function get_header() in /home/iamsiuk/healthier-workforce.co.uk/wp-content/themes/healthier-workforce/index.php:2
-Stack trace:
-#0 {main}
-  thrown in /home/iamsiuk/healthier-workforce.co.uk/wp-content/themes/healthier-workforce/index.php on line 2

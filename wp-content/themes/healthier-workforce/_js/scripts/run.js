@@ -100,6 +100,20 @@ jQuery(function ($) {
 			}});
 		});
 
+        // Smooth scroll for anchor links
+        $('a[href*="#"]:not([href="#"])').click(function() {
+            if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 50 // Offset by 50px to account for any fixed headers
+                    }, 800); // 800ms duration for smooth animation
+                    return false;
+                }
+            }
+        });
+
     });
 });
 

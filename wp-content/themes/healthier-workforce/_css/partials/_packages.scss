@@ -1,0 +1,239 @@
+/* Package USPs
+--------------------------------------------------------------- */
+
+.package-usps-container {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: #fdf4dc;
+    padding: 100px 0px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.package-usps-heading {
+    display: block;
+    text-align: center;
+    font-size: 3.3em;
+    font-weight: 700;
+    margin: 0 auto 20px auto!important;
+    color: $logodeepblue;
+}
+
+.package-button {
+    margin: 20px auto 0 auto;
+    text-align: center;
+    padding: 11px 22px 26px 22px!important;
+    position: relative;
+
+    &::before {
+        content: "\f107";
+        position: absolute;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        font: 1.5em / 1 FontAwesome;
+        color: #fff;
+    }
+
+    &::after {
+        display: none!important;
+    }
+}
+
+.package-usps {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: left;
+    padding: 20px 0px 0px 0px;
+    transition: box-shadow 0.3s ease;
+    margin: 10px auto 10px auto;
+
+    @include bp800 {
+        flex-wrap: nowrap;
+        justify-content: center;
+    }
+
+    li {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 0.8em 1.5em;
+        font-size: 1.2em;
+        color: $logodeepblue;
+        text-align: center;
+
+        @include bp800 {
+            align-items: center;
+        }
+
+        img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px!important; 
+        }
+
+        span {
+            color: $logodeepblue;
+        }
+
+        span.package-usp-heading {
+            display: block;
+            width: 100%;
+            border-bottom: 1px solid $logodeepblue;
+            font-weight: 700;
+            font-size: 1.4em;
+            padding: 10px 0px 10px 0px;
+        }
+
+        span.package-usp-text {
+            padding: 10px 0px 10px 0px;
+        }
+    }
+}
+
+/* Package Items
+--------------------------------------------------------------- */
+
+.package-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 80px 10px;
+    background: $logodeepblue;
+
+    @include bp800 {
+        //flex-wrap: nowrap;
+        justify-content: center;
+    }
+
+    li {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: left;
+        align-items: flex-start;
+        padding: 0.8em 1.5em;
+        font-size: 1.2em;
+        color: $logodeepblue;
+        text-align: left;
+        max-width: 900px;
+        margin-bottom: 60px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        background: #fff;
+
+        @include bp800 {
+            align-items: center;
+        }
+
+        &:first-of-type {
+            border-left: 10px solid #4FA397;
+
+            span.package-usp-heading {
+                color: #4FA397;
+            }
+
+            img {
+                border: 5px solid #4FA397;
+            }
+        }
+
+        &:nth-of-type(2) {
+            border-left: 10px solid #8873A2;
+
+            span.package-usp-heading {
+                color: #8873A2;
+            }
+
+            img {
+                border: 5px solid #8873A2;
+            }
+        }
+
+        &:nth-of-type(3) {
+            border-left: 10px solid #3871A2;
+
+            span.package-usp-heading {
+                color: #3871A2;
+            }
+
+            img {
+                border: 5px solid #3871A2;
+            }
+        }
+
+        img {
+            width: 75px;
+            height: 75px;
+            margin-right: 10px!important; 
+            margin-top: 10px;
+            padding: 5px;
+            border-radius: 70px;
+        }
+
+        span.heading-group {
+            display: flex;
+
+            span.package-usp-heading {
+                display: block;
+                width: 100%;
+                font-weight: 700;
+                font-size: 1.8em;
+            }
+    
+            span.package-usp-subheading {
+                display: block;
+                width: 100%;
+                font-weight: 700;
+                font-size: 1.1em;
+            }
+        }
+
+        span {
+            color: $logodeepblue;
+        }
+
+        span.package-usp-text {
+            padding: 10px 0px 10px 0px;
+        }
+    }
+}
+
+/* Package Table
+--------------------------------------------------------------- */
+
+.package-table-container {
+    width: 100%;
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+  
+      th,
+      td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+      }
+  
+      th {
+        background: #f0f0f0;
+      }
+  
+      .energy {
+        background-color: #d1f5e0;
+      }
+  
+      .power {
+        background-color: #e4daf7;
+      }
+  
+      .strength {
+        background-color: #d3e5f5;
+      }
+  
+      .check {
+        text-align: center;
+        color: green;
+      }
+}
+
