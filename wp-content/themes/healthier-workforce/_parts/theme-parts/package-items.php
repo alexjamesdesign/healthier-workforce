@@ -26,6 +26,10 @@
         </span>
 
         <span class="package-usp-text"><?php echo $PackageText; ?></span>
+
+        <div class="package-contact-link">
+            <a class="btn btn-sandyyellow" href="<?php echo esc_url( home_url( '/contact' ) ); ?>">Get In Touch</a>
+        </div>
     </li>
 
 <?php endwhile; ?>

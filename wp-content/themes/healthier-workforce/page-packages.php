@@ -27,6 +27,26 @@
 
 </div>
 
+<section>
+
+	<div class="container flexbox800">
+
+		<div class="grid grid6_12 box box-logodeepblue get-in-touch">
+
+			<?php get_template_part('_parts/cta-bottom'); ?>
+
+		</div>
+
+		<div class="grid grid6_12 box box-logodeepblue map">
+
+			<?php get_template_part('_parts/map'); ?>
+
+		</div>
+
+	</div>
+
+</section>
+
 <?php get_template_part('_parts/separator'); ?>
 	
 <?php get_footer(); ?>

@@ -434,11 +434,11 @@ li.social-nav-item {
                     z-index: 2000;
 
                     @include bp1200 {
-                        width: 550px;
+                        width: 350px;
                     }
 
                     li {
-                        width: 50%;
+                        width: 100%;
                         float: left;
                     }
 
@@ -453,6 +453,7 @@ li.social-nav-item {
                         border-bottom: 1px solid rgba(255,255,255,.1);
                         color: $blanc;
                         font-size: 1em;
+                        padding: 20px;
                         background: $logodeepblue;
 
                         &:hover {

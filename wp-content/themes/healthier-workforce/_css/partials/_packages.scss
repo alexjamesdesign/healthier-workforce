@@ -16,6 +16,8 @@
     font-weight: 700;
     margin: 0 auto 20px auto!important;
     color: $logodeepblue;
+    line-height: 3.7rem;
+    padding: 0 15px;
 }
 
 .package-button {
@@ -83,6 +85,7 @@
             font-weight: 700;
             font-size: 1.4em;
             padding: 10px 0px 10px 0px;
+            line-height: 3.7rem!important;
         }
 
         span.package-usp-text {
@@ -111,7 +114,7 @@
         flex-wrap: wrap;
         justify-content: left;
         align-items: flex-start;
-        padding: 0.8em 1.5em;
+        padding: 20px 25px;
         font-size: 1.2em;
         color: $logodeepblue;
         text-align: left;
@@ -122,6 +125,7 @@
 
         @include bp800 {
             align-items: center;
+            padding: 30px 35px;
         }
 
         &:first-of-type {
@@ -163,7 +167,7 @@
         img {
             width: 75px;
             height: 75px;
-            margin-right: 10px!important; 
+            margin-right: 15px!important; 
             margin-top: 10px;
             padding: 5px;
             border-radius: 70px;
@@ -194,6 +198,10 @@
         span.package-usp-text {
             padding: 10px 0px 10px 0px;
         }
+
+        .btn {
+            font-size: 1.0rem;
+        }
     }
 }
 
@@ -202,10 +210,18 @@
 
 .package-table-container {
     width: 100%;
+    padding: 30px 10px;
+    background: $fadedsandyyellow;
+
+    @include bp800 {
+        padding: 80px;
+    }
 
     table {
         width: 100%;
         border-collapse: collapse;
+        background: #fff;
+        margin-top: 50px;
       }
   
       th,
