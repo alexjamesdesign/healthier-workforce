@@ -7,21 +7,27 @@
     font-weight: 700;
     text-decoration: underline;
     color: $logodeepblue;
-    margin: 0.5em 0 0 0!important;
+    margin: 0.5em 0 0 0 !important;
 }
 
 .nf-before-form-content {
     margin-bottom: 1em;
 }
 
+.nf-field-description {
+    margin-bottom: 15px;
+}
+
 nf-fields-wrap {
     display: flex;
     flex-wrap: wrap;
+
     // Callback submit
     #nf-field-13 {
         background: $logodeepblue;
         color: $blanc;
     }
+
     //Contact cubmit
     #nf-field-4 {
         background: $blanc;

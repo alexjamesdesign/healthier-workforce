@@ -1,0 +1,131 @@
+/* Video Modal Styles */
+
+.video-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+
+    &.is-open {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+.video-modal-container {
+    background: #000;
+    width: 100%;
+    max-width: 900px;
+    /* Adjust as needed */
+    position: relative;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    animation: modalSlideIn 0.3s ease-out;
+
+    // Maintain aspect ratio wrapper if useful, but auto-height is safer for mixed content
+    // aspect-ratio: 16 / 9; 
+}
+
+.video-modal-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+
+    // Ensure iframes and videos fill the space nicely
+    // Ensure iframes and videos fill the space nicely
+    iframe,
+    video,
+    .video-player,
+    .aiovg-player-container,
+    .aiovg-player,
+    aiovg-video {
+        width: 100% !important;
+        height: auto;
+        display: block;
+        max-height: 80vh;
+    }
+
+    /* Fix for All-in-One Video Gallery Intrinsic Ratio */
+    .aiovg-player,
+    aiovg-video {
+        position: relative !important;
+        height: 0 !important;
+        /* Required for the padding-bottom hack to work correctly */
+        overflow: hidden !important;
+    }
+
+    .aiovg-player iframe,
+    .aiovg-player video,
+    .aiovg-player .video-js {
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+}
+
+.video-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 30px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 5px;
+    opacity: 0.8;
+    transition: opacity 0.2s;
+
+    &:hover {
+        opacity: 1;
+    }
+
+    @media (min-width: 768px) {
+        top: -30px;
+        right: -30px;
+    }
+}
+
+/* Prevent body scroll when modal is open */
+body.modal-open {
+    overflow: hidden;
+}
+
+@keyframes modalSlideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Helper to hide content without display:none (so iframes load in BG) */
+.video-modal-hidden-source {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+}
