@@ -45,7 +45,7 @@ HTML;
         $errors = $this->parse($this->_form->getErrors());
         if(!empty($errors)) {
             header("Content-type: application/json");
-            echo wp_kses_post(json_encode(array("errors" => $errors)));
+            echo wp_kses_post((string)json_encode(array("errors" => $errors)));
         }
     }
 }

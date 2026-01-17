@@ -104,9 +104,9 @@ class RM_Frontend_Form_Multipage extends RM_Frontend_Form_Base
         if (!$this->preview && empty($edit_submission) && $this->is_expired())
         {
             if ($this->form_options->form_message_after_expiry)
-                echo wp_kses_post($this->form_options->form_message_after_expiry);
+                echo wp_kses_post((string)$this->form_options->form_message_after_expiry);
             else
-                echo '<div class="rm-no-default-from-notification">'.wp_kses_post(RM_UI_Strings::get('MSG_FORM_EXPIRY')).'</div>';
+                echo '<div class="rm-no-default-from-notification">'.wp_kses_post((string)RM_UI_Strings::get('MSG_FORM_EXPIRY')).'</div>';
             echo '</div>';
             return;
         }
@@ -143,7 +143,7 @@ class RM_Frontend_Form_Multipage extends RM_Frontend_Form_Base
             if (count($this->fields) !== 0)
                 $form->render();
             else
-                echo wp_kses_post(RM_UI_Strings::get('MSG_NO_FIELDS'));
+                echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_FIELDS'));
         } else {
             $this->base_render($form);
         }
@@ -204,18 +204,18 @@ class RM_Frontend_Form_Multipage extends RM_Frontend_Form_Base
             return $addon_form_multipage->prepare_fields_for_render($form,$this,$editing_sub);
         }
         
-        if(isset($_GET['form_prev']) && current_user_can('manage_options')) {
+        if(isset($_GET['form_prev'])) {
             if($this->form_type == 0) {
-                $form->addElement(new Element_HTML("<div class=\"rm-form-preview-notice\">".__("Since you are already logged in, Email Field cannot be edited. <span>This message is only visible to site admin.</span>", 'custom-registration-form-builder-with-submission-manager')."</div>"));
+                $form->addElement(new Element_HTML("<div class=\"rm-form-preview-notice\">".__("Since you are already logged in, Email Field cannot be edited.", 'custom-registration-form-builder-with-submission-manager')."</div>"));
             } else {
                 if($this->form_options->hide_username == 1 && isset($this->fields['pwd'])) {
-                    $form->addElement(new Element_HTML("<div class=\"rm-form-preview-notice\">".__("Since you are already logged in, Email and Password Fields cannot be edited. <span>This message is only visible to site admin.</span>", 'custom-registration-form-builder-with-submission-manager')."</div>"));
+                    $form->addElement(new Element_HTML("<div class=\"rm-form-preview-notice\">".__("Since you are already logged in, Email and Password Fields cannot be edited.", 'custom-registration-form-builder-with-submission-manager')."</div>"));
                 } elseif($this->form_options->hide_username == 0 && isset($this->fields['pwd'])) {
-                    $form->addElement(new Element_HTML("<div class=\"rm-form-preview-notice\">".__("Since you are already logged in, Username, Email and Password Fields cannot be edited. <span>This message is only visible to site admin.</span>", 'custom-registration-form-builder-with-submission-manager')."</div>"));
+                    $form->addElement(new Element_HTML("<div class=\"rm-form-preview-notice\">".__("Since you are already logged in, Username, Email and Password Fields cannot be edited.", 'custom-registration-form-builder-with-submission-manager')."</div>"));
                 } elseif($this->form_options->hide_username == 1 && !isset($this->fields['pwd'])) {
-                    $form->addElement(new Element_HTML("<div class=\"rm-form-preview-notice\">".__("Since you are already logged in, Email Field cannot be edited. <span>This message is only visible to site admin.</span>", 'custom-registration-form-builder-with-submission-manager')."</div>"));
+                    $form->addElement(new Element_HTML("<div class=\"rm-form-preview-notice\">".__("Since you are already logged in, Email Field cannot be edited.", 'custom-registration-form-builder-with-submission-manager')."</div>"));
                 } elseif($this->form_options->hide_username == 0 && !isset($this->fields['pwd'])) {
-                    $form->addElement(new Element_HTML("<div class=\"rm-form-preview-notice\">".__("Since you are already logged in, Username and Email Fields cannot be edited. <span>This message is only visible to site admin.</span>", 'custom-registration-form-builder-with-submission-manager')."</div>"));
+                    $form->addElement(new Element_HTML("<div class=\"rm-form-preview-notice\">".__("Since you are already logged in, Username and Email Fields cannot be edited.", 'custom-registration-form-builder-with-submission-manager')."</div>"));
                 }
             }
         }
@@ -245,7 +245,7 @@ class RM_Frontend_Form_Multipage extends RM_Frontend_Form_Base
                                 if(!empty($row->heading))
                                     $form->addElement(new Element_HTML('<div class="rmagic-heading">'.$row->heading.'</div>'));
                                 if(!empty($row->subheading))
-                                    $form->addElement(new Element_HTML('<div class="rmagic-subheading">'.$row->subheading.'</div>'));
+                                    $form->addElement(new Element_HTML('<div class="rmagic-subheading">'.nl2br($row->subheading).'</div>'));
                                 if($row->gutter == 10)
                                     $form->addElement(new Element_HTML('<div class="rmagic-fields-wrap">'));
                                 else
@@ -272,10 +272,13 @@ class RM_Frontend_Form_Multipage extends RM_Frontend_Form_Base
                                 }
                                 $field_counter = 1;
                                 foreach($row->fields as $field) {
-                                    if($row->columns == '2:1' && $field_counter == 1)
+                                    if($row->columns == '2:1' && $field_counter == 1) {
                                         $form->addElement(new Element_HTML('<div class="rmagic-col rmagic-col-8">'));
-                                    else
+                                    } else if(isset($field->field_options['id']) && $field->field_options['id'] == 'rm_reg_form_pw_reentry' && $field->field_model->field_options->cnf_pass_position == 'below') {
+                                        // Doing nothing
+                                    } else {
                                         $form->addElement(new Element_HTML('<div class="rmagic-col '.$col_class.'">'));
+                                    }
                                     if(empty($field)) {
                                         $form->addElement(new Element_HTML("</div>"));
                                         $field_counter++;
@@ -377,9 +380,9 @@ class RM_Frontend_Form_Multipage extends RM_Frontend_Form_Base
             $sub_btn_label = __('Update','custom-registration-form-builder-with-submission-manager');
         }
 
-        $form->addElement(new Element_Button(stripslashes($sub_btn_label), "submit", array(
+        $form->addElement(new Element_Button(stripslashes((string)$sub_btn_label), "submit", array(
 "style" => isset($this->form_options->style_btnfield)?$this->form_options->style_btnfield:null,"name"=>"rm_sb_btn","id"=>"rm_next_form_page_button_".$this->form_id.'_'.$this->form_number,"class"=>"rm_next_btn")));
-        $form->addElement(new Element_Button(stripslashes($sub_btn_label), "submit", array(
+        $form->addElement(new Element_Button(stripslashes((string)$sub_btn_label), "submit", array(
 "style" => isset($this->form_options->style_btnfield)?$this->form_options->style_btnfield:null,"name"=>"rm_sb_btn","class"=>"rm_noscript_btn")));
         $this->insert_JS($form);
     }
@@ -415,8 +418,8 @@ class RM_Frontend_Form_Multipage extends RM_Frontend_Form_Base
             $addon_form_multipage = new RM_Frontend_Form_Multipage_Addon();
             return $addon_form_multipage->insert_JS($form,$this);
         }
-        if(is_admin()) // Restricting front js loading in dashboard.
-            return;
+        //if(is_admin()) // Restricting front js loading in dashboard.
+            //return;
         
         $max_page_count = 1;
         $form_identifier = "form_".$this->get_form_id();
@@ -425,6 +428,7 @@ class RM_Frontend_Form_Multipage extends RM_Frontend_Form_Base
         
         $jqvalidate = RM_Utilities::enqueue_external_scripts('rm_jquery_validate', RM_BASE_URL."public/js/jquery.validate.min.js", array('jquery'));
         $jqvalidate .= RM_Utilities::enqueue_external_scripts('rm_jquery_validate_add', RM_BASE_URL."public/js/additional-methods.min.js", array('jquery'));
+        $jqvalidate .= RM_Utilities::enqueue_external_scripts('rm_password_utility', RM_BASE_URL."public/js/password-utility.js", array('jquery'));
         $jq_front_form_script = RM_Utilities::enqueue_external_scripts('rm_front_form_script', RM_BASE_URL."public/js/rm_front_form.js", array('jquery'));
         wp_enqueue_script('rm_front');
         wp_enqueue_script('rm_jquery_conditionalize');
@@ -481,7 +485,7 @@ function gotonext_'.esc_html($form_identifier).'_'.esc_html($this->form_number).
                 
             if(!valid)
             {
-                setTimeout(function(){ submit_btn.prop(\'disabled\',false); }, 1000);
+                setTimeout(function(){ submit_btn.prop(\'disabled\',false); submit_btn.addClass(\'rm-submit-btn-show\'); }, 1000);
                 var error_element= jQuery(document).find("input.rm-form-field-invalid-msg")[0];
                 if(error_element){
                     error_element.focus();

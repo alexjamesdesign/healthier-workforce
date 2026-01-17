@@ -71,7 +71,7 @@ class RM_Frontend_Field_GGeo extends RM_Frontend_Field_Base
                 
                 $this->field_options['state_type']= $field_options->ca_state_type;
                 $this->field_options['label_as_placeholder']= $field_options->field_ca_label_as_placeholder;
-                $this->field_options['countries']= explode(',',$field_options->field_ca_country_limited);
+                $this->field_options['countries']= explode(',',(string)$field_options->field_ca_country_limited);
                 $this->field_options['state_as_code']= empty($field_options->field_ca_state_codes) ? 0 : 1;
                 $this->field_options['country_search_enabled']= empty($field_options->field_ca_en_country_search) ? 0 : 1; 
             }

@@ -22,6 +22,7 @@ abstract class RM_Frontend_Form_Base
     public $contains_price_fields;
     public $form_number;//Keeps track of the how many of the same forms have been rendered
     public $ignore_expiration;
+    public $primary_field_indices;
     public $preview= false;
 
     //Submission related function, must be implemented by child class
@@ -177,19 +178,19 @@ abstract class RM_Frontend_Form_Base
     {
         $row_class = empty($this->rows) ? '.rmrow' : '.rmagic-row';
         $important = ' !important';
-        $p_css = str_replace("::-", ' #form_' . $this->form_id . "_" . $this->form_number .' ::-', $this->form_options->placeholder_css);
-        echo '<style>'.str_replace("}:-", '} #form_' . wp_kses_post($this->form_id) . "_" . wp_kses_post($this->form_number) .' ::-', wp_kses_post($p_css)).'</style>';
+        $p_css = str_replace("::-", ' #form_' . $this->form_id . "_" . $this->form_number .' ::-', (string)$this->form_options->placeholder_css);
+        echo '<style>'.str_replace("}:-", '} #form_' . wp_kses_post((string)$this->form_id) . "_" . wp_kses_post((string)$this->form_number) .' ::-', wp_kses_post((string)$p_css)).'</style>';
         echo '<style>';
         if($this->form_options->style_btnfield)
-            echo '.rmagic #form_' . wp_kses_post($this->form_id) . "_" . wp_kses_post($this->form_number) .' .buttonarea input[type="submit"] {'.wp_kses_post($this->form_options->style_btnfield).wp_kses_post($important).'}';
+            echo '.rmagic #form_' . wp_kses_post((string)$this->form_id) . "_" . wp_kses_post((string)$this->form_number) .' .buttonarea input[type="submit"] {'.wp_kses_post((string)$this->form_options->style_btnfield).wp_kses_post((string)$important).'}';
         if($this->form_options->btn_hover_color)
-            echo '.rmagic #form_' . wp_kses_post($this->form_id) . "_" . wp_kses_post($this->form_number) .' .buttonarea input[type="submit"]:hover{ background-color:'.wp_kses_post($this->form_options->btn_hover_color).wp_kses_post($important).';}';
+            echo '.rmagic #form_' . wp_kses_post((string)$this->form_id) . "_" . wp_kses_post((string)$this->form_number) .' .buttonarea input[type="submit"]:hover{ background-color:'.wp_kses_post((string)$this->form_options->btn_hover_color).wp_kses_post((string)$important).';}';
         if($this->form_options->field_bg_focus_color || $this->form_options->text_focus_color){
-            echo '.rmagic #form_' . wp_kses_post($this->form_id) . "_" . wp_kses_post($this->form_number) .' ' . wp_kses_post($row_class) . ' input:focus,.rmagic #form_'.wp_kses_post($this->form_id).'_'.wp_kses_post($this->form_number).' ' . wp_kses_post($row_class) . ' select:focus,.rmagic #form_'.wp_kses_post($this->form_id).'_'.wp_kses_post($this->form_number).' ' . wp_kses_post($row_class) . ' textarea:focus{';
+            echo '.rmagic #form_' . wp_kses_post((string)$this->form_id) . "_" . wp_kses_post((string)$this->form_number) .' ' . wp_kses_post((string)$row_class) . ' input:focus,.rmagic #form_'.wp_kses_post((string)$this->form_id).'_'.wp_kses_post((string)$this->form_number).' ' . wp_kses_post((string)$row_class) . ' select:focus,.rmagic #form_'.wp_kses_post((string)$this->form_id).'_'.wp_kses_post((string)$this->form_number).' ' . wp_kses_post((string)$row_class) . ' textarea:focus{';
             if($this->form_options->field_bg_focus_color)
-                echo 'background-color:'.wp_kses_post($this->form_options->field_bg_focus_color).wp_kses_post($important).';';
+                echo 'background-color:'.wp_kses_post((string)$this->form_options->field_bg_focus_color).wp_kses_post((string)$important).';';
             if($this->form_options->text_focus_color)
-                echo 'color:'.wp_kses_post($this->form_options->text_focus_color).wp_kses_post($important).';';
+                echo 'color:'.wp_kses_post((string)$this->form_options->text_focus_color).wp_kses_post((string)$important).';';
             echo '}';
         }
         echo '</style>';
@@ -237,12 +238,12 @@ abstract class RM_Frontend_Form_Base
                 }
 
                 $exp_str .= '</div>';
-                echo wp_kses_post($exp_str);
+                echo wp_kses_post((string)$exp_str);
             }
         }
         echo('<div class="rmcontent">');
         if ($this->custom_pre_str !== '' || $this->custom_pre_str)
-            echo wp_kses_post($this->custom_pre_str);
+            echo wp_kses_post((string)$this->custom_pre_str);
     }
 
     public function prepare_fields_for_render($form)
@@ -293,13 +294,13 @@ abstract class RM_Frontend_Form_Base
         if (count($this->fields) !== 0)
             $form->render();
         else
-            echo wp_kses_post(RM_UI_Strings::get('MSG_NO_FIELDS'));
+            echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_FIELDS'));
     }
 
     public function post_render()
     {
         if ($this->custom_post_str !== '' || $this->custom_post_str)
-            echo wp_kses_post($this->custom_post_str);
+            echo wp_kses_post((string)$this->custom_post_str);
 
         echo "</div>";
     }
@@ -334,9 +335,9 @@ abstract class RM_Frontend_Form_Base
         } else
         {
             if ($this->form_options->form_message_after_expiry)
-                echo wp_kses_post($this->form_options->form_message_after_expiry);
+                echo wp_kses_post((string)$this->form_options->form_message_after_expiry);
             else
-                echo wp_kses_post(RM_UI_Strings::get('MSG_FORM_EXPIRY'));
+                echo wp_kses_post((string)RM_UI_Strings::get('MSG_FORM_EXPIRY'));
         }
 
 

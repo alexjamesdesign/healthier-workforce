@@ -96,16 +96,15 @@ class Bulkedit extends EditFeature {
 	 */
 	public function init_fields() {
 
-		add_filter( 'acf/validate_value', [ $this, 'validate_value'], 10, 4 );
+		add_filter( 'acf/validate_value', [ $this, 'validate_value' ], 10, 4 );
 
-		parent::init_fields();
+		$is_active = parent::init_fields();
 
-		if ( $this->is_active() ) {
-
+		if ( $is_active ) {
 			add_action( 'bulk_edit_custom_box', [ $this , 'display_bulk_edit' ], 200, 2 );
-
 		}
 
+		return $is_active;
 	}
 
 	/**
@@ -116,8 +115,8 @@ class Bulkedit extends EditFeature {
 			&& is_array( $_REQUEST['acf'] )
 			&& isset( $_REQUEST['acf'][ $this->get_bulk_operation_key() ] )
 			&& is_array( $_REQUEST['acf'][ $this->get_bulk_operation_key() ] )
-			&& isset( $_REQUEST['acf'][ $this->get_bulk_operation_key() ][ $field_key] )
-			&& ! empty( $_REQUEST['acf'][ $this->get_bulk_operation_key() ][ $field_key] );
+			&& isset( $_REQUEST['acf'][ $this->get_bulk_operation_key() ][ $field_key ] )
+			&& ! empty( $_REQUEST['acf'][ $this->get_bulk_operation_key() ][ $field_key ] );
 	}
 
 	/**
@@ -125,7 +124,7 @@ class Bulkedit extends EditFeature {
 	 */
 	public function get_bulk_operation( $field_key ) {
 		return $this->is_bulk_operation( $field_key )
-		 	? $_REQUEST['acf'][ $this->get_bulk_operation_key() ][ $field_key]
+			? sanitize_text_field( wp_unslash( $_REQUEST['acf'][ $this->get_bulk_operation_key() ][ $field_key ] ) ) // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotValidated -- already checked in is_bulk_operation()
 			: false;
 	}
 
@@ -200,8 +199,7 @@ class Bulkedit extends EditFeature {
 			//
 			$data = array_filter( $data, [ $this, 'filter_commands' ] );
 			array_walk( $data, [ $this, 'process_data' ], $post_id );
-
-			$data = array_filter( $data, [ $this, 'filter_ampty_array' ] );
+			$data = array_filter( $data, [ $this, 'filter_empty_array' ] );
 		}
 
 		$op = $this->get_bulk_operation( $key );
@@ -222,7 +220,7 @@ class Bulkedit extends EditFeature {
 	/**
 	 *	array_filter callback - returns false for empty arrays
 	 */
-	private function filter_ampty_array( $el ) {
+	private function filter_empty_array( $el ) {
 		return ! is_array( $el ) || ( count( $el ) > 0 );
 	}
 }

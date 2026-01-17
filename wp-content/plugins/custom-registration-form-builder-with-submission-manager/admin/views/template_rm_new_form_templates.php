@@ -82,7 +82,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                             }
                                             ?>
                                         </div>
-                                        <p><?php echo wp_kses_post($template['description']);?></p>
+                                        <p><?php echo wp_kses_post((string)$template['description']);?></p>
                                         <div class="rm-form-template-link"><a href="#" class="rm-form-template-demo">Live Preview<span class="material-icons"> launch </span></a></div>
                                     </div>
                                     <div class="rm-temp-footer">
@@ -108,11 +108,16 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                             }
                                         ?>
                                         <span class="material-icons"> workspace_premium </span><?php _e('Premium Template','custom-registration-form-builder-with-submission-manager');?></div>
-                                   <p><?php echo wp_kses_post($template['description']);?></p>
+                                   <p><?php echo wp_kses_post((string)$template['description']);?></p>
                                     <div class="rm-form-template-link"><a href="#" class="rm-form-template-demo">Live Preview<span class="material-icons"> launch </span></a></div>
                                 </div>
                                 <div class="rm-temp-footer">
-                                    <a href="https://registrationmagic.com/comparison/?utm_source=rm_plugin&utm_medium=form_template_modal&utm_campaign=form_template_upgrade" target="_blank" class="rm-form-template-btn"><?php _e('Upgrade','custom-registration-form-builder-with-submission-manager');?></a> 
+                                    <!--
+                                    <a href="https://registrationmagic.com/comparison/?utm_source=rm_plugin&utm_medium=form_template_modal&utm_campaign=form_template_upgrade" target="_blank" class="rm-form-template-btn">
+                                    -->
+                                    <a href="admin.php?page=rm_support_premium_page" class="rm-form-template-btn">
+                                        <?php esc_html_e('Upgrade','custom-registration-form-builder-with-submission-manager'); ?>
+                                    </a>
                                 </div>
                             </div>
                         </li>

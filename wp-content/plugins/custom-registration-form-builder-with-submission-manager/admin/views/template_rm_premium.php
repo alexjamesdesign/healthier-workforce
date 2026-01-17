@@ -439,6 +439,12 @@ $rm_premium_image_url = RM_IMG_URL . "pro/";
                     <div class="rm_pr_feature_title"><?php _e("Invoices and Payments Ext.", 'custom-registration-form-builder-with-submission-manager'); ?></div>
                     <div class="rm_pr_feature_desc" style=""><?php _e("A separate area to filter and manage form payments with support for custom invoicing.", 'custom-registration-form-builder-with-submission-manager'); ?></div>
                 </div> 
+                
+                <div class="rm_pr_block_small">
+                    <div class="rm_pr_feature_icon"><i class="material-icons">door_sliding</i></div>
+                    <div class="rm_pr_feature_title"><?php _e("Turnstile Antispam Security Ext.", 'custom-registration-form-builder-with-submission-manager'); ?></div>
+                    <div class="rm_pr_feature_desc" style=""><?php _e("Protect your forms from spam bots with Cloudflare Turnstile's advanced, non-intrusive detection system. Ensure a smooth user experience while maintaining privacy-focused security.", 'custom-registration-form-builder-with-submission-manager'); ?></div>
+                </div> 
 
      
 
@@ -447,7 +453,7 @@ $rm_premium_image_url = RM_IMG_URL . "pro/";
           
         </div>
             
-                <div class="rm_pr_row">
+            <div class="rm_pr_row" style="display: none;">
                 <div class="rm_pr_banner_wrap">
           <div class="rm_pr_banner-title">
               <?php _e("Ready to add massive power to your forms?",'custom-registration-form-builder-with-submission-manager'); ?>

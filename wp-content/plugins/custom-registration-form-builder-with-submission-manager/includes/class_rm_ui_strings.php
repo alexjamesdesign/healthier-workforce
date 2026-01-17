@@ -114,7 +114,7 @@ class RM_UI_Strings {
                 return __('Note Text', 'custom-registration-form-builder-with-submission-manager');
 
             case 'LABEL_ADD_OTHER':
-                return sprintf(__("Allow users to input custom value. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/new-field/#htoptions');
+                return __("Allow users to input custom value. ", 'custom-registration-form-builder-with-submission-manager');
 
             case 'MAIL_REGISTRAR_DEF_SUB':
                 return __('Your Submission', 'custom-registration-form-builder-with-submission-manager');
@@ -156,7 +156,7 @@ class RM_UI_Strings {
                 return sprintf(__("This text will appear with the opt-in checkbox. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/mailchimp-integration-2/#htmcoptintext');
             
             case 'LABEL_WORDPRESS_DEFAULT':
-                 return __('Wordpress Default:', 'custom-registration-form-builder-with-submission-manager');
+                 return __('WordPress Default', 'custom-registration-form-builder-with-submission-manager');
                  
              case 'LABEL_WORDPRESS_DEFAULT_EMAIL_To':
                  return __('To:', 'custom-registration-form-builder-with-submission-manager');
@@ -412,6 +412,9 @@ class RM_UI_Strings {
             case 'LABEL_UNIQUE_TOKEN':
                 return __('Display a Unique Token Number', 'custom-registration-form-builder-with-submission-manager');
 
+            case 'LABEL_UNIQUE_TOKEN_OPT':
+                return __('Unique Token Type', 'custom-registration-form-builder-with-submission-manager');
+
             case 'LABEL_USER_REDIRECT':
                 return __('Redirection', 'custom-registration-form-builder-with-submission-manager');
 
@@ -567,7 +570,7 @@ class RM_UI_Strings {
                 return __('Required Field', 'custom-registration-form-builder-with-submission-manager');
 
             case 'LABEL_SHOW_ON_USER_PAGE':
-                return __('Display in Frontend User Area', 'custom-registration-form-builder-with-submission-manager');
+                return __('Display in User Area', 'custom-registration-form-builder-with-submission-manager');
 
             case 'LABEL_PARAGRAPF_TEXT':
                 return __('Paragraph Text', 'custom-registration-form-builder-with-submission-manager');
@@ -654,7 +657,7 @@ class RM_UI_Strings {
                 return __('Radio Button', 'custom-registration-form-builder-with-submission-manager');
 
             case 'FIELD_TYPE_TEXTAREA':
-                return __('Textarea', 'custom-registration-form-builder-with-submission-manager');
+                return __('Text Area', 'custom-registration-form-builder-with-submission-manager');
 
             case 'FIELD_TYPE_CHECKBOX':
                 return __('Checkbox', 'custom-registration-form-builder-with-submission-manager');
@@ -667,6 +670,9 @@ class RM_UI_Strings {
 
             case 'FIELD_TYPE_EMAIL':
                 return __('Email', 'custom-registration-form-builder-with-submission-manager');
+
+            case 'FIELD_TYPE_URL':
+                return __('URL', 'custom-registration-form-builder-with-submission-manager');
 
             case 'FIELD_TYPE_NUMBER':
                 return __('Number', 'custom-registration-form-builder-with-submission-manager');
@@ -790,6 +796,13 @@ class RM_UI_Strings {
             case 'GLOBAL_SETTINGS_GENERAL':
                 return __('General Settings', 'custom-registration-form-builder-with-submission-manager');
                 
+            case 'GLOBAL_SETTINGS_LICENSE':
+                return __('License', 'custom-registration-form-builder-with-submission-manager');
+                
+                case 'GLOBAL_SETTINGS_LICENSE_EXCERPT':
+                return __('Add license keys for auto-updates.', 'custom-registration-form-builder-with-submission-manager');
+
+                    
             case 'GLOBAL_SETTINGS_TABS':
                 return __('Customize User Area Tab', 'custom-registration-form-builder-with-submission-manager');    
                 
@@ -833,7 +846,7 @@ class RM_UI_Strings {
                 return __('Name', 'custom-registration-form-builder-with-submission-manager');
 
             case 'GLOBAL_SETTINGS_PAYMENT_EXCERPT':
-                return __('Currency, Symbol Position, Checkout Page etc.', 'custom-registration-form-builder-with-submission-manager');
+                return __('Currency, Symbol Position, Checkout Page, Tax etc.', 'custom-registration-form-builder-with-submission-manager');
 
             case 'SETTINGS':
                 return __('Settings', 'custom-registration-form-builder-with-submission-manager');
@@ -913,6 +926,9 @@ class RM_UI_Strings {
             case 'LABEL_SEND_PASS_EMAIL':
                 return __('Send Username and Password to the User through Email', 'custom-registration-form-builder-with-submission-manager');
 
+            case 'LABEL_ACTIVATION_EMAIL':
+                return __('Send Account Activation Email to the User', 'custom-registration-form-builder-with-submission-manager');
+
             case 'LABEL_REGISTER_APPROVAL':
                 return __('WordPress Registration Auto Approval', 'custom-registration-form-builder-with-submission-manager');
 
@@ -923,7 +939,7 @@ class RM_UI_Strings {
                 return __('Notify Site Admin', 'custom-registration-form-builder-with-submission-manager');
 
             case 'LABEL_ENABLE_SMTP':
-                return __('User External SMTP', 'custom-registration-form-builder-with-submission-manager');
+                return __('External SMTP', 'custom-registration-form-builder-with-submission-manager');
 
             case 'LABEL_SMTP_HOST':
                 return __('SMTP Host', 'custom-registration-form-builder-with-submission-manager');
@@ -1020,6 +1036,9 @@ class RM_UI_Strings {
                 
             case 'LABEL_TAX_PERCENTAGE':
                 return __('Tax Percentage', 'custom-registration-form-builder-with-submission-manager');
+                
+            case 'LABEL_TAX_RENAME':
+                return __('Rename Tax', 'custom-registration-form-builder-with-submission-manager');
 
             case 'LABEL_CURRENCY_SYMBOL_HELP':
                 return sprintf(__("Choose position of the currency sign. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/payments/#htcurrencysymbol');
@@ -1163,7 +1182,7 @@ class RM_UI_Strings {
                 return __('You have not submitted any forms yet.', 'custom-registration-form-builder-with-submission-manager');
 
             case 'USERNAME_EXISTS':
-                return __("This user is already registered. Please try with different username or login.", 'custom-registration-form-builder-with-submission-manager');
+                return __("This username has already been taken. Please try again with a different username.", 'custom-registration-form-builder-with-submission-manager');
 
             case 'P_FIELD_TYPE_FIXED':
                 return __("Fixed", 'custom-registration-form-builder-with-submission-manager');
@@ -1178,7 +1197,9 @@ class RM_UI_Strings {
                 return __("User Defined", 'custom-registration-form-builder-with-submission-manager');
 
             case 'USEREMAIL_EXISTS':
-                return __("This email is already associated with a user account. Please login to fill this form.", 'custom-registration-form-builder-with-submission-manager');
+                $login_service = new RM_Login_Service;
+                $recovery_options = $login_service->get_recovery_options();
+                return sprintf(__("A user account with this email already exists. If it belongs to you, you can reset the password <a href='%s'>here</a>.", 'custom-registration-form-builder-with-submission-manager'), get_permalink($recovery_options['recovery_page']));
 
             case 'USER_EXISTS':
                 return __("This user is already registered. Please try with different username or email.", 'custom-registration-form-builder-with-submission-manager');
@@ -1193,7 +1214,7 @@ class RM_UI_Strings {
                 return __("Support, Feature Requests and Feedback", 'custom-registration-form-builder-with-submission-manager');
 
             case 'MAIL_BODY_NEW_USER_NOTIF':
-                return sprintf(__("Your account has been successfully created on %s. You can now login using following credentials:<br>Username : %s<br>Password : %s.<br><br>If your registration form submission required making a payment, then your account will only be activated after the payment is confirmed.", 'custom-registration-form-builder-with-submission-manager'),'{{SITE_NAME}}','{{USER_NAME}}','{{USER_PASS}}');
+                return sprintf(__("Thank you for registering on <a href='%s' target='_blank'>%s</a>. Your login credentials are:<br><br>Username: %s<br>Password: %s<br><br>If your registration form required payment, your account will be activated after the payment is confirmed.", 'custom-registration-form-builder-with-submission-manager'),'{{SITE_URL}}','{{SITE_URL}}','{{USER_NAME}}','{{USER_PASS}}');
 
             case 'SUBTITLE_SUPPORT_PAGE':
                 return __("For support, please fill in the support form with relevant details.", 'custom-registration-form-builder-with-submission-manager');
@@ -1443,13 +1464,13 @@ class RM_UI_Strings {
                 return __('Registration Activity', 'custom-registration-form-builder-with-submission-manager');
 
             case 'MSG_OTP_SUCCESS':
-                return __("Success! an email with one time password (OTP) was sent to your email address.", 'custom-registration-form-builder-with-submission-manager');
+                return __("Success! an email with one-time password (OTP) was sent to your email address.", 'custom-registration-form-builder-with-submission-manager');
 
             case 'LABEL_OTP':
-                return __("One Time Password", 'custom-registration-form-builder-with-submission-manager');
+                return __("One-Time Password", 'custom-registration-form-builder-with-submission-manager');
 
             case 'OTP_MAIL':
-                return __("Your One Time Password is ", 'custom-registration-form-builder-with-submission-manager');
+                return __("Your One-Time Password is ", 'custom-registration-form-builder-with-submission-manager');
 
             case 'MSG_EMAIL_NOT_EXIST':
                 return __("Oops! We could not find this email address in our submissions database.", 'custom-registration-form-builder-with-submission-manager');
@@ -1495,6 +1516,9 @@ class RM_UI_Strings {
 
             case 'HELP_ADD_FORM_UNIQUE_TOKEN':
                 return sprintf(__("A Unique Token Number/ Unique ID is assigned to the submission and also emailed to the user if auto-reply is turned on. Token number is visible in the submission records. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/post-submission/#httokennumber');
+
+            case 'HELP_ADD_FORM_UNIQUE_TOKEN_OPT':
+                return __("System generated token will be an automatically generated unique number based on various submission parameters. Submission ID will be the unique form submission ID that is saved in the database.", 'custom-registration-form-builder-with-submission-manager');
 
             case 'HELP_ADD_FORM_REDIRECT_AFTER_SUB':
                 return sprintf(__("Redirect the user to a new page after submission (and success message). <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/post-submission/#htredirection');
@@ -1557,7 +1581,7 @@ class RM_UI_Strings {
                 return sprintf(__("User will see this message when accessing the form. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/limits/#htlimitaction');
 
             case 'HELP_ADD_FIELD_SELECT_TYPE':
-                return __("Select  or change type of the field if not already selected.", 'custom-registration-form-builder-with-submission-manager');
+                return __("Select or change type of the field if not already selected.", 'custom-registration-form-builder-with-submission-manager');
 
             case 'HELP_ADD_FIELD_LABEL':
                 return sprintf(__("Label of the field as it appears on forms and inside user accounts. This does not apply to fields without labels like Shortcode field. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/new-field/#htlabel');
@@ -1581,7 +1605,7 @@ class RM_UI_Strings {
                 return sprintf(__("Make this field mandatory to be filled. Form will show user an error if he/ she tries to submit the form without filling this field. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/new-field/#htisreq');
 
             case 'HELP_ADD_FIELD_SHOW_ON_USERPAGE':
-                return sprintf(__("Display's this field's value inside RegistrationMagic's User Manager area. It also displays the value on frontend User Account area created by RegistrationMagic's shortcode. Please note, RegistrationMagic's account area is different from WordPress' user page. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/new-field/#htaddtouser');
+                return sprintf(__("Display this field's value prominently on user's page in admin User Manager section. It will also be displayed prominently in frontend User Area published with [RM_Front_Submissions] shortcode. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/new-field/#htaddtouser');
 
             case 'HELP_ADD_FIELD_PARA_TEXT':
                 return __("The text you want the user to see.", 'custom-registration-form-builder-with-submission-manager');
@@ -1611,7 +1635,7 @@ class RM_UI_Strings {
                 return sprintf(__("Select the product created in &quot;Products&quot; section of RegistrationMagic. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/new-field/#htproduct');
 
             case 'HELP_ADD_FIELD_OPTIONS_COMMASEP':
-                return sprintf(__("Options for drop down list. Separate multiple values with a comma(,). <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/new-field/#htproduct');
+                return sprintf(__("Options for drop down list. Separate multiple values with a comma(,). <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/new-field/#htoptions');
 
             case 'HELP_ADD_FIELD_ENABLE_SEARCH':
                 return sprintf(__("Enable this to allow users to search for a value within the dropdown. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/new-field/#htproduct');
@@ -1626,7 +1650,7 @@ class RM_UI_Strings {
                 return sprintf(__("Select visual style of your forms. Classic applies a set neutral tone which looks pleasing with all kinds of WordPress themes. Match My Theme will let forms pick visual elements automatically from your active WordPress theme. When this is selected, you can also override the design of individual forms in Form Dashboard --> Build --> Design. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/general-settings-2/#htformstyle');
 
             case 'HELP_OPTIONS_GEN_LAYOUT':
-                return sprintf(__("Select position of labels and  and column layout for your forms. Important: This option only applies to forms built with the legacy builder. The new drag and drop builder allows you to define columns for individual rows inside the form and this option has no effect on it. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/general-settings-2/#htlayout');
+                return sprintf(__("Select position of labels and column layout for your forms. Important: This option only applies to forms built with the legacy builder. The new drag and drop builder allows you to define columns for individual rows inside the form and this option has no effect on it. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/general-settings-2/#htlayout');
 
             case 'HELP_OPTIONS_GEN_FILETYPES':
                 return sprintf(__('Restrict the type of files allowed to be attached to your File type fields. You will need to define extension of the file types. For multiple extensions, seperate using pipe "|". <a target=\'_blank\' class=\'rm-more\' href=\'%s\'>More</a>', 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/general-settings-2/#htfiletypes');
@@ -1656,7 +1680,7 @@ class RM_UI_Strings {
                 return sprintf(__("Required to make reCAPTCHA  work. You can generate site key from <a target='blank' class='rm_help_link' href='%s'>here</a>", 'custom-registration-form-builder-with-submission-manager'),'https://www.google.com/recaptcha/');
 
             case 'HELP_OPTIONS_ASPM_SECRET_KEY':
-                return __("Required to make reCAPTCHA  work. It will be provided when you generate site key.", 'custom-registration-form-builder-with-submission-manager');
+                return __("Required to make reCAPTCHA work. It will be provided when you generate site key.", 'custom-registration-form-builder-with-submission-manager');
 
             case 'HELP_OPTIONS_USER_AUTOGEN':
                 return sprintf(__("Creates and sends the users random password instead of allowing them to set one on the form. After selecting this, password field will not appear on the forms. %s", 'custom-registration-form-builder-with-submission-manager'),"<a target='_blank' class='rm-more' href='https://registrationmagic.com/knowledgebase/user-accounts-2/#htautogenpass'>More</a>");
@@ -1743,6 +1767,9 @@ class RM_UI_Strings {
             case 'ADMIN_MENU_REG':
                 return __("RegistrationMagic", 'custom-registration-form-builder-with-submission-manager');
 
+            case 'ADMIN_MENU_REG_SHORT':
+                return __("Registration", 'custom-registration-form-builder-with-submission-manager');
+
             case 'ADMIN_MENU_NEWFORM':
                 return __("New Form", 'custom-registration-form-builder-with-submission-manager');
 
@@ -1806,6 +1833,9 @@ class RM_UI_Strings {
             case 'ADMIN_MENU_MNG_FIELDS_PT':
                 return __("Manage Form Fields", 'custom-registration-form-builder-with-submission-manager');
 
+            case 'ADMIN_MENU_FRM_PREV_PT':
+                return __("Form Preview", 'custom-registration-form-builder-with-submission-manager');
+
             case 'ADMIN_MENU_ADD_FIELD_PT':
                 return __("Add Field", 'custom-registration-form-builder-with-submission-manager');
 
@@ -1850,6 +1880,9 @@ class RM_UI_Strings {
 
             case 'HELP_OPTIONS_USER_SEND_PASS':
                 return sprintf(__("Send users an email with their selected username and password after successful registration. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/user-accounts-2/#htuserpassemail');
+
+            case 'HELP_OPTIONS_USER_ACT_EMAIL':
+                return sprintf(__("Send users email on activation of their account. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/knowledgebase/user-accounts-2/#htuserpassemail');
 
             case 'MSG_CREATE_PRICE_FIELD':
                 return __("First Create a product from Products > Add New", 'custom-registration-form-builder-with-submission-manager');
@@ -1937,7 +1970,7 @@ class RM_UI_Strings {
 
 
             case 'NEWSLETTER_SUB_MSG':
-                return __("<span class='rm-newsletter-button'><a href='javascript:void(0)' onclick='handle_newsletter_subscription_click(\"" . self::get('MSG_NEWSLETTER_SUBMITTED') . "\")'> Click here</a></span> to keep up with breakthroughs and innovations we are bringing to WordPress registration system.", 'custom-registration-form-builder-with-submission-manager');
+                return __("Click here</a></span> to keep up with breakthroughs and innovations we are bringing to WordPress registration system.", 'custom-registration-form-builder-with-submission-manager');
 
             case 'MAIL_ACTIVATE_USER_DEF_SUB':
                 return __("Activate User", 'custom-registration-form-builder-with-submission-manager');
@@ -2200,7 +2233,7 @@ class RM_UI_Strings {
             case 'FIELD_TYPE_FACEBOOK':
                 return __("Facebook", 'custom-registration-form-builder-with-submission-manager');
             case 'FIELD_TYPE_TWITTER':
-                return __("Twitter", 'custom-registration-form-builder-with-submission-manager');
+                return __("X (Formerly Twitter)", 'custom-registration-form-builder-with-submission-manager');
             case 'FIELD_TYPE_GOOGLE':
                 return __("Google+", 'custom-registration-form-builder-with-submission-manager');
             case 'FIELD_TYPE_INSTAGRAM':
@@ -2543,7 +2576,7 @@ class RM_UI_Strings {
                 return __('Large size read only text useful for creating custom headings.', 'custom-registration-form-builder-with-submission-manager');
 
             case 'FIELD_HELP_TEXT_Select':
-                return __('Allows user to choose a value from multiple predefined options displayed as drop down list.', 'custom-registration-form-builder-with-submission-manager');
+                return __('A field that presents a dropdown menu, allowing users to select one option from a list of predefined choices.', 'custom-registration-form-builder-with-submission-manager');
 
             case 'FIELD_HELP_TEXT_Radio':
                 return __('Allows user to choose a value from multiple predefined options displayed as radio boxes.', 'custom-registration-form-builder-with-submission-manager');
@@ -2559,7 +2592,10 @@ class RM_UI_Strings {
 
             case 'FIELD_HELP_TEXT_Email':
                 return __('An additional email field. Please note, primary email field always appears in the form and cannot be removed.', 'custom-registration-form-builder-with-submission-manager');
-
+            
+            case 'FIELD_HELP_TEXT_Url':
+                return __('Allows user to input a URL value.', 'custom-registration-form-builder-with-submission-manager');
+            
             case 'FIELD_HELP_TEXT_Number':
                 return __('Allows user to input value in numbers.', 'custom-registration-form-builder-with-submission-manager');
 
@@ -2579,7 +2615,7 @@ class RM_UI_Strings {
                 return __('Adds product to the form. Products are separately defined in &quot;Products&quot; section of RegistrationMagic. This field type allows you to insert one of the products defined there.', 'custom-registration-form-builder-with-submission-manager');
 
             case 'FIELD_HELP_TEXT_Repeatable':
-                return __('Allows user to add extra text field boxes to the form for submitting different values. Useful where a field requires multiple user input  values. ', 'custom-registration-form-builder-with-submission-manager');
+                return __('Allows user to add extra text field boxes to the form for submitting different values. Useful where a field requires multiple user input values. ', 'custom-registration-form-builder-with-submission-manager');
 
             case 'FIELD_HELP_TEXT_Map':
                 return __('Displays a Map on the form with ability to search and mark an address.', 'custom-registration-form-builder-with-submission-manager');
@@ -2737,19 +2773,19 @@ class RM_UI_Strings {
                 return __("Export", 'custom-registration-form-builder-with-submission-manager');
 
             case 'UPLOAD_XML':
-                return __("Upload Rmagic.xml ", 'custom-registration-form-builder-with-submission-manager');
+                return __("Upload XML File", 'custom-registration-form-builder-with-submission-manager');
 
             case 'UPLOAD_XML_HELP':
-                return __("Upload the backup Rmagic.xml file you had exported earlier, to import all contained data.", 'custom-registration-form-builder-with-submission-manager');
+                return __("Upload the backup form XML file you had exported earlier, to import all contained data.", 'custom-registration-form-builder-with-submission-manager');
 
             case 'CC_ERROR':
-                return __("<div class='rmnotice'>Oops!! Something went wrong.<ul><li>Possible causes:-</li><li>Couldn't access your  constant contact account with the details you have provided in Gloabal settings->External Integrations.</li><li>You have not created any list in your constant contact account.</li></ul></div>", 'custom-registration-form-builder-with-submission-manager');
+                return __("<div class='rmnotice'>Oops!! Something went wrong.<ul><li>Possible causes:</li><li>Couldn't access your constant contact account with the details you have provided in Global Settings -> External Integrations.</li><li>You have not created any list in your constant contact account.</li></ul></div>", 'custom-registration-form-builder-with-submission-manager');
 
             case 'AW_ERROR':
-                return __("<div class='rmnotice'>Oops!! Something went wrong.<ul><li>Possible causes:-</li><li>Couldn't access your  aweber account with the details you have provided in Gloabal settings->External Integrations.</li><li>You have not created any list in your aweber account.</li></ul></div>", 'custom-registration-form-builder-with-submission-manager');
+                return __("<div class='rmnotice'>Oops!! Something went wrong.<ul><li>Possible causes:</li><li>Couldn't access your aweber account with the details you have provided in Gloabal Settings -> External Integrations.</li><li>You have not created any list in your aweber account.</li></ul></div>", 'custom-registration-form-builder-with-submission-manager');
 
             case 'MC_ERROR':
-                return __("<div class='rmnotice'>Oops!! Something went wrong.<ul><li>Possible causes:-</li><li>Couldn't access your  mailchimp account with the details you have provided in Gloabal settings->External Integrations.</li><li>You have not created any list in your mailchimp account.</li></ul></div>", 'custom-registration-form-builder-with-submission-manager');
+                return __("<div class='rmnotice'>Oops!! Something went wrong.<ul><li>Possible causes:</li><li>Couldn't access your mailchimp account with the details you have provided in Gloabal Settings -> External Integrations.</li><li>You have not created any list in your mailchimp account.</li></ul></div>", 'custom-registration-form-builder-with-submission-manager');
 
             case 'RM_ERROR_EXTENSION_CURL_CC':
                 return __("PHP extension CURL is not enabled on server.So Constant Contact will not work.", 'custom-registration-form-builder-with-submission-manager');
@@ -2771,6 +2807,9 @@ class RM_UI_Strings {
 
             case 'LABEL_DEFAULT':
                 return __("Default", 'custom-registration-form-builder-with-submission-manager');
+                
+                case 'FIELD_HELP_TEXT_Custom':
+                return __('Add a generic field with custom validation set below.', 'custom-registration-form-builder-with-submission-manager');
 
             case 'LABEL_SUB_LIMIT_ANTISPAM_HELP_GOLD':
                 return __("Limits how many times a form can be submitted from a device within a day. Helpful to prevent spams. Set it to zero(0) to disable this feature.(Part of GOLD Bundle)", 'custom-registration-form-builder-with-submission-manager');
@@ -3015,7 +3054,7 @@ class RM_UI_Strings {
                 return __("You've reached <span class='rm-submission-mark'>%d</span> submissions...", 'custom-registration-form-builder-with-submission-manager');
 
             case 'USER_MESSAGE':
-                return __("You've reached <span class='rm-submission-mark'>%d</span>  users on your website...", 'custom-registration-form-builder-with-submission-manager');
+                return __("You've reached <span class='rm-submission-mark'>%d</span> users on your website...", 'custom-registration-form-builder-with-submission-manager');
 
             case 'REVIEW_MESSAGE_EVENT1':
                 return __("You've reached <span class='rm-submission-mark'>10</span> submissions...", 'custom-registration-form-builder-with-submission-manager');
@@ -3043,6 +3082,9 @@ class RM_UI_Strings {
 
             case 'LABEL_SHOW_PAYMENT_TAB':
                 return __("Show Payment Tab", 'custom-registration-form-builder-with-submission-manager');
+
+            case 'LABEL_DEFAULT_FORM':
+                return __("Registration Form", 'custom-registration-form-builder-with-submission-manager');
 
             case 'LABEL_SHOW_SUBMISSION_TAB':
                 return __("Show Registrations Tab", 'custom-registration-form-builder-with-submission-manager');
@@ -3402,9 +3444,15 @@ class RM_UI_Strings {
 
             case 'LABEL_SHOW_TOTAL_PRICE' :
                 return __('Show total price on the form', 'custom-registration-form-builder-with-submission-manager');
+            
+            case 'LABEL_SAVE_SUBMISSION_ENABLED' :
+                return __('Enable users to save form submissions', 'custom-registration-form-builder-with-submission-manager');
 
             case 'HELP_SHOW_TOTAL_PRICE' :
                 return sprintf(__("Enables a real-time display of total amount when you have multiple products added to the form. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),"https://registrationmagic.com/knowledgebase/general-settings/#httotalprice");
+
+            case 'HELP_SAVE_SUBMISSION_ENABLED' :
+                return sprintf(__("Enable this option to allow users to save their form data temporarily instead of submitting it. <a target='_blank' class='rm-more' href='%s'>More</a>", 'custom-registration-form-builder-with-submission-manager'),"https://registrationmagic.com/knowledgebase/general-settings/#httotalprice");
 
             case 'LABEL_DATE_FORMAT' :
                 return __('Date format', 'custom-registration-form-builder-with-submission-manager');
@@ -3897,7 +3945,6 @@ class RM_UI_Strings {
             
             case 'HELP_ADD_FORM_NU_EMAIL_SUB':
                 return __("Subject of the email to be sent to the newly created user.", 'custom-registration-form-builder-with-submission-manager');
-            
               
             case 'HELP_ADD_FORM_USER_ACTIVATED_SUB' :
                 return __("Subject of the email to be sent to the activated user.", 'custom-registration-form-builder-with-submission-manager');
@@ -3910,6 +3957,36 @@ class RM_UI_Strings {
                 
             case 'HELP_ADD_FORM_USER_PI_SUB' :
                 return __("Subject for the email with the invoice to be sent to the users.", 'custom-registration-form-builder-with-submission-manager');
+
+            case 'LABEL_FAILED_LOGIN_EMAIL_SUB' :
+                return __("Failed Login Attempt Email Subject", 'custom-registration-form-builder-with-submission-manager');
+
+            case 'LABEL_OTP_MESSAGE_EMAIL_SUB' :
+                return __("One-Time Password Email Subject", 'custom-registration-form-builder-with-submission-manager');
+
+            case 'LABEL_PASS_RESET_EMAIL_SUB' :
+                return __("Password Reset Email Subject", 'custom-registration-form-builder-with-submission-manager');
+
+            case 'LABEL_FAILED_LOGIN_ADMIN_EMAIL_SUB' :
+                return __("Failed Login Attempt Email Subject", 'custom-registration-form-builder-with-submission-manager');
+
+            case 'LABEL_BAN_MESSAGE_ADMIN_EMAIL_SUB' :
+                return __("IP Blocked Email Subject", 'custom-registration-form-builder-with-submission-manager');
+
+            case 'HELP_FAILED_LOGIN_EMAIL_SUB' :
+                return __("Set the subject for the email sent to users when a failed login attempt occurs.", 'custom-registration-form-builder-with-submission-manager');
+
+            case 'HELP_OTP_MESSAGE_EMAIL_SUB' :
+                return __("Set the subject for the email containing a one-time password sent to users.", 'custom-registration-form-builder-with-submission-manager');
+
+            case 'HELP_PASS_RESET_EMAIL_SUB' :
+                return __("Set the subject for the email containing a password reset link sent to users.", 'custom-registration-form-builder-with-submission-manager');
+
+            case 'HELP_FAILED_LOGIN_ADMIN_EMAIL_SUB' :
+                return __("Set the subject for the email sent to admins when a failed login attempt occurs.", 'custom-registration-form-builder-with-submission-manager');
+            
+            case 'HELP_BAN_MESSAGE_ADMIN_EMAIL_SUB' :
+                return __("Set the subject for the email sent to admins when an IP is blocked.", 'custom-registration-form-builder-with-submission-manager');
              
             case 'LABEL_UPLOAD_FORM_TEMPLATE':
                 return __('Upload Form Template','custom-registration-form-builder-with-submission-manager');  
@@ -4288,7 +4365,10 @@ class RM_UI_Strings {
             
             case 'HIDE_MAGIC_PANEL_STYLER':
                 return __('This will hide MagicPopup styling options on frontend for Admins. If you do not plan to use MagicPopup or have configured it and no longer wish to change its style, you should check this option.', 'custom-registration-form-builder-with-submission-manager');
-                
+
+            case 'SELECT_DEFAULT_FORM_FAB':
+                return esc_html__("Select the form that will appear in the 'Register' tab of the MagicPopup.", 'custom-registration-form-builder-with-submission-manager');
+
             case 'RM_SOCIAL_ERR_ACC_UNAPPROVED':
                 return __('Please wait for admin\'s approval before you can log in.', 'custom-registration-form-builder-with-submission-manager');
                 
@@ -4302,6 +4382,8 @@ class RM_UI_Strings {
                 return __('Click on a button to edit its label.', 'custom-registration-form-builder-with-submission-manager');
             case 'ADMIN_MENU_SETUP':
                 return __('Form Wizard', 'custom-registration-form-builder-with-submission-manager');
+            case 'ADMIN_MENU_FS_IMPORT':
+                return __('Form Import', 'custom-registration-form-builder-with-submission-manager');
             case 'ADMIN_MENU_DASH':
                 return __('Overview','custom-registration-form-builder-with-submission-manager');
             case 'DASHBOARD_COUNTER':
@@ -4475,7 +4557,7 @@ class RM_UI_Strings {
             case 'LABEL_PAYPAL_CLIENT_ID':
                 return __('PayPal Client ID', 'custom-registration-form-builder-with-submission-manager');
             case 'HELP_OPTIONS_PYMNT_PP_CLIENT_ID':
-                return __('Client ID can be obtained from PayPal dashboard.', 'custom-registration-form-builder-with-submission-manager');
+                return __('Client ID can be obtained from your PayPal dashboard.', 'custom-registration-form-builder-with-submission-manager');
             case 'LABEL_OPTIONS_PAYPAL_BTN_COLOR':
                 return __('Button Color', 'custom-registration-form-builder-with-submission-manager');
             case 'HELP_OPTIONS_PAYPAL_BTN_COLOR':
@@ -4692,7 +4774,36 @@ class RM_UI_Strings {
             case 'LABEL_UNBLOCK_IP':
                 return __("Unblock IP", 'custom-registration-form-builder-with-submission-manager');
             case 'STATUS_ACTION_NOTE':
-                return __('Certain actions can be associated when applying Status to a submission. These actions are executed once, when the label is applied. Removing the label does not reverses these actions.', 'custom-registration-form-builder-with-submission-manager');    
+                return __('Certain actions can be associated when applying Status to a submission. These actions are executed once, when the label is applied. Removing the label does not reverses these actions.', 'custom-registration-form-builder-with-submission-manager');  
+            case 'FIELD_HELP_TEXT_DigitalSignature':    
+                return __('A field for capturing a digital signature using mouse or touchscreen.', 'custom-registration-form-builder-with-submission-manager');  
+            case 'FIELD_TYPE_DIGITALSIGNATURE':
+                return __("Digital Signature", 'custom-registration-form-builder-with-submission-manager');
+            case 'FIELD_HELP_TEXT_DigitalSign':
+                return __('A field for capturing a digital signature using mouse or touchscreen.', 'custom-registration-form-builder-with-submission-manager');
+            case 'DEFAULT_ACC_ACT_VALUE':
+                return __('You have successfully verified your email. Your account is now active. You can login below.','custom-registration-form-builder-with-submission-manager');
+            case 'DEFAULT_INVALID_ACC_ACT_CODE_VALUE':
+                 return __('Looks like the activation code is broken or incorrect. You can try pasting the activation code from your mail in input box below and manually verify it.' ,'custom-registration-form-builder-with-submission-manager');
+            case 'DEFAULT_ACC_ACT_LINK_NOTICE_VALUE':
+                 return __('Sorry, the verification link has expired. Click here to resend the link {{SEND_VERIFICATION_EMAIL}}.','custom-registration-form-builder-with-submission-manager');
+            case 'DEFAULT_LOGIN_ERR_MSG_VALUE':
+                 return __('Your account has not been activated yet. Please follow the link we sent to your registered email to activate your account. If you have not received it, click here to resend the link {{SEND_VERIFICATION_EMAIL}}.','custom-registration-form-builder-with-submission-manager');
+            case 'FIELD_HELP_TEXT_Subscription':
+                return __('This field connects to available subscription plans and allows users to select a plan during registration.', 'custom-registration-form-builder-with-submission-manager');
+            case 'FIELD_TYPE_SUBSCRIPTION':
+                return __("Subscription field", 'custom-registration-form-builder-with-submission-manager');
+            case 'FIELD_HELP_TEXT_PRODUCT_SUBSCRIPTION_Resctriction':
+                return __("Subscription Field don't work as this form contain product field.", 'custom-registration-form-builder-with-submission-manager');
+            case 'FIELD_HELP_TEXT_SUBSCRIPTION_Resctriction':
+                return __("Only 1 subscription field allowed in a single form.", 'custom-registration-form-builder-with-submission-manager');
+            case 'LABEL_PAYPAL_SECRET_KEY':
+                return __("PayPal Secret Key", 'custom-registration-form-builder-with-submission-manager');
+            case 'HELP_OPTIONS_PYMNT_PP_SECRET_KEY':
+                return __("Secret key can be obtained from your PayPal dashboard.", 'custom-registration-form-builder-with-submission-manager');
+            case 'FIELD_HELP_TEXT_SUBSCRIPTION_Not_Installed_Resctriction':
+                return __("RegistrationMagic Subscriptions Addons is required for this field to work. Please install and activate the RegistrationMagic Subscriptions Addons plugin.", 'custom-registration-form-builder-with-submission-manager');
+                
             default:
                 if(defined('REGMAGIC_ADDON'))
                     return RM_UI_Strings_Addon::get($identifier);

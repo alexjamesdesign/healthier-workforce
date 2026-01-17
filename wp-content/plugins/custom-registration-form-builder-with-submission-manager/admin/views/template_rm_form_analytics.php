@@ -27,6 +27,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                 <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo RM_UI_Strings::get("LABEL_BACK"); ?></a></li>
                 <li onclick="jQuery.rm_do_action_with_alert('<?php echo RM_UI_Strings::get('ALERT_STAT_RESET'); ?>', 'rm_form_analytic_dd', 'rm_analytics_reset')"><a href="javascript:void(0)"><?php echo RM_UI_Strings::get('LABEL_RESET_STATS'); ?></a></li>
                 <li><a href="<?php echo admin_url().'admin.php?page=rm_reports_dashboard'; ?>"><?php echo RM_UI_Strings::get('ADMIN_MENU_REPORTS'); ?></a></li>
+                <li><a href="<?php echo admin_url().'admin.php?page=rm_dashboard_widget_dashboard'; ?>"><?php echo RM_UI_Strings::get('ADMIN_MENU_DASH'); ?></a></li>
                 <li class="rm-form-toggle">
                     <?php
                     if (count($data->forms) !== 0) {
@@ -101,12 +102,6 @@ if (!$data->stat_data):
     return;
 endif;
 ?>
-
-
-
-
-
-
 
 <div class="rm-center-stats-box">
     <div class="rm-box-title"><?php echo RM_UI_Strings::get('LABEL_SUBS_OVER_TIME'); ?></div>
@@ -194,7 +189,7 @@ endif;
             <?php if($stat->user_ip == '::1') { ?>
             <td><?php echo 'localhost'; ?></td>
             <?php } else { ?>
-            <td><a href='https://geoiptool.com/?ip=<?php echo esc_attr($stat->user_ip); ?>'><?php echo esc_html($stat->user_ip); ?></a></td>
+            <td><a href='https://iplocation.io/ip/<?php echo esc_attr($stat->user_ip); ?>'><?php echo esc_html($stat->user_ip); ?></a></td>
             <?php } ?>
             <td>&nbsp;
                 <?php
@@ -283,7 +278,7 @@ if ($data->total_pages > 1):
 
 </div>
 <?php 
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
     
     
@@ -308,7 +303,7 @@ $json_table = RM_Utilities::create_json_for_chart(RM_UI_Strings::get('LABEL_SUBM
 <pre class='rm-pre-wrapper-for-script-tags'><script>
     function drawConversionChart()
     {
-        var data = new google.visualization.DataTable('<?php echo wp_kses_post($json_table); ?>');
+        var data = new google.visualization.DataTable('<?php echo wp_kses_post((string)$json_table); ?>');
 
         // Set chart options
         var options = {/*is3D : true,*/
@@ -344,7 +339,7 @@ $json_table = RM_Utilities::create_json_for_chart(RM_UI_Strings::get('LABEL_BROW
 <pre class='rm-pre-wrapper-for-script-tags'><script>
     function drawBrowserUsageChart()
     {
-        var data = new google.visualization.DataTable('<?php echo wp_kses_post($json_table); ?>');
+        var data = new google.visualization.DataTable('<?php echo wp_kses_post((string)$json_table); ?>');
 
         // Set chart options
         var options = {/*is3D : true,*/
@@ -380,7 +375,7 @@ $data_string = substr($data_string, 2);
             ['<?php echo RM_UI_Strings::get('LABEL_BROWSER'); ?>',
                 '<?php echo RM_UI_Strings::get('LABEL_TOTAL_VISITS'); ?>',
                 '<?php echo RM_UI_Strings::get('LABEL_SUBMISSIONS'); ?>'],
-<?php echo wp_kses_post($data_string); ?>
+<?php echo wp_kses_post((string)$data_string); ?>
         ]);
 
         var options = {
@@ -428,7 +423,7 @@ $data_string = substr($data_string, 2);
             ['<?php echo RM_UI_Strings::get('LABEL_DATE'); ?>',
              '<?php echo RM_UI_Strings::get('LABEL_VISITS'); ?>',
              '<?php echo RM_UI_Strings::get('LABEL_SUBMISSIONS'); ?>'],
-<?php echo wp_kses_post($data_string); ?>
+<?php echo wp_kses_post((string)$data_string); ?>
         ]);
 
         var options = {

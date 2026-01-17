@@ -18,7 +18,7 @@ class RM_Widget_Helper {
                 }
                 include_once('html/submissions.php');
             } else {
-                echo '<div class="rmnotice-container"><div class="rmnotice">' . wp_kses_post(RM_UI_Strings::get('MSG_NO_DATA_FOR_EMAIL')) . '</div></div>';
+                echo '<div class="rmnotice-container"><div class="rmnotice">' . wp_kses_post((string)RM_UI_Strings::get('MSG_NO_DATA_FOR_EMAIL')) . '</div></div>';
             }
         }
     }
@@ -45,7 +45,7 @@ class RM_Widget_Helper {
             if (!empty($payments)) {
                 include_once('html/payments.php');
             } else {
-                echo '<div class="rmnotice-container"><div class="rmnotice">' . wp_kses_post(RM_UI_Strings::get('MSG_NO_DATA_FOR_EMAIL')) . '</div></div>';
+                echo '<div class="rmnotice-container"><div class="rmnotice">' . wp_kses_post((string)RM_UI_Strings::get('MSG_NO_DATA_FOR_EMAIL')) . '</div></div>';
             }
         }
     }
@@ -97,9 +97,9 @@ class RM_Widget_Helper {
         $user_email = $service->get_user_email();
         $user_login=$service->get_user_login_name();
         if($user_email)
-            $user = get_user_by('email', $user_email);
+            $user = get_user_by('email', (string)$user_email);
         else
-            $user = get_user_by('login', $user_login);
+            $user = get_user_by('login', (string)$user_login);
         $data = new stdClass;
         if ($user instanceof WP_User)
             return $user;

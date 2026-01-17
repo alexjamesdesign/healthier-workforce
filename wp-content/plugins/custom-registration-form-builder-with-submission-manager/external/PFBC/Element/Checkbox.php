@@ -59,17 +59,17 @@ JS;
                 $style_str = "";
                 if(isset($this->_attributes["style"]))
                 {
-                    $al = explode(';',$this->_attributes["style"]);                    
+                    $al = explode(';',(string)$this->_attributes["style"]);                    
                     foreach($al as $a)
                     {
-                        if(strpos(trim($a),"color:")=== 0)
+                        if(strpos(trim((string)$a),"color:")=== 0)
                         {
                             $style_str ='style="'.$a.'";'; 
                             break;
                         }
                     }
                 }
-                echo '<ul class="' .esc_attr($labelClass). '" '.wp_kses_post($style_str).'>';
+                echo '<ul class="' .esc_attr($labelClass). '" '.wp_kses_post((string)$style_str).'>';
                 
                 //Get base name of the sub element (if specified) to process inside the loop
                 $sub_ele = $this->getAdvanceAttr('sub_element');
@@ -78,18 +78,18 @@ JS;
 		foreach($this->options as $value => $text) {
 			$value = $this->getOptionValue($value);
                         
-                        echo '<li><span class="rm-pricefield-wrap"> <input id="', esc_attr($this->_attributes["id"]), '-', esc_attr($count), '"', wp_kses_post($this->getAttributes(array("id", "value", "checked"))), ' value="', wp_kses_post($this->filter($value)), '"';
+                        echo '<li><span class="rm-pricefield-wrap"> <input id="', esc_attr($this->_attributes["id"]), '-', esc_attr($count), '"', wp_kses_post((string)$this->getAttributes(array("id", "value", "checked"))), ' value="', wp_kses_post((string)$this->filter($value)), '"';
 			//echo '<label class="', $labelClass, '"> <input id="', $this->_attributes["id"], '-', $count, '"', $this->getAttributes(array("id", "value", "checked", "required")), ' value="', $this->filter($value), '"';
 			if($value && in_array($value, $this->_attributes["value"]))
 				echo ' checked="checked"';
 			//echo '/> ', $text, ' </label> ';
-			echo '/><label for="',esc_attr($this->_attributes["id"]), '-', esc_attr($count),'"><span>', wp_kses($text,RM_Utilities::expanded_allowed_tags()), '</span></label>';
+			echo '/><label for="',esc_attr($this->_attributes["id"]), '-', esc_attr($count),'"><span>', wp_kses((string)$text,RM_Utilities::expanded_allowed_tags()), '</span></label>';
                         ////Render sub element if specified
                         if($sub_ele && $sub_ele instanceof Element)
                         {
                             if($sub_ele_name)
                                 $sub_ele->setAttribute("name",$sub_ele_name."[$value]");
-                            echo '</span><div class="rmrow">', wp_kses_post($this->renderLabel($sub_ele)), '<div class="rminput">', wp_kses_post($sub_ele->render()), '</div></div>';
+                            echo '</span><div class="rmrow">', wp_kses_post((string)$this->renderLabel($sub_ele)), '<div class="rminput">', wp_kses_post((string)$sub_ele->render()), '</div></div>';
                             //$sub_ele->render();
                         }
                         //////End sub element render.
@@ -115,15 +115,15 @@ JS;
                     }
                    if(!$other_val)
                    {
-                   echo '<input type="checkbox" value="" id="'.esc_attr($this->_attributes["id"]).'_other" name="'.esc_attr($this->getAttribute("name")).'" style="'.wp_kses_post($this->getAttribute("style")).'"><label for="'.esc_attr($this->_attributes["id"]).'_other">'.$other_label.'</label></li>'.
+                   echo '<input type="checkbox" value="" id="'.esc_attr($this->_attributes["id"]).'_other" name="'.esc_attr($this->getAttribute("name")).'" style="'.wp_kses_post((string)$this->getAttribute("style")).'"><label for="'.esc_attr($this->_attributes["id"]).'_other">'.$other_label.'</label></li>'.
                         '<li id="'.esc_attr($this->_attributes["id"]).'_other_section" style="display:none">'.
-                        '<input style="'.wp_kses_post($this->getAttribute("style")).'" type="text" id="'.esc_attr($this->_attributes["id"]).'_other_input" disabled>';
+                        '<input style="'.wp_kses_post((string)$this->getAttribute("style")).'" type="text" id="'.esc_attr($this->_attributes["id"]).'_other_input" disabled>';
                    }
                    else
                    {
-                    echo '<input type="checkbox" value="" id="'.esc_attr($this->_attributes["id"]).'_other" name="'.esc_attr($this->getAttribute("name")).'" style="'.wp_kses_post($this->getAttribute("style")).'" checked><label for="'.esc_attr($this->_attributes["id"]).'_other">'.$other_label.'</label></li>'.
+                    echo '<input type="checkbox" value="" id="'.esc_attr($this->_attributes["id"]).'_other" name="'.esc_attr($this->getAttribute("name")).'" style="'.wp_kses_post((string)$this->getAttribute("style")).'" checked><label for="'.esc_attr($this->_attributes["id"]).'_other">'.$other_label.'</label></li>'.
                         '<li id="'.esc_attr($this->_attributes["id"]).'_other_section">'.
-                        '<input style="'.wp_kses_post($this->getAttribute("style")).'" type="text" id="'.esc_attr($this->_attributes["id"]).'_other_input" value="'.esc_attr($other_val).'">';   
+                        '<input style="'.wp_kses_post((string)$this->getAttribute("style")).'" type="text" id="'.esc_attr($this->_attributes["id"]).'_other_input" value="'.esc_attr($other_val).'">';   
                    }
                    echo  '</li>';
                 }
@@ -140,7 +140,7 @@ JS;
             {
                 //echo '<label class="control-label" for="', $element->getAttribute("id"), '">';
                 $field_class = trim("rmfield ".$element->getAdvanceAttr('exclass_field'));
-                echo '<div class="'.esc_attr($field_class).'" for="', esc_attr($element->getAttribute("id")), '" style="',wp_kses_post($element->getAttribute("labelstyle")),'"><label>';
+                echo '<div class="'.esc_attr($field_class).'" for="', esc_attr($element->getAttribute("id")), '" style="',wp_kses_post((string)$element->getAttribute("labelstyle")),'"><label>';
 
 
                 if ($element->isRequired()  && ($element->show_asterix()=='yes'))

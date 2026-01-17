@@ -8,7 +8,7 @@ class Validation_Required extends Validation {
 
 	public function isValid($value) {
 		$valid = false;
-                $value= is_scalar($value) ? trim($value): $value;
+                $value= is_scalar($value) ? trim((string)$value): $value;
                 if(is_array($value) && isset($value['original'])){
                     $value = $value['original'];
                 }

@@ -351,8 +351,11 @@
     RM_jQ.field_add_form_manage = function (field_type) {
         if(!field_type)
             return;
-        
-        var all_elem = RM_jQ(".rm_static_field");
+        if(field_type == 'Checkbox' || field_type == 'Radio') {
+            var all_elem = RM_jQ(".rm_static_field").not("#rm_field_value_options_sortable");
+        } else {
+            var all_elem = RM_jQ(".rm_static_field");
+        }
         RM_jQ(".rm_sub_heading").show();
         RM_jQ(".rm_check").hide();
         all_elem.prop('disabled', false);
@@ -374,6 +377,7 @@
         RM_jQ("#rm_field_dateformat_container").hide();
         RM_jQ("#rm_field_dateformat").prop('disabled', true);
         RM_jQ("#rm_field_enable_search-0").parents(".rmrow").hide();
+        RM_jQ("#rm_basic_field_layout").hide();
         
         switch (field_type) {
             case 'Textbox' :
@@ -442,13 +446,14 @@
 
             case 'Select' :
             case 'Multi-Dropdown' :
-                var object = RM_jQ(".rm_text_type_field, .rm_field_value, .rm_textarea_type, #rm_field_default_value_sortable").not("#rm_field_value_options_textarea, #rm_field_helptext_container");
+                var object = RM_jQ(".rm_text_type_field, .rm_field_value, .rm_textarea_type, #rm_field_default_value_sortable, #rm_field_default_value_textarea").not("#rm_field_value_options_textarea, #rm_field_helptext_container");
                 var val_field = RM_jQ("#rm_field_value_options_textarea");
                 break;
 
             case 'Radio' :
                 var object = RM_jQ(".rm_text_type_field, .rm_field_value, .rm_textarea_type, #rm_field_default_value_sortable").not("#rm_field_value_options_sortable, #rm_field_helptext_container");
                 var val_field = RM_jQ("#rm_field_value_options_sortable");
+                RM_jQ('#rm_basic_field_layout').show();
                 break;
 
             case 'Textarea' :
@@ -456,8 +461,9 @@
                 var object = RM_jQ(".rm_field_value, .rm_options_type_fields, #rm_field_is_read_only-0").not("#rm_field_default_value_textarea");
                 break;
             case 'Checkbox' :
-                var object = RM_jQ(".rm_text_type_field, .rm_field_value, .rm_textarea_type, #rm_field_default_value").not("#rm_field_value_options_sortable, #rm_field_helptext_container");
+                var object = RM_jQ(".rm_text_type_field, .rm_field_value, .rm_textarea_type, #rm_field_default_value, #rm_field_default_value_textarea").not("#rm_field_value_options_sortable, #rm_field_helptext_container");
                 var val_field = RM_jQ("#rm_field_value_options_sortable");
+                RM_jQ('#rm_basic_field_layout').show();
                 RM_jQ(".rm_check").show();
                 break;
             case 'Bdate' :
@@ -472,6 +478,7 @@
             case 'Timezone' :
             case 'Language' :
             case 'ESign':
+            case 'DigitalSign':
             case 'Image' :
             case 'PGAvatar' :
             case 'Rating' :
@@ -488,6 +495,7 @@
             case 'Email' :
             case 'SecEmail' :
             case 'Number' :
+            case 'URL' :
                 var object = RM_jQ(".rm_static_field").not(".rm_required, #rm_field_is_required-0, #rm_field_helptext_container, #rm_field_is_editable-0, #rm_field_placeholder, #existing_user_meta, #rm_field_default_value");
                 break;
             case 'Facebook' :
@@ -540,7 +548,12 @@
             case 'Activeuser' :
                 var object = RM_jQ(".rm_text_type_field, .rm_field_value, .rm_textarea_type, #rm_field_default_value_sortable, #rm_field_default_value_textarea").not("#rm_field_helptext_container");
                 var val_field = RM_jQ("#rm_field_value_options_textarea");
-                break;    
+            case 'Subscription' :
+                break; 
+            case 'Profilegridgroups' :
+                var object = RM_jQ(".rm_text_type_field, .rm_field_value, .rm_textarea_type, #rm_field_default_value_sortable, #rm_field_default_value_textarea").not("#rm_field_helptext_container");
+                var val_field = RM_jQ("#rm_field_value_options_textarea");
+                break;
             default :
                 var object = RM_jQ(".rm_static_field").not("#rm_field_type_select_dropdown");
                 RM_jQ("#rm_field_helptext_container").hide();
@@ -717,11 +730,12 @@
         var form = RM_jQ("#rm_user_manager_form");
         form.children('input#rm_slug_input_field').val('rm_user_delete');
         form.submit();
-    }
+    };
     
 
     RM_jQ.rm_append_textbox_other = function (elem) {
         RM_jQ("#rmaddotheroptiontextboxdiv").show();
+        RM_jQ("#rmaddotheroptiontextdiv").addClass("rm-custom-value-appended");
         RM_jQ("#rm_field_is_other_option").val(1);
     };
 
@@ -838,9 +852,6 @@ function rmDashboardUserImages() {
     });
 }
 
-
-
-
 jQuery(document).ready(function(){
     
     var themeSelector =  jQuery('#theme_dropdown').val();
@@ -894,9 +905,44 @@ jQuery(document).ready(function ($) {
             $("#rm-submission-quick-view"+submissionId).css("display", "block");
         });
     });
-    
 
-    
-//Inbox Quick view Modal   
+//RM Upgrade Notice JS
+var rmUpgradeNotice = $( '.rm-upgrade-notice-info' );
+          
+$( '#wpbody-content' ).prepend( rmUpgradeNotice );
+rmUpgradeNotice.show();
 
+$(".rm-upgrade-notice-info .rm-promo-notice-dismiss").click(function(){
+    $(".rm-upgrade-notice-info").slideUp();
+    
+    var dismiss_data = {
+        'action': 'rm_dismiss_upgrade_notice',
+        'rm_sec_nonce': rm_admin_vars.nonce
+    };
+    
+    $.post(ajaxurl, dismiss_data, function(response) {});
+});
+
+$("button.rm-sale-banner-close").click(function() {
+    $("div.rm-admin-sale-banner").slideUp();
+    
+    var dismiss_data = {
+        'action': 'rm_dismiss_sale_banner',
+        'rm_sec_nonce': rm_admin_vars.nonce
+    };
+    
+    $.post(ajaxurl, dismiss_data, function(response) {});
+});
+});
+
+
+// Page Loader
+
+    document.addEventListener('DOMContentLoaded', function() {
+    var rmPageSelector = document.querySelector('.rmagic-page-fadein');
+    if (rmPageSelector) {
+        //element.style.opacity = '0'; 
+        rmPageSelector.classList.add('rm-page-fade-in');
+    }
+   
 });

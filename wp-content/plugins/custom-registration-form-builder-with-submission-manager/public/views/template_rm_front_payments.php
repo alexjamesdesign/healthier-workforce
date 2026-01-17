@@ -4,7 +4,7 @@
                 <i class="material-icons rm-bg" data-rm_apply_acc_bgcolor="true">credit_card</i>
             </div>
             <div class="rm-user-row dbfl">
-                <h2><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PAY_HISTORY')); ?></h2>
+                <h2><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PAY_HISTORY')); ?></h2>
             </div>
             <?php
             if (empty($data->payments)) {
@@ -14,18 +14,18 @@
             <?php if ($data->payments): ?>
                 <table class="rm-user-data">
                     <tr>
-                        <th class="rm-bg-lt"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DATE')); ?></th>
-                        <th class="rm-bg-lt"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FORM')); ?></th>
+                        <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DATE')); ?></th>
+                        <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FORM')); ?></th>
                         <th class="rm-bg-lt"><?php _e('Unique ID', 'custom-registration-form-builder-with-submission-manager'); ?></th>
-                        <th class="rm-bg-lt"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_AMOUNT')); ?></th>
-                        <th class="rm-bg-lt"><?php echo defined('REGMAGIC_ADDON') ? wp_kses_post(RM_UI_Strings::get('LABEL_TXN_ID')) : wp_kses_post(RM_UI_Strings::get('LABEL_INVOICE_SHORT')); ?></th>
-                        <th class="rm-bg-lt"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_STATUS')); ?></th>
+                        <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_AMOUNT')); ?></th>
+                        <th class="rm-bg-lt"><?php echo defined('REGMAGIC_ADDON') ? wp_kses_post((string)RM_UI_Strings::get('LABEL_TXN_ID')) : wp_kses_post((string)RM_UI_Strings::get('LABEL_INVOICE_SHORT')); ?></th>
+                        <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_STATUS')); ?></th>
                         <?php 
                             $enable_user_invoice = get_option('enable_user_invoice');
                             $enable_invoice = get_option('enable_invoice');
                            if($enable_user_invoice=='yes' && $enable_invoice =='yes' && defined('REGMAGIC_ADDON')):
                         ?>
-                        <th class="rm-bg-lt"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_INVOICE_TH')); ?></th>
+                        <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_INVOICE_TH')); ?></th>
                         <?php endif;?>
                     </tr>
                     <?php
@@ -67,8 +67,8 @@
                         <?php
                         if ($data->curr_page_pay > 1):
                             ?>
-                            <li onclick="get_tab_and_redirect('rm_reqpage_pay=1')"><a><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FIRST')); ?></a></li>
-                            <li onclick="get_tab_and_redirect('rm_reqpage_pay=<?php echo esc_html($data->curr_page_pay - 1); ?>')"><a><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PREVIOUS')); ?></a></li>
+                            <li onclick="get_tab_and_redirect('rm_reqpage_pay=1')"><a><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FIRST')); ?></a></li>
+                            <li onclick="get_tab_and_redirect('rm_reqpage_pay=<?php echo esc_html($data->curr_page_pay - 1); ?>')"><a><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PREVIOUS')); ?></a></li>
                             <?php
                         endif;
                         if ($data->total_pages_pay > $max_pages_without_abb):
@@ -111,8 +111,8 @@
                         <?php
                         if ($data->curr_page_pay < $data->total_pages_pay):
                             ?>
-                            <li onclick="get_tab_and_redirect('rm_reqpage_pay=<?php echo esc_html($data->curr_page_pay + 1); ?>')"><a><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_NEXT')); ?></a></li>
-                            <li onclick="get_tab_and_redirect('rm_reqpage_pay=<?php echo esc_html($data->total_pages_pay); ?>')"><a><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LAST')); ?></a></li>
+                            <li onclick="get_tab_and_redirect('rm_reqpage_pay=<?php echo esc_html($data->curr_page_pay + 1); ?>')"><a><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_NEXT')); ?></a></li>
+                            <li onclick="get_tab_and_redirect('rm_reqpage_pay=<?php echo esc_html($data->total_pages_pay); ?>')"><a><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LAST')); ?></a></li>
                             <?php
                         endif;
                         ?>

@@ -26,7 +26,8 @@ class RM_Frontend_Field_Visible_Only extends RM_Frontend_Field_Base
         else
         {   
             $class_name = "Element_" . $this->field_type;
-            $this->pfbc_field = new $class_name($this->field_value,$this->field_class, $this->field_options);
+            $this->set_conditional_properties();
+            $this->pfbc_field = new $class_name($this->field_value, $this->field_class, $this->field_options);
             return $this->pfbc_field;
         }  
     }

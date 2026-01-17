@@ -28,27 +28,27 @@ test</div>------->
     <form method="post" id="rm_field_manager_form">
         <input type="hidden" name="rm_slug" value="" id="rm_slug_input_field">
         <div class="operationsbar">
-            <div class="rmtitle"><?php echo wp_kses_post(RM_UI_Strings::get("TITLE_FORM_FIELD_PAGE")); ?></div>
+            <div class="rmtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get("TITLE_FORM_FIELD_PAGE")); ?></div>
             <div class="icons">
                 
             </div>
             <div class="nav">
                 <ul>
               <!-- <li onclick="window.history.back()"><a href="javascript:void(0)"><?php //echo RM_UI_Strings::get("LABEL_BACK"); ?></a></li>-->
-              <li ><a href="#rm-field-selector" onclick='CallModalBox(this)'><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_ADD_NEW_FIELD')); ?></a></li>
-              <!-- <li ><a href="#rm-widget-selector" onclick='CallModalBox(this)'><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_ADD_NEW_WIDGET')); ?></a></li> -->     
-              <li id="rm-duplicate-field" class="rm_deactivated" onclick="jQuery.rm_do_action('rm_field_manager_form', 'rm_field_duplicate')"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DUPLICATE')); ?></a></li>  
+              <li ><a href="#rm-field-selector" onclick='CallModalBox(this)'><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_ADD_NEW_FIELD')); ?></a></li>
+              <!-- <li ><a href="#rm-widget-selector" onclick='CallModalBox(this)'><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_ADD_NEW_WIDGET')); ?></a></li> -->     
+              <li id="rm-duplicate-field" class="rm_deactivated" onclick="jQuery.rm_do_action('rm_field_manager_form', 'rm_field_duplicate')"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DUPLICATE')); ?></a></li>  
                     
-                    <li id="rm-delete-field" class="rm_deactivated"  onclick="jQuery.rm_do_action('rm_field_manager_form', 'rm_field_remove')"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REMOVE')); ?></a></li>
-                    <li class="rm-form-toggle"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_TOGGLE_FORM')); ?>
+                    <li id="rm-delete-field" class="rm_deactivated"  onclick="jQuery.rm_do_action('rm_field_manager_form', 'rm_field_remove')"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_REMOVE')); ?></a></li>
+                    <li class="rm-form-toggle"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TOGGLE_FORM')); ?>
                         <select id="rm_form_dropdown" name="form_id" onchange = "rm_load_page(this, 'field_manage')">
                             <?php
                             echo "<option value='rm_login_form'>Login Form</option>";
                             foreach ($data->forms as $form_id => $form)
                                 if ($data->form_id == $form_id)
-                                    echo "<option value=".esc_attr($form_id)." selected>".wp_kses_post($form)."</option>";
+                                    echo "<option value=".esc_attr($form_id)." selected>".wp_kses_post((string)$form)."</option>";
                                 else
-                                    echo "<option value=".esc_attr($form_id).">".wp_kses_post($form)."</option>";
+                                    echo "<option value=".esc_attr($form_id).">".wp_kses_post((string)$form)."</option>";
                             ?>
                         </select></li> 
                         <?php
@@ -69,7 +69,7 @@ test</div>------->
                 
         <?php
         if($data->total_page > 1)
-            echo "<div class='rmnotice'>".wp_kses_post(RM_UI_Strings::get('MULTIPAGE_DEGRADE_WARNING'))."</div>";
+            echo "<div class='rmnotice'>".wp_kses_post((string)RM_UI_Strings::get('MULTIPAGE_DEGRADE_WARNING'))."</div>";
         ?>
         
 
@@ -92,7 +92,7 @@ test</div>------->
                                                 <img alt="" src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . 'images/rm-drag.png'); ?>">
                                             </span>
                                         </div>
-                            <div class="rm-field-manager-sorting"><?php echo wp_kses_post(RM_UI_Strings::get('SORT_FIELD_ORDER_DISC')); ?></div>
+                            <div class="rm-field-manager-sorting"><?php echo wp_kses_post((string)RM_UI_Strings::get('SORT_FIELD_ORDER_DISC')); ?></div>
                                     </div>
     <?php //foreach($data->form_pages as $k => $fpage)//for ($i = 1; $i <= $data->total_page; $i++)
     {$i = 1;
@@ -140,7 +140,7 @@ test</div>------->
                                                             }
                                                             ?>
                                                             <input type="checkbox" name="rm_selected[]" onclick="rm_on_field_selection()" value="<?php echo esc_attr($field_data->field_id); ?>" <?php if ($field_data->is_field_primary == 1) echo "disabled"; ?>>
-                                                            <span class="rm-field-slab-label"><?php echo wp_kses_post($field_data->field_label); ?></span>
+                                                            <span class="rm-field-slab-label"><?php echo wp_kses_post((string)$field_data->field_label); ?></span>
                                                                 <span class="rm-field-type"><?php echo esc_html($data->field_types[$field_data->field_type]) ?></span>
 
                                                         </div>
@@ -153,21 +153,21 @@ test</div>------->
                                                                 }
                                                                 ?>
 
-                                                                <a href="javascript:void(0)" onClick="showConditionFormModal(<?php echo esc_js($field_data->field_id); ?>)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_ADD_CONDITION')); ?><span class="rm-conditions-badge"><?php echo esc_html($c_count); ?></span></a>    
+                                                                <a href="javascript:void(0)" onClick="showConditionFormModal(<?php echo esc_js($field_data->field_id); ?>)"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_ADD_CONDITION')); ?><span class="rm-conditions-badge"><?php echo esc_html($c_count); ?></span></a>    
                                                             <?php endif; ?>     
-                                                            <a onclick="edit_field_in_page('<?php echo esc_js($field_data->field_type); ?>',<?php echo esc_attr($field_data->field_id); ?>)" href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_EDIT")); ?></a>
+                                                            <a onclick="edit_field_in_page('<?php echo esc_js($field_data->field_type); ?>',<?php echo esc_attr($field_data->field_id); ?>)" href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_EDIT")); ?></a>
                                                             <?php if ($field_data->is_field_primary == 1 && (empty($field_data->is_deletion_allowed)) && strtolower($field_data->field_type)=="username"): ?>
-                                                                <a href="javascript:void(0)" class="rm-premium-option" onclick="CallModalBox(this)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a>
+                                                                <a href="javascript:void(0)" class="rm-premium-option" onclick="CallModalBox(this)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a>
                                                                 <div class="rm-premium-option-popup" style="display:none">
                                                                   <span class="rm-premium-option-popup-nub"></span>
                                                                   <span class="rm_buy_pro_inline"><?php printf(__('To unlock removing Username field (and many more features), please upgrade <a href="%s" target="blank">Click here</a>', 'custom-registration-form-builder-with-submission-manager'), RM_Utilities::comparison_page_link()); ?> </span>
                                                                 </div>
                                                             <?php elseif ($field_data->is_field_primary == 1 && strtolower($field_data->field_type)=="email") : ?>
-                                                                     <a href="javascript:void(0)" class="rm_deactivated"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a>
+                                                                     <a href="javascript:void(0)" class="rm_deactivated"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a>
                                                             <?php elseif ($field_data->is_field_primary == 1 && !empty($field_data->is_deletion_allowed)) : ?>
-                                                                <a href="#rm-<?php echo esc_attr(strtolower($field_data->field_type)); ?>-delete" data-field-id="<?php echo esc_attr($field_data->field_id); ?>" onclick="<?php echo esc_attr(strtolower($field_data->field_type)) . '_delete(false,this)' ?>"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a>
+                                                                <a href="#rm-<?php echo esc_attr(strtolower($field_data->field_type)); ?>-delete" data-field-id="<?php echo esc_attr($field_data->field_id); ?>" onclick="<?php echo esc_attr(strtolower($field_data->field_type)) . '_delete(false,this)' ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a>
                                                             <?php else : ?>
-                                                                <a href="<?php echo esc_url('?page=rm_field_manage&rm_form_id=' . $data->form_id . '&rm_field_id=' . $field_data->field_id . '&rm_action=delete"'); ?>"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a>
+                                                                <a href="<?php echo esc_url('?page=rm_field_manage&rm_form_id=' . $data->form_id . '&rm_field_id=' . $field_data->field_id . '&rm_action=delete"'); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a>
                                                             <?php endif; ?>        
                                                         </div>
                                                     </div>
@@ -177,7 +177,7 @@ test</div>------->
                                             }
                                         } else
                                         {
-                                            echo wp_kses_post(RM_UI_Strings::get('NO_FIELDS_MSG'));
+                                            echo wp_kses_post((string)RM_UI_Strings::get('NO_FIELDS_MSG'));
                                         }
                                         ?>    </ul>
                                     
@@ -224,7 +224,7 @@ test</div>------->
                                     </div>
                                 </div>
                             </div>
-                            <div class="rm-field-submit-field-hint"><?php echo wp_kses_post(RM_UI_Strings::get('EDIT_BUTTON_LABEL_DISC')); ?></div>
+                            <div class="rm-field-submit-field-hint"><?php echo wp_kses_post((string)RM_UI_Strings::get('EDIT_BUTTON_LABEL_DISC')); ?></div>
                         </div>
                         <!-- End: Submit Field -->
                                                     

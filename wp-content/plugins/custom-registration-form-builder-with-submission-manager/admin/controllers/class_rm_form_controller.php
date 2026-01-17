@@ -33,18 +33,35 @@ class RM_Form_Controller {
             $new_added_form = intval($request->req['rm_new_added_form']);
         }
 
+        $attach_service = new RM_Attachment_Service();
+        $search_term = isset($request->req['rm_form_search']) ? $request->req['rm_form_search'] : null;
+        $form_filter = isset($request->req['rm_form_filter']) ? $request->req['rm_form_filter'] : null;
         $sort_by = (isset($request->req['rm_sortby'])) ? $request->req['rm_sortby'] : null;
-        $descending = (isset($request->req['rm_descending'])) ? false : true;
+        $descending = (isset($request->req['rm_descending']) && absint($request->req['rm_descending']) == 0) ? false : true;
         $req_page = (isset($request->req['rm_reqpage']) && $request->req['rm_reqpage'] > 0) ? $request->req['rm_reqpage'] : 1;
+        $url_params = array(
+            'page' => 'rm_form_manage',
+            'rm_form_search' => $search_term,
+            'rm_form_filter' => $form_filter,
+            'rm_sortby' => $sort_by,
+            'rm_descending' => $descending,
+            'rm_reqpage' => $req_page
+        );
         $options=new RM_Options;
         $submission_type=$options->get_value_of('submission_on_card');
-        
-        $items_per_page = 9;
+        //$items_per_page = 10;
+        $items_per_page = get_site_option('rm_forms_entry_depth');
+        $items_per_page = empty($items_per_page) ? 10 : absint($items_per_page);
         if($sort_by=="form_submissions"){
             // $forms = $service->get_all(null, ($req_page - 1) * $items_per_page, $items_per_page, '*', null, $descending);
-             $forms = $service->get_all(null, 0, 999999, '*', null, $descending);
-             usort($forms, function(stdClass $a, stdClass $b)
-                {
+            if(empty($search_term)) {
+                $forms = $service->get_all(null, 0, 999999, '*', null, $descending);
+            } else {
+                $forms = RM_DBManager::search_forms_by_name($search_term, null, $descending);
+            }
+            
+            if($descending) {
+                usort($forms, function(stdClass $a, stdClass $b) {
                     $options=new RM_Options;
                     $submission_type=$options->get_value_of('submission_on_card');
                     $form_id='';
@@ -58,24 +75,60 @@ class RM_Form_Controller {
                     if ($asub == $bsub)
                         return 0;
                     else
-                        return $asub > $bsub? -1:1;
+                        return $asub > $bsub ? -1 : 1;
                 });
-                
-           $forms=array_slice($forms,($req_page - 1) * $items_per_page,$items_per_page);
+            } else {
+                usort($forms, function(stdClass $a, stdClass $b) {
+                    $options=new RM_Options;
+                    $submission_type=$options->get_value_of('submission_on_card');
+                    $form_id='';
+                    $afid=(int)$a->form_id;
+                    $bfid=(int)$b->form_id;
+                    $result1= RM_DBManager::get_results_for_last($submission_type,$afid,null,null ,0,999999,'submission_id', false);
+                    $asub= is_array($result1) ? count($result1) : 0;
+                    $result2= RM_DBManager::get_results_for_last($submission_type,$bfid,null,null ,0,999999,'submission_id', false);
+                    $bsub= is_array($result2) ? count($result2) : 0;
+                    
+                    if ($asub == $bsub)
+                        return 0;
+                    else
+                        return $asub < $bsub ? -1 : 1;
+                });
+            }
+
+           //$forms = array_slice($forms,($req_page - 1) * $items_per_page, $items_per_page);
+        } else {
+            if(empty($search_term)) {
+                $forms = $service->get_all(null, 0, 999999, '*', $sort_by, $descending);
+            } else {
+                $forms = RM_DBManager::search_forms_by_name($search_term, $sort_by, $descending);
+            }
         }
-        else
-            $forms = $service->get_all(null, ($req_page - 1) * $items_per_page, $items_per_page, '*', $sort_by, $descending);
         $i = 0;
         $data = array();
+        $reg_forms = 0;
+        $multi_page_forms = 0;
         if (is_array($forms) || is_object($forms))
             foreach ($forms as $form) {
+                if($form->form_type == 1) {
+                    $reg_forms++;
+                } elseif($form_filter == 'registration') {
+                    continue;
+                }
+                $form_options = maybe_unserialize($form->form_options);
+                if(isset($form_options->form_pages) && is_array($form_options->form_pages) && count($form_options->form_pages) > 1) {
+                    $multi_page_forms++;
+                } elseif($form_filter == 'multi_page') {
+                    continue;
+                }
 
                 $data[$i] = new stdClass;
                 $data[$i]->form_id = $form->form_id;
                 $data[$i]->form_name = $form->form_name;
                 $data[$i]->form_type = $form->form_type;
-                if(defined('REGMAGIC_ADDON'))
-                    $data[$i]->form_options=maybe_unserialize($form->form_options);
+                $data[$i]->form_options = $form_options;
+                $data[$i]->created_on = $form->created_on;
+                $data[$i]->form_attachments = $attach_service->get_all_form_attachments($form->form_id);
                 $filter_submissions = RM_DBManager::get_results_for_last($submission_type, $form->form_id,null,null ,0,99999,'submission_id', true);
                 if(!is_array($filter_submissions)){
                     $filter_submissions=array();
@@ -100,38 +153,41 @@ class RM_Form_Controller {
                 $i++;
             }
 
+            $data = array_slice($data, ($req_page - 1) * $items_per_page, $items_per_page);
 
-        $total_forms = $service->count($model->get_identifier(), 1);
+            if(empty($search_term)) {
+                $total_forms = $service->count($model->get_identifier(), 1);
+            } else {
+                $total_forms = count($forms);
+            }
 
-        //New object to consolidate data for view.    
+        //New object to consolidate data for view.
         $view_data = new stdClass;
         $view_data->data = $data;
+        if($form_filter == 'registration') {
+            $view_data->filtered_count = $reg_forms;
+        } elseif($form_filter == 'multi_page') {
+            $view_data->filtered_count = $multi_page_forms;
+        } else {
+            $view_data->filtered_count = (int)$total_forms;
+        }
+        $view_data->old_view = get_option('rm_forms_view_roll_back');
         $view_data->curr_page = $req_page;
-        $view_data->total_pages = (int) ($total_forms / $items_per_page) + (($total_forms % $items_per_page) == 0 ? 0 : 1);
+        $view_data->total_pages = (int) ($view_data->filtered_count / $items_per_page) + (($view_data->filtered_count % $items_per_page) == 0 ? 0 : 1);
+        $view_data->total_forms = (int)$total_forms;
+        $view_data->items_per_page = $items_per_page;
+        $view_data->reg_forms = $reg_forms;
+        $view_data->multi_page_forms = $multi_page_forms;
+        $view_data->search_term = $search_term;
+        $view_data->form_filter = $form_filter;
         $view_data->rm_slug = $request->req['page'];
         $view_data->sort_by = $sort_by;
         $view_data->descending = $descending;
+        $view_data->url_params = $url_params;
         $view_data->done_with_review_banner = $service->get_setting('done_with_review_banner') === 'no' ? false : true;
         $view_data->def_form_id = $service->get_setting('default_form_id');
         $view_data->new_added_form = $new_added_form;
         
-        if (function_exists('is_multisite') && is_multisite())
-        {
-            $nl_subscribed = get_site_option('rm_option_newsletter_subbed', false);
-        }
-        else
-        {
-            $nl_subscribed = get_site_option('rm_option_newsletter_subbed', false);
-        }
-        
-        if(!$nl_subscribed)
-        {
-            $view_data->newsletter_sub_link = RM_UI_Strings::get('NEWSLETTER_SUB_MSG');
-        }
-        else
-        {
-            $view_data->newsletter_sub_link = null;
-        }
         //Include joyride script and style
         wp_enqueue_script('rm_joyride_js', RM_BASE_URL.'admin/js/jquery.joyride-2.1.js');
         wp_enqueue_style('rm_joyride_css', RM_BASE_URL.'admin/css/joyride-2.1.css');
@@ -142,12 +198,54 @@ class RM_Form_Controller {
         
         $view_data->submission_type=$submission_type;
         
+        /*
         $view_data->review_event=$service->get_review_event();
         $view_data->review_message=  RM_UI_Strings::get('REVIEW_MESSAGE_EVENT'.$view_data->review_event);
         $view_data->review_popup_flag=$service->check_event_status($view_data->review_event);
+        */
         
         $view_data->should_show_fb_footer = ($options->get_value_of('has_subbed_fb_page') == 'yes') ? false : true;
         $view_data->templates = $service->forms_template_lists('contact');
+
+        // Getting translation promo message
+        $locale = get_locale();
+        switch ($locale) {
+            case 'en_GB':
+            case 'en_US':
+                $view_data->translation_promo = 'Translate into your language';
+                break;
+            case 'ja':
+                $view_data->translation_promo = 'プラグインを翻訳';
+                break;
+            case 'es_ES':
+                $view_data->translation_promo = 'Traducir a tu idioma';
+                break;
+            case 'fr_FR':
+                $view_data->translation_promo = 'Traduisez la dans votre langue';
+                break;
+            case 'de_DE':
+                $view_data->translation_promo = 'Übersetze in deine Sprache';
+                break;
+            case 'it_IT':
+                $view_data->translation_promo = 'Traduci nella tua lingua';
+                break;
+            case 'pt_BR':
+                $view_data->translation_promo = 'Traduzir para seu idioma';
+                break;
+            case 'nl_NL':
+                $view_data->translation_promo = 'In jouw taal vertalen';
+                break;
+            case 'ru_RU':
+                $view_data->translation_promo = 'Перевести на ваш язык';
+                break;
+            case 'pl_PL':
+                $view_data->translation_promo = 'Przetłumacz na swój język';
+                break;
+            default:
+                $view_data->translation_promo = 'Translate into your language'; // Default to English if locale not matched
+                break;
+        }
+
         $view = $this->mv_handler->setView('form_manager');
         $view->render($view_data);
     }
@@ -192,49 +290,46 @@ class RM_Form_Controller {
     }
 
     public function quick_add($model, $service, $request, $params) {
-        $valid = false;
-        if ($this->mv_handler->validateForm("rm_form_quick_add")) {
-            $model->set($request->req);
+        if (current_user_can('manage_options') || current_user_can('rm_form_managemanage_options')) {
+            $valid = false;
+            if ($this->mv_handler->validateForm("rm_form_quick_add")) {
+                $model->set($request->req);
 
-            $valid = $model->validate_model();
+                $valid = $model->validate_model();
+            }
+            if ($valid) {
+                //By default make it registration type
+                $model->set_form_type(1);
+                $model->set_default_form_user_role('subscriber');
+
+                if (isset($request->req['form_id']))
+                    $valid = $service->update($request->req['form_id']);
+                else
+                    $service->add_user_form();
+            }
+
+            $this->manage($model, $service, $request, $params);
         }
-        if ($valid) {
-            //By default make it registration type
-            $model->set_form_type(1);
-            $model->set_default_form_user_role('subscriber');
-
-            if (isset($request->req['form_id']))
-                $valid = $service->update($request->req['form_id']);
-            else
-                $service->add_user_form();
-        }
-
-        $this->manage($model, $service, $request, $params);
     }
 
     public function import($model, $service, $request, $params) {
-         $data=new stdClass();
+        $data=new stdClass();
         
         if($_FILES){
-               $name=get_temp_dir().'RMagic.xml';
-               
-               if(is_array($_FILES['Forms']['tmp_name']))
-               $status= move_uploaded_file(sanitize_text_field($_FILES['Forms']['tmp_name']['0']), $name);
-               else
-               $status= move_uploaded_file(sanitize_text_field($_FILES['Forms']['tmp_name']), $name);    
-          $data->status=$status;
-          
-           $view = $this->mv_handler->setView("form_upload");
-           $view->render($data);
-          }
-
-        
-        else
-        { 
-        $view = $this->mv_handler->setView("form_upload");
-        $view->render();
+            $name = get_temp_dir().'RMagic.xml';
+            
+            if(is_array($_FILES['Forms']['tmp_name']))
+                $status= move_uploaded_file(sanitize_text_field($_FILES['Forms']['tmp_name']['0']), $name);
+            else
+                $status= move_uploaded_file(sanitize_text_field($_FILES['Forms']['tmp_name']), $name);
+            $data->status=$status;
+            
+            $view = $this->mv_handler->setView("form_upload");
+            $view->render($data);
+        } else { 
+            $view = $this->mv_handler->setView("form_upload");
+            $view->render();
         }
-      
     }
 
     public function export($model, $service, $request, $params) {
@@ -262,7 +357,6 @@ class RM_Form_Controller {
          //echo "<pre>",var_dump($forms_data);die;
           $front_user_data=$service->get_all('FRONT_USERS',0,0);
             $paypa_fields_data=$service->get_all('PAYPAL_FIELDS',0,0);
-
            $xmlDoc = new DOMDocument('1.0');
 
     //create the root element
@@ -290,6 +384,7 @@ class RM_Form_Controller {
                     "form_id"=>(int)$forms->form_id
                 );
 
+            $paypal_fields = array();
              $fields_data  = RM_DBManager::  get("FIELDS",$where, array("%d"), 'results', $offset = 0, $limit = 9999999, $column = '*', $sort_by = '', $descending = false);
              $rows_data  = RM_DBManager::  get("ROWS",$where, array("%d"), 'results', $offset = 0, $limit = 9999999, $column = '*', $sort_by = '', $descending = false);
              $submissions_data  = RM_DBManager::  get("SUBMISSIONS",$where, array("%d"), 'results', $offset = 0, $limit = 9999999, $column = '*', $sort_by = '', $descending = false);
@@ -309,6 +404,9 @@ class RM_Form_Controller {
                   $xmlDoc->createElement('FIELDS'));
                 foreach($forms as $form_attr_name=>$value)
                 {
+                    if($form_attr_name == 'field_type' && $value == 'Price') {
+                        $paypal_fields[] = $forms->field_value;
+                    }
                     $form_attr_name=  htmlspecialchars($form_attr_name);
                   $value=  htmlspecialchars($value);
                    $temp->appendChild(
@@ -435,11 +533,14 @@ class RM_Form_Controller {
 
             }
             }
-
+            
             if(isset($paypa_fields_data))
             {
             foreach($paypa_fields_data as $forms)
-            {   
+            {
+                 if(!in_array($forms->field_id, $paypal_fields)) {
+                    continue;
+                 }
                 //echo "<pre>", var_dump($xml->startElement("form"));
               $tutTag = $root->appendChild(
                   $xmlDoc->createElement('PAYPAL_FIELDS'));
@@ -715,5 +816,20 @@ class RM_Form_Controller {
         
         $view = $this->mv_handler->setView('form_setup_finished');
         $view->render($data);       
+    }
+
+    public function preview($model, $service, $request, $params){
+        wp_enqueue_style('rm_form_preview', RM_BASE_URL . 'public/css/rm-form-preview.css', array(), RM_PLUGIN_VERSION, 'all');
+        echo do_shortcode("[RM_Forms id='".absint($request->req['rm_form_id'])."']");
+        // Old preview
+        /* $data = new stdClass;
+        if(isset($request->req['rm_form_id'])){
+            $data->form_id = absint($request->req['rm_form_id']);
+        } else {
+            $data->form_id = 0;
+        }
+
+        $view = $this->mv_handler->setView('form_preview');
+        $view->render($data);   */     
     }
 }

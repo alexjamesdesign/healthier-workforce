@@ -19,7 +19,11 @@ class RM_Dashboard_Widget_Controller
         $data = new stdClass;
 
         $submissions = $service->get('SUBMISSIONS', 1, null, 'results', 0, 10, '*', 'submitted_on', true);
-
+        $forms = $service->get('FORMS', 1, null, 'results', 0, 10, '*');
+        $form_names = array();
+        foreach($forms as $form) {
+            $form_names[$form->form_id] = $form->form_name;
+        }
         $sub_data = array();
 
         if($submissions)
@@ -27,11 +31,11 @@ class RM_Dashboard_Widget_Controller
             foreach ($submissions as $submission)
             {
                //echo "<br>ID: ".$submission->form_id." : ".RM_Utilities::localize_time($submission->submitted_on, 'M dS Y, h:ia')." : ";
-               $name = $service->get('FORMS', array('form_id' => $submission->form_id), array('%d'), 'var', 0, 10, 'form_name');
+               //$name = $service->get('FORMS', array('form_id' => $submission->form_id), array('%d'), 'var', 0, 10, 'form_name');
                $date = RM_Utilities::localize_time($submission->submitted_on, 'd M Y'); //Previously "M dS Y, h:ia".
                $payment_status = $service->get('PAYPAL_LOGS', array('submission_id' => $submission->submission_id), array('%d'), 'var', 0, 10, 'status');
-
-               $sub_data[] = (object)array('submission_id'=>$submission->submission_id, 'name'=>$name, 'date'=>$date, 'payment_status'=>$payment_status);
+               
+               $sub_data[] = (object)array('submission_id'=>$submission->submission_id, 'name'=> isset($form_names[$submission->form_id]) ? $form_names[$submission->form_id] : "", 'date'=>$date, 'payment_status'=>$payment_status);
             }
             
             $data->total_sub = count($submissions);

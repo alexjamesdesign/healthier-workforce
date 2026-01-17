@@ -23,8 +23,10 @@ class RM_Form_Settings_Controller {
         $data = new stdClass();
         if (!isset($request->req['rm_form_id']) || !(int)$request->req['rm_form_id'] || !$form->load_from_db($request->req['rm_form_id'])){
             $view = $this->mv_handler->setView('show_notice');
-            $view->render(RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED'));
-           return;
+            //$view->render(RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED'));
+            $view->render(esc_html__('No form selected. Redirecting you back to the all forms page.','custom-registration-form-builder-with-submission-manager'));
+            echo "<script>window.setTimeout(function(){ window.location.href = '" . admin_url('admin.php?page=rm_form_manage') . "';}, 3000);</script>";
+            return;
         }
                 
         $form_options = $form->get_form_options();
@@ -91,7 +93,10 @@ class RM_Form_Settings_Controller {
             $options['show_total_price'] = isset($request->req['show_total_price']) ? $request->req['show_total_price'] : null;
             if(defined('REGMAGIC_ADDON')) {
                 $options['no_prev_button'] = isset( $request->req['no_prev_button']) ? 1 : null;
-                $options['sub_limit_ind_user']= empty($request->req['sub_limit_ind_user'])?0:$request->req['sub_limit_ind_user']; 
+                $options['sub_limit_ind_user']= empty($request->req['sub_limit_ind_user'])?0:$request->req['sub_limit_ind_user'];
+                if(defined('RM_SAVE_SUBMISSION_BASENAME')) {
+                    $options['save_submission_enabled'] = isset($request->req['save_submission_enabled']) ? $request->req['save_submission_enabled'] : null;
+                }
             }
 
             if (isset($request->req['rm_form_id']) && (int)$request->req['rm_form_id']) {
@@ -131,6 +136,7 @@ class RM_Form_Settings_Controller {
             $options['form_expiry_date'] = $request->req['form_expiry_date'];
             if(defined('REGMAGIC_ADDON')) {
                 $options['form_limit_by_cs'] = isset($request->req['form_limit_by_cs']) ? maybe_serialize($request->req['form_limit_by_cs']) : null;
+                $options['exclude_pending_subs'] = isset($request->req['exclude_pending_subs']) ? $request->req['exclude_pending_subs'] : null;
             }
             
             if(isset( $request->req['form_message_after_expiry']))
@@ -145,7 +151,6 @@ class RM_Form_Settings_Controller {
                  $options['admin_email'] = implode(",", $request->req['resp_emails']);        
             if(isset( $request->req['post_expiry_form_id']))
                 $options['post_expiry_form_id'] = $request->req['post_expiry_form_id'];
-            //var_dump($request->req);die;
             if (isset($request->req['rm_form_id']) && (int)$request->req['rm_form_id']) {
                 $model->load_from_db($request->req['rm_form_id']);
                 $model->set($options);
@@ -156,7 +161,7 @@ class RM_Form_Settings_Controller {
                 } else
                     $visited = true;
             } else {
-                echo '<div class="rmnotice">' . wp_kses_post(RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED')) . '</div>';
+                echo '<div class="rmnotice">' . wp_kses_post((string)RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED')) . '</div>';
                 return;
             }
         }
@@ -187,6 +192,7 @@ class RM_Form_Settings_Controller {
             $options['form_redirect_to_url'] = $request->req['form_redirect_to_url'];
             if(defined('REGMAGIC_ADDON')) {
                 $options['form_is_unique_token'] = isset($request->req['form_is_unique_token']) ? $request->req['form_is_unique_token'] : null;
+                $options['unique_token_opt'] = isset($request->req['unique_token_opt']) ? $request->req['unique_token_opt'] : 'system';
                 $options['should_export_submissions'] = isset($request->req['should_export_submissions']) ? $request->req['should_export_submissions'] : null;
                 $options['export_submissions_to_url'] = isset($request->req['export_submissions_to_url']) ? $request->req['export_submissions_to_url'] : null;
             }
@@ -201,7 +207,7 @@ class RM_Form_Settings_Controller {
                 } else
                     $visited = true;
             } else {
-                echo '<div class="rmnotice">' . wp_kses_post(RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED')) . '</div>';
+                echo '<div class="rmnotice">' . wp_kses_post((string)RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED')) . '</div>';
                 return;
             }
         }
@@ -281,7 +287,7 @@ class RM_Form_Settings_Controller {
                     $visited = true;
                 }
             } else {
-                echo '<div class="rmnotice">' . wp_kses_post(RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED')) . '</div>';
+                echo '<div class="rmnotice">' . wp_kses_post((string)RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED')) . '</div>';
                 return;
             }
         }
@@ -359,7 +365,7 @@ class RM_Form_Settings_Controller {
                 } else
                     $visited = true;
             } else {
-                echo '<div class="rmnotice">' . wp_kses_post(RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED')) . '</div>';
+                echo '<div class="rmnotice">' . wp_kses_post((string)RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED')) . '</div>';
                 return;
             }
         }
@@ -433,7 +439,7 @@ class RM_Form_Settings_Controller {
                 RM_Utilities::redirect('?page='.$next_page.'&rm_form_id='.$request->req['rm_form_id']);
                 return;
             } else {
-                echo '<div class="rmnotice">' . wp_kses_post(RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED')) . '</div>';
+                echo '<div class="rmnotice">' . wp_kses_post((string)RM_UI_Strings::get('MSG_FS_NOT_AUTHORIZED')) . '</div>';
                 return;
             }
         }
@@ -608,7 +614,7 @@ class RM_Form_Settings_Controller {
             $latest_sub_data[$i] = new stdClass();
             $user = get_user_by('email', $submission->user_email);
             if($user instanceof WP_User){
-                if(isset($user->first_name) && trim($user->first_name))
+                if(isset($user->first_name) && trim((string)$user->first_name))
                     $latest_sub_data[$i]->user_name = $user->first_name.' '.$user->last_name;
                 else
                     $latest_sub_data[$i]->user_name = $user->display_name ? : $user->user_login;
@@ -637,7 +643,7 @@ class RM_Form_Settings_Controller {
         if ($attachments)
             foreach ($attachments as $att) {
                 $data->attachments[$i] = new stdClass;
-                $att_mime = explode('/', $att->post_mime_type);
+                $att_mime = explode('/', (string)$att->post_mime_type);
                 $att_type = $att_mime[0];
                 switch ($att_type) {
                     case 'image':

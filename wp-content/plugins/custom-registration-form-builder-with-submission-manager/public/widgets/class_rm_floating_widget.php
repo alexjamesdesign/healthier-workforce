@@ -41,10 +41,10 @@
                 <div class="rm-color-switch-title dbfl rm-accent-bg rm-pad-10"><?php _e("Magic Panel Styler!",'custom-registration-form-builder-with-submission-manager') ?></div>
                 <input type="text" class="dbfl rm-grey-box jscolor" placeholder="<?php _e("Panel Accent Color",'custom-registration-form-builder-with-submission-manager') ?>" id="rm-panel-accent">
                 <select class="dbfl" id="rm-panel-theme">
-                    <option value="Light"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LIGHT')); ?></option>
-                    <option value="Dark"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DARK')); ?></option>
+                    <option value="Light"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LIGHT')); ?></option>
+                    <option value="Dark"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DARK')); ?></option>
                 </select>
-                <button class="difl" id="rm-color-switch"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SWITCH')); ?></button>
+                <button class="difl" id="rm-color-switch"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SWITCH')); ?></button>
             </div>
             <?php
             }
@@ -77,31 +77,31 @@
                     }
                         if ($this->user_level === 0x1) {
                             ?>
-                    <div class="rm-popup-item dbfl" id="rm-login-open"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LOGIN')); ?></div>
+                    <div class="rm-popup-item dbfl" id="rm-login-open"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LOGIN')); ?></div>
                     
                     <?php
                     //if(!isset($rm_form_diary[$this->param->default_form])){
                     if(!empty($this->param->default_form)){
                     ?>
-                    <div class="rm-popup-item dbfl" id="rm-register-open-big"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REGISTER')); ?></div>
+                    <div class="rm-popup-item dbfl" id="rm-register-open-big"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_REGISTER')); ?></div>
                     <?php }
                     //else {
                     ?>
-                    <!-- <a href="#form_<?php echo esc_attr($this->param->default_form); ?>_1" id="rm_fab_register_redirect_link"><div class="rm-popup-item dbfl" id="rm-register-open-big"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REGISTER')); ?></div></a> -->
+                    <!-- <a href="#form_<?php echo esc_attr($this->param->default_form); ?>_1" id="rm_fab_register_redirect_link"><div class="rm-popup-item dbfl" id="rm-register-open-big"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_REGISTER')); ?></div></a> -->
                      <?php    
                     //}
                    
                         }
                         ?>
-                    <div class="rm-popup-item dbfl" id="rm-submissions-open"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_MY_SUBS')); ?></div>
-                    <div class="rm-popup-item dbfl" id="rm-transactions-open"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PAYMENTS')); ?></div>
-                    <div class="rm-popup-item dbfl" id="rm-account-open"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_MY_DETAILS')); ?></div>
+                    <div class="rm-popup-item dbfl" id="rm-submissions-open"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_MY_SUBS')); ?></div>
+                    <div class="rm-popup-item dbfl" id="rm-transactions-open"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PAYMENTS')); ?></div>
+                    <div class="rm-popup-item dbfl" id="rm-account-open"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_MY_DETAILS')); ?></div>
                     <?php
                         //Options extended by extensions
                         echo apply_filters('rm_popup_button_menu', '');
                     ?>
                     <?php if($this->user_level !== 0x1 && !is_user_logged_in()){ ?>
-                    <div class="rm-popup-item dbfl rm-popup-item-log-off" id="rm_log_off" onclick="document.getElementById('rm_floating_btn_nav_form').submit()"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LOG_OFF')); ?></div>
+                    <div class="rm-popup-item dbfl rm-popup-item-log-off" id="rm_log_off" onclick="document.getElementById('rm_floating_btn_nav_form').submit()"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LOG_OFF')); ?></div>
                    
                     <form method="post" id="rm_floating_btn_nav_form">
                        <input type="hidden" name="rm_slug" value="rm_front_log_off">
@@ -110,7 +110,7 @@
                     <?php } 
                     elseif(is_user_logged_in()){
                         ?>
-                    <div class="rm-popup-item dbfl rm-popup-item-log-off" id="rm_log_off"><a href="<?php echo wp_logout_url(); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LOG_OFF')); ?></a></div>
+                    <div class="rm-popup-item dbfl rm-popup-item-log-off" id="rm_log_off"><a href="<?php echo wp_logout_url(); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LOG_OFF')); ?></a></div>
                     <?php
                     }
 ?>
@@ -123,7 +123,7 @@
             </div>
 
             <div class="rm-floating-page rm-shadow-10 dbfl" id="rm-panel-page" style="transform: translateX(150%);">
-                <div class="rm-floating-page-top rm-border rm-white-box dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_MY_SUBS')); ?></div>
+                <div class="rm-floating-page-top rm-border rm-white-box dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_MY_SUBS')); ?></div>
                 <div class="rm-floating-page-content dbfl">
 
                     <!----Login Panel---->
@@ -132,11 +132,11 @@
                     </div>
                     <!--Registration Form-->
                     <div class="dbfl" id="rm-register-panel-big">
-                        <?php if ($this->param->default_form > 0 && !is_user_logged_in()) {                           
-                                
-                            echo do_shortcode("[RM_Form force_enable_multiform='true' id='".$this->param->default_form."']");       
+                        <?php if ($this->param->default_form > 0 && !is_user_logged_in()) {
+                            //echo do_shortcode("[RM_Form force_enable_multiform='true' id='".$this->param->default_form."']");
+                            echo do_shortcode("[RM_Forms id='".$this->param->default_form."']");
                         } else {
-                            echo "<div class='rm-no-default-from-notification'>". wp_kses_post(RM_UI_Strings::get('NO_DEFAULT_FORM'))."</div>";
+                            echo "<div class='rm-no-default-from-notification'>". wp_kses_post((string)RM_UI_Strings::get('NO_DEFAULT_FORM'))."</div>";
                         }
                         ?>
                     </div>
@@ -147,7 +147,7 @@
                         if ($this->user_level !== 0x1)
                             $this->widget_helper->getSubmissions();
                         else
-                            echo "<div class='rm-no-default-from-notification'>".wp_kses_post(RM_UI_Strings::get('MSG_PLEASE_LOGIN_FIRST'))."</div>";
+                            echo "<div class='rm-no-default-from-notification'>".wp_kses_post((string)RM_UI_Strings::get('MSG_PLEASE_LOGIN_FIRST'))."</div>";
                         ?>
                     </div>
 
@@ -157,7 +157,7 @@
                         if ($this->user_level !== 0x1)
                             $this->widget_helper->getPayments();
                         else
-                            echo "<div class='rm-no-default-from-notification'>".wp_kses_post(RM_UI_Strings::get('MSG_PLEASE_LOGIN_FIRST'))."</div>";
+                            echo "<div class='rm-no-default-from-notification'>".wp_kses_post((string)RM_UI_Strings::get('MSG_PLEASE_LOGIN_FIRST'))."</div>";
                         ?>
 
                     </div>
@@ -168,7 +168,7 @@
                         if ($this->user_level !== 0x1)
                             $this->widget_helper->get_account();
                         else
-                            echo "<div class='rm-no-default-from-notification'>".wp_kses_post(RM_UI_Strings::get('MSG_PLEASE_LOGIN_FIRST'))."</div>";
+                            echo "<div class='rm-no-default-from-notification'>".wp_kses_post((string)RM_UI_Strings::get('MSG_PLEASE_LOGIN_FIRST'))."</div>";
                         ?>
                         
                     </div>
@@ -179,7 +179,7 @@
                 </div>
 
                 <div class="rm-floating-page-bottom rm-border rm-white-box dbfl">
-                    <button class="rm-rounded-corners rm-button" id="rm-panel-close"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FIELD_ICON_CLOSE')); ?></button>
+                    <button class="rm-rounded-corners rm-button" id="rm-panel-close"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FIELD_ICON_CLOSE')); ?></button>
                 </div>
 
             </div>
@@ -198,8 +198,8 @@
                 wp_enqueue_style( 'rm_addon_floating_button', RM_ADDON_BASE_URL . 'public/css/floating-button.css' );
             ?>
             <pre class="rm-pre-wrapper-for-script-tags"><script type="text/javascript">
-                var rm_fab_theme = '<?php echo wp_kses_post($fab_theme); ?>';
-                var rm_fab_color = '<?php echo wp_kses_post($fab_color); ?>';
+                var rm_fab_theme = '<?php echo wp_kses_post((string)$fab_theme); ?>';
+                var rm_fab_color = '<?php echo wp_kses_post((string)$fab_color); ?>';
                 var ajaxurl = '<?php echo admin_url('admin-ajax.php'); ?>';
                 var floating_js_vars= {greetings: {morning: '<?php _e("Good Morning",'custom-registration-form-builder-with-submission-manager') ?>',evening:'<?php _e("Good Evening",'custom-registration-form-builder-with-submission-manager') ?>',afternoon: '<?php _e("Good Afternoon",'custom-registration-form-builder-with-submission-manager') ?>'}};
             </script></pre>

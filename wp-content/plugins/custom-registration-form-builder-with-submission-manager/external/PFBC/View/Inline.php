@@ -5,7 +5,7 @@ class View_Inline extends View {
 	public function render() {
 		$this->_form->appendAttribute("class", $this->class);
 
-		echo '<form', wp_kses_post($this->_form->getAttributes()), '>';
+		echo '<form', wp_kses_post((string)$this->_form->getAttributes()), '>';
 		$this->_form->getErrorView()->render();
 
 		$elements = $this->_form->getElements();
@@ -15,7 +15,7 @@ class View_Inline extends View {
 			if($e > 0)
 				echo ' ';
             $element = $elements[$e];
-			echo wp_kses_post($this->renderLabel($element), ' ', $element->render(), $this->renderDescriptions($element));
+			echo wp_kses_post((string)$this->renderLabel($element), ' ', $element->render(), $this->renderDescriptions($element));
 			++$elementCount;
         }
 
@@ -25,10 +25,10 @@ class View_Inline extends View {
 	public function renderLabel(Element $element) {
         $label = $element->getLabel();
         if(!empty($label)) {
-			echo '<label for="', wp_kses_post($element->getAttribute("id")), '">';
+			echo '<label for="', wp_kses_post((string)$element->getAttribute("id")), '">';
 			if($element->isRequired())
 				echo '<span class="required">* </span>';
-			echo wp_kses_post($label);	
+			echo wp_kses_post((string)$label);	
 			echo '</label>'; 
         }
     }

@@ -144,7 +144,7 @@ class RM_PayPal_Fields extends RM_Base_Model
         $option_label_sanitized = array();
         foreach($option_label as $label)
         {
-            if($label == null || trim($label) == '')
+            if($label == null || trim((string)$label) == '')
                 continue;
             else
                 $option_label_sanitized[] = $label ;                
@@ -162,7 +162,7 @@ class RM_PayPal_Fields extends RM_Base_Model
         $option_price_sanitized = array();
         foreach($option_price as $price)
         {
-            if($price == null || trim($price) == '')
+            if($price == null || trim((string)$price) == '')
                 continue;
             else
                 $option_price_sanitized[] = $price ;                

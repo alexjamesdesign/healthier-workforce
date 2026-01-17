@@ -85,7 +85,7 @@ $form->addElement(new Element_Button(RM_UI_Strings::get('LABEL_RESET_PASS'), "su
                         jQuery('#new_pass_error').show();
                     }
                     <?php if(isset($patt_regex)) { ?>
-                    var pattRegex = /<?php echo wp_kses_post($patt_regex); ?>/;
+                    var pattRegex = /<?php echo wp_kses_post((string)$patt_regex); ?>/;
                     if(!pattRegex.test(new_pass)){
                         jQuery('#rm-pass-reset-error').parent().show();
                         e.preventDefault();

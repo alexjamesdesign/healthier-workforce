@@ -594,16 +594,16 @@ class RM_Table_Tech
         $charset_collate = $wpdb->get_charset_collate();        
         $table_name = self::get_table_name_for('SESSIONS');
         
-        if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name)
-        {
-            $sql= "CREATE TABLE IF NOT EXISTS $table_name (
+        //if ($wpdb->get_var("SHOW TABLES LIKE '$table_name'") != $table_name)
+        //{
+            $sql= "CREATE TABLE $table_name (
                     `id` varchar(128) NOT NULL,
                     `data` mediumtext NOT NULL,
                     `timestamp` int(255) NOT NULL,
                     PRIMARY KEY (`id`)) $charset_collate;";
             
              dbDelta($sql);
-        }
+        //}
     }
     
     public static function create_rows_table()

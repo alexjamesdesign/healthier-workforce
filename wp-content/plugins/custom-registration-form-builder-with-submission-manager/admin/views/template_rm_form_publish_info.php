@@ -12,7 +12,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         <div id="rm-form-publish-shortcode-info">
             <?php _e('Paste following shortcode in a post or page to publish this form.', 'custom-registration-form-builder-with-submission-manager'); ?>
             <div id="rm-form-publish-shortcode" class="rmcode">
-                <span id="rmformshortcode"><?php echo "[RM_Form id='".esc_html($data->form_id)."']"; ?></span>
+                <span id="rmformshortcode"><?php echo "[RM_Forms id='".esc_html($data->form_id)."']"; ?></span>
                 <button onclick="rm_copy_content(document.getElementById('rmformshortcode'))"><?php _e('Copy', 'custom-registration-form-builder-with-submission-manager'); ?></button>
             </div>
         </div>

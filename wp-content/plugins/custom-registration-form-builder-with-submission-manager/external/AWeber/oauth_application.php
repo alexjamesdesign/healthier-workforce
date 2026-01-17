@@ -78,6 +78,8 @@ class OAuthApplication implements AWeberOAuthAdapter {
     public $consumerKey = false;
     public $consumerSecret = false;
 
+    public $app = null;
+
     /**
      * __construct
      *
@@ -310,7 +312,7 @@ class OAuthApplication implements AWeberOAuthAdapter {
      * @return void         Encoded data
      */
     protected function encode($data) {
-        return rawurlencode($data);
+        return rawurlencode((string)$data);
     }
 
     /**
@@ -374,11 +376,11 @@ class OAuthApplication implements AWeberOAuthAdapter {
         $method = $this->encode(strtoupper($method));
         $query = parse_url($url, PHP_URL_QUERY);
         if ($query) {
-            $parts = explode('?', $url, 2);
+            $parts = explode('?', (string)$url, 2);
             $url = array_shift($parts);
-            $items = explode('&', $query);
+            $items = explode('&', (string)$query);
             foreach ($items as $item) {
-                list($key, $value) = explode('=', $item);
+                list($key, $value) = explode('=', (string)$item);
                 $data[rawurldecode($key)] = rawurldecode($value);
             }
         }
@@ -440,7 +442,7 @@ class OAuthApplication implements AWeberOAuthAdapter {
      */
     public function makeRequest($method, $url, $data=array()) {
 
-        if ($this->debug) echo "\n** ".wp_kses_post($method).": ".esc_url($url)."\n";
+        if ($this->debug) echo "\n** ".wp_kses_post((string)$method).": ".esc_url($url)."\n";
         
         switch (strtoupper($method)) {
             case 'POST':
@@ -468,8 +470,8 @@ class OAuthApplication implements AWeberOAuthAdapter {
         if ($this->debug) {
             echo "<pre>";
             print_r($oauth);
-            echo " --> Status: ".wp_kses_post($resp->headers['Status-Code'])."\n";
-            echo " --> Body: ".wp_kses_post($resp->body);
+            echo " --> Status: ".wp_kses_post((string)$resp->headers['Status-Code'])."\n";
+            echo " --> Body: ".wp_kses_post((string)$resp->body);
             echo "</pre>";
         }
 

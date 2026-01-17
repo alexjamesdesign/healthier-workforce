@@ -16,6 +16,8 @@ class AWeberResponse extends AWeberAPIBase {
     public $adapter = false;
     public $data = array();
     public $_dynamicData = array();
+    public $url = '';
+    public $type = null;
 
     /**
      * __construct

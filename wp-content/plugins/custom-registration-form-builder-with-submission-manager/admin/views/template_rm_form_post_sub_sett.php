@@ -32,7 +32,8 @@ global $rm_env_requirements;
             $form->addElement(new Element_HTML('<div class="rmheader">' . RM_UI_Strings::get("TITLE_NEW_FORM_PAGE") . '</div>'));
         }
 
-        $form->addElement(new Element_TinyMCEWP("<b>" . RM_UI_Strings::get('LABEL_SUCC_MSG') . "</b>", $data->model->form_options->form_success_message, "form_success_message", array('editor_class' => 'rm_TinydMCE', 'editor_height' => '100px'), array("longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_SUCCESS_MSG'))));
+        $form_success_message = empty($data->model->form_options->form_success_message) ?  sprintf(esc_html__("%s Submitted", "custom-registration-form-builder-with-submission-manager"), $data->model->form_name) : $data->model->form_options->form_success_message;
+        $form->addElement(new Element_TinyMCEWP("<b>" . RM_UI_Strings::get('LABEL_SUCC_MSG') . "</b>", (string)$form_success_message, "form_success_message", array('editor_class' => 'rm_TinydMCE', 'editor_height' => '100px'), array("longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_SUCCESS_MSG'))));
          $form->addElement(new Element_Checkbox("<b>" . RM_UI_Strings::get('LABEL_UNIQUE_TOKEN') . "</b>", "get_pro_3", array(1 => ''), array("id" => "rm_", "disabled" => 1, "value" => 'no', "longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_UNIQUE_TOKEN') . "<br><br>" . RM_UI_Strings::get('MSG_BUY_PRO_INLINE'))));
         $form->addElement(new Element_Radio("<b>" . RM_UI_Strings::get('LABEL_USER_REDIRECT') . "</b>", "form_redirect", array('none' => 'None', 'page' => 'Page', 'url' => 'URL'), array("id" => "rm_", "class" => "rm_", "onclick" => "hide_show_radio(this);", "value" => $data->model->form_redirect? : 'none', "required" => "1", "longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_REDIRECT_AFTER_SUB'))));
 
@@ -89,7 +90,7 @@ global $rm_env_requirements;
     </div>
     
     <?php 
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
 </div>
 

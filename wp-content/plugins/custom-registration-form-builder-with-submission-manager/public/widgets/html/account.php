@@ -17,16 +17,16 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'widgets/html/a
 </div>
 <div class="rm-user-panel-user-details rm-rounded-corners dbfl">
     <div class="rm-panel-row dbfl">
-        <div class="rm-panel-field difl"><?php echo wp_kses_post(RM_UI_Strings::get('FIELD_TYPE_FNAME')); ?></div>
+        <div class="rm-panel-field difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FIELD_TYPE_FNAME')); ?></div>
         <div class="rm-panel-value difl"><?php echo esc_html($data->user->first_name); ?></div>
     </div>
     <div class="rm-panel-row dbfl">
-        <div class="rm-panel-field difl"><?php echo wp_kses_post(RM_UI_Strings::get('FIELD_TYPE_LNAME')); ?></div>
+        <div class="rm-panel-field difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FIELD_TYPE_LNAME')); ?></div>
         <div class="rm-panel-value difl"><?php echo esc_html($data->user->last_name); ?></div>
     </div>
     <div class="rm-panel-row dbfl">
-        <div class="rm-panel-field difl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_BIO')); ?></div>
-        <div class="rm-panel-value difl"><?php echo wp_kses_post($data->user->description); ?></div>
+        <div class="rm-panel-field difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_BIO')); ?></div>
+        <div class="rm-panel-value difl"><?php echo wp_kses_post((string)$data->user->description); ?></div>
     </div>
     <?php
         if ($data->user->user_email)
@@ -34,7 +34,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'widgets/html/a
             ?>
 
             <div class="rm-panel-row dbfl">
-                <div class="rm-panel-field difl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_EMAIL')); ?>:</div>
+                <div class="rm-panel-field difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_EMAIL')); ?>:</div>
                 <div class="rm-panel-value difl"><?php echo sanitize_email($data->user->user_email); ?></div>
             </div>
             <?php
@@ -44,7 +44,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'widgets/html/a
             ?>
 
             <div class="rm-panel-row dbfl">
-                <div class="rm-panel-field difl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SECEMAIL')); ?>:</div>
+                <div class="rm-panel-field difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SECEMAIL')); ?>:</div>
                 <div class="rm-panel-value difl"><?php echo sanitize_email($data->user->sec_email); ?></div>
             </div>
             <?php
@@ -54,7 +54,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'widgets/html/a
             ?>
 
             <div class="rm-panel-row dbfl">
-                <div class="rm-panel-field difl"><?php echo wp_kses_post(RM_UI_Strings::get('FIELD_TYPE_NICKNAME')); ?>:</div>
+                <div class="rm-panel-field difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FIELD_TYPE_NICKNAME')); ?>:</div>
                 <div class="rm-panel-value difl"><?php echo esc_html($data->user->nickname); ?></div>
             </div>
             <?php
@@ -64,7 +64,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'widgets/html/a
             ?>
 
             <div class="rm-panel-row dbfl">
-                <div class="rm-panel-field difl"><?php echo wp_kses_post(RM_UI_Strings::get('FIELD_TYPE_WEBSITE')); ?>:</div>
+                <div class="rm-panel-field difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FIELD_TYPE_WEBSITE')); ?>:</div>
                 <div class="rm-panel-value difl"><?php echo esc_url($data->user->user_url); ?></div>
             </div>
             <?php
@@ -98,7 +98,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'widgets/html/a
                                                 <div class="rm-submission-attachment">
                                                     <?php echo wp_get_attachment_link($sub, 'thumbnail', false, true, false); ?>
                                                     <div class="rm-submission-attachment-field"><?php echo esc_html(basename($att_path)); ?></div>
-                                                    <div class="rm-submission-attachment-field"><a href="<?php echo esc_url($att_url); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
+                                                    <div class="rm-submission-attachment-field"><a href="<?php echo esc_url($att_url); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
                                                 </div>
 
                                                 <?php
@@ -112,29 +112,43 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'widgets/html/a
                                                 $sub .= '<b>'.__('Zip Code', 'custom-registration-form-builder-with-submission-manager').'</b> : ' . $meta['zip'] . '<br/>';
                                                 $sub .= '<b>'.__('Country', 'custom-registration-form-builder-with-submission-manager').'</b> : ' . $meta['country'];
                                             }
-                                                echo wp_kses_post($sub);
+                                                echo wp_kses_post((string)$sub);
                                         } elseif ($sub->type == 'Time') {                                  
-                                    echo wp_kses_post($meta['time']).", Timezone: ".wp_kses_post($meta['timezone']);
+                                    echo wp_kses_post((string)$meta['time']).", Timezone: ".wp_kses_post((string)$meta['timezone']);
                                 } elseif ($sub->type == 'Checkbox') {   
-                                    echo wp_kses_post(implode(', ',RM_Utilities::get_lable_for_option($field_id, $meta)));
+                                    echo wp_kses_post((string)implode(', ',RM_Utilities::get_lable_for_option($field_id, $meta)));
+                                } elseif ($sub->type == 'URL') {
+                                    $url = esc_url($meta['url']);
+                                    echo wp_kses_post("<a href='$url'>$url</a>");
                                 } else {
                                             $sub = implode(', ', $meta);
-                                            echo wp_kses_post($sub);
+                                            echo wp_kses_post((string)$sub);
                                         }
                                     } else {
                                         if($sub->type=='Rating')
                                         {
                                             if(defined('REGMAGIC_ADDON'))
-                                                echo wp_kses_post(RM_Utilities::enqueue_external_scripts('script_rm_rating', RM_ADDON_BASE_URL . 'public/js/rating3/jquery.rateit.js'));
+                                                echo wp_kses_post((string)RM_Utilities::enqueue_external_scripts('script_rm_rating', RM_ADDON_BASE_URL . 'public/js/rating3/jquery.rateit.js'));
                                            echo '<div class="rateit" id="rateit5" data-rateit-min="0" data-rateit-max="5" data-rateit-value="'.esc_attr($meta).'" data-rateit-ispreset="true" data-rateit-readonly="true"></div>';
                                  
                                         }
                                         elseif ($sub->type == 'Radio' || $sub->type == 'Select')
                                         {   
-                                            echo wp_kses_post(RM_Utilities::get_lable_for_option($field_id, $meta));
+                                            echo wp_kses_post((string)RM_Utilities::get_lable_for_option($field_id, $meta));
+                                        }elseif($sub->type == 'DigitalSign'){
+                                            if(!empty($sub_data)){
+                                                $sign_url  = RM_BASE_URL . 'plus/signature/signature-access.php?file='.$sub_data;
+                                                
+                                                ?>
+                                                <div class="rm-submission-attachment">
+                                                    <img src="<?php echo esc_url($sign_url);?>" style="max-width:100px;">
+                                                    <div class="rm-submission-attachment-field"><a href="<?php echo esc_url($sign_url); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
+                                                </div>
+                                            <?php
+                                            }
                                         }
                                         else
-                                        echo wp_kses_post($meta);
+                                        echo wp_kses_post((string)$meta);
                                     }
                     ?>
                 </div>
@@ -153,8 +167,8 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'widgets/html/a
 <div id="rm_edit_sub_link">
     <form method="post" name="rm_form" action="<?php echo get_permalink(get_option('rm_option_front_sub_page_id')); ?>" id="rmeditsubmissions">
         <input type="hidden" name="rm_edit_user_details" value="true">
-        <input type="hidden" name="form_ids" value='<?php echo wp_kses_post(json_encode($editable_forms)); ?>'>
+        <input type="hidden" name="form_ids" value='<?php echo wp_kses_post((string)json_encode($editable_forms)); ?>'>
     </form>
-    <a href="javascript:void(0)" onclick="document.getElementById('rmeditsubmissions').submit();"><?php echo wp_kses_post(RM_UI_Strings::get('MSG_EDIT_YOUR_SUBMISSIONS')); ?></a>
+    <a href="javascript:void(0)" onclick="document.getElementById('rmeditsubmissions').submit();"><?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_EDIT_YOUR_SUBMISSIONS')); ?></a>
 </div>
 <?php } } ?>

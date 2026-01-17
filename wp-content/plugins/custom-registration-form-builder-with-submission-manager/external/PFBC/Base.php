@@ -1,6 +1,6 @@
 <?php
 abstract class Base {
-	public function configure(array $properties = null) {
+	public function configure($properties = null) {
         if(!empty($properties)) {
 			$class = get_class($this);
                            
@@ -41,7 +41,7 @@ abstract class Base {
 
 	/*This method can be used to view a class' state.*/
 	public function debug() {
-		echo wp_kses_post("<pre>", print_r($this, true), "</pre>");
+		echo wp_kses_post((string)"<pre>", print_r($this, true), "</pre>");
 	}
 
 	/*This method prevents double/single quotes in html attributes from breaking the markup.*/
@@ -97,7 +97,10 @@ abstract class Base {
     }
 
     public function setAttribute($attribute, $value) {
-        if(isset($this->_attributes))
-            $this->_attributes[$attribute] = $value;
+        if(isset($this->_attributes)) {
+            if(!is_null($value)) {
+                $this->_attributes[$attribute] = $value;
+            }
+        }
     }
 }

@@ -126,21 +126,21 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
   <div class="rm-form-configuration-wrapper" style="display:none">
     <div class="rm-grid-top dbfl">
         <div class="rm-grid-title difl"><?php echo esc_html($data->form->get_form_name()); ?></div>
-        <span class="rm-grid-button difl" onclick="rm_start_joyride()"><a class="rm_fd_link" href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_TOUR')); ?></a></span>
+        <span class="rm-grid-button difl" onclick="rm_start_joyride()"><a class="rm_fd_link" href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TOUR')); ?></a></span>
         
         <span class="rm-fd-form-toggle difr" id="rm_form_toggle">
         <?php
             if (count($data->all_forms) !== 0) {
-                echo wp_kses_post(RM_UI_Strings::get('LABEL_TOGGLE_FORM'));
+                echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TOGGLE_FORM'));
                 ?>            
                 <select id="rm_form_dropdown" name="form_id" onchange = "rm_fd_switch_form(jQuery(this).val(), <?php echo esc_js($data->timerange); ?>)">
                 <?php 
                     echo "<option value='rm_login_form'>".__('Login Form','custom-registration-form-builder-with-submission-manager')."</option>";
                     foreach ($data->all_forms as $form_id => $form)
                         if ($data->form_id == $form_id)
-                            echo "<option value=".esc_attr($form_id)." selected>".wp_kses_post($form)."</option>";
+                            echo "<option value=".esc_attr($form_id)." selected>".wp_kses_post((string)$form)."</option>";
                         else
-                            echo "<option value=".esc_attr($form_id).">".wp_kses_post($form)."</option>";
+                            echo "<option value=".esc_attr($form_id).">".wp_kses_post((string)$form)."</option>";
                     ?>
                 </select>
                 <?php
@@ -152,9 +152,9 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         
                 <!--  -->
             <div class="rm-grid-section dbfl" id="rm_tour_timewise_stats">
-                <div class="rm-grid-section-title dbfl rm-box-title"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SUBS_OVER_TIME')); ?></div>
+                <div class="rm-grid-section-title dbfl rm-box-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SUBS_OVER_TIME')); ?></div>
                 <div class="rm-timerange-toggle rm-fd-form-toggle rm-timerange-dashboard">
-                <?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SELECT_TIMERANGE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SELECT_TIMERANGE')); ?>
                     <select id="rm_stat_timerange" onchange="rm_refresh_stats()">
                     <?php $trs = array(7,30,60,90); 
 
@@ -174,7 +174,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
  
         <div class="rm-grid-section dbfl" id="rm-form-build-section">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_1_TITLE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_1_TITLE')); ?>
             </div>
             
             <div class="rm-grid-icon difl" id="rm-customfields-icon">
@@ -183,7 +183,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                         <div class="rm-grid-icon-badge"><?php echo esc_html($data->field_count); ?></div>
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-custom-fields.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_FORM_FIELDS')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_FORM_FIELDS')); ?></div>
                 </a>
             </div>
             
@@ -192,7 +192,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-view.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_DESIGN')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_DESIGN')); ?></div>
                 </a>
             </div> 
             
@@ -201,7 +201,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>dash-more-options.jpg">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
                 </a>
             </div> 
             
@@ -215,7 +215,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         
         <div class="rm-grid-section dbfl" id="rm-general-icon">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_2_TITLE')); ?>               
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_2_TITLE')); ?>               
             </div>
             
             <div class="rm-grid-icon difl" id="rm-general-settings">
@@ -223,7 +223,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-settings.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_GEN_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_GEN_SETT')); ?></div>
                 </a>
             </div>
 
@@ -233,7 +233,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-accounts.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_ACC_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_ACC_SETT')); ?></div>
                     
                 </a>
             </div>  
@@ -243,7 +243,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>post-submission.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_PST_SUB_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_PST_SUB_SETT')); ?></div>
                 </a>
             </div>  
 
@@ -252,7 +252,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl" >
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>auto-responder.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_AUTO_RESP_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_AUTO_RESP_SETT')); ?></div>
                 </a>
             </div> 
 
@@ -261,7 +261,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-limits.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_LIM_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_LIM_SETT')); ?></div>
                 </a>
             </div>  
             
@@ -271,7 +271,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-access.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_ACTRL_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_ACTRL_SETT')); ?></div>
                 </a>
             </div>
             -->
@@ -281,7 +281,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>email_templates.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_EMAIL_TEMPLATES_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_EMAIL_TEMPLATES_SETT')); ?></div>
                 </a>
             </div> 
             <!--
@@ -290,7 +290,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-overrides.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_OVERRIDES_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_OVERRIDES_SETT')); ?></div>
                 </a>
             </div>
             -->
@@ -300,7 +300,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>dash-more-options.jpg">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
                 </a>
             </div> 
             
@@ -309,7 +309,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 
         <div class="rm-grid-section dbfl" id="rm-thirdparty-section">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_3_TITLE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_3_TITLE')); ?>
             </div>
             
             <div class="rm-grid-icon difl" id="rm-mailchimp-icon">  
@@ -317,7 +317,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>mailchimp.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_MC_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_MC_SETT')); ?></div>
                     
                 </a>
             </div>
@@ -438,7 +438,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>dash-more-options.jpg">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
                 </a>
             </div>
              
@@ -446,7 +446,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 
         <div class="rm-grid-section dbfl" id="rm-publish-section">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_4_TITLE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_4_TITLE')); ?>
             </div>            
        
             <div class="rm-grid-icon difl" id="rm-shortcode-icon">
@@ -454,7 +454,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>publish_shortcode.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PUBLISH_SHORTCODE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PUBLISH_SHORTCODE')); ?></div>
                 </a>
             </div> 
             <!--
@@ -463,7 +463,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>publish_embed.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PUBLISH_HTML_CODE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PUBLISH_HTML_CODE')); ?></div>
                 </a>
             </div> 
             -->
@@ -472,7 +472,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>publish_widget.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PUBLISH_FORM_WIDGET')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PUBLISH_FORM_WIDGET')); ?></div>
                 </a>
             </div> 
             <!--
@@ -481,7 +481,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>publish_userdir.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PUBLISH_USER_DIRECTORY')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PUBLISH_USER_DIRECTORY')); ?></div>
                 </a>
             </div> 
             -->
@@ -490,7 +490,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>publish_subs.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PUBLISH_USER_AREA')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PUBLISH_USER_AREA')); ?></div>
                 </a>
             </div>
             <div class="rm-grid-icon difl" id="rm-user-area-icon-single-tab">
@@ -498,7 +498,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>rm-custom-profile-tab.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PUBLISH_USER_AREA_TABS')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PUBLISH_USER_AREA_TABS')); ?></div>
                 </a>
             </div>
             <div class="rm-grid-icon difl" id="rm-magic-popup-icon">
@@ -506,7 +506,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>publish_magicpopup.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PUBLISH_MAGIC_POPUP')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PUBLISH_MAGIC_POPUP')); ?></div>
                 </a>
             </div>
             <!--
@@ -515,7 +515,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>publish_landingpage.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PUBLISH_LANDING_PAGE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PUBLISH_LANDING_PAGE')); ?></div>
                 </a>
             </div>
             -->
@@ -524,7 +524,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>publish_login.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PUBLISH_LOGIN_BOX')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PUBLISH_LOGIN_BOX')); ?></div>
                 </a>
             </div> 
             
@@ -533,7 +533,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>publish_otp.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PUBLISH_OTP_WIDGET')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PUBLISH_OTP_WIDGET')); ?></div>
                 </a>
             </div> 
             
@@ -542,7 +542,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>dash-more-options.jpg">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
                 </a>
             </div>
            
@@ -550,7 +550,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
        
         <div class="rm-grid-section dbfl" id="rm-manage-section">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_5_TITLE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_5_TITLE')); ?>
             </div>
             
                <div class="rm-grid-icon difl rm-sub-icon-tour">
@@ -559,7 +559,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                         <div class="rm-grid-icon-badge rm-sub-icon-tour-badge"><?php echo esc_html($data->sub_count); ?></div>
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-inbox.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REGISTRATIONS')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_REGISTRATIONS')); ?></div>
                 </a>
             </div> 
             <div class="rm-grid-icon difl" id="rm-outbox-icon">
@@ -567,7 +567,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>outbox.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_OUTBOX')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_OUTBOX')); ?></div>
                 </a>
             </div>
            <!--
@@ -577,7 +577,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                         <div class="rm-grid-icon-badge"><?php echo $data->attachment_count ? : 0; ?></div>
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-attachments.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('TITLE_ATTACHMENT_PAGE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('TITLE_ATTACHMENT_PAGE')); ?></div>
                     
                 </a>
             </div> 
@@ -587,7 +587,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>dash-more-options.jpg">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
                 </a>
             </div>
             
@@ -596,14 +596,14 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         
         <div class="rm-grid-section dbfl"  id="rm-analyze-section">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_6_TITLE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_6_TITLE')); ?>
             </div>            
             <div class="rm-grid-icon difl" id="rm-analytics-icon">
                 <a href="?page=rm_analytics_show_form&rm_form_id=<?php echo esc_attr($data->form_id); ?>" class="rm_fd_link">   
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-analytics.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('TITLE_FORM_STAT_PAGE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('TITLE_FORM_STAT_PAGE')); ?></div>
                 </a>
             </div> 
             <!--
@@ -612,7 +612,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>field-analytics.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('TITLE_FIELD_STAT_PAGE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('TITLE_FIELD_STAT_PAGE')); ?></div>
                     
                 </a>
             </div>
@@ -622,7 +622,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>dash-more-options.jpg">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
                 </a>
             </div>
              
@@ -630,7 +630,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
        
         <div class="rm-grid-section dbfl" id="rm-automate-section">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_7_TITLE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_7_TITLE')); ?>
             </div>            
             <?php do_action("rm_form_settings_dashboard_action_icon", $data->form_id); ?>
             
@@ -639,7 +639,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>email-users.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('TITLE_INVITES')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('TITLE_INVITES')); ?></div>
                 </a>
             </div> 
             
@@ -648,7 +648,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>dash-more-options.jpg">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
                 </a>
             </div>
             
@@ -661,7 +661,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
             if($data->sub_count == 0):
                 ?>
             <div class="rm-grid-sidebar-card dbfl">
-                <div class='rmnotice-container'><div class="rmnotice-container"><div class="rm-counter-box">0</div><div class="rm-counter-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REGISTRATIONS')); ?></div></div></div>  
+                <div class='rmnotice-container'><div class="rmnotice-container"><div class="rm-counter-box">0</div><div class="rm-counter-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_REGISTRATIONS')); ?></div></div></div>  
 </div>
                 <?php
             endif;
@@ -684,7 +684,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
             <div class="rm-grid-quick-tasks dbfl">
                 <div class="rm-grid-sidebar-row dbfl">
                     <div class="rm-grid-sidebar-row-label difl">
-                        <a class="<?php echo $data->sub_count ? '' : 'rm_deactivated'?>" href="?page=rm_submission_manage&rm_form_id=<?php echo esc_attr($data->form_id); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_VIEW_ALL')); ?></a>
+                        <a class="<?php echo $data->sub_count ? '' : 'rm_deactivated'?>" href="?page=rm_submission_manage&rm_form_id=<?php echo esc_attr($data->form_id); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_VIEW_ALL')); ?></a>
                     </div>
                 </div>
             </div>
@@ -693,13 +693,13 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         <div class="rm-grid-section-cards dbfl"> 
 
             <div class="rm-grid-sidebar-card dbfl" id="rm-attachments-card">
-                <div class='rmnotice-container'><div class="rmnotice-container"><div class="rm-counter-box">0</div><div class="rm-counter-label"><?php echo wp_kses_post(RM_UI_Strings::get('TITLE_ATTACHMENT_PAGE')); ?></div></div></div>  
+                <div class='rmnotice-container'><div class="rmnotice-container"><div class="rm-counter-box">0</div><div class="rm-counter-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('TITLE_ATTACHMENT_PAGE')); ?></div></div></div>  
             </div>
 
             <div class="rm-grid-quick-tasks dbfl">
                 <div class="rm-grid-sidebar-row dbfl">
                     <div class="rm-grid-sidebar-row-label difl">
-                        <a href="?page=rm_attachment_manage&rm_form_id=<?php echo esc_attr($data->form_id); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_VIEW_ALL')); ?></a>
+                        <a href="?page=rm_attachment_manage&rm_form_id=<?php echo esc_attr($data->form_id); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_VIEW_ALL')); ?></a>
                     </div>
                 </div>
             </div>
@@ -727,36 +727,36 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
     <div class="rm-grid-sidebar-2 difl">
         <div class="rm-grid-section dbfl">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_STATUS')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_STATUS')); ?>
                 <span class="rm-grid-section-toggle rm-collapsible"></span>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl" id="rm-sidebar-sc-icon">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>shortcode.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_FORM_SHORTCODE')); ?>:</div>
-                <div class="rm-grid-sidebar-row-value difl"><span id="rmformshortcode">[RM_Form id='<?php echo esc_html($data->form->get_form_id()); ?>']</span><a href="javascript:void(0)" onclick="rm_copy_to_clipboard(document.getElementById('rmformshortcode'))" id="rm-copy-sc"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_COPY')); ?></a>
+                <div class="rm-grid-sidebar-row-label difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_FORM_SHORTCODE')); ?>:</div>
+                <div class="rm-grid-sidebar-row-value difl"><span id="rmformshortcode">[RM_Forms id='<?php echo esc_html($data->form->get_form_id()); ?>']</span><a href="javascript:void(0)" onclick="rm_copy_to_clipboard(document.getElementById('rmformshortcode'))" id="rm-copy-sc"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_COPY')); ?></a>
                     <div style="display:none" id="rm_msg_copied_to_clipboard"><?php _e("Copied to clipboard",'custom-registration-form-builder-with-submission-manager'); ?></div><div style="display:none" id="rm_msg_not_copied_to_clipboard"><?php _e("Could not be copied. Please try manually.",'custom-registration-form-builder-with-submission-manager'); ?></div></div>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>visiblity.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-visibility"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_FORM_VISIBILITY')); ?>:</div>
-                <div class="rm-grid-sidebar-row-value difl"><?php echo esc_html($data->form_access); ?><a href="?page=rm_form_sett_access_control&rm_form_id=<?php echo esc_attr($data->form_id); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_EDIT')); ?></a></div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-visibility"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_FORM_VISIBILITY')); ?>:</div>
+                <div class="rm-grid-sidebar-row-value difl"><?php echo esc_html($data->form_access); ?><a href="?page=rm_form_sett_access_control&rm_form_id=<?php echo esc_attr($data->form_id); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_EDIT')); ?></a></div>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>event.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_FORM_CREATED_ON')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_FORM_CREATED_ON')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl"><?php echo esc_html(RM_Utilities::localize_time($data->form->get_created_on())); ?></div>
             </div>
 
             <div class="rm-grid-quick-tasks dbfl">
                 <div class="rm-grid-sidebar-row dbfl">
                     <div class="rm-grid-sidebar-row-label difl">
-                        <a href="javascript:void(0)" id="rm-sidebar-delete" onclick="jQuery.rm_do_action_with_alert('<?php echo wp_kses_post(RM_UI_Strings::get('ALERT_DELETE_FORM')); ?>', 'rm_fd_action_form', 'rm_form_remove')"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DELETE')); ?></a>
+                        <a href="javascript:void(0)" id="rm-sidebar-delete" onclick="jQuery.rm_do_action_with_alert('<?php echo wp_kses_post((string)RM_UI_Strings::get('ALERT_DELETE_FORM')); ?>', 'rm_fd_action_form', 'rm_form_remove')"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DELETE')); ?></a>
                     </div>
                 </div>
             </div>
@@ -764,56 +764,56 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 
         <div class="rm-grid-section dbfl">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_CONTENT')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_CONTENT')); ?>
                 <span class="rm-grid-section-toggle rm-collapsible"></span>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>pages.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-pages"><?php echo wp_kses_post(RM_UI_Strings::get('FD_FORM_PAGES')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-pages"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_FORM_PAGES')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl"><?php echo 1; ?></div>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>field.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-fields"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_F_FIELDS')); ?>:</div>
-                <div class="rm-grid-sidebar-row-value difl"><?php echo esc_html($data->field_count); ?><a id="rm-sidebar-add-field" href="?page=rm_field_manage&rm_form_id=<?php echo esc_attr($data->form->get_form_id()); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_ADD')); ?></a></div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-fields"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_F_FIELDS')); ?>:</div>
+                <div class="rm-grid-sidebar-row-value difl"><?php echo esc_html($data->field_count); ?><a id="rm-sidebar-add-field" href="?page=rm_field_manage&rm_form_id=<?php echo esc_attr($data->form->get_form_id()); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_ADD')); ?></a></div>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>submit.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-add-submit"><?php echo wp_kses_post(RM_UI_Strings::get('FD_FORM_SUBMIT_BTN_LABEL')); ?>:</div>
-                <div class="rm-grid-sidebar-row-value difl"><div class="difl" id="rm-submit-label"><?php echo $data->form_options->form_submit_btn_label ? : 'Submit'; ?></div><a href='javascript:;' onclick='edit_label()' ><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FIELD_ICON_CHANGE')); ?></a></div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-add-submit"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_FORM_SUBMIT_BTN_LABEL')); ?>:</div>
+                <div class="rm-grid-sidebar-row-value difl"><div class="difl" id="rm-submit-label"><?php echo $data->form_options->form_submit_btn_label ? : 'Submit'; ?></div><a href='javascript:;' onclick='edit_label()' ><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FIELD_ICON_CHANGE')); ?></a></div>
                 <div id="rm-submit-label-textbox" style="display:none"><input type="text" id="submit_label_textbox"/><div><input type="button" value ="Save" onclick="save_submit_label()"><input type="button" value ="Cancel" onclick="cancel_edit_label()"></div></div> </div>
             <div class="rm-grid-quick-tasks dbfl">
                 <div class="rm-grid-sidebar-row dbfl">
                     <div class="rm-grid-sidebar-row-label difl">
-                        <a id="rm-sidebar-duplicate" href="javascript:void(0)" onclick="jQuery.rm_do_action('rm_fd_action_form', 'rm_form_duplicate')"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DUPLICATE')); ?></a>
+                        <a id="rm-sidebar-duplicate" href="javascript:void(0)" onclick="jQuery.rm_do_action('rm_fd_action_form', 'rm_form_duplicate')"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DUPLICATE')); ?></a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="rm-grid-section rm-premium-option-grid dbfl">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_STATS')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_STATS')); ?>
                 <span class="rm-grid-section-toggle rm-collapsible"></span>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>visitors.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-visitors"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_VISITORS')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-visitors"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_VISITORS')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl"><?php echo esc_html($data->visitors_count) .__(" in last 30 days.",'custom-registration-form-builder-with-submission-manager'); ?></div>
             </div>
             <div class="rm-grid-sidebar-row rm-premium-option-popup-wrap dbfl">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>submissions.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-submissions"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REGISTRATIONS')); ?>:</div>
-                <div class="rm-grid-sidebar-row-value difl"><?php echo esc_html($data->sub_count); ?><a href="javascript:void(0)" class="rm_deactivated rm-premium-option" onclick="CallModalBox(this)"><?php echo wp_kses_post(RM_UI_Strings::get('FD_DOWNLOAD_REGISTRATIONS')); ?></a></div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-submissions"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_REGISTRATIONS')); ?>:</div>
+                <div class="rm-grid-sidebar-row-value difl"><?php echo esc_html($data->sub_count); ?><a href="javascript:void(0)" class="rm_deactivated rm-premium-option" onclick="CallModalBox(this)"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_DOWNLOAD_REGISTRATIONS')); ?></a></div>
                  <div class="rm-premium-option-popup" style="display:none">
                 <span class="rm-premium-option-popup-nub"></span>
                 <span class="rm_buy_pro_inline"><?php printf(__('To unlock downloading submissions (and many more features), please upgrade. <a href="%s" target="blank">Click here</a>', 'custom-registration-form-builder-with-submission-manager'), RM_Utilities::comparison_page_link()); ?> </span>
@@ -824,7 +824,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>conversion.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-conversion"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_CONVERSION')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-conversion"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_CONVERSION')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl"><?php echo esc_html($data->conversion_rate); ?>%</div>
             </div>
 
@@ -832,7 +832,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>avgtime.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-avgtime"><?php echo wp_kses_post(RM_UI_Strings::get('FD_AVG_TIME')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-avgtime"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_AVG_TIME')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl"><?php echo esc_html($data->avg_time); ?></div>
             </div>
 
@@ -840,15 +840,15 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
             <div class="rm-grid-quick-tasks dbfl">
                 <div class="rm-grid-sidebar-row dbfl">
                     <div class="rm-grid-sidebar-row-label difl">
-                        <a id="rm-sidebar-reset" href="javascript:void(0)" onclick="jQuery.rm_do_action_with_alert('<?php _e("You are going to delete all stats for selected form. Do you want to proceed?",'custom-registration-form-builder-with-submission-manager'); ?>', 'rm_fd_action_form', 'rm_analytics_reset')"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_RESET')); ?></a>
+                        <a id="rm-sidebar-reset" href="javascript:void(0)" onclick="jQuery.rm_do_action_with_alert('<?php _e("You are going to delete all stats for selected form. Do you want to proceed?",'custom-registration-form-builder-with-submission-manager'); ?>', 'rm_fd_action_form', 'rm_analytics_reset')"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_RESET')); ?></a>
                     </div>
                 </div>
             </div>
         </div>
-        <!--
+        
         <div class="rm-grid-section dbfl">
             <div class="rm-grid-section-title dbfl" id="rm-sidebar-quick-toggles">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_QCK_TOGGLE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_QCK_TOGGLE')); ?>
                 <span class="rm-grid-section-toggle rm-collapsible"></span>
             </div>
 
@@ -862,11 +862,11 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                   }
                 
              ?>
-            <div   <?php echo wp_kses_post($tooltip); ?> class="rm-grid-sidebar-row dbfl <?php echo esc_html($deactivation_class); ?>">
+            <div   <?php echo wp_kses_post((string)$tooltip); ?> class="rm-grid-sidebar-row dbfl <?php echo esc_html($deactivation_class); ?>">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>auto-responder.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" ><?php echo wp_kses_post(RM_UI_Strings::get('FD_AUTORESPONDER')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl" ><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_AUTORESPONDER')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl<?php echo ($data->form_options->form_email_subject && $data->form_options->form_email_content) ? '' : ' rm_deactivated' ?>"><div class="rm-grid-sidebar-row-value difl"><div class="switch">
                             <input id="rm-toggle-1"  class="rm-toggle rm-toggle-round-flat" onchange="rm_fd_quick_toggle(this, <?php echo esc_js($data->form_id); ?>)" name="form_should_send_email" type="checkbox"<?php echo $data->form->get_form_should_send_email() == 1 ? ' checked' : '' ?>>
                             <label for="rm-toggle-1"></label>
@@ -877,7 +877,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>form-accounts.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_WP_REG')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_WP_REG')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl"><div class="rm-grid-sidebar-row-value difl"><div class="switch">
                             <input id="rm-toggle-2" class="rm-toggle rm-toggle-round-flat" onchange="rm_fd_quick_toggle(this, <?php echo esc_js($data->form_id); ?>)" name="form_type" type="checkbox"<?php echo $data->form->get_form_type() == 1 ? ' checked' : '' ?>>
                             <label for="rm-toggle-2"></label>
@@ -894,11 +894,11 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                   }
                 
              ?>
-            <div <?php echo wp_kses_post($tooltip);?> class="rm-grid-sidebar-row dbfl <?php echo esc_attr($deactivation_class); ?>">
+            <div <?php echo wp_kses_post((string)$tooltip);?> class="rm-grid-sidebar-row dbfl <?php echo esc_attr($deactivation_class); ?>">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>form-limits.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_EXPIRY')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_EXPIRY')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl<?php echo ($data->form_options->form_expired_by) ? '' : ' rm_deactivated' ?>"><div class="rm-grid-sidebar-row-value difl"><div class="switch">
                             <input id="rm-toggle-5" class="rm-toggle rm-toggle-round-flat" onchange="rm_fd_quick_toggle(this, <?php echo esc_js($data->form_id); ?>)" name="form_should_auto_expire" type="checkbox"<?php echo $data->form->get_form_should_auto_expire() == 1 ? ' checked' : '' ?>>
                             <label for="rm-toggle-5"></label>
@@ -906,7 +906,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
             </div>
 
         </div>
-        -->
+        
     </div>
 
     <!-- action form to execute rm_slug_actions -->
@@ -924,7 +924,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         <select onchange="rm_fd_switch_form()">
             <?php
             foreach ($data->all_forms as $form_id => $form_name):
-                echo "<option value='".esc_attr($form_id)."'>".wp_kses_post($form_name)."</option>";
+                echo "<option value='".esc_attr($form_id)."'>".wp_kses_post((string)$form_name)."</option>";
             endforeach;
             ?>
         </select>
@@ -1113,22 +1113,22 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
     
     function drawTimewiseStat()
     {
-        if('<?php echo wp_kses_post($show_chart); ?>'==0){
+        if('<?php echo wp_kses_post((string)$show_chart); ?>'==0){
             jQuery("#rm_subs_over_time_chart_div,#rm_tour_timewise_stats").remove();
             return;
         }
         var data= {
-                    labels: <?php echo wp_kses_post($date_labels); ?>,
+                    labels: <?php echo wp_kses_post((string)$date_labels); ?>,
                     datasets:[{
                                 label: 'Submissions',
-                                data: <?php echo wp_kses_post($subs); ?>,
+                                data: <?php echo wp_kses_post((string)$subs); ?>,
                                 fill: false,
                                 borderColor: 'rgb(53,167,227)',
                                 backgroundColor: 'rgb(53,167,227)'
                     },
                     {
                                 label: 'Visits',
-                                data: <?php echo wp_kses_post($visits); ?>,
+                                data: <?php echo wp_kses_post((string)$visits); ?>,
                                 fill: false,
                                 borderColor: 'rgb(72,84,104)',
                                 backgroundColor: 'rgb(72,84,104)'

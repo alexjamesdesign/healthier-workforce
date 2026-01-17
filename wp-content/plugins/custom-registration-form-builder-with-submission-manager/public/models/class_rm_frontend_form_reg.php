@@ -49,7 +49,7 @@ class RM_Frontend_Form_Reg extends RM_Frontend_Form_Multipage//RM_Frontend_Form_
             $username = $prime_data['username']->value;
             
             if(isset($prime_data['email_confirmation'])){
-                $email_conf = trim($prime_data['email_confirmation']->value);
+                $email_conf = trim((string)$prime_data['email_confirmation']->value);
                 if($email !== $email_conf)
                 {
                     RM_PFBC_Form::setError($form_name, RM_UI_Strings::get("ERR_EMAIL_MISMATCH"));
@@ -91,7 +91,7 @@ class RM_Frontend_Form_Reg extends RM_Frontend_Form_Multipage//RM_Frontend_Form_
                 if (!empty($user))
                 {
                     $this->user_exists = true;
-                    RM_PFBC_Form::setError($form_name, RM_UI_Strings::get("USERNAME_EXISTS"));
+                    RM_PFBC_Form::setError($form_name, RM_UI_Strings::get("USEREMAIL_EXISTS"));
                     return false;
                 } 
             
@@ -280,7 +280,7 @@ class RM_Frontend_Form_Reg extends RM_Frontend_Form_Multipage//RM_Frontend_Form_
         if (count($this->fields) !== 0)
             $form->render();
         else
-            echo wp_kses_post(RM_UI_Strings::get('MSG_NO_FIELDS'));
+            echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_FIELDS'));
     }
       
     public function get_jqvalidator_config_JS()
@@ -556,7 +556,7 @@ JSHD;
             $price_flag = true;
 
         if ($role_cost) {
-            $data->billing[] = (object) array('label' => $label, 'price' => $role_cost);
+            $data->billing[] = (object) array('label' => $label, 'price' => $role_cost, 'qty' => 1);
             $data->total_price += $role_cost;
             $price_flag = true;
         }
@@ -575,7 +575,7 @@ JSHD;
         } else {
             $data->tax = 0.0;
         }
-
+        
         return $price_flag ? $data : null;
     }
     

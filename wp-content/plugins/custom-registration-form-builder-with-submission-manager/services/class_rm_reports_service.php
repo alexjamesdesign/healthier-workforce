@@ -28,8 +28,7 @@ class RM_Reports_Service extends RM_Services
         return $filter;
     }
     
-    public function get_submission($req, $limit=5, $column='*'){
-        
+    public function get_submission($req, $limit = 5, $column = '*') {
         global $wpdb;
         $table_name = RM_Table_Tech::get_table_name_for('SUBMISSIONS');
         $qry = "";
@@ -42,23 +41,23 @@ class RM_Reports_Service extends RM_Services
         $para->start_date = $req->start_date;
         $para->end_date = $req->end_date;
         $para->form_id = $req->form_id;
-        $para->email = $req->email;
+        $para->email = isset($req->email) ? $req->email : "";
         if($limit != 0){
             $limit_string = "LIMIT ".$limit;
         }
-        if($req->email){
-            $email_string = "user_email = '$req->email' AND ";
+        if(isset($req->email) && !empty($req->email)){
+            $email_string = $wpdb->prepare("user_email = %s AND ", $req->email);
         }
-        $interval_string = "BETWEEN '" .date('Y-m-d',strtotime($req->start_date)). "' AND '".date('Y-m-d',strtotime($req->end_date))."'  ORDER BY `submission_id` DESC ".$limit_string;
-        $count_interval_string = "BETWEEN '" .date('Y-m-d',strtotime($req->start_date)). "' AND '".date('Y-m-d',strtotime($req->end_date))."'  ORDER BY `submission_id` DESC ";
+        $interval_string = $wpdb->prepare("BETWEEN %s AND %s ORDER BY `submission_id` DESC $limit_string", date('Y-m-d',strtotime($req->start_date)), date('Y-m-d',strtotime($req->end_date)));
+        $count_interval_string = $wpdb->prepare("BETWEEN %s AND %s ORDER BY `submission_id` DESC", date('Y-m-d',strtotime($req->start_date)), date('Y-m-d',strtotime($req->end_date)));
         if($req->form_id =='all'){
-            $qry = "SELECT $column FROM `$table_name` WHERE $email_string CAST(submitted_on AS date) $interval_string";
-            $count_qry = "SELECT $column FROM `$table_name` WHERE $email_string CAST(submitted_on AS date) $count_interval_string";
+            $qry = defined('RM_SAVE_SUBMISSION_BASENAME') ? "SELECT $column FROM `$table_name` WHERE `is_pending` = 0 AND $email_string CAST(submitted_on AS date) $interval_string" : "SELECT $column FROM `$table_name` WHERE $email_string CAST(submitted_on AS date) $interval_string";
+            $count_qry = defined('RM_SAVE_SUBMISSION_BASENAME') ? "SELECT $column FROM `$table_name` WHERE `is_pending` = 0 AND $email_string CAST(submitted_on AS date) $count_interval_string" : "SELECT $column FROM `$table_name` WHERE $email_string CAST(submitted_on AS date) $count_interval_string";
             $submissions = $wpdb->get_results($qry);
             $sub_count= count($wpdb->get_results($count_qry));
         }else{
-            $qry = "SELECT $column FROM `$table_name` WHERE `form_id` = $req->form_id AND $email_string CAST(submitted_on AS date) $interval_string";
-            $count_qry = "SELECT $column FROM `$table_name` WHERE `form_id` = $req->form_id AND $email_string CAST(submitted_on AS date) $count_interval_string";
+            $qry = defined('RM_SAVE_SUBMISSION_BASENAME') ? $wpdb->prepare("SELECT $column FROM `$table_name` WHERE `form_id` = %d AND `is_pending` = 0 AND $email_string CAST(submitted_on AS date) $interval_string", absint($req->form_id)) : $wpdb->prepare("SELECT $column FROM `$table_name` WHERE `form_id` = %d AND $email_string CAST(submitted_on AS date) $interval_string", absint($req->form_id));
+            $count_qry = defined('RM_SAVE_SUBMISSION_BASENAME') ? $wpdb->prepare("SELECT $column FROM `$table_name` WHERE `form_id` = %d AND `is_pending` = 0 AND $email_string CAST(submitted_on AS date) $count_interval_string", absint($req->form_id)) : $wpdb->prepare("SELECT $column FROM `$table_name` WHERE `form_id` = %d AND $email_string CAST(submitted_on AS date) $count_interval_string", absint($req->form_id));
             $submissions = $wpdb->get_results($qry);
             $sub_count= count($wpdb->get_results($count_qry));
         }
@@ -75,7 +74,7 @@ class RM_Reports_Service extends RM_Services
         $table_name = RM_Table_Tech::get_table_name_for('SUBMISSIONS');
         $email_string = '';
         if(isset($req->email) && $req->email!=''){
-            $email_string = "user_email = '$req->email' AND ";
+            $email_string = $wpdb->prepare("user_email = %s AND ", $req->email);
         }
         $start_date = new DateTime(date('Y-m-d',strtotime($req->start_date)));
         $end_date = new DateTime(date('Y-m-d',strtotime($req->end_date)));
@@ -91,10 +90,10 @@ class RM_Reports_Service extends RM_Services
             $chart_date[] = date("j M", strtotime($req->start_date));
             $count_interval_string = "= '" .date('Y-m-d',strtotime($req->start_date))."'";
             if($req->form_id =='all'){
-                $count_qry = "SELECT * FROM `$table_name` WHERE $email_string CAST(submitted_on AS date) $count_interval_string";
+                $count_qry = defined('RM_SAVE_SUBMISSION_BASENAME') ? "SELECT * FROM `$table_name` WHERE `is_pending` = 0 AND $email_string CAST(submitted_on AS date) $count_interval_string" : "SELECT * FROM `$table_name` WHERE $email_string CAST(submitted_on AS date) $count_interval_string";
                 $sub_count= count($wpdb->get_results($count_qry));
             }else{
-                $count_qry = "SELECT * FROM `$table_name` WHERE $email_string `form_id` = $req->form_id AND CAST(submitted_on AS date) $count_interval_string";
+                $count_qry = defined('RM_SAVE_SUBMISSION_BASENAME') ? $wpdb->prepare("SELECT * FROM `$table_name` WHERE $email_string `form_id` = %d AND `is_pending` = 0 AND CAST(submitted_on AS date) $count_interval_string", $req->form_id) : $wpdb->prepare("SELECT * FROM `$table_name` WHERE $email_string `form_id` = %d AND CAST(submitted_on AS date) $count_interval_string", $req->form_id);
                 $sub_count= count($wpdb->get_results($count_qry));
             }
             $chart_value[] = $sub_count;
@@ -211,19 +210,19 @@ class RM_Reports_Service extends RM_Services
             $value = html_entity_decode($value);
             
             if (array_key_exists($submission->submission_id, $export_data))
-                $export_data[$submission->submission_id][$submission->field_id] = stripslashes($value);
+                $export_data[$submission->submission_id][$submission->field_id] = stripslashes((string)$value);
             
             $field_data = new RM_Fields();            
             $field_data->load_from_db($submission->field_id);
             $WCBilling_str = '';
             $WCShipping_str = '';
             if($field_data->field_type=='WCBilling'){
-                $WCBilling_str .= stripslashes($value).', ';
+                $WCBilling_str .= stripslashes((string)$value).', ';
                 $export_data[$submission->submission_id][$submission->field_id] = $WCBilling_str;
             }
             
             if($field_data->field_type=='WCShipping'){
-                $WCShipping_str .= stripslashes($value).', ';
+                $WCShipping_str .= stripslashes((string)$value).', ';
                 $export_data[$submission->submission_id][$submission->field_id] = $WCShipping_str;
             }
         }  
@@ -257,7 +256,7 @@ class RM_Reports_Service extends RM_Services
         
         if(!empty($field_ext_types) && $field_ext_types[0]!=''){
             foreach($field_ext_types as $type){
-                $ext = explode('|',$type);
+                $ext = explode('|',(string)$type);
                 $types = array_merge($types, $ext);
             }
         }
@@ -592,7 +591,7 @@ class RM_Reports_Service extends RM_Services
         $form_data->form_name = $submissions[0]->form_name;
         $form_data->created_on = $submissions[0]->created_on;
         $pages = (array)maybe_unserialize($submissions[0]->form_options);
-        $pages = (array)$pages['form_pages'];
+        $pages = isset($pages['form_pages']) ? (array)$pages['form_pages'] : array();
         $form_data->total_pages = count($pages) ? count($pages) : 1;
         $form_data->registration_form = $submissions[0]->form_type ? 'Yes' : 'No';
         $form_data->payment_completed_count = $payment_completed[0]->payment_completed_count ? $payment_completed[0]->payment_completed_count : 0;
@@ -632,7 +631,7 @@ class RM_Reports_Service extends RM_Services
         if($submissions[0]->total_view > 0){
             $success_rate = round ( (($success[0]->success_submission / $submissions[0]->total_view) *100) , 2).'%';
         }
-        $data->avg_filling_time = round($submissions[0]->avg_filling_time, 2).'S';
+        $data->avg_filling_time = round(floatval($submissions[0]->avg_filling_time), 2).'S';
         $data->total_view = $submissions[0]->total_view;
         $data->success_rate = $success_rate;
         $data->total_fields = $fields_counts[0]->total_fields;
@@ -917,13 +916,14 @@ class RM_Reports_Service extends RM_Services
     }
     
     public function rm_reports_email_setup($notification_id = null){
+        $notifications = RM_DBManager::get_reports();
+
         if(defined('REGMAGIC_ADDON')):
             if($notification_id){
                 $notification = RM_DBManager::get_row('REPORTS_NOTIFICATIONS', $notification_id );
                 $this->schedule_cron($notification);
             }
             else{
-                $notifications = RM_DBManager::get_reports();
                 if(!empty($notifications)):
                     foreach ($notifications as $notification){
                         $this->schedule_cron($notification);
@@ -931,6 +931,8 @@ class RM_Reports_Service extends RM_Services
                 endif;
             }
         endif;
+
+        $this->reports_email_schedule_callback($notifications);
     }
     public function schedule_cron($notification){
         
@@ -951,8 +953,8 @@ class RM_Reports_Service extends RM_Services
         );
         return $schedules;
     }
-    public function reports_email_schedule_callback(){
-        $notifications = RM_DBManager::get_reports();
+    public function reports_email_schedule_callback($notifications){
+        //$notifications = RM_DBManager::get_reports();
         if(!empty($notifications)){
             foreach($notifications as $notification) {            
                 if($notification->cron_type !='' && $notification->notification_type !='' && $notification->enable):
@@ -1070,7 +1072,7 @@ class RM_Reports_Service extends RM_Services
         if($sent_to == 'individual'){
             $individuals_lists = $notification->receivers != null ? $notification->receivers : null;
             if(!empty($individuals_lists)){
-                $receivers = explode(',',$individuals_lists);
+                $receivers = explode(',',(string)$individuals_lists);
             }
         }elseif($sent_to == 'admins'){
             $users = get_users( array( 'role__in' => array('administrator' ) ) );
@@ -1209,8 +1211,8 @@ class RM_Reports_Service extends RM_Services
         $interval_string = "BETWEEN '" .date('Y-m-d H:i:s',strtotime($req->start_date)). "' AND '".date('Y-m-d H:i:s',strtotime($req->end_date))."'  ORDER BY `submission_id` DESC ".$limit_string;
         $count_interval_string = "BETWEEN '" .date('Y-m-d H:i:s',strtotime($req->start_date)). "' AND '".date('Y-m-d H:i:s',strtotime($req->end_date))."'  ORDER BY `submission_id` DESC ";
         
-        $qry = "SELECT $column FROM `$table_name` WHERE `form_id` = $req->form_id AND $email_string CAST(submitted_on AS datetime) $interval_string";
-        $count_qry = "SELECT $column FROM `$table_name` WHERE `form_id` = $req->form_id AND $email_string CAST(submitted_on AS datetime) $count_interval_string";
+        $qry = defined('RM_SAVE_SUBMISSION_BASENAME') ? "SELECT $column FROM `$table_name` WHERE `form_id` = $req->form_id AND `is_pending` = 0 AND $email_string CAST(submitted_on AS datetime) $interval_string" : "SELECT $column FROM `$table_name` WHERE `form_id` = $req->form_id AND $email_string CAST(submitted_on AS datetime) $interval_string";
+        $count_qry = defined('RM_SAVE_SUBMISSION_BASENAME') ? "SELECT $column FROM `$table_name` WHERE `form_id` = $req->form_id AND `is_pending` = 0 AND $email_string CAST(submitted_on AS datetime) $count_interval_string" : "SELECT $column FROM `$table_name` WHERE `form_id` = $req->form_id AND $email_string CAST(submitted_on AS datetime) $count_interval_string";
         $submissions = $wpdb->get_results($qry);
         $sub_count= count($wpdb->get_results($count_qry));
         

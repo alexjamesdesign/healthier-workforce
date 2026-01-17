@@ -13,7 +13,7 @@ abstract class Element extends Base {
                                         'exclass_input' => '', //This class will be added along with rminput.
                                         'sub_element' => null); //A child element nested within.
         
-	public function __construct($label, $name, array $properties = null, array $advance_opts = null) {
+	public function __construct($label, $name, $properties = null, $advance_opts = null) {
 		$configuration = array(
 			"label" => $label,
 			"name" => $name
@@ -143,7 +143,7 @@ abstract class Element extends Base {
                 else
                     $options .= var_export($value, true);
             }
-            echo "{ ", wp_kses_post($options), " }";
+            echo "{ ", wp_kses_post((string)$options), " }";
         }
 	}
 
@@ -151,7 +151,7 @@ abstract class Element extends Base {
 	Password, Date, Color, Button, Email, and File element classes.  The project's other element classes will
 	override this method with their own implementation.*/
 	public function render() {
-		echo '<input', wp_kses_post($this->getAttributes()), '/>';
+		echo '<input', wp_kses_post((string)$this->getAttributes()), '/>';
         if(strpos($this->getAttributes(), 'name="pwd"') !== false || strpos($this->getAttributes(), 'name="password_confirmation"') !== false) {
             echo '';
         }

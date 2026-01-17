@@ -17,7 +17,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         <div class="rmtitle"><?php echo _e('Login Timeline: Advanced', 'custom-registration-form-builder-with-submission-manager'); ?></div>
         <div class="nav">
             <ul>
-                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
             </ul>
         </div>
 
@@ -124,7 +124,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                     }
                                 }
                                 ?>
-                                <td> <div class="rm-login-result-icon"><?php echo wp_kses($login_icon,RM_Utilities::expanded_allowed_tags()); ?></div></td>
+                                <td> <div class="rm-login-result-icon"><?php echo wp_kses((string)$login_icon,RM_Utilities::expanded_allowed_tags()); ?></div></td>
                                 <td><div class="rm-login-boolean-result <?php echo ($login_log->status==1)?'rm-login-true':'rm-login-false'; ?>"><i class="fa fa-<?php echo ($login_log->status==1)?'check':'times'; ?>"></i></div></td>
                                 <td> <div class="rm-login-user-sep"><i class="fa fa-circle"></i></div></td>
                                 <td class="rm-login-setting"> 
@@ -145,7 +145,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                             <?php endif; ?>
                                             
                                             <?php
-                                            $ip_as_arr = explode('.', $login_log->ip);
+                                            $ip_as_arr = explode('.', (string)$login_log->ip);
                                             if(count($ip_as_arr)!=4){
                                                 $sanitized_user_ip = $login_log->ip;
                                             }else{
@@ -294,8 +294,8 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
             <?php
             if ($data->curr_page > 1):
                 ?>
-                <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=1<?php echo esc_attr($qry_str); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FIRST')); ?></a></li>
-                <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->curr_page - 1); ?><?php echo esc_attr($qry_str); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PREVIOUS')); ?></a></li>
+                <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=1<?php echo esc_attr($qry_str); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FIRST')); ?></a></li>
+                <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->curr_page - 1); ?><?php echo esc_attr($qry_str); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PREVIOUS')); ?></a></li>
                 <?php
             endif;
             if ($data->total_pages > $max_pages_without_abb):
@@ -338,8 +338,8 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
             <?php
             if ($data->curr_page < $data->total_pages):
                 ?>
-                <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->curr_page + 1); ?><?php echo esc_attr($qry_str); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_NEXT')); ?></a></li>
-                <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->total_pages); ?><?php echo esc_attr($qry_str); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LAST')); ?></a></li>
+                <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->curr_page + 1); ?><?php echo esc_attr($qry_str); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_NEXT')); ?></a></li>
+                <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->total_pages); ?><?php echo esc_attr($qry_str); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LAST')); ?></a></li>
                 <?php
             endif;
             ?>

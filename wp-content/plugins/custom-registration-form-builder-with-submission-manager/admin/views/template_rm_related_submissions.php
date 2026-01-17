@@ -16,7 +16,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         
         <div class="nav">
             <ul>
-                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
               
             </ul>
         </div>
@@ -33,10 +33,10 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                         //echo "<pre>",  var_dump($data->submissions);
                         ?>
                         <tr>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_EMAIL")) ?></th>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_FORM")) ?></th>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_SUBMITTED_ON")) ?></th>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("ACTION")); ?></th></tr>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_EMAIL")) ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_FORM")) ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_SUBMITTED_ON")) ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("ACTION")); ?></th></tr>
 
                         <?php
                        
@@ -55,7 +55,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                      
                                      ?></td>   
                                           <td><?php echo esc_html(RM_Utilities::localize_time($submission->submitted_on)); ?></td>
-                                    <td><a href="?page=rm_submission_view&rm_submission_id=<?php echo esc_html($submission->submission_id); ?>"><?php echo wp_kses_post(RM_UI_Strings::get("VIEW")); ?></a></td>
+                                    <td><a href="?page=rm_submission_view&rm_submission_id=<?php echo esc_html($submission->submission_id); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get("VIEW")); ?></a></td>
                                 </tr>
 
                                 <?php

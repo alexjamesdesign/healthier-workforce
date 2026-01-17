@@ -20,7 +20,7 @@ class RM_Sanitizer
 	public function sanitize_request($req)
 	{
         $request = RM_Utilities::trim_array($req);
-
+        
         // Changes made by Kevin S. begin
         // Removing characters from input strings that might be HTML
         if(!empty($request) && !is_null($request) && isset($request['page']))
@@ -36,10 +36,15 @@ class RM_Sanitizer
                         $request[$key] = $this->sanitized_array($value);
                         continue;
                     }
-                    if ($_SERVER['REQUEST_METHOD'] === 'GET' && !isset($_REQUEST['page'])) {
+                    if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] === 'GET' && !isset($_REQUEST['page'])) {
                         $request[$key] = $this->sanitize_query_elements($value);
                     } else {
-                        $request[$key] = wp_kses_post($value);
+                        if(isset($request['rm_slug']) && $request['rm_slug'] == 'rm_login_form' && ($key == 'username' || $key == 'pwd')) {
+                            continue;
+                        } else if (isset($request['rm_form_sub_id']) && $request['rm_form_sub_id'] === 'rm_reset_password_form' && ($key === 'password' || $key === 'confirm_password')) {
+                            continue;
+                        }
+                        $request[$key] = wp_kses_post((string)$value);
                     }
                     // Confirming integer values for variables that should be integers
                     if (in_array($key,array('rm_form_id',
@@ -69,6 +74,9 @@ class RM_Sanitizer
 
     public function sanitize_all_requests($page,$request)
     {
+        if (is_array($page)) {
+            $page = implode('', $page);
+        }
         $sanitize_method = 'get_sanitized_' . strtolower($page) . '_page';
         $sanitize_array = array();
         foreach($request as $key=>$value)
@@ -89,7 +97,7 @@ class RM_Sanitizer
                 else 
                 {
                     if (isset($request['rm_field_type']) && in_array($request['rm_field_type'], array('RichText','HTMLP','Terms','Privacy')) && ($key == 'field_value' || $key == 'privacy_policy_content')) {
-                        $sanitize_array[$key] = wp_kses_post($value);
+                        $sanitize_array[$key] = wp_kses_post((string)$value);
                     } else {
                         if ($_SERVER['REQUEST_METHOD'] === 'GET' && !isset($_REQUEST['page'])) {
                             $sanitize_array[$key] = $this->sanitize_query_elements($value);
@@ -142,7 +150,7 @@ class RM_Sanitizer
         switch($key)
         {
             case 'rm_mail_body':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             default:
                 $value = sanitize_text_field($value);
@@ -156,7 +164,7 @@ class RM_Sanitizer
          switch($key)
         {
             case 'form_custom_text':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             default:
                 $value = sanitize_text_field($value);
@@ -170,7 +178,7 @@ class RM_Sanitizer
          switch($key)
         {
             case 'form_success_message':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             default:
                 $value = sanitize_text_field($value);
@@ -184,22 +192,22 @@ class RM_Sanitizer
          switch($key)
         {
             case 'form_nu_notification':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'form_user_activated_notification':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'form_admin_ns_notification':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'form_activate_user_notification':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'act_link_message':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'form_user_payment_invoice':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             default:
                 $value = sanitize_text_field($value);
@@ -213,19 +221,19 @@ class RM_Sanitizer
          switch($key)
         {
             case 'failed_login_err':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'otp_message':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'pass_reset':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'failed_login_err_admin':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'ban_message_admin':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             default:
                 $value = sanitize_text_field($value);
@@ -239,7 +247,7 @@ class RM_Sanitizer
          switch($key)
         {
             case 'form_email_content':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             default:
                 $value = sanitize_text_field($value);
@@ -253,7 +261,7 @@ class RM_Sanitizer
          switch($key)
         {
             case 'ex_olp_info':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             default:
                 $value = sanitize_text_field($value);
@@ -267,10 +275,10 @@ class RM_Sanitizer
          switch($key)
         {
             case 'cs_email_user_body':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'cs_email_admin_body':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             default:
                 $value = sanitize_text_field($value);
@@ -288,10 +296,10 @@ class RM_Sanitizer
          switch($key)
         {
             case 'ctab_desc':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             case 'ctab_label':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             default:
                 $value = sanitize_text_field($value);
@@ -304,7 +312,7 @@ class RM_Sanitizer
         switch($key)
         {
             case 'invoice_footer_text':
-                $value = wp_kses_post($value);
+                $value = wp_kses_post((string)$value);
                 break;
             default:
                 $value = sanitize_text_field($value);
@@ -312,4 +320,33 @@ class RM_Sanitizer
         }
         return $value;
     }
+
+    public function get_sanitized_rm_note_add_page($key, $value)
+    {
+         switch($key)
+        {
+            case 'notes':
+                $value = wp_kses_post(nl2br((string)$value));
+                break;
+            default:
+                $value = sanitize_text_field($value);
+                break;
+        }
+        return $value;
+    }
+
+    public function get_sanitized_rm_field_manage_page($key, $value)
+    {
+        switch($key)
+        {
+            case 'subheading':
+                $value = htmlspecialchars(sanitize_textarea_field((string)$value));
+                break;
+            default:
+                $value = htmlspecialchars(sanitize_text_field($value));
+                break;
+        }
+        return $value;
+    }
+
 }

@@ -93,7 +93,7 @@ class RM_Public {
         $theme = $settings->get_value_of('theme');
         $layout = $settings->get_value_of('form_layout');
         if(defined('REGMAGIC_ADDON'))
-             wp_enqueue_style('style_rm_rating', RM_ADDON_BASE_URL . 'public/js/rating3/rateit.css', array(), $this->version, 'all');
+            wp_enqueue_style('style_rm_rating', RM_ADDON_BASE_URL . 'public/js/rating3/rateit.css', array(), $this->version, 'all');
 
         switch ($theme) {
             case 'classic':
@@ -146,6 +146,10 @@ class RM_Public {
         if($theme == 'default') {
             wp_enqueue_style('rm_default_theme', plugin_dir_url(__FILE__) . 'css/rm_default_theme.css', array(), $this->version, 'all');
         }
+
+        if(is_rtl()) {
+            wp_enqueue_style('rm-form-revamp-rtl', RM_BASE_URL . 'public/css/rm-form-rtl-style.css', array(), $this->version, 'all');
+        }
     }
 
     /**
@@ -157,9 +161,9 @@ class RM_Public {
         $gopt= new RM_Options();
         $magic_pop= $gopt->get_value_of('display_floating_action_btn');
         if(defined('REGMAGIC_ADDON'))
-            wp_register_script('rm_front', RM_ADDON_BASE_URL . 'public/js/script_rm_front.js', array('jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-tabs', 'jquery-ui-datepicker','jquery-effects-core','jquery-effects-slide'), $this->version, false);
+            wp_register_script('rm_front', RM_ADDON_BASE_URL . 'public/js/script_rm_front.js', array('jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-tabs', 'jquery-ui-datepicker'), $this->version, false);
         else
-            wp_register_script('rm_front', plugin_dir_url(__FILE__) . 'js/script_rm_front.js', array('jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-tabs', 'jquery-ui-datepicker','jquery-effects-core','jquery-effects-slide'), $this->version, false);
+            wp_register_script('rm_front', RM_BASE_URL . 'public/js/script_rm_front.js', array('jquery', 'jquery-ui-core', 'jquery-ui-sortable', 'jquery-ui-tabs', 'jquery-ui-datepicker'), $this->version, false);
         $rm_ajax_data= array(
                         "url"=>admin_url('admin-ajax.php'),
                         "nonce"=>wp_create_nonce('rm_ajax_secure'),
@@ -177,6 +181,7 @@ class RM_Public {
                         'tax_type'=>get_site_option('rm_option_tax_type', null),
                         'tax_fixed'=>round(floatval(get_site_option('rm_option_tax_fixed', null)),2),
                         'tax_percentage'=>round(floatval(get_site_option('rm_option_tax_percentage', null)),2),
+                        'tax_rename'=>esc_html($gopt->get_value_of('tax_rename')),
         );
         if(defined('REGMAGIC_ADDON')) {
             $login_service= new RM_Login_Service();
@@ -188,6 +193,7 @@ class RM_Public {
         
         wp_register_script('rm_front_form_script', RM_BASE_URL."public/js/rm_front_form.js",array('rm_front', 'jquery'), $this->version, false);
         wp_localize_script('rm_front_form_script','rm_ajax',$rm_ajax_data);
+        wp_enqueue_script('rm_password_utility', RM_BASE_URL."public/js/password-utility.js",array('jquery'));
         //Register jQ validate scripts but don't actually enqueue it. Enqueue it from within the shortcode callback.
         wp_enqueue_script('rm_jquery_validate', RM_BASE_URL."public/js/jquery.validate.min.js", array('jquery'), $this->version);
         wp_enqueue_script('rm_jquery_validate_add', RM_BASE_URL."public/js/additional-methods.min.js", array('jquery'), $this->version);
@@ -211,6 +217,9 @@ class RM_Public {
             wp_enqueue_script("rm_mask_script", RM_BASE_URL . "public/js/jquery.mask.min.js");
             wp_enqueue_script('rm_jquery_conditionalize');
         }
+        wp_register_script('rm-jquery-touchpad', RM_BASE_URL.'public/js/jquery.ui.touch-punch.js',array('jquery'));
+        wp_register_script('rm-jquery-signature', RM_BASE_URL.'public/js/jquery.signature.js', array('jquery'), RM_PLUGIN_VERSION, false);
+        
     }
 
     public function run_controller($attributes = null, $content = null, $shortcode = null) {
@@ -218,9 +227,14 @@ class RM_Public {
     }
 
     public function rm_front_submissions($attr) {
+        ob_start();
+        $this->enqueue_styles();
+        $this->enqueue_scripts();
         if(defined('REGMAGIC_ADDON')) {
             $addon_public = new RM_Public_Addon();
-            return $addon_public->rm_front_submissions($attr,$this);
+            echo $addon_public->rm_front_submissions($attr,$this);
+            $html = ob_get_clean();
+            return $html;
         }
         $form_prev= isset($_GET['form_prev']) ? absint(sanitize_text_field($_GET['form_prev'])) : '';
         if(is_user_logged_in() && class_exists('Profile_Magic') && empty($attr) && empty($form_prev) && !isset($_REQUEST['submission_id']) && empty(get_site_option('rm_option_disable_pg_profile'))){
@@ -236,8 +250,9 @@ class RM_Public {
             $form->set_preview(true);
             echo '<script>jQuery(document).ready(function(){jQuery(".entry-header").remove();}); </script>';
             wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.css' );
-            echo '<div class="rm_embedeed_form">' . wp_kses_post($form->render()) . '</div>';
-            return;
+            echo '<div class="rm_embedeed_form">' . wp_kses_post((string)$form->render()) . '</div>';
+            $html = ob_get_clean();
+            return $html;
         }
         
         if (RM_Utilities::fatal_errors()) {
@@ -259,10 +274,14 @@ class RM_Public {
 
         $params = array('request' => $request, 'xml_loader' => $xml_loader,'attr'=>$attr);
         $this->controller = new RM_Main_Controller($params);
-        return $this->controller->run();
+        echo $this->controller->run();
+        $html = ob_get_clean();
+        return $html;
     }
 
     public function rm_login($attributes) {
+        $this->enqueue_styles();
+        $this->enqueue_scripts();
         self::$login_form_counter++;        
         $_REQUEST['login_popup_show']  = 0;
         if(defined('REGMAGIC_ADDON')) {
@@ -304,7 +323,29 @@ class RM_Public {
     }
 
     public function rm_user_form_render($attribute) {
-        RM_DBManager::add_form_published_pages(absint($attribute['id']),get_the_ID());
+        if(isset($attribute['id'])) {
+            $form_id = absint($attribute['id']);
+        } else {
+            ob_start();
+            esc_html_e('Form ID is required to render the form.','custom-registration-form-builder-with-submission-manager');
+            return ob_get_clean();
+        }
+
+        RM_DBManager::add_form_published_pages($form_id, get_the_ID());
+
+        // Load new shortcode if form has rows
+        if (!empty(RM_DBManager::get_rows_by_form_id($form_id))) {
+            return $this->rm_new_form_render($attribute);
+        }
+
+        $this->enqueue_styles();
+        $this->enqueue_scripts();
+        $attribute = apply_filters('rm_before_form_render', $attribute);
+        if ( isset($attribute['block']) && !empty($attribute['block']) ) {
+            ob_start();
+            echo isset($attribute['block_message']) ? wp_kses_post($attribute['block_message']) : '';
+            return ob_get_clean();
+        }
         if(defined('REGMAGIC_ADDON')) {
             $addon_public = new RM_Public_Addon();
             return $addon_public->rm_user_form_render($attribute,$this);
@@ -317,8 +358,7 @@ class RM_Public {
             $html = ob_get_clean();
             return $html;
         }
-        $form_id= $attribute['id'];
-        $xml_loader = defined('REGMAGIC_ADDON') ? RM_XML_Loader::getInstance(RM_ADDON_INCLUDES_DIR . 'rm_config.xml') : RM_XML_Loader::getInstance(plugin_dir_path(__FILE__) . 'rm_config.xml');
+        $xml_loader = defined('REGMAGIC_ADDON') ? RM_XML_Loader::getInstance(RM_ADDON_INCLUDES_DIR . 'rm_config.xml') : RM_XML_Loader::getInstance(RM_INCLUDES_DIR . 'rm_config.xml');
         $request = new RM_Request($xml_loader);
         $request->setReqSlug('rm_user_form_process', true);
         if(!self::$success_form && !empty($request->req['rm_success']) && !empty($form_id) && isset($request->req['rm_form_id']) && is_numeric($request->req['rm_form_id']) && $form_id==$request->req['rm_form_id']){
@@ -332,31 +372,50 @@ class RM_Public {
             $html .= '</div>';
             return $html;
         }
-        $params = array('request' => $request, 'xml_loader' => $xml_loader, 'form_id' => isset($attribute['id']) ? $attribute['id'] : null);
+        $params = array('request' => $request, 'xml_loader' => $xml_loader, 'form_id' => $form_id);
         $params['force_enable_multiform'] = true;
         $this->controller = new RM_Main_Controller($params);
         return $this->controller->run();
     }
-    
-      // Disable cache 
+
+    public function rm_new_form_render($attribute) {
+        $form_id = isset($attribute['id']) ? absint($attribute['id']) : null;
+        $theme = isset($attribute['theme']) ? sanitize_text_field(strtolower($attribute['theme'])) : null;
+        if(!empty($form_id)) {
+            self::$form_counter++;
+        }
+        ob_start();
+        $attribute = apply_filters('rm_before_form_render', $attribute);
+        if ( isset($attribute['block']) && !empty($attribute['block']) ) {
+            echo isset($attribute['block_message']) ? wp_kses_post($attribute['block_message']) : '';
+        } else {
+            $form_factory = new RM_Form_Factory_Revamp();
+            $form_factory->render_form($form_id, $theme);
+        }
+        $output = ob_get_clean();
+        return $output;
+    }
+
+    // Disable cache
     public function disable_cache()
-    { 
-        //Diable caches
+    {
+        //Disable caches
         if(!defined('DONOTCACHEPAGE'))
             define( 'DONOTCACHEPAGE', true );
     }
     
     public function register_otp_widget() {
+        include_once RM_PUBLIC_DIR . 'widgets/class_rm_otp_widget.php';
         register_widget('RM_OTP_Widget');
     }
     
-    public function register_login_btn_widget()
-    {  
+    public function register_login_btn_widget() {
+        include_once RM_PUBLIC_DIR . 'widgets/class_rm_login_btn_widget.php';
         register_widget('RM_Login_Btn_Widget');
     }
     
-    public function register_form_widget()
-    {
+    public function register_form_widget() {
+        include_once RM_PUBLIC_DIR . 'widgets/class_rm_form_widget.php';
         register_widget('RM_Form_Widget');
     }
     
@@ -404,14 +463,19 @@ class RM_Public {
     }
 
     public function floating_action() {
-        $xml_loader = defined('REGMAGIC_ADDON') ? RM_XML_Loader::getInstance(RM_ADDON_INCLUDES_DIR . 'rm_config.xml'): RM_XML_Loader::getInstance(plugin_dir_path(__FILE__) . 'rm_config.xml');
+        if(get_option('rm_option_display_floating_action_btn') === 'yes') {
+            $this->enqueue_styles();
+            $this->enqueue_scripts();
 
-        $request = new RM_Request($xml_loader);
-        $request->setReqSlug('rm_front_fab', true);
+            $xml_loader = defined('REGMAGIC_ADDON') ? RM_XML_Loader::getInstance(RM_ADDON_INCLUDES_DIR . 'rm_config.xml'): RM_XML_Loader::getInstance(plugin_dir_path(__FILE__) . 'rm_config.xml');
 
-        $params = array('request' => $request, 'xml_loader' => $xml_loader);
-        $this->controller = new RM_Main_Controller($params);
-        return $this->controller->run();
+            $request = new RM_Request($xml_loader);
+            $request->setReqSlug('rm_front_fab', true);
+
+            $params = array('request' => $request, 'xml_loader' => $xml_loader);
+            $this->controller = new RM_Main_Controller($params);
+            return $this->controller->run();
+        }
     }
     
     public function rm_user_list($attribute){
@@ -424,6 +488,8 @@ class RM_Public {
     }
     
     public function rm_user_list_shortcode($attribute){
+        $this->enqueue_styles();
+        $this->enqueue_scripts();
         if(defined('REGMAGIC_ADDON')) {
             $addon_public = new RM_Public_Addon();
             return $addon_public->rm_user_list($attribute,$this);
@@ -458,7 +524,7 @@ class RM_Public {
                 if(is_array($form_ids) && count($form_ids) > 0) {
                     $front_form_service = new RM_Front_Form_Service;            
                     foreach($form_ids as $form_uid) {
-                        $form_id = explode("_", sanitize_text_field($form_uid));
+                        $form_id = explode("_", sanitize_text_field((string)$form_uid));
                         if(count($form_id) == 3) {
                             $form_id = intval($form_id[1]);                                                
                             $result[$form_uid] = $front_form_service->create_stat_entry(array('form_id' => $form_id));
@@ -466,7 +532,7 @@ class RM_Public {
                     }
                 }
             }
-            echo wp_kses_post(json_encode($result));
+            echo wp_kses_post((string)json_encode($result));
         }
         wp_die();
     }
@@ -499,7 +565,7 @@ class RM_Public {
         } else if($country=="canada"){
              $states= RM_Utilities::get_canadian_provinces();
         }
-        echo wp_kses_post(json_encode($states));
+        echo wp_kses_post((string)json_encode($states));
         die;
     }
     
@@ -511,26 +577,26 @@ class RM_Public {
             if(empty($user_id)){
                 $response['success']= false;
                 $response['msg']= __('No such user exists', 'custom-registration-form-builder-with-submission-manager');
-                echo wp_kses_post(json_encode($response));
+                echo wp_kses_post((string)json_encode($response));
                 exit;
             }
             $user_info = get_userdata($user_id); 
             if(empty($user_info)){
                 $response['success']= false;
                 $response['msg']= __('No such user exists', 'custom-registration-form-builder-with-submission-manager');
-                echo wp_kses_post(json_encode($response));
+                echo wp_kses_post((string)json_encode($response));
                 exit;
             }
             
             RM_Email_Service::send_activation_link($user_id);
             $response['msg']= __('Verification link has been sent on your registered email account. Please check.', 'custom-registration-form-builder-with-submission-manager');
             
-            echo wp_kses_post(json_encode($response));
+            echo wp_kses_post((string)json_encode($response));
         } else {
             $response['success'] = false;
             $response['msg'] = __('Incorrect security token. Please try after some time.', 'custom-registration-form-builder-with-submission-manager');
             
-            echo wp_kses_post(json_encode($response));
+            echo wp_kses_post((string)json_encode($response));
         }
         exit;
     }
@@ -592,7 +658,7 @@ class RM_Public {
         $offset_sub = ($req_page_sub - 1) * $entries_per_page_sub;
 
         if (isset($request->req['rm_edit_user_details'])) { 
-            $form_ids = json_decode(stripslashes($request->req['form_ids']));
+            $form_ids = json_decode(stripslashes((string)$request->req['form_ids']));
             $submissions = $front_service->get_latest_submission_for_user($user_email, $form_ids);
             $data->total_submission_count = $total_entries_sub = count($submissions);
             $distinct = true;
@@ -693,7 +759,7 @@ class RM_Public {
         
         // Success message
         $response['msg'] .= '<div id="rmform">';
-        $response['msg'] .= "<br><br><div class='rm-post-sub-msg'>";
+        $response['msg'] .= "<br><div class='rm-post-sub-msg'>";
         $response['msg'] .= $form->form_options->form_success_message != "" ? apply_filters('rm_form_success_msg',$form->form_options->form_success_message,$form_id,$submission->get_submission_id()) : $form->get_form_name() . " ". __('Submitted','custom-registration-form-builder-with-submission-manager');
         $response['msg'] .= '</div>';
         
@@ -753,6 +819,8 @@ class RM_Public {
     }
     
     public function password_recovery($attrs) {
+        $this->enqueue_styles();
+        $this->enqueue_scripts();
         $xml_loader = defined('REGMAGIC_ADDON') ? RM_XML_Loader::getInstance(RM_ADDON_INCLUDES_DIR . 'rm_config.xml'): RM_XML_Loader::getInstance(plugin_dir_path(__FILE__) . 'rm_config.xml');
         $request = new RM_Request($xml_loader);
         $request->setReqSlug('rm_login_lost_password', true);
@@ -770,7 +838,7 @@ class RM_Public {
             } else {
                 $response['redirect'] = get_permalink();
             }
-            echo wp_kses_post(json_encode($response));
+            echo wp_kses_post((string)json_encode($response));
         }
         wp_die();
     }

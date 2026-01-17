@@ -2,7 +2,6 @@
 if (!defined('WPINC')) {
     die('Closed');
 }
-wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.css' );
 wp_enqueue_style('rm-jquery-ui', 'https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.min.css');
 ?>
     <div class="rmagic">
@@ -54,16 +53,16 @@ wp_enqueue_style('rm-jquery-ui', 'https://cdnjs.cloudflare.com/ajax/libs/jqueryu
             </div>
         </div>
            
-    <div class="rmnotice-container rm-custom-status-notice" style="margin-top: 10px;display: inline-block;width: 100%;">
-              <div class="rmnotice">You can assign statuses to registrations from the <a href="admin.php?page=rm_submission_manage">inbox</a></div>
-            </div>
+        <div class="rmnotice-container rm-custom-status-notice" style="margin-top: 10px;display: inline-block;width: 100%;">
+            <div class="rmnotice"><?php esc_html_e('You can assign statuses to registrations from the ','custom-registration-form-builder-with-submission-manager'); ?><a href="admin.php?page=rm_submission_manage"><?php esc_html_e('inbox','custom-registration-form-builder-with-submission-manager'); ?></a></div>
+        </div>
             
             <?php
     }
    else
     {?>
     <div class="rmnotice-container rm-custom-status-notice"  style="margin-bottom: 20px;display: inline-block;width: 100%;">
-        <div class="rmnotice">You can assign statuses to registrations from the <a href="admin.php?page=rm_submission_manage">inbox</a></div>
+        <div class="rmnotice"><?php esc_html_e('You can assign statuses to registrations from the ','custom-registration-form-builder-with-submission-manager'); ?><a href="admin.php?page=rm_submission_manage"><?php esc_html_e('inbox','custom-registration-form-builder-with-submission-manager'); ?></a></div>
     </div>
     
     <div class="form-cstatus-table-wrapper">
@@ -90,8 +89,8 @@ wp_enqueue_style('rm-jquery-ui', 'https://cdnjs.cloudflare.com/ajax/libs/jqueryu
     <?php 
     }
 ?>
-</div>
 
+    </div>
 <script>
 function selectAll(obj){
     if(jQuery(obj).is(':checked')){
@@ -115,4 +114,3 @@ jQuery(document).ready(function(){
 });
 </script>
 
-</div>

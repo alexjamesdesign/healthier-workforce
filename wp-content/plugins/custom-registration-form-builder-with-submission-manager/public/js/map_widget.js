@@ -65,7 +65,6 @@ function rm_show_map_widget(container_id, addresses,zoom) {
                         icon: em_map_info.gmarker*/
                     });
                     allMarkers.push(marker);
-                    console.log(results[0]);
                     infowindow.setContent(results[0].formatted_address);
                     infowindow.open(map, marker);
                 } 

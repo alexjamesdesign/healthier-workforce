@@ -48,26 +48,26 @@ JS;
                 $style_str = "";
                 if(isset($this->_attributes["style"]))
                 {
-                    $al = explode(';',$this->_attributes["style"]);                    
+                    $al = explode(';',(string)$this->_attributes["style"]);                    
                     foreach($al as $a)
                     {
-                        if(strpos(trim($a),"color:")=== 0)
+                        if(strpos(trim((string)$a),"color:")=== 0)
                         {
                             $style_str ='style="'.$a.'";'; 
                             break;
                         }
                     }
                 }
-                echo '<ul class="' .esc_attr($labelClass). '" '.wp_kses_post($style_str).'">';
+                echo '<ul class="' .esc_attr($labelClass). '" '.wp_kses_post((string)$style_str).'">';
 		foreach($this->options as $value => $text) {
 			$value = $this->getOptionValue($value);
 
 			//echo '<label class="', $labelClass . '"> <input id="', $this->_attributes["id"], '-', $count, '"', $this->getAttributes(array("id", "value", "checked")), ' value="', $this->filter($value), '"';
-			echo '<li> <input id="', esc_attr($this->_attributes["id"]), '-', esc_attr($count), '"', wp_kses_post($this->getAttributes(array("id", "value", "checked"))), ' value="', esc_attr($this->filter($value)), '"';
+			echo '<li> <input id="', esc_attr($this->_attributes["id"]), '-', esc_attr($count), '"', wp_kses_post((string)$this->getAttributes(array("id", "value", "checked"))), ' value="', esc_attr($this->filter($value)), '"';
 			if(isset($this->_attributes["value"]) && $this->_attributes["value"] == $value)
 				echo ' checked="checked"';
 			//echo '/> ', $text, ' </label> ';
-			echo '/><label for="', esc_attr($this->_attributes["id"]), '-', esc_attr($count),'"> ', wp_kses_post($text), '</label> </li> ';
+			echo '/><label for="', esc_attr($this->_attributes["id"]), '-', esc_attr($count),'"> ', wp_kses_post((string)$text), '</label> </li> ';
 			++$count;
 		}                
                 if(isset($this->_attributes["rm_is_other_option"]) && $this->_attributes["rm_is_other_option"] == 1){                       //get value of "other" field to be prefilled if provided.
@@ -81,15 +81,15 @@ JS;
                         $other_label = $this->_attributes["rm_textbox"];
                     }
                    if($other_val){
-                     echo      '<input id="'.esc_attr($this->_attributes["id"]).'_other" type="radio" value="" name="'.wp_kses_post($this->getAttribute("name")).'" style="'.wp_kses_post($this->getAttribute("style")).'" checked><label for="'.esc_attr($this->_attributes["id"]).'_other">'.$other_label.'</label></li>'.
+                     echo      '<input id="'.esc_attr($this->_attributes["id"]).'_other" type="radio" value="" name="'.wp_kses_post((string)$this->getAttribute("name")).'" style="'.wp_kses_post((string)$this->getAttribute("style")).'" checked><label for="'.esc_attr($this->_attributes["id"]).'_other">'.$other_label.'</label></li>'.
                         '<li id="'.esc_attr($this->_attributes["id"]).'_other_section">'.
-                        '<input style="'.wp_kses_post($this->getAttribute("style")).'" type="text" id="'.esc_attr($this->_attributes["id"]).'_other_input" name="'.wp_kses_post($this->getAttribute("name")).'" value="'.esc_attr($other_val).'">';
+                        '<input style="'.wp_kses_post((string)$this->getAttribute("style")).'" type="text" id="'.esc_attr($this->_attributes["id"]).'_other_input" name="'.wp_kses_post((string)$this->getAttribute("name")).'" value="'.esc_attr($other_val).'">';
                    }
                    else
                    {
-                     echo  '<input id="'.esc_attr($this->_attributes["id"]).'_other" type="radio" value="" name="'.wp_kses_post($this->getAttribute("name")).'" style="'.wp_kses_post($this->getAttribute("style")).'"><label for="'.esc_attr($this->_attributes["id"]).'_other">'.$other_label.'</label></li>'.
+                     echo  '<input id="'.esc_attr($this->_attributes["id"]).'_other" type="radio" value="" name="'.wp_kses_post((string)$this->getAttribute("name")).'" style="'.wp_kses_post((string)$this->getAttribute("style")).'"><label for="'.esc_attr($this->_attributes["id"]).'_other">'.$other_label.'</label></li>'.
                         '<li id="'.esc_attr($this->_attributes["id"]).'_other_section" style="display:none">'.
-                        '<input style="'.wp_kses_post($this->getAttribute("style")).'" type="text" id="'.esc_attr($this->_attributes["id"]).'_other_input" name="'.wp_kses_post($this->getAttribute("name")).'" disabled>';
+                        '<input style="'.wp_kses_post((string)$this->getAttribute("style")).'" type="text" id="'.esc_attr($this->_attributes["id"]).'_other_input" name="'.wp_kses_post((string)$this->getAttribute("name")).'" disabled>';
 
                    }
                     echo   '</li>';

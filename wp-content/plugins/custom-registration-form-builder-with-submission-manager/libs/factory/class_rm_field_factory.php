@@ -82,7 +82,7 @@ class RM_Field_Factory {
     }
     
     public function create_select_field(){
-        if(is_user_logged_in() && !$this->prevent_value_update && !isset($_GET['form_prev']) && $this->db_field->field_show_on_user_page && !empty($this->field_options->field_meta_add)){
+        if(is_user_logged_in() && !$this->prevent_value_update && !isset($_GET['form_prev']) && !empty($this->field_options->field_meta_add)){
             $current_user = wp_get_current_user();  
             $select_field= get_user_meta($current_user->ID, $this->get_user_meta_key(), true);
             $this->opts['value'] = ($select_field == '')? $this->opts['value'] : $select_field;
@@ -106,6 +106,7 @@ class RM_Field_Factory {
             $user_base_info= get_user_meta($current_user->ID,$this->get_user_meta_key(), true);
             $this->opts['value'] = ($user_base_info == '')? $this->opts['value'] : $user_base_info;
         }
+
         return new RM_Frontend_Field_Base($this->db_field->field_id, 'Textbox', $this->field_name, $this->db_field->field_label, $this->opts, $this->db_field->page_no, $this->db_field->is_field_primary, $this->x_opts);
     }
     
@@ -147,13 +148,22 @@ class RM_Field_Factory {
     }
     
     public function create_website_field(){
-        $this->opts['Pattern'] = "((?:https?\:\/\/|[wW][wW][wW]\.)(?:[-a-zA-Z0-9]+\.)*[-a-zA-Z0-9]+.*)";
+        $this->opts['Pattern'] = "(https:\/\/|http:\/\/)?([a-zA-Z0-9]{2,}\.)?([a-zA-Z0-9]{2,})(\.[a-zA-Z0-9]{2,3})(\.[a-zA-Z0-9]{2,3})?(\/[^\s]{0,})?";
         if(is_user_logged_in() && !isset($_GET['form_prev']))
         {
             $current_user = wp_get_current_user(); 
             $this->opts['value'] = isset($current_user->user_url)? $current_user->user_url : null;
         }
         return new RM_Frontend_Field_Base($this->db_field->field_id,'Website', '', $this->db_field->field_label, $this->opts, $this->db_field->page_no, $this->db_field->is_field_primary, $this->x_opts);
+    }
+
+    public function create_url_field(){
+        if(is_user_logged_in() && !$this->prevent_value_update && !isset($_GET['form_prev']) && !empty($this->field_options->field_meta_add)){
+            $current_user = wp_get_current_user();  
+            $url_info = maybe_unserialize(get_user_meta($current_user->ID,$this->get_user_meta_key(), true));
+            $this->opts['value'] = empty($url_info) ? $this->opts['value'] : $url_info['url'];
+        }
+        return new RM_Frontend_Field_URL($this->db_field->field_id,'Url', '', $this->db_field->field_label, $this->opts, $this->db_field->page_no, $this->db_field->is_field_primary, $this->x_opts);
     }
     
     public function create_twitter_field(){
@@ -176,7 +186,7 @@ class RM_Field_Factory {
     
     public function create_instagram_field(){
        //return null;
-        $validate = new Validation_RegExp("/(?:^|[^\w])(?:@)([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)/", RM_UI_Strings::get("INSTAGRAM_ERROR"));
+        $validate = new Validation_RegExp("/(?:(?:http|https):\/\/)?(?:www.)?(?:instagram.com|instagr.am|instagr.com)\/(\w+)/", RM_UI_Strings::get("INSTAGRAM_ERROR"));
         $this->opts['validation'] = $validate;
         //$this->opts['Pattern'] = "(?:^|[^\w])(?:@)([A-Za-z0-9_](?:(?:[A-Za-z0-9_]|(?:\.(?!\.))){0,28}(?:[A-Za-z0-9_]))?)";
         $this->opts['Pattern'] = "(?:(?:http|https):\/\/)?(?:www.)?(?:instagram.com|instagr.am|instagr.com)\/(\w+)";
@@ -315,16 +325,17 @@ class RM_Field_Factory {
         // in this case pre-populate the primary email field with logged-in user's email.
         if($this->db_field->is_field_primary)
         {
-            if(is_user_logged_in() && !isset($_GET['form_prev']))
-            {
-                $current_user = wp_get_current_user();                            
-                $this->opts['value'] = $current_user->user_email;
-                $this->opts['readonly']= 'readonly';
-            }
-            else
-            {
+            if(is_user_logged_in() && !isset($_GET['form_prev'])) {
+                if(isset($_GET['page']) && $_GET['page'] == 'rm_form_preview') {
+                    $this->opts['value'] = '';
+                } else {
+                    $current_user = wp_get_current_user();
+                    $this->opts['value'] = $current_user->user_email;
+                    $this->opts['readonly']= 'readonly';
+                }
+            } else {
                 if(is_user_logged_in()) {
-                    $current_user = wp_get_current_user();                            
+                    $current_user = wp_get_current_user();
                     $this->opts['value'] = $current_user->user_email;
                     $this->opts['readonly']= 'readonly';
                 }
@@ -459,7 +470,7 @@ class RM_Field_Factory {
         return new RM_Frontend_Field_Base($this->db_field->field_id, $this->db_field->field_type, '', $this->db_field->field_label, $this->opts, $this->db_field->page_no, $this->db_field->is_field_primary, $this->x_opts);
     }
     
-    public function create_default_field(){
+    public function create_default_field() {
         if(is_user_logged_in() && !$this->prevent_value_update && !isset($_GET['form_prev']) && !empty($this->field_options->field_meta_add)){
          $current_user = wp_get_current_user();  
          $user_defaultinfo = get_user_meta($current_user->ID,$this->get_user_meta_key(),true);
@@ -563,7 +574,7 @@ class RM_Field_Factory {
             }
             wp_enqueue_script("rm_map_widget_script",RM_BASE_URL."public/js/map_widget.js");
             $element_id= 'map'.$this->db_field->field_id;
-            echo '<script>jQuery(document).ready(function(){rm_show_map_widget("'.wp_kses_post($element_id).'",["'.wp_kses_post($address).'"],'.wp_kses_post($zoom).')});</script>';
+            echo '<script>jQuery(document).ready(function(){rm_show_map_widget("'.wp_kses_post((string)$element_id).'",["'.wp_kses_post((string)$address).'"],'.wp_kses_post((string)$zoom).')});</script>';
         }
        
         $html= "<div class='rmrow'><div style='$style' class='rm_mapv_container $class '><div id='".$element_id."' class='rm-map-widget'></div></div></div>";
@@ -685,7 +696,8 @@ class RM_Field_Factory {
         $cp_opts = $this->opts;
         $cp_opts['placeholder'] = RM_UI_Strings::get('LABEL_PASSWORD_PH_AGAIN');
         $cp_opts['id'] = 'rm_reg_form_pw_reentry';
-        $cp_opts['label'] = RM_UI_Strings::get('LABEL_PASSWORD_AGAIN');
+        $cp_opts['label'] = isset($this->field_options->cnf_pass_label) ? $this->field_options->cnf_pass_label : RM_UI_Strings::get('LABEL_PASSWORD_AGAIN');
+        $cp_opts['data-confirmpasspos'] = isset($this->field_options->cnf_pass_position) ? $this->field_options->cnf_pass_position : 'right';
         $this->opts['name']="pwd";
         
         // Password field ID
@@ -717,9 +729,8 @@ class RM_Field_Factory {
         
         $this->opts['style'] = $form->form_options->style_textfield;
         $this->opts['labelStyle'] = $form->form_options->style_label;
-        
-        
         $this->opts["minlength"] = 7;
+        $this->opts["data-confirmpasspos"] = isset($this->field_options->cnf_pass_position) ? $this->field_options->cnf_pass_position : 'right';
 
 
         array_push($fields_array, new RM_Frontend_Field_Base($this->db_field->field_id, $this->db_field->field_type, '', $this->db_field->field_label, $this->opts, $this->db_field->page_no, $this->db_field->is_field_primary, $this->x_opts));
@@ -785,13 +796,13 @@ class RM_Field_Factory {
              
               $preferred_countries='';
               if(!empty($this->field_options->preferred_countries)) {
-                  $countries= explode(',', $this->field_options->preferred_countries);
+                  $countries= explode(',', (string)$this->field_options->preferred_countries);
                   if(is_array($countries)) {
                     $preferred_countries= '[';
                     foreach($countries as $country){
                         $preferred_countries .= '"'.strtolower(RM_Utilities::get_country_code($country)).'",';
                     }
-                    $tel_params .= 'preferredCountries:'.rtrim($preferred_countries, ',').'],';
+                    $tel_params .= 'preferredCountries:'.rtrim((string)$preferred_countries, ',').'],';
                   }
               }
              
@@ -801,8 +812,8 @@ class RM_Field_Factory {
               
               if($rm_country_field->field_type=='Address'){
                   if($embed){
-                      echo "<script>jQuery(document).ready(function(){jQuery('[name=\'".wp_kses_post($country_field_name)."\']').change(function(){" 
-                      . " var selected_value= jQuery(this).val(); var country=rm_get_country_code_by_name(rm_country_list,selected_value); iti_" . wp_kses_post($this->opts['id']) . ".setCountry(country); ".wp_kses_post($force_match_js)." "
+                      echo "<script>jQuery(document).ready(function(){jQuery('[name=\'".wp_kses_post((string)$country_field_name)."\']').change(function(){" 
+                      . " var selected_value= jQuery(this).val(); var country=rm_get_country_code_by_name(rm_country_list,selected_value); iti_" . wp_kses_post((string)$this->opts['id']) . ".setCountry(country); ".wp_kses_post((string)$force_match_js)." "
                       . "})});</script>";
                   }
                   else
@@ -814,8 +825,8 @@ class RM_Field_Factory {
                   
               } else {
                    if($embed){
-                       echo "<script>jQuery(document).ready(function(){jQuery('[name=\'".wp_kses_post($country_field_name)."\']').change(function(){" 
-                      . " var selected_value= jQuery(this).val(); var index= selected_value.search(/\[[A-Z]{2}\]/i); if(index>=0) { var country= selected_value.substr(index+1,2).toLowerCase(); iti_" . wp_kses_post($this->opts['id']) . ".setCountry(country); ".wp_kses_post($force_match_js)."} "
+                       echo "<script>jQuery(document).ready(function(){jQuery('[name=\'".wp_kses_post((string)$country_field_name)."\']').change(function(){" 
+                      . " var selected_value= jQuery(this).val(); var index= selected_value.search(/\[[A-Z]{2}\]/i); if(index>=0) { var country= selected_value.substr(index+1,2).toLowerCase(); iti_" . wp_kses_post((string)$this->opts['id']) . ".setCountry(country); ".wp_kses_post((string)$force_match_js)."} "
                       . "})});</script>";
                    }
                    else
@@ -838,14 +849,14 @@ class RM_Field_Factory {
             
             $ca_state_type= isset($rm_country_field->field_options->ca_state_type) ? $rm_country_field->field_options->ca_state_type : 'all';
             if($ca_state_type=='america'){
-                $preferred_countries= empty($preferred_countries) ? '["us","gb"]' : rtrim($preferred_countries,',').']';
+                $preferred_countries= empty($preferred_countries) ? '["us","gb"]' : rtrim((string)$preferred_countries,',').']';
                 $placeholder_sett='';
                 if(empty($this->field_options->field_placeholder)){
                     $placeholder_sett = "autoPlaceholder:'aggressive',utilsScript:'".$util_js."?1684676252775'";
                 }
                 if(!empty($this->field_options->country_match)){
                     if($embed){
-                         echo "<script>if (typeof telDuplicate_" . wp_kses_post($this->opts['id']) . " === 'undefined') { telDuplicate_" . wp_kses_post($this->opts['id']) . " = true; const el = document.querySelector('#" . wp_kses_post($this->opts['id']) . "'); var iti_" . wp_kses_post($this->opts['id']) . " = window.intlTelInput(el, {initialCountry:'us',preferredCountries:".wp_kses_post($preferred_countries).",".wp_kses_post($placeholder_sett)."}); jQuery(el).on('keyup', function(e) { const check = iti_" . wp_kses_post($this->opts['id']) . ".isValidNumber() ? 1 : 0; el.dataset.validnumber = check; el.dataset.fullnumber = iti_" . wp_kses_post($this->opts['id']) . ".getNumber(intlTelInputUtils.numberFormat.E164); jQuery(el).closest('.rminput').find('.selected-flag').addClass('disable-flag'); } }); }</script>";
+                         echo "<script>if (typeof telDuplicate_" . wp_kses_post((string)$this->opts['id']) . " === 'undefined') { telDuplicate_" . wp_kses_post((string)$this->opts['id']) . " = true; const el = document.querySelector('#" . wp_kses_post((string)$this->opts['id']) . "'); var iti_" . wp_kses_post((string)$this->opts['id']) . " = window.intlTelInput(el, {initialCountry:'us',preferredCountries:".wp_kses_post((string)$preferred_countries).",".wp_kses_post((string)$placeholder_sett)."}); jQuery(el).on('keyup', function(e) { const check = iti_" . wp_kses_post((string)$this->opts['id']) . ".isValidNumber() ? 1 : 0; el.dataset.validnumber = check; el.dataset.fullnumber = iti_" . wp_kses_post((string)$this->opts['id']) . ".getNumber(intlTelInputUtils.numberFormat.E164); jQuery(el).closest('.rminput').find('.selected-flag').addClass('disable-flag'); } }); }</script>";
                     }
                     else
                     {
@@ -856,7 +867,7 @@ class RM_Field_Factory {
                 else
                 {   
                      if($embed){
-                        echo "<script>if (typeof telDuplicate_" . wp_kses_post($this->opts['id']) . " === 'undefined') { telDuplicate_" . wp_kses_post($this->opts['id']) . " = true; const el = document.querySelector('#" . wp_kses_post($this->opts['id']) . "'); var iti_" . wp_kses_post($this->opts['id']) . " = window.intlTelInput(el, {initialCountry:'us',preferredCountries:".wp_kses_post($preferred_countries).",".wp_kses_post($placeholder_sett)."}); jQuery(el).on('keyup', function(e) { const check = iti_" . wp_kses_post($this->opts['id']) . ".isValidNumber() ? 1 : 0; el.dataset.validnumber = check; el.dataset.fullnumber = iti_" . wp_kses_post($this->opts['id']) . ".getNumber(intlTelInputUtils.numberFormat.E164); }); }</script>"; 
+                        echo "<script>if (typeof telDuplicate_" . wp_kses_post((string)$this->opts['id']) . " === 'undefined') { telDuplicate_" . wp_kses_post((string)$this->opts['id']) . " = true; const el = document.querySelector('#" . wp_kses_post((string)$this->opts['id']) . "'); var iti_" . wp_kses_post((string)$this->opts['id']) . " = window.intlTelInput(el, {initialCountry:'us',preferredCountries:".wp_kses_post((string)$preferred_countries).",".wp_kses_post((string)$placeholder_sett)."}); jQuery(el).on('keyup', function(e) { const check = iti_" . wp_kses_post((string)$this->opts['id']) . ".isValidNumber() ? 1 : 0; el.dataset.validnumber = check; el.dataset.fullnumber = iti_" . wp_kses_post((string)$this->opts['id']) . ".getNumber(intlTelInputUtils.numberFormat.E164); }); }</script>"; 
                      }
                      else
                      {
@@ -865,7 +876,7 @@ class RM_Field_Factory {
                 }
             } else{
                 if($embed){
-                    echo "<script>if (typeof telDuplicate_" . wp_kses_post($this->opts['id']) . " === 'undefined') { var telDuplicate_" . wp_kses_post($this->opts['id']) . " = true; const el = document.querySelector('#" . wp_kses_post($this->opts['id']) . "'); var iti_" . wp_kses_post($this->opts['id']) . " = window.intlTelInput(el, " . wp_kses_post($tel_params) . "); jQuery(el).on('keyup', function(e) { const check = iti_" . wp_kses_post($this->opts['id']) . ".isValidNumber() ? 1 : 0; el.dataset.validnumber = check; el.dataset.fullnumber = iti_" . wp_kses_post($this->opts['id']) . ".getNumber(intlTelInputUtils.numberFormat.E164); }); }</script>";
+                    echo "<script>if (typeof telDuplicate_" . wp_kses_post((string)$this->opts['id']) . " === 'undefined') { var telDuplicate_" . wp_kses_post((string)$this->opts['id']) . " = true; const el = document.querySelector('#" . wp_kses_post((string)$this->opts['id']) . "'); var iti_" . wp_kses_post((string)$this->opts['id']) . " = window.intlTelInput(el, " . wp_kses_post((string)$tel_params) . "); jQuery(el).on('keyup', function(e) { const check = iti_" . wp_kses_post((string)$this->opts['id']) . ".isValidNumber() ? 1 : 0; el.dataset.validnumber = check; el.dataset.fullnumber = iti_" . wp_kses_post((string)$this->opts['id']) . ".getNumber(intlTelInputUtils.numberFormat.E164); }); }</script>";
                 }
                 else
                 {
@@ -889,7 +900,7 @@ class RM_Field_Factory {
            
             if(!empty($this->field_options->country_match) && empty($meta_value)  ){ 
                 if($embed){
-                     echo "<script>jQuery(document).ready(function(){setTimeout(function(){jQuery('[name=\'".wp_kses_post($country_field_name)."\']').trigger('change'); },3000);});</script>";
+                     echo "<script>jQuery(document).ready(function(){setTimeout(function(){jQuery('[name=\'".wp_kses_post((string)$country_field_name)."\']').trigger('change'); },3000);});</script>";
                 }
                 else
                 {
@@ -898,7 +909,7 @@ class RM_Field_Factory {
             }
             else if(!empty($this->field_options->country_match)){ 
                  if($embed){
-                     echo "<script>jQuery(document).ready(function(){setTimeout(function(){jQuery('[id=" . wp_kses_post($this->opts['id']) . "]').closest('.rminput,.rmwc-input').find('.selected-flag').addClass('disable-flag')},3000)});</script>";
+                     echo "<script>jQuery(document).ready(function(){setTimeout(function(){jQuery('[id=" . wp_kses_post((string)$this->opts['id']) . "]').closest('.rminput,.rmwc-input').find('.selected-flag').addClass('disable-flag')},3000)});</script>";
                 }
                 else
                 {
@@ -915,7 +926,7 @@ class RM_Field_Factory {
             
             wp_enqueue_script("rm_mask_script", RM_BASE_URL . "public/js/jquery.mask.min.js");
             if($embed){
-                echo "<script>jQuery(document).ready(function(){jQuery('#" . wp_kses_post($this->opts['id']) . "').mask('(000)-000-0000')});</script>";
+                echo "<script>jQuery(document).ready(function(){jQuery('#" . wp_kses_post((string)$this->opts['id']) . "').mask('(000)-000-0000')});</script>";
             }
             else
             {
@@ -937,7 +948,7 @@ class RM_Field_Factory {
             }
             wp_enqueue_script("rm_mask_script", RM_BASE_URL . "public/js/jquery.mask.min.js");
              if($embed){
-                 echo "<script>jQuery(document).ready(function(){jQuery('#" . wp_kses_post($this->opts['id']) . "').mask('".wp_kses_post($this->field_options->custom_mobile_format)."')});</script>";
+                 echo "<script>jQuery(document).ready(function(){jQuery('#" . wp_kses_post((string)$this->opts['id']) . "').mask('".wp_kses_post((string)$this->field_options->custom_mobile_format)."')});</script>";
              }
              else
              {
@@ -951,30 +962,30 @@ class RM_Field_Factory {
             $util_js= RM_BASE_URL . "public/js/mobile_field/utils.js";
             $tel_params = '{';
             if(!empty($this->field_options->lim_countries)){
-                  $countries= explode(',', $this->field_options->lim_countries);
+                  $countries= explode(',', (string)$this->field_options->lim_countries);
                   if(is_array($countries)){
                       $limited_countries= '[';
                       foreach($countries as $country){
                         $limited_countries .= '"'.strtolower(RM_Utilities::get_country_code($country)).'",';
                       }
-                      $tel_params .= 'onlyCountries:'.rtrim($limited_countries, ',').'],';
+                      $tel_params .= 'onlyCountries:'.rtrim((string)$limited_countries, ',').'],';
                   }
             }
               
             if(!empty($this->field_options->lim_pref_countries)){
-                  $countries= explode(',', $this->field_options->lim_pref_countries);
+                  $countries= explode(',', (string)$this->field_options->lim_pref_countries);
                   if(is_array($countries)){
                       $preferred_countries= '[';
                       foreach($countries as $country){
                         $preferred_countries .= '"'.strtolower(RM_Utilities::get_country_code($country)).'",';
                       }
-                      $tel_params .= 'preferredCountries:'.rtrim($preferred_countries, ',').'],';
+                      $tel_params .= 'preferredCountries:'.rtrim((string)$preferred_countries, ',').'],';
                   }
             }
             $tel_params.= 'utilsScript:"'.$util_js.'?1684676252775"}';
             if($embed){
                 //echo "<script>jQuery(document).ready(function(){jQuery('#" . $this->opts['id'] . "').intlTelInput(".$tel_params.");});</script>";
-                echo "<script>if (typeof telDuplicate_" . wp_kses_post($this->opts['id']) . " === 'undefined') { telDuplicate_" . wp_kses_post($this->opts['id']) . " = true; const el = document.querySelector('#" . wp_kses_post($this->opts['id']) . "'); var iti_" . wp_kses_post($this->opts['id']) . " = window.intlTelInput(el, " . wp_kses_post($tel_params) . "); jQuery(el).on('keyup', function(e) { jQuery(el).prop('pattern',''); const check = iti_" . wp_kses_post($this->opts['id']) . ".isValidNumber() ? 1 : 0; el.dataset.validnumber = check; el.dataset.fullnumber = iti_" . wp_kses_post($this->opts['id']) . ".getNumber(intlTelInputUtils.numberFormat.E164); }); }</script>";
+                echo "<script>if (typeof telDuplicate_" . wp_kses_post((string)$this->opts['id']) . " === 'undefined') { telDuplicate_" . wp_kses_post((string)$this->opts['id']) . " = true; const el = document.querySelector('#" . wp_kses_post((string)$this->opts['id']) . "'); var iti_" . wp_kses_post((string)$this->opts['id']) . " = window.intlTelInput(el, " . wp_kses_post((string)$tel_params) . "); jQuery(el).on('keyup', function(e) { jQuery(el).prop('pattern',''); const check = iti_" . wp_kses_post((string)$this->opts['id']) . ".isValidNumber() ? 1 : 0; el.dataset.validnumber = check; el.dataset.fullnumber = iti_" . wp_kses_post((string)$this->opts['id']) . ".getNumber(intlTelInputUtils.numberFormat.E164); }); }</script>";
             }
             else{
                 wp_add_inline_script("rm_mobile_script","if (typeof telDuplicate_" . $this->opts['id'] . " === 'undefined') { telDuplicate_" . $this->opts['id'] . " = true; const el = document.querySelector('#" . $this->opts['id'] . "'); var iti_" . $this->opts['id'] . " = window.intlTelInput(el, " . $tel_params . "); jQuery(el).on('keyup', function(e) { jQuery(el).prop('pattern',''); const check = iti_" . $this->opts['id'] . ".isValidNumber() ? 1 : 0; el.dataset.validnumber = check; el.dataset.fullnumber = iti_" . $this->opts['id'] . ".getNumber(intlTelInputUtils.numberFormat.E164); }); }"); 

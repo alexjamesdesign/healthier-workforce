@@ -16,7 +16,7 @@ class Element_Terms extends Element {
     public $_attributes = array("rows" => "5");
     public $required_scroll;
 
-    public function __construct($label, $name, $terms_text, array $properties = null) {
+    public function __construct($label, $name, $terms_text, $properties = null) {
         $configuration = array(
             "label" => $label,
             "name" => $name
@@ -59,16 +59,16 @@ class Element_Terms extends Element {
             $checked = "checked";
        
        if(isset($this->_attributes["check_above_tc"]) && $this->_attributes["check_above_tc"] == 1)
-           echo "<div class='rm_terms_checkbox'><input ",esc_attr($checked)," ",esc_attr($disabled)," value='on' type='checkbox'", wp_kses_post($this->getAttributes(array("default_value", "value"))),  " class='rm_check_box'>".wp_kses_post($cb_label)."</div>";
+           echo "<div class='rm_terms_checkbox'><input ",esc_attr($checked)," ",esc_attr($disabled)," value='on' type='checkbox'", wp_kses_post((string)$this->getAttributes(array("default_value", "value"))),  " class='rm_check_box'>".wp_kses_post((string)$cb_label)."</div>";
        
-       echo "<div id='rm_terms_textarea' class='rm_terms_textarea'><textarea ", wp_kses_post($style) ," onscroll='",esc_js($scroll),"' readonly  id='rm_terms_area_", esc_attr($this->_attributes['name']), "' class='rm_terms_area'>";
+       echo "<div id='rm_terms_textarea' class='rm_terms_textarea'><textarea ", wp_kses_post((string)$style) ," onscroll='",esc_js($scroll),"' readonly  id='rm_terms_area_", esc_attr($this->_attributes['name']), "' class='rm_terms_area'>";
        
        if (!empty($this->_attributes["default_value"]))
            echo esc_html($this->filter(html_entity_decode($this->_attributes["default_value"])));
        echo "</textarea></div>";
        
        if(!isset($this->_attributes["check_above_tc"]) || $this->_attributes["check_above_tc"] == 0)
-           echo "<div class='rm_terms_checkbox'><input ",esc_attr($checked)," ",esc_attr($disabled)," value='on' type='checkbox'", wp_kses_post($this->getAttributes(array("default_value", "value"))),  " class='rm_check_box'>".wp_kses_post($cb_label)."</div>";
+           echo "<div class='rm_terms_checkbox'><input ",esc_attr($checked)," ",esc_attr($disabled)," value='on' type='checkbox'", wp_kses_post((string)$this->getAttributes(array("default_value", "value"))),  " class='rm_check_box'>".wp_kses_post((string)$cb_label)."</div>";
    }
 
 

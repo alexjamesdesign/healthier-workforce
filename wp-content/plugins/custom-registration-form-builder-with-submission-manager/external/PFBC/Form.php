@@ -222,7 +222,7 @@ class RM_PFBC_Form extends Base
             // Removing hidden fields (conditional logics) to skip their validation
             $conditional_fields= array();
             if(!empty($_POST['rm_cond_hidden_fields']))
-                $conditional_fields= explode(',',sanitize_text_field($_POST['rm_cond_hidden_fields']));
+                $conditional_fields= explode(',',sanitize_text_field((string)$_POST['rm_cond_hidden_fields']));
             
             /* Each element's value is saved in the session and checked against any validation rules applied
             to the element. */
@@ -281,9 +281,9 @@ class RM_PFBC_Form extends Base
                     self::clearValues($id);
                 self::clearErrors($id);
             }
-        } elseif(!is_admin() && str_contains($id,'rm_otp_form')) {
+        } elseif(!is_admin() && str_contains((string)$id,'rm_otp_form')) {
             $valid = false;
-        } elseif(is_admin() && (str_contains($id,'form_sett_mailpoet') || str_contains($id,'form_sett_newsletter') || str_contains($id,'options_rmwc') || str_contains($id,'form_sett_dpx'))) {
+        } elseif(is_admin() && (str_contains((string)$id,'form_sett_mailpoet') || str_contains((string)$id,'form_sett_newsletter') || str_contains((string)$id,'options_rmwc') || str_contains((string)$id,'form_sett_dpx'))) {
             $valid = false;
         } else {
             $valid = true;
@@ -413,7 +413,7 @@ class RM_PFBC_Form extends Base
      */
     protected function noScriptsTags(){ ?>
         <noscript>
-            <div class="rm-js-disabled"><b><?php echo wp_kses_post(RM_UI_Strings::get('BROWSER_JS_DISABLED')); ?></b></div>
+            <div class="rm-js-disabled"><b><?php echo wp_kses_post((string)RM_UI_Strings::get('BROWSER_JS_DISABLED')); ?></b></div>
             <style>
                 .rm_next_btn {display:none !important}
                 .rm_noscript_btn {display: block !important}
@@ -480,7 +480,7 @@ JS;
 
             /* A callback function can be specified to handle any post submission events. */
             if (!empty($this->ajaxCallback))
-                echo wp_kses_post($this->ajaxCallback), "(response);";
+                echo wp_kses_post((string)$this->ajaxCallback), "(response);";
 
             /* After the form has finished submitting, re-enable all submit buttons to allow additional submissions. */
             echo <<<JS
@@ -538,20 +538,20 @@ JS;
                     if($dep === 'jQuery')
                         wp_enqueue_script('jquery');
                     else
-                        echo wp_kses_post(RM_Utilities::enqueue_external_scripts($dep, $urls[$dep]));
+                        echo wp_kses_post((string)RM_Utilities::enqueue_external_scripts($dep, $urls[$dep]));
                     unset($urls[$dep]);
                 }
             }
 
             foreach ($urls as $handle => $url){
-                echo wp_kses_post(RM_Utilities::enqueue_external_scripts($handle, $url));
+                echo wp_kses_post((string)RM_Utilities::enqueue_external_scripts($handle, $url));
             }
         }
         
         if(!empty($localize)){
             foreach($localize as $single){
                 foreach($single as $handle_key=>$data){
-                    echo wp_kses_post(RM_Utilities::localize_script($handle_key,$data['name'],$data['value']));
+                    echo wp_kses_post((string)RM_Utilities::localize_script($handle_key,$data['name'],$data['value']));
                 }
             }
         }

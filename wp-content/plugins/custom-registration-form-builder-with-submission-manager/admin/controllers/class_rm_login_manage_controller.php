@@ -283,13 +283,16 @@ class RM_Login_Manage_Controller {
             $params['en_captcha']= isset($request->req['en_captcha']) ? absint($request->req['en_captcha']) : 0;
             $params['allowed_failed_attempts']= absint($request->req['allowed_failed_attempts']);
             $params['allowed_failed_duration']= absint($request->req['allowed_failed_duration']);
-            $params['en_ban_ip']= isset($request->req['en_ban_ip']) ? absint($request->req['en_ban_ip']) : 0;
-            $params['allowed_attempts_before_ban']= isset($request->req['allowed_attempts_before_ban'])?absint($request->req['allowed_attempts_before_ban']):6;
-            $params['allowed_duration_before_ban']= isset($request->req['allowed_duration_before_ban'])?absint($request->req['allowed_duration_before_ban']):60;
-            $params['ban_type']= isset($request->req['ban_type'])?sanitize_text_field($request->req['ban_type']):'temp';
-            $params['ban_duration']= isset($request->req['ban_duration'])?absint($request->req['ban_duration']):1440;
-            $params['ban_error_msg']= isset($request->req['ban_error_msg'])?$request->req['ban_error_msg']:'Your IP has been banned by the Admin due to repeated failed login attempts.';
-            $params['notify_admin_on_ban']= isset($request->req['notify_admin_on_ban']) ? absint($request->req['notify_admin_on_ban']) : 0;
+            if(defined('REGMAGIC_ADDON')) {
+                $params['en_ban_ip']= isset($request->req['en_ban_ip']) ? absint($request->req['en_ban_ip']) : 0;
+                $params['allowed_attempts_before_ban']= isset($request->req['allowed_attempts_before_ban'])?absint($request->req['allowed_attempts_before_ban']):6;
+                $params['allowed_duration_before_ban']= isset($request->req['allowed_duration_before_ban'])?absint($request->req['allowed_duration_before_ban']):60;
+                $params['ban_type']= isset($request->req['ban_type'])?sanitize_text_field($request->req['ban_type']):'temp';
+                $params['ban_duration']= isset($request->req['ban_duration'])?absint($request->req['ban_duration']):1440;
+                $params['ban_error_msg']= isset($request->req['ban_error_msg'])?$request->req['ban_error_msg']:esc_html__('Your IP has been banned by the Admin due to repeated failed login attempts.', 'custom-registration-form-builder-with-submission-manager');
+                $params['notify_admin_on_ban']= isset($request->req['notify_admin_on_ban']) ? absint($request->req['notify_admin_on_ban']) : 0;
+                $params['disable_autocomplete']= isset($request->req['disable_autocomplete']) ? absint($request->req['disable_autocomplete']) : 0;
+            }
             $service->update_validations($params);
             RM_Utilities::redirect(admin_url('/admin.php?page=rm_login_sett_manage'));
         }
@@ -307,16 +310,16 @@ class RM_Login_Manage_Controller {
             $params['recovery_page']= absint($request->req['recovery_page']);
             $params['rec_email_label']= sanitize_text_field($request->req['rec_email_label']);
             $params['rec_btn_label']= sanitize_text_field($request->req['rec_btn_label']);
-            $params['rec_link_sent_msg']= wp_kses_post(stripslashes($request->req['rec_link_sent_msg']));
-            $params['rec_email_not_found_msg']= wp_kses_post(stripslashes($request->req['rec_email_not_found_msg']));
+            $params['rec_link_sent_msg']= wp_kses_post((string)stripslashes($request->req['rec_link_sent_msg']));
+            $params['rec_email_not_found_msg']= wp_kses_post((string)stripslashes($request->req['rec_email_not_found_msg']));
             $params['rec_new_pass_label']= sanitize_text_field($request->req['rec_new_pass_label']);
             $params['rec_conf_pass_label']= sanitize_text_field($request->req['rec_conf_pass_label']);
             $params['rec_pass_btn_label']= sanitize_text_field($request->req['rec_pass_btn_label']);
             $params['rec_pass_match_err']= sanitize_text_field($request->req['rec_pass_match_err']);
-            $params['rec_pas_suc_message']= wp_kses_post(stripslashes($request->req['rec_pas_suc_message']));
-            $params['rec_invalid_reset_err']= wp_kses_post(stripslashes($request->req['rec_invalid_reset_err']));
+            $params['rec_pas_suc_message']= wp_kses_post((string)stripslashes($request->req['rec_pas_suc_message']));
+            $params['rec_invalid_reset_err']= wp_kses_post((string)stripslashes($request->req['rec_invalid_reset_err']));
             $params['rec_tok_sub_label']= sanitize_text_field($request->req['rec_tok_sub_label']);
-            $params['rec_invalid_tok_err']= wp_kses_post(stripslashes($request->req['rec_invalid_tok_err']));
+            $params['rec_invalid_tok_err']= wp_kses_post((string)stripslashes($request->req['rec_invalid_tok_err']));
             $params['rec_link_expiry']= absint($request->req['rec_link_expiry']);
             $params['rec_link_exp_err']= sanitize_text_field($request->req['rec_link_exp_err']);
             $params['rec_redirect_default']= isset($request->req['rec_redirect_default']) ? absint($request->req['rec_redirect_default']) : 0;
@@ -340,11 +343,16 @@ class RM_Login_Manage_Controller {
         $data= new stdClass();
         if($this->mv_handler->validateForm("login-email-temp")) {
             $params= array();
-            $params['failed_login_err']= $request->req['failed_login_err'];
-            $params['otp_message']= $request->req['otp_message'];
-            $params['pass_reset']= $request->req['pass_reset'];
-            $params['failed_login_err_admin']= $request->req['failed_login_err_admin'];
-            $params['ban_message_admin']= $request->req['ban_message_admin'];
+            $params['failed_login_err_sub'] = $request->req['failed_login_err_sub'];
+            $params['failed_login_err'] = $request->req['failed_login_err'];
+            $params['otp_message_sub'] = $request->req['otp_message_sub'];
+            $params['otp_message'] = $request->req['otp_message'];
+            $params['pass_reset_sub'] = $request->req['pass_reset_sub'];
+            $params['pass_reset'] = $request->req['pass_reset'];
+            $params['failed_login_err_admin_sub'] = $request->req['failed_login_err_admin_sub'];
+            $params['failed_login_err_admin'] = $request->req['failed_login_err_admin'];
+            $params['ban_message_admin_sub'] = $request->req['ban_message_admin_sub'];
+            $params['ban_message_admin'] = $request->req['ban_message_admin'];
             $service->update_template_options($params);
             RM_Utilities::redirect(admin_url('/admin.php?page=rm_login_sett_manage'));
         }
@@ -366,37 +374,42 @@ class RM_Login_Manage_Controller {
         $setting_service= new RM_Setting_Service();
         $setting_service->set_model($model);
         if($this->mv_handler->validateForm("login-integrations")) {
-            $options= array();
-            if($data->type=='fb'){
-                $options['enable_facebook'] = isset($request->req['enable_facebook']) ? "yes" : null;
-                $options['facebook_app_id'] = $request->req['facebook_app_id'];
-                $options['facebook_app_secret'] = $request->req['facebook_app_secret'];
+            // Check nonce
+            if (!isset($request->req['social_login_nonce']) || !wp_verify_nonce($request->req['social_login_nonce'], 'social_login_nonce')) {
+                RM_PFBC_Form::setError('login-integrations', esc_html__('Nonce check failed. Please try again.', 'custom-registration-form-builder-with-submission-manager'));
+            } else {
+                $options= array();
+                if($data->type=='fb'){
+                    $options['enable_facebook'] = isset($request->req['enable_facebook']) ? "yes" : null;
+                    $options['facebook_app_id'] = $request->req['facebook_app_id'];
+                    $options['facebook_app_secret'] = $request->req['facebook_app_secret'];
+                }
+                else if($data->type=='inst'){
+                    $options['enable_instagram_login'] = isset($request->req['enable_instagram_login']) ? "yes" : null;
+                    $options['instagram_client_id'] = $request->req['instagram_client_id'];
+                    $options['instagram_client_secret'] = $request->req['instagram_client_secret'];
+                }
+                else if($data->type=='win'){
+                    $options['enable_window_login'] = isset($request->req['enable_window_login']) ? "yes" : null;
+                    $options['windows_client_id'] = $request->req['windows_client_id'];
+                }
+                else if($data->type=='google'){
+                    $options['enable_gplus'] = isset($request->req['enable_gplus']) ? "yes" : null;
+                    $options['gplus_client_id'] = $request->req['gplus_client_id']; 
+                }
+                else if($data->type=='tw'){
+                    $options['enable_twitter_login'] = isset($request->req['enable_twitter_login']) ? "yes" : null;
+                    $options['tw_consumer_key'] = $request->req['tw_consumer_key'];
+                    $options['tw_consumer_secret'] = $request->req['tw_consumer_secret'];
+                }
+                else if($data->type=='linked'){
+                    $options['enable_linked'] = isset($request->req['enable_linked']) ? "yes" : null;
+                    $options['linkedin_api_key'] = $request->req['linkedin_api_key'];
+                    $options['linkedin_secret_key'] = $request->req['linkedin_secret_key'];
+                }
+                $setting_service->save_options($options);
+                RM_Utilities::redirect(admin_url('/admin.php?page=rm_login_sett_manage'));
             }
-            else if($data->type=='inst'){
-                $options['enable_instagram_login'] = isset($request->req['enable_instagram_login']) ? "yes" : null;
-                $options['instagram_client_id'] = $request->req['instagram_client_id'];
-                $options['instagram_client_secret'] = $request->req['instagram_client_secret'];
-            }
-            else if($data->type=='win'){
-                $options['enable_window_login'] = isset($request->req['enable_window_login']) ? "yes" : null;
-                $options['windows_client_id'] = $request->req['windows_client_id'];
-            }
-            else if($data->type=='google'){
-                $options['enable_gplus'] = isset($request->req['enable_gplus']) ? "yes" : null;
-                $options['gplus_client_id'] = $request->req['gplus_client_id']; 
-            }
-            else if($data->type=='tw'){
-                $options['enable_twitter_login'] = isset($request->req['enable_twitter_login']) ? "yes" : null;
-                $options['tw_consumer_key'] = $request->req['tw_consumer_key'];
-                $options['tw_consumer_secret'] = $request->req['tw_consumer_secret'];
-            }
-            else if($data->type=='linked'){
-                $options['enable_linked'] = isset($request->req['enable_linked']) ? "yes" : null;
-                $options['linkedin_api_key'] = $request->req['linkedin_api_key'];
-                $options['linkedin_secret_key'] = $request->req['linkedin_secret_key'];
-            }
-            $setting_service->save_options($options);
-            RM_Utilities::redirect(admin_url('/admin.php?page=rm_login_sett_manage'));
         }
         $data->options = $setting_service->get_options();
         $view = $this->mv_handler->setView("login_integrations");

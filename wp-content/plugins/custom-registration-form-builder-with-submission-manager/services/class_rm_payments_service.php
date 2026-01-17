@@ -19,8 +19,9 @@ class RM_Payments_Service extends RM_Services
         }
     }
     
-    public function rm_user_payments_details($user_email){
-        $user_payments = RM_DBManager::get_recents_payments_by_email($user_email);
+    public function rm_user_payments_details($user_email, $start_date ='', $end_date ='',$status=''){
+        $user_payments = RM_DBManager::get_recents_payments_by_email_date($user_email, $start_date, $end_date, $status);
+        
         if(!empty($user_payments)):?>
         <div class="rmagic">
             <div class="rmagic-table">
@@ -40,20 +41,20 @@ class RM_Payments_Service extends RM_Services
                         <?php 
                         foreach( $user_payments as $user_payment ){ ?>
                         <tr>
-                            <td><?php echo wp_kses_post(RM_Utilities::localize_time($user_payment->submitted_on,'j M, Y'));?></td>
-                            <td><?php echo wp_kses_post($user_payment->form_name);?></td>
-                            <td><?php echo wp_kses_post($user_payment->unique_token);?></td>
-                            <td><?php echo wp_kses_post(RM_Utilities::get_formatted_price($user_payment->total_amount));?></td>
-                            <td><?php echo wp_kses_post($user_payment->invoice);?></td>
+                            <td><?php echo wp_kses_post((string)RM_Utilities::localize_time($user_payment->submitted_on,'j M, Y'));?></td>
+                            <td><?php echo wp_kses_post((string)$user_payment->form_name);?></td>
+                            <td><?php echo wp_kses_post((string)$user_payment->unique_token);?></td>
+                            <td><?php echo wp_kses_post((string)RM_Utilities::get_formatted_price($user_payment->total_amount));?></td>
+                            <td><?php echo wp_kses_post((string)$user_payment->invoice);?></td>
                             <td><?php 
                                 if(strtolower($user_payment->status) == 'succeeded'){
-                                    echo _e('Completed','registrationmagic-addon');
+                                    echo _e('Completed','custom-registration-form-builder-with-submission-manager');
                                 }else{
-                                    echo wp_kses_post($user_payment->status);
+                                    echo wp_kses_post((string)$user_payment->status);
                                 }
                             ?></td>
                             <td>
-                                <?php echo wp_kses_post(ucfirst($user_payment->pay_proc));?>
+                                <?php echo wp_kses_post((string)ucfirst($user_payment->pay_proc));?>
                             </td>
                         </tr>
                         <?php

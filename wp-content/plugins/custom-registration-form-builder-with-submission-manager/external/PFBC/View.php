@@ -2,7 +2,7 @@
 class View extends Base {
 	public $_form;
 
-	public function __construct(array $properties = null) {
+	public function __construct($properties = null) {
 		$this->configure($properties);
 	}
 
@@ -25,13 +25,13 @@ class View extends Base {
 		if(!empty($shortDesc)){
 			//echo '<span class="help-inline">', $shortDesc, '</span>';;
                         echo '<div class="rmnote"><div class="rmprenote"></div>';
-			echo '<div class="rmnote">', wp_kses_post($shortDesc), '</div></div>';
+			echo '<div class="rmnote">', wp_kses_post((string)$shortDesc), '</div></div>';
                 }
 
 		$longDesc = $element->getLongDesc();
 		if(!empty($longDesc)){
                         echo '<div class="rmnote"><div class="rmprenote"></div>';
-			echo '<div class="rmnotecontent">', wp_kses_post($longDesc), '</div></div>';
+			echo '<div class="rmnotecontent">', wp_kses_post((string)$longDesc), '</div></div>';
                 }
 			//echo '<span class="help-block">', $longDesc, '</span>';;
 	}

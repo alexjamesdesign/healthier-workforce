@@ -38,6 +38,7 @@ $primary_fields = array();
                 </div>
                 
                 <!----Pannel--->
+                
                     <div class="rm-fs-panel rm-fs-panel-from-top js-cd-panel-main">
                         <div class="rm-fs-panel-overlay"></div>
                         <div class="rm-fs-panel-container rm-box-white-bg rm-box-border">
@@ -70,19 +71,19 @@ $primary_fields = array();
                                             ?>
                                         </ul>
                                     </div>
-
+                                    <!--
                                     <div class="rm-fs-popular-forms">
                                         <div class="rm-fs-forms-title"><?php _e('Popular Forms', 'custom-registration-form-builder-with-submission-manager'); ?></div>
                                         <ul id="rm-fs-popular-forms">
-    <?php foreach ($data->popular_forms as $popular_form) { ?>
+                                            <?php //foreach ($data->popular_forms as $popular_form) { ?>
                                                 <li>
-                                                    <a href="?page=rm_field_manage&rm_form_id=<?php echo esc_attr($popular_form['id']); ?>"><?php echo esc_html($popular_form['name']); ?>
-                                                    <span class="rm-fs-form-desc"><?php echo esc_html($popular_form['desc']); ?></span>
+                                                    <a href="?page=rm_field_manage&rm_form_id=<?php //echo esc_attr($popular_form['id']); ?>"><?php //echo esc_html($popular_form['name']); ?>
+                                                    <span class="rm-fs-form-desc"><?php //echo esc_html($popular_form['desc']); ?></span>
                                                     </a>
                                                     
                                                 </li>
                                             <?php
-                                            }
+                                            //}
                                             /* foreach ($data->forms as $form_id => $form)
                                               if ($data->form_id == $form_id)
                                               echo "<div>" . esc_html($form) . "</div>";
@@ -92,7 +93,7 @@ $primary_fields = array();
                                             ?>
                                         </ul> 
                                     </div> 
-
+                                    -->
                                     <div class="rm-fs-search-result" style="display:none;">
                                         <div class="rm-fs-search-result-head"><span>0</span> <?php _e('result(s) found', 'custom-registration-form-builder-with-submission-manager'); ?> <a href="javascript:void(0)"><?php _e('Reset', 'custom-registration-form-builder-with-submission-manager'); ?></a></div>
                                         <div class="rm-fs-forms-title"><?php _e('Search Result', 'custom-registration-form-builder-with-submission-manager'); ?></div>
@@ -120,7 +121,7 @@ $primary_fields = array();
 
 <?php
 if($data->total_page > 1)
-    echo "<div class='rm-builder-notice'><div class='rmnotice'>".wp_kses_post(RM_UI_Strings::get('MULTIPAGE_DEGRADE_WARNING'))."</div></div>";
+    echo "<div class='rm-builder-notice'><div class='rmnotice'>".wp_kses_post((string)RM_UI_Strings::get('MULTIPAGE_DEGRADE_WARNING'))."</div></div>";
 ?>
 
 <div class="rmagic rm-field-manager-main">
@@ -140,7 +141,7 @@ if($data->total_page > 1)
                 
                 <div class="rm-fields-row-wrap">
                     <div class="rm-fields-row-title"><?php echo esc_html($row->heading); ?></div>
-                    <div class="rm-fields-row-subtitle"><?php echo esc_html($row->subheading); ?></div>
+                    <div class="rm-fields-row-subtitle"><?php echo wp_kses_post(nl2br($row->subheading)); ?></div>
                 </div>
                 
                 <div class="rm-fields-row <?php echo 'rm-fields-' . str_replace(':', '-', $row->columns); ?>" >
@@ -152,17 +153,26 @@ if($data->total_page > 1)
                     </span>
                 </div>
                 <div class="rm-field-row-actions rm-field-actions-item-wrap">
-                    <div class="rm-field-row-duplicate rm-field-action-item rm-field-row-action" title="Duplicate Row"><a href="?page=rm_field_manage&rm_form_id=<?php echo esc_attr($data->form_id); ?>&rm_row_id=<?php echo esc_attr($row->row_id); ?>&rm_form_page_no=<?php echo esc_attr($row->page_no); ?>&rm_action=duplicate_row" class="rm-row-duplicate-icon"><span class="material-icons">content_copy</span></a></div>
-                    <div class="rm-field-row-setting rm-field-action-item rm-field-row-action" title="Row Setting" ><a onclick="CallModalBox(this)" data-row-id="<?php echo esc_attr($row->row_id); ?>" data-action="update_row" data-row-columns="<?php echo esc_attr($row->columns); ?>" data-row-class="<?php echo esc_attr($row->class); ?>" data-row-gutter="<?php echo esc_attr($row->gutter); ?>" data-row-bmargin="<?php echo esc_attr($row->bmargin); ?>" data-row-width="<?php echo esc_attr($row->width); ?>" data-row-heading="<?php echo esc_attr($row->heading); ?>" data-row-subheading="<?php echo esc_attr($row->subheading); ?>" data-page-no="<?php echo esc_attr($row->page_no); ?>"><span class="material-icons">settings</span></a></div>
-                    <div class="rm-field-row-delete rm-field-action-item rm-field-row-action" title="Delete Row"><a onclick="CallRowDeleteBox(this)" data-form-id="<?php echo esc_attr($data->form_id); ?>" data-row-id="<?php echo esc_attr($row->row_id); ?>"><span class="material-icons">delete</span></a></div>
+                    <div class="rm-field-row-duplicate rm-field-action-item rm-field-row-action" title="<?php _e('Duplicate Row', 'custom-registration-form-builder-with-submission-manager'); ?>"><a href="?page=rm_field_manage&rm_form_id=<?php echo esc_attr($data->form_id); ?>&rm_row_id=<?php echo esc_attr($row->row_id); ?>&rm_form_page_no=<?php echo esc_attr($row->page_no); ?>&rm_action=duplicate_row" class="rm-row-duplicate-icon"><span class="material-icons">content_copy</span></a></div>
+                    <div class="rm-field-row-setting rm-field-action-item rm-field-row-action" title="<?php _e('Row Options', 'custom-registration-form-builder-with-submission-manager'); ?>"><a onclick="CallModalBox(this)" data-row-id="<?php echo esc_attr($row->row_id); ?>" data-action="update_row" data-row-columns="<?php echo esc_attr($row->columns); ?>" data-row-class="<?php echo esc_attr($row->class); ?>" data-row-gutter="<?php echo esc_attr($row->gutter); ?>" data-row-bmargin="<?php echo esc_attr($row->bmargin); ?>" data-row-width="<?php echo esc_attr($row->width); ?>" data-row-heading="<?php echo esc_attr($row->heading); ?>" data-row-subheading="<?php echo wp_kses_post($row->subheading); ?>" data-page-no="<?php echo esc_attr($row->page_no); ?>"><span class="material-icons">settings</span></a></div>
+                    <div class="rm-field-row-delete rm-field-action-item rm-field-row-action" title="<?php _e('Delete Row', 'custom-registration-form-builder-with-submission-manager'); ?>"><a onclick="CallRowDeleteBox(this)" data-form-id="<?php echo esc_attr($data->form_id); ?>" data-row-id="<?php echo esc_attr($row->row_id); ?>"><span class="material-icons">delete</span></a></div>
                     
                 </div>
+                <?php $is_subscription_added = 0;
+                    $is_product_added = 0;
+                ?>    
                 <!--<div class="rm-fields-dragable">-->
                 <?php foreach ($row->fields as $field_order => $field) { ?>
                 <?php if (!empty($field)) {
                         $is_privacy_added = 0;
                         if($field->field_type=='Privacy') {
                             $is_privacy_added = 1;
+                        }
+                        if($field->field_type=='Subscription') {
+                            $is_subscription_added = 1;
+                        }
+                        if($field->field_type=='Price') {
+                            $is_product_added = 1;
                         }
                         $f_options = maybe_unserialize($field->field_options);
                         if (isset($f_options->field_is_multiline) && $f_options->field_is_multiline == 1) {
@@ -180,7 +190,7 @@ if($data->total_page > 1)
                         </span>
                         <div class="rm-field-box-name"><?php if($field->is_field_primary && $field->field_type == 'Email') echo 'Account ' . esc_html($data->field_types[$field->field_type]); else echo esc_html($data->field_types[$field->field_type]); ?></div>
                         <div class="rm-field-box-label"><?php echo esc_html($field->field_label); ?></div>
-                        <div class="rm-field-actions rm-field-actions-item-wrap" data-title="<?php if($field->is_field_primary && $field->field_type == 'Email') echo 'Account Email'; else echo esc_attr($field->field_type); ?>">
+                        <div class="rm-field-actions rm-field-actions-item-wrap rm-overflow-hidden" data-title="<?php if($field->is_field_primary && $field->field_type == 'Email') echo 'Account Email'; else echo esc_attr($field->field_type); ?>">
                            <!-- <div class="rm-field-analytics rm-field-action-item rm-field-action rm-field-action-disabled"><a href="#"><span class="material-icons">pie_chart</span></a></div> -->
                             <div class="rm-field-rules rm-field-action-item rm-field-action"><?php
                                 if (empty($field->is_field_primary) && in_array($field->field_type, $allowed_c_fields)):
@@ -190,9 +200,11 @@ if($data->total_page > 1)
                                     }
                                     ?><a href="javascript:void(0)" onClick="showConditionFormModal(<?php echo esc_attr($field->field_id); ?>)" class="rm-di-flex rm-box-center"><span class="material-icons">rule</span><span class="rm-conditions-badge"><?php echo esc_html($c_count); ?></span></a>
                                 <?php endif; ?></div>
-                            <div class="rm-field-setting rm-field-action-item rm-field-action" title="Field Setting"><a onclick="edit_field_in_page('<?php echo esc_attr($field->field_type); ?>',<?php echo esc_attr($field->field_id); ?>,<?php echo esc_attr($field->page_no); ?>)" href="javascript:void(0)"><span class="material-icons">settings</span></a></div>
-                            <div class="rm-field-delete rm-field-action-item rm-field-action" title="Delete Field">
+                            <div class="rm-field-setting rm-field-action-item rm-field-action" title="<?php _e('Field Options', 'custom-registration-form-builder-with-submission-manager'); ?>"><a onclick="edit_field_in_page('<?php echo esc_attr($field->field_type); ?>',<?php echo esc_attr($field->field_id); ?>,<?php echo esc_attr($field->page_no); ?>)" href="javascript:void(0)"><span class="material-icons">settings</span></a></div>
+                            <div class="rm-field-delete rm-field-action-item rm-field-action" title="<?php _e('Delete Field', 'custom-registration-form-builder-with-submission-manager'); ?>">
                                 <?php if ($field->is_field_primary == 1 && strtolower($field->field_type)=="username"): ?>
+                                <a data-form-id="<?php echo esc_attr($data->form_id); ?>" data-field-id="<?php echo esc_attr($field->field_id); ?>" data-field-type="<?php echo esc_attr($field->field_type); ?>" data-row-id="<?php echo esc_attr($row->row_id); ?>" data-order="<?php echo esc_attr($field_order); ?>" onclick="CallFieldDeleteBox(this)"><span class="material-icons">delete</span></a>
+                                <!--
                                 <a onclick="CallFieldDeleteBox(this)" class="rm-premium-option"><span class="material-icons">delete</span></a>
                                 <div class="rm-premium-option-popup" style="display:none">
                                     <span class="rm-premium-option-popup-close rm-premium-option" onclick="CallFieldDeleteBox(this)">×</span>
@@ -200,6 +212,7 @@ if($data->total_page > 1)
                                     <span class="rm_buy_pro_inline"><?php printf(__('To unlock removing Username field (and many more features), please upgrade <a href="%s" target="blank">Click here</a>', 'custom-registration-form-builder-with-submission-manager'), RM_Utilities::comparison_page_link()); ?> </span>
                                 </div>
                                 <div class="rm-premium-option-popup-overlay rm-premium-option" onclick="CallFieldDeleteBox(this)" style="display:none"></div>
+                                -->
                                 <?php elseif ($field->is_field_primary == 1 && empty($field->is_deletion_allowed)) : ?>
                                 <a href="javascript:void(0)" class="rm_deactivated" onclick="CallFieldDeleteBox(this)"><span class="material-icons">delete</span></a>
                                 <?php else: ?>
@@ -255,7 +268,7 @@ if($data->total_page > 1)
                     <div class="rm-field-submit-field-btn-container rm-field-btn-align-<?php echo esc_attr($btn_align); ?>">
                         &#8203;<!-- Zero width space character is added to workaround webkit bug where clicking outside the div enables editing of the content. -->
 
-                        <div class="rm-field-sub-btn rm_field_btn" id="rm_field_sub_button" title="<?php _e('Click to edit button label', 'custom-registration-form-builder-with-submission-manager') ?>" contenteditable="true" spellcheck="false"><?php echo wp_kses_post($submit_label); ?></div>
+                        <div class="rm-field-sub-btn rm_field_btn" id="rm_field_sub_button" title="<?php _e('Click to edit button label', 'custom-registration-form-builder-with-submission-manager') ?>" contenteditable="true" spellcheck="false"><?php echo wp_kses_post((string)$submit_label); ?></div>
                         &#8203;
                     </div>
                     <div class="rm-field-submit-field-options">
@@ -306,15 +319,16 @@ if($data->total_page > 1)
                 <div class="rm-field-row-wrap">
                     
                     <div class="rmrow rm-field-head-row">
-                      <div class="rm-field-columns-head">
-                                <div class="rm-field-column-label"><?php _e('Heading (Optional)','custom-registration-form-builder-with-submission-manager'); ?></div>
+                        <div class="rm-field-columns-head">
+                                <div class="rm-field-column-label"><?php _e('Heading (Optional)', 'custom-registration-form-builder-with-submission-manager'); ?></div>
                                 <input type="text" placeholder="Heading" id="rm-row-heading" class="rm-form-column-control" name="heading" value="">
-                                <div class="rm-form-column-help-text"><?php _e('Heading text for the fields in this row. Rendered on frontend with larger font size.','custom-registration-form-builder-with-submission-manager'); ?></div>
+                                <div class="rm-form-column-help-text"><?php _e('Heading text for the fields in this row. Rendered on frontend with larger font size.', 'custom-registration-form-builder-with-submission-manager'); ?></div>
                         </div>
                         
-                        <div class="rm-field-columns-head">
+                        <div class="rm-field-columns-head rm-mt-2">
                                 <div class="rm-field-column-label"><?php _e('Sub-heading (Optional)','custom-registration-form-builder-with-submission-manager'); ?></div>
-                                <input type="text" placeholder="Sub Heading" id="rm-row-subheading" class="rm-form-column-control" name="subheading" value="">
+                               <!-- <input type="text" placeholder="Sub Heading" id="rm-row-subheading" class="rm-form-column-control" name="subheading" value="">-->
+                                <textarea placeholder="<?php _e('Sub Heading', 'custom-registration-form-builder-with-submission-manager'); ?>" name="subheading" cols="3" class="rm-form-column-control" id="rm-row-subheading"></textarea>
                                 <div class="rm-form-column-help-text"><?php _e('Subtitle for the fields in this row. Rendered on frontend with muted body font.','custom-registration-form-builder-with-submission-manager'); ?></div>
                         </div> 
                         
@@ -369,6 +383,8 @@ if($data->total_page > 1)
                                     </li>
                                 </ul>
                             </div>
+                            
+                            <div class="rm-alert rm-alert-warning rm-mt-3" id="rm_row_col_edit_notice" style="display:none;"><?php esc_html_e('The number of columns cannot be less than the number of fields in this row.','custom-registration-form-builder-with-submission-manager'); ?></div>
                         </div>
                     </div>
                     <div class="rmrow">
@@ -405,9 +421,9 @@ if($data->total_page > 1)
                     <input type="hidden" name="page-no" value="1">
                     <input type="hidden" name="rm_row_id" value="-1">
                     <input type="hidden" name="rm_action" value="add_row">
-                    <div class="rm-form-builder-modal-footer">
-                        <div class="rm-cancel-row-setting"><a href="javascript:void(0)" class="rm-modal-close">← &nbsp;<?php _e('Cancel','custom-registration-form-builder-with-submission-manager'); ?></a></div>
-                        <div class="rm-save-row-setting"><input type="submit" value="Save" class="rm-delete-row-button"></div>
+                    <div class="rm-form-builder-modal-footer rm-justify-content-between rm-pt-2 rm-pb-3">
+                        <div class="rm-cancel-row-setting"><a href="javascript:void(0)" class="button rm-bg-white button-secondary rm-modal-close">← &nbsp;<?php _e('Cancel','custom-registration-form-builder-with-submission-manager'); ?></a></div>
+                        <div class="rm-save-row-setting"><input type="submit" value="Save" class="button button-primary"></div>
                     </div>
                 </div>
             </div>
@@ -423,22 +439,29 @@ if($data->total_page > 1)
                 <div class="rm-modal-title">
                     <?php _e('Delete Row','custom-registration-form-builder-with-submission-manager'); ?>
                 </div>
-                <span class="rm-modal-close">×</span>
+                <span class="rm-modal-close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                </span>
             </div>
             <div class="rm-modal-container">
-                <div class="rmrow">
-                    <div class="rm-delete-row-info-icon">
-                        <span class="material-icons">error</span>
+                <div class="rmrow rm-my-4">
+                    <div class="rm-delete-row-info-icon rm-mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                            <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
+                            <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                            </svg>
                     </div>
-                </div>
-                <div class="rmrow">
-                    <div class="rm-delete-row-info-text">
+                    
+                      <div class="rm-delete-row-info-text">
                         <?php _e('Are you sure you want to delete this row?','custom-registration-form-builder-with-submission-manager'); ?>
                     </div>
                 </div>
-                <div class="rm-form-builder-modal-footer">
-                    <div class="rm-cancel-delete-action"><a href="javascript:void(0)" class="rm-modal-close">← &nbsp;<?php _e('Cancel','custom-registration-form-builder-with-submission-manager'); ?></a></div>
-                    <div class="rm-confirm-delete-action"><a id="rm-delete-row-link"><?php _e('Delete','custom-registration-form-builder-with-submission-manager'); ?></a></div>
+
+                <div class="rm-form-builder-modal-footer rm-justify-content-between rm-pt-2 rm-pb-3">
+                    <div class="rm-cancel-delete-action"><a href="javascript:void(0)" class="button rm-bg-white button-secondary rm-modal-close">← &nbsp;<?php _e('Cancel','custom-registration-form-builder-with-submission-manager'); ?></a></div>
+                    <div class="rm-confirm-delete-action"><a class="rm-btn-danger button-primary" id="rm-delete-row-link"><?php _e('Delete','custom-registration-form-builder-with-submission-manager'); ?></a></div>
                 </div>
             </div>
         </div>
@@ -452,22 +475,29 @@ if($data->total_page > 1)
                 <div class="rm-modal-title" id="rm-field-delete-modal-title">
                     <?php _e('Delete Field','custom-registration-form-builder-with-submission-manager'); ?>
                 </div>
-                <span class="rm-modal-close">×</span>
+                <span class="rm-modal-close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                </span>
             </div>
             <div class="rm-modal-container">
-                <div class="rmrow">
-                    <div class="rm-delete-row-info-icon">
-                        <span class="material-icons">error</span>
+                <div class="rmrow rm-my-4">
+                    <div class="rm-delete-row-info-icon rm-mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                            <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
+                            <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                            </svg>
                     </div>
-                </div>
-                <div class="rmrow">
+                    
                     <div class="rm-delete-row-info-text" id="rm-field-delete-modal-info">
                         <?php _e('Are you sure you want to delete this field?','custom-registration-form-builder-with-submission-manager'); ?>
                     </div>
                 </div>
-                <div class="rm-form-builder-modal-footer">
-                    <div class="rm-cancel-delete-action"><a href="javascript:void(0)" class="rm-modal-close">← &nbsp;<?php _e('Cancel','custom-registration-form-builder-with-submission-manager'); ?></a></div>
-                    <div class="rm-confirm-delete-action"><a id="rm-delete-field-link" href="javascript:void(0)"><?php _e('Delete','custom-registration-form-builder-with-submission-manager'); ?></a></div>
+      
+                <div class="rm-form-builder-modal-footer rm-justify-content-between rm-pt-2 rm-pb-3">
+                    <div class="rm-cancel-delete-action"><a class="button rm-bg-white button-secondary rm-modal-close" href="javascript:void(0)">← &nbsp;<?php _e('Cancel','custom-registration-form-builder-with-submission-manager'); ?></a></div>
+                    <div class="rm-confirm-delete-action"><a class="rm-btn-danger button-primary" id="rm-delete-field-link" href="javascript:void(0)"><?php _e('Delete','custom-registration-form-builder-with-submission-manager'); ?></a></div>
                 </div>
             </div>
         </div>
@@ -476,11 +506,13 @@ if($data->total_page > 1)
 
     <!--- Field Selector PopUp -->
     <div id="rm-field-selector" class="rm-modal-view" style="display:none">
-        <div class="rm-modal-overlay"></div> 
+        <div class="rm-modal-overlay rm-field-popup-overlay-fade-in"></div> 
 
         <div class="rm-modal-wrap">
             <div class="rm-modal-titlebar">
-                <div class="rm-modal-title"> <?php _e('Choose a field type','custom-registration-form-builder-with-submission-manager'); ?></div>
+                <div class="rm-modal-title"> <?php esc_html_e('Form Fields','custom-registration-form-builder-with-submission-manager'); ?>
+                    <span class="rm-field-selector-subhead"><?php esc_html_e('Click on a field to add it to your form.','custom-registration-form-builder-with-submission-manager'); ?></span>
+                </div>
                 <span  class="rm-modal-close">&times;</span>
             </div>
             <div class="rm-modal-container">
@@ -523,19 +555,26 @@ if($data->total_page > 1)
                 <div class="rm-modal-title">
                     <?php _e('Delete Row', 'custom-registration-form-builder-with-submission-manager'); ?>
                 </div>
-                <span class="rm-modal-close">×</span>
+                    <span class="rm-modal-close">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                        </svg>
+                    </span>
             </div>
             <div class="rm-modal-container">
-                <div class="rmrow">
-                    <div class="rm-delete-row-info-icon">
-                        <span class="material-icons">error</span>
+                <div class="rmrow rm-my-4">
+                    <div class="rm-delete-row-info-icon rm-mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="62" height="62" fill="currentColor" class="bi bi-exclamation-triangle" viewBox="0 0 16 16">
+                            <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.15.15 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.2.2 0 0 1-.054.06.1.1 0 0 1-.066.017H1.146a.1.1 0 0 1-.066-.017.2.2 0 0 1-.054-.06.18.18 0 0 1 .002-.183L7.884 2.073a.15.15 0 0 1 .054-.057m1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767z"/>
+                            <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                            </svg>
+                    </div>
+                    
+                    <div class="rm-delete-row-info-text rm-text-dark">
+                    <?php _e('There are fields inside this row. Please delete them first.','custom-registration-form-builder-with-submission-manager'); ?>
                     </div>
                 </div>
-                <div class="rmrow">
-                    <div class="rm-delete-row-info-text">
-                    <?php _e('Please delete the fields inside this row first.','custom-registration-form-builder-with-submission-manager'); ?>
-                    </div>
-                </div>
+
                 <!--
                 <div class="rm-form-builder-modal-footer">
                     <div class="rm-confirm-delete-action"><a id="rm-delete-row-link">Yes, Remove Username</a></div>
@@ -613,6 +652,11 @@ if($data->total_page > 1)
             fields_in_this_row++;
         });
         if(fields_in_this_row > 0) {
+            if(fields_in_this_row > 1) {
+                jQuery('div#rm_row_col_edit_notice').show();
+            } else {
+                jQuery('div#rm_row_col_edit_notice').hide();
+            }
             jQuery('input[name=columns]').each(function(index) {
                 if(jQuery(this).data('allowed-fields') < fields_in_this_row) {
                     jQuery(this).attr("disabled", true);
@@ -639,6 +683,7 @@ if($data->total_page > 1)
                 }
             });
         } else {
+            jQuery('div#rm_row_col_edit_notice').hide();
             jQuery('input[name=columns]').each(function(index) {
                 jQuery(this).removeAttr("disabled");
             });
@@ -646,9 +691,11 @@ if($data->total_page > 1)
         jQuery("#rm-field-row-setting-modal").toggle();
         jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').removeClass('rm-field-popup-out');
         jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').addClass('rm-field-popup-in');
+        
+        jQuery('.rmagic .rm-modal-view').addClass('rm-form-popup-show').removeClass('rm-form-popup-hide'); 
 
-        jQuery('.rm-modal-overlay').removeClass('rm-field-popup-overlay-fade-out');
-        jQuery('.rm-modal-overlay').addClass('rm-field-popup-overlay-fade-in');
+        jQuery('#rm-field-row-setting-modal .rm-modal-overlay').removeClass('rm-field-popup-overlay-fade-out');
+        jQuery('#rm-field-row-setting-modal .rm-modal-overlay').addClass('rm-field-popup-overlay-fade-in');
         
         jQuery('input[name=columns][value="' + jQuery(ele).data('row-columns') + '"]').attr('checked',true);
         jQuery('input[name=class]').val(jQuery(ele).data('row-class'));
@@ -656,7 +703,7 @@ if($data->total_page > 1)
         jQuery('input[name=bmargin]').val(jQuery(ele).data('row-bmargin'));
         jQuery('input[name=width]').val(jQuery(ele).data('row-width'));
         jQuery('input[name=heading]').val(jQuery(ele).data('row-heading'));
-        jQuery('input[name=subheading]').val(jQuery(ele).data('row-subheading'));
+        jQuery('textarea[name=subheading]').val(jQuery(ele).data('row-subheading'));
         jQuery('input[name=page-no]').val(jQuery(ele).data('page-no'));
         jQuery('input[name=rm_row_id]').val(jQuery(ele).data('row-id'));
         jQuery('input[name=rm_action]').val(jQuery(ele).data('action'));
@@ -667,6 +714,9 @@ if($data->total_page > 1)
         field_order_in_row = jQuery(ele).data('order');
         row_id_for_field = jQuery(ele).data('row-id');
         curr_form_page_for_field = jQuery(ele).data('page-no');
+        jQuery('.rmagic .rm-modal-view').addClass('rm-form-popup-show').removeClass('rm-form-popup-hide');
+        jQuery('.rmagic .rm-modal-wrap').removeClass('rm-field-popup-out');
+        jQuery('.rmagic .rm-modal-wrap').addClass('rm-field-popup-in');
     }
     
     
@@ -692,12 +742,13 @@ if($data->total_page > 1)
         
             jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').removeClass('rm-field-popup-out');
             jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').addClass('rm-field-popup-in');
+            jQuery('.rmagic .rm-modal-view').addClass('rm-form-popup-show').removeClass('rm-form-popup-hide'); 
 
             jQuery('.rm-modal-overlay').removeClass('rm-field-popup-overlay-fade-out');
             jQuery('.rm-modal-overlay').addClass('rm-field-popup-overlay-fade-in');
         } else {
             jQuery("#rm-field-row-delete-modal").toggle();
-
+             jQuery('.rmagic .rm-modal-view').addClass('rm-form-popup-show').removeClass('rm-form-popup-hide'); 
             jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').removeClass('rm-field-popup-out');
             jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').addClass('rm-field-popup-in');
 
@@ -710,19 +761,21 @@ if($data->total_page > 1)
 
 
     function CallFieldDeleteBox(ele) {
-        if(jQuery(ele).hasClass('rm-premium-option')) {
+            if(jQuery(ele).hasClass('rm-premium-option')) {
             jQuery('.rm-premium-option-popup, .rm-premium-option-popup-overlay').toggle();
         } else {
             if(jQuery(ele).data('field-type').toLowerCase() == 'username') {
-                jQuery('#rm-field-delete-modal-title').text('<?php _e('Remove Username Field?','custom-registration-form-builder-with-submission-manager'); ?>');
-                jQuery('#rm-field-delete-modal-info').text('<?php _e('You are about to remove Username field from this form. Consequently, Email field wil be used as Username field. Registering users can later login using their Email and Password. Do you wish to proceed? ','custom-registration-form-builder-with-submission-manager'); ?>');
+                jQuery('#rm-field-delete-modal-title').text('<?php _e('Delete Username Field','custom-registration-form-builder-with-submission-manager'); ?>');
+                jQuery('#rm-field-delete-modal-info').text(`<?php _e('After removing the Username field, Email field will be used as login ID.','custom-registration-form-builder-with-submission-manager'); ?> <?php _e('Do you wish to proceed? ','custom-registration-form-builder-with-submission-manager'); ?>`);
             }
             if(jQuery(ele).data('field-type').toLowerCase() == 'userpassword') {
-                jQuery('#rm-field-delete-modal-title').text('<?php _e('Remove Password Field?','custom-registration-form-builder-with-submission-manager'); ?>');
-                jQuery('#rm-field-delete-modal-info').text('<?php _e('You are about to remove Password field from this form. Once removed, password will be autogenerated and emailed to the user on successful registration. Do you wish to proceed?','custom-registration-form-builder-with-submission-manager'); ?>');
+                jQuery('#rm-field-delete-modal-title').text('<?php _e('Delete Password Field','custom-registration-form-builder-with-submission-manager'); ?>');
+                jQuery('#rm-field-delete-modal-info').text('<?php _e('After removing the Password Field, passwords will be automatically generated and emailed to the user on successful registration. Do you wish to proceed?','custom-registration-form-builder-with-submission-manager'); ?>');
             }
             jQuery("#rm-field-delete-modal").toggle();
-
+            
+             
+            jQuery('.rmagic .rm-modal-view').addClass('rm-form-popup-show').removeClass('rm-form-popup-hide');
             jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').removeClass('rm-field-popup-out');
             jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').addClass('rm-field-popup-in');
 
@@ -751,8 +804,10 @@ if($data->total_page > 1)
         jQuery('.rm-modal-close, .rm-modal-overlay').click(function () {
             setTimeout(function () {
                 //jQuery(this).parents('.rm-modal-view').hide();
-                jQuery('.rm-modal-view').hide();
+                  jQuery('.rm-modal-view').hide();
             }, 400);
+               
+            jQuery('.rmagic .rm-modal-view').addClass('rm-form-popup-hide').removeClass('rm-form-popup-show'); 
             
             jQuery('#rm-field-delete-modal-title').text('<?php _e('Delete Field','custom-registration-form-builder-with-submission-manager'); ?>');
             jQuery('#rm-field-delete-modal-info').text('<?php _e('Are you sure you want to delete this field?','custom-registration-form-builder-with-submission-manager'); ?>');
@@ -767,7 +822,7 @@ if($data->total_page > 1)
             jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').addClass('rm-field-popup-out');
 
             jQuery('.rm-modal-overlay').removeClass('rm-field-popup-overlay-fade-in');
-            jQuery('.rm-modal-overlay').addClass('rm-field-popup-overlay-fade-out');
+            jQuery('.rm-modal-overlay').addClass('rm-field-popup-overlay-fade-in');
         });
 
         jQuery("body").addClass("registrationmagic-form-builder");
@@ -800,6 +855,15 @@ if($data->total_page > 1)
     function add_new_field_to_page(field_type) {
         var curr_form_page = get_current_form_page();
         var loc = "?page=rm_field_add&rm_form_id=<?php echo esc_attr($data->form_id); ?>&rm_form_page_no=" + curr_form_page + "&rm_row_id=" + row_id_for_field + "&rm_order_in_row=" + field_order_in_row + "&rm_field_type";
+        if (field_type !== undefined)
+            loc += ('=' + field_type);
+        window.location = loc;
+    }
+
+    function add_user_field_to_page(field_type) 
+    {
+        var curr_form_page = get_current_form_page();//(jQuery("#rm_form_page_tabs").tabs("option", "active")) + 1;
+        var loc = "?page=rm_field_manage&rm_form_id=<?php echo esc_attr($data->form_id); ?>&rm_form_page_no=" + curr_form_page + "&rm_row_id=" + row_id_for_field + "&rm_order_in_row=" + field_order_in_row + "&rm_field_type";
         if (field_type !== undefined)
             loc += ('=' + field_type);
         window.location = loc;
@@ -1064,14 +1128,14 @@ if($data->total_page > 1)
    }
    
    .wp-core-ui.admin_page_rm_field_manage .notice {
-       display:none
+       display:none !important;
    }
    
    .wp-core-ui .rmagic::before {
        display: none;
    }
    .rm-col-area {
-        cursor: pointer;
+        cursor: default;
         display: -ms-flexbox;
         display: flex;
         -ms-flex-align: center;

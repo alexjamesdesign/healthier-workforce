@@ -51,7 +51,6 @@ class RM_Editor_Actions_Controller
         $data->editor_control_id = 'mce_rm_mail_body';
         $view = $this->mv_handler->setView('editor_add_email');
         $view->render($data);
-
     }
 
 

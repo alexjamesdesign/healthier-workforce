@@ -3,18 +3,21 @@
                 <i class="material-icons rm-bg" data-rm_apply_acc_bgcolor='true' >assignment_turned_in</i>
             </div>
             <div class="rm-user-row dbfl">
-                <h2><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_MY_SUBS')); ?></h2>
+                <h2><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_MY_SUBS')); ?></h2>
             </div>
             <?php
             if ($data->submission_exists === true) {
                 ?>
-                <table class="rm-user-data">
+                <table class="rm-user-data rm-user-submission-table">
                     <tr>
-                        <th class="rm-bg-lt"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SR')); ?></th>
-                        <th class="rm-bg-lt"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FORM')); ?></th>
-                        <th class="rm-bg-lt"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DATE')); ?></th>
+                        <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SR')); ?></th>
+                        <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FORM')); ?></th>
+                        <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DATE')); ?></th>
                         <?php if(defined('REGMAGIC_ADDON')) { ?>
-                        <th class="rm-bg-lt"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></th>
+                        <?php if(defined('RM_SAVE_SUBMISSION_BASENAME')) { ?>
+                        <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_STATUS')); ?></th>
+                        <?php } ?>
+                        <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></th>
                         <?php } ?>
                     </tr>
                     <?php
@@ -30,8 +33,15 @@
                                 <td class="<?php echo defined('REGMAGIC_ADDON') ? 'rm-sr-number' : ''; ?>" width="<?php echo defined('REGMAGIC_ADDON') ? '52' : ''; ?>" id="<?php echo esc_attr($data_single->submission_id); ?>"><?php echo esc_html(++$i); ?></td>
                                 <td><a href="<?php echo esc_url($url);  ?>"><?php echo esc_html($data_single->form_name); ?></a></td>
                                 <td><?php echo esc_html(RM_Utilities::localize_time($data_single->submitted_on, $data->date_format)); ?></td>
+                                <?php if(defined('RM_SAVE_SUBMISSION_BASENAME')) { ?>
+                                <?php if(isset($submission->is_pending) && $submission->is_pending == 1) { ?>
+                                <td><span class="rm-submission-status rm-submission-pending"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PENDING')); ?>
+                                <?php } else { ?>
+                                <td><span class="rm-submission-status rm-submission-approved"><?php esc_html_e('Completed','custom-registration-form-builder-with-submission-manager'); ?>
+                                <?php } ?>
+                                <?php } ?>
                                 <?php if(defined('REGMAGIC_ADDON')) { ?>
-                                <td><a target="_blank" href="<?php echo admin_url('admin-ajax.php?rm_submission_id='.$data_single->submission_id.'&action=rm_print_pdf&rm_sec_nonce='.wp_create_nonce('rm_ajax_secure')); ?>"><i class="material-icons">cloud_download</i></a></td>
+                                <td class="rm-submission-download-col"><a target="_blank" href="<?php echo admin_url('admin-ajax.php?rm_submission_id='.$data_single->submission_id.'&action=rm_print_pdf&rm_sec_nonce='.wp_create_nonce('rm_ajax_secure')); ?>"><i class="material-icons">cloud_download</i></a></td>
                                 <?php } else { ?>
                                 <form id="rmsubmissionfrontform<?php echo esc_attr($data_single->submission_id); ?>" method="post">
                                     <input type="hidden" value="<?php echo esc_attr($data_single->submission_id); ?>" name="rm_submission_id">
@@ -56,8 +66,8 @@
                         <?php
                         if ($data->curr_page_sub > 1):
                             ?>
-                            <li onclick="get_tab_and_redirect('rm_reqpage_sub=1')"><a><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FIRST')); ?></a></li>
-                            <li onclick="get_tab_and_redirect('rm_reqpage_sub=<?php echo esc_html($data->curr_page_sub - 1); ?>')"><a><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PREVIOUS')); ?></a></li>
+                            <li onclick="get_tab_and_redirect('rm_reqpage_sub=1')"><a><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FIRST')); ?></a></li>
+                            <li onclick="get_tab_and_redirect('rm_reqpage_sub=<?php echo esc_html($data->curr_page_sub - 1); ?>')"><a><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PREVIOUS')); ?></a></li>
                             <?php
                         endif;
                         if ($data->total_pages_sub > $max_pages_without_abb):
@@ -100,8 +110,8 @@
                         <?php
                         if ($data->curr_page_sub < $data->total_pages_sub):
                             ?>
-                            <li onclick="get_tab_and_redirect('rm_reqpage_sub=<?php echo esc_html($data->curr_page_sub + 1); ?>')"><a><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_NEXT')); ?></a></li>
-                            <li onclick="get_tab_and_redirect('rm_reqpage_sub=<?php echo esc_html($data->total_pages_sub); ?>')"><a><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LAST')); ?></a></li>
+                            <li onclick="get_tab_and_redirect('rm_reqpage_sub=<?php echo esc_html($data->curr_page_sub + 1); ?>')"><a><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_NEXT')); ?></a></li>
+                            <li onclick="get_tab_and_redirect('rm_reqpage_sub=<?php echo esc_html($data->total_pages_sub); ?>')"><a><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LAST')); ?></a></li>
                             <?php
                         endif;
                         ?>
@@ -109,7 +119,7 @@
                     <?php
                 endif;
             } else
-                echo wp_kses_post(RM_UI_Strings::get('MSG_NO_SUBMISSION_FRONT'));
+                echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_SUBMISSION_FRONT'));
             do_action('rm_extend_front_registrations_view');
             
             ?>

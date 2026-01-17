@@ -65,7 +65,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                     $enable_invoice = get_option('enable_invoice');
                     if($enable_user_invoice=='yes' && $enable_invoice =='yes' && defined('REGMAGIC_ADDON')):
                 ?>
-                <th class="rm-bg-lt"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_INVOICE_TH')); ?></th>
+                <th class="rm-bg-lt"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_INVOICE_TH')); ?></th>
                 <?php endif;?>
             </tr>
     <?php
@@ -102,8 +102,8 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
             <?php
             if ($data->curr_page_pay > 1):
                 ?>
-                    <li onclick="get_tab_and_redirect('rm_reqpage_pay=1')"><a><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FIRST')); ?></a></li>
-                    <li onclick="get_tab_and_redirect('rm_reqpage_pay=<?php echo esc_html($data->curr_page_pay - 1); ?>')"><a><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PREVIOUS')); ?></a></li>
+                    <li onclick="get_tab_and_redirect('rm_reqpage_pay=1')"><a><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FIRST')); ?></a></li>
+                    <li onclick="get_tab_and_redirect('rm_reqpage_pay=<?php echo esc_html($data->curr_page_pay - 1); ?>')"><a><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PREVIOUS')); ?></a></li>
             <?php
         endif;
         if ($data->total_pages_pay > $max_pages_without_abb):

@@ -17,15 +17,15 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         <div class="rmtitle"><?php echo _e('Login Timeline', 'custom-registration-form-builder-with-submission-manager'); ?></div>
         <div class="nav">
             <ul>
-                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
-                <li><a href="admin.php?page=rm_login_sett_manage&action=rm_login_log_reset"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_RESET_STATS')); ?></a></li>
+                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+                <li><a href="admin.php?page=rm_login_sett_manage&action=rm_login_log_reset"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_RESET_STATS')); ?></a></li>
                 <li id="rm_form_toggle" class="rm-form-toggle">
-                    <?php echo wp_kses_post(RM_UI_Strings::get('LABEL_TOGGLE_FORM')); ?>
+                    <?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TOGGLE_FORM')); ?>
                     <select id="rm_form_dropdown" onchange="rm_refresh_stats()">
                         <?php
                         echo "<option selected value='rm_login_form'>".__('Login Form','custom-registration-form-builder-with-submission-manager')."</option>";
                         foreach ($data->all_forms as $form_id => $form_name):
-                            echo "<option value='".esc_attr($form_id)."'>".wp_kses_post($form_name)."</option>";
+                            echo "<option value='".esc_attr($form_id)."'>".wp_kses_post((string)$form_name)."</option>";
                         endforeach;
                         ?>
                     </select>
@@ -38,7 +38,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
          
     <div class="rm-login-timeline rm-dbfl">
         
-        <div  class="rm-advanced-timeline rm-dbfl"><a href="?page=rm_login_advanced"><?php _e('Advanced View', 'custom-registration-form-builder-with-submission-manager'); ?></a></div>
+        <div  class="rm-advanced-timeline rm-dbfl rm-mb-2"><a href="?page=rm_login_advanced"><?php _e('Advanced View', 'custom-registration-form-builder-with-submission-manager'); ?></a></div>
         <table class="rm-login-analytics rmagic-table">
             <tbody>
                 <?php
@@ -57,7 +57,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                         <a href="#">
                                             <?php echo get_avatar($login_log->email)?get_avatar($login_log->email):'<img src="'.RM_IMG_URL.'default_person.png">'; ?>
                                         </a>
-                                        <?php $user = get_user_by( 'email', $login_log->email ); ?>
+                                        <?php $user = get_user_by( 'email', (string)$login_log->email ); ?>
                                         <?php if(!empty($user)): ?>
                                             <span class="rm-login-user-status <?php echo (RM_Utilities::is_user_online($user->ID))?'rm-login-user-online':'' ?>"><i class="fa fa-circle"></i></span>
                                         <?php else: ?>
@@ -94,7 +94,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                     }
                                 }
                                 ?>
-                                <td> <div class="rm-login-result-icon"><?php echo wp_kses($login_icon,RM_Utilities::expanded_allowed_tags()); ?></div></td>
+                                <td> <div class="rm-login-result-icon"><?php echo wp_kses((string)$login_icon,RM_Utilities::expanded_allowed_tags()); ?></div></td>
                                 <td><div class="rm-login-boolean-result <?php echo ($login_log->status==1)?'rm-login-true':'rm-login-false'; ?>"><i class="fa fa-<?php echo ($login_log->status==1)?'check':'times'; ?>"></i></div></td>
                                 <td> <div class="rm-login-user-sep"><i class="fa fa-circle"></i></div></td>
                                 <td class="rm-login-setting"> 
@@ -114,7 +114,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                             <?php endif; ?>
                                             
                                             <?php
-                                            $ip_as_arr = explode('.', $login_log->ip);
+                                            $ip_as_arr = explode('.', (string)$login_log->ip);
                                             if(count($ip_as_arr)!=4){
                                                 $sanitized_user_ip = $login_log->ip;
                                             }else{
@@ -254,8 +254,8 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                 <?php
                 if ($data->curr_page > 1):
                     ?>
-                    <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=1"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FIRST')); ?></a></li>
-                    <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_html($data->curr_page - 1); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PREVIOUS')); ?></a></li>
+                    <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=1"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FIRST')); ?></a></li>
+                    <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_html($data->curr_page - 1); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PREVIOUS')); ?></a></li>
                     <?php
                 endif;
                 if ($data->total_pages > $max_pages_without_abb):
@@ -298,8 +298,8 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                 <?php
                 if ($data->curr_page < $data->total_pages):
                     ?>
-                    <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->curr_page + 1); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_NEXT')); ?></a></li>
-                    <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->total_pages); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LAST')); ?></a></li>
+                    <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->curr_page + 1); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_NEXT')); ?></a></li>
+                    <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->total_pages); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LAST')); ?></a></li>
                     <?php
                 endif;
                 ?>
@@ -333,7 +333,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
     <div class="rm-grid-section dbfl" id="rm_tour_timewise_stats">
         <div class="rm-grid-section-title dbfl rm-box-title"><?php _e('Login Failures vs. Login Success Over Time (Line Graph)', 'custom-registration-form-builder-with-submission-manager'); ?></div>
         <div class="rm-timerange-toggle rm-fd-form-toggle rm-timerange-dashboard">
-            <?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SELECT_TIMERANGE')); ?>
+            <?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SELECT_TIMERANGE')); ?>
             <select id="rm_stat_timerange" onchange="rm_refresh_stats_graph()">
                 <?php
                 $trs = array(7,30,60,90);
@@ -498,10 +498,10 @@ $data_string = substr($data_string, 2);
     function drawTimewiseStat()
     {
         var data = google.visualization.arrayToDataTable([
-            ['<?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DATE')); ?>',
+            ['<?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DATE')); ?>',
              'Login Success',
              'Login Failures'],
-            <?php echo wp_kses_post($data_string); ?>
+            <?php echo wp_kses_post((string)$data_string); ?>
         ]);
 
         var options = {
@@ -533,7 +533,7 @@ $data_string = substr($data_string, 2);
         var form_id = jQuery('#rm_form_dropdown').val();
         var trange = jQuery('#rm_stat_timerange').val();
         if(typeof trange == 'undefined')
-            trange = <?php echo wp_kses_post($data->timerange); ?>;
+            trange = <?php echo wp_kses_post((string)$data->timerange); ?>;
         window.location = '?page=rm_analytics_show_form&rm_form_id=' + form_id + '&rm_tr='+trange;
     }
 </script></pre>

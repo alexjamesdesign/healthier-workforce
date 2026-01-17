@@ -42,7 +42,7 @@
 
 	</div>
 
-	<div class="grid grid6_12 box box-logodeepblue">
+	<div class="grid grid6_12 box box-logodeepblue form-container">
 
 		<?php if (is_page('contact')) : ?>
 

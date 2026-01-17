@@ -21,7 +21,7 @@ class Element_Textboxsortable extends Element
     public $append;
     public $others;
 
-    public function __construct($label, $name, array $properties = null, array $others = array())
+    public function __construct($label, $name, $properties = null, array $others = array())
     {
         $configuration = array(
             "label" => $label,
@@ -46,12 +46,12 @@ class Element_Textboxsortable extends Element
         if (!empty($this->append))
             $addons[] = "input-append";
         if (!empty($addons))
-            echo '<div class="', wp_kses_post(implode(" ", $addons)), '">';
+            echo '<div class="', wp_kses_post((string)implode(" ", $addons)), '">';
         
         $suffix = mt_rand(1, 500);
         $this->renderSortable('start',$suffix);
         $i = 0;
-        if(is_array($this->_attributes['value']) && !empty($this->_attributes['value'])) {
+        if(isset($this->_attributes['value']) && is_array($this->_attributes['value']) && !empty($this->_attributes['value'])) {
             foreach ($this->_attributes['value'] as $key => $value)
             {
                 $this->renderSortable("prepend",$suffix);
@@ -95,7 +95,7 @@ class Element_Textboxsortable extends Element
             if ($span)
                 echo '<span class="add-on">';
 
-            echo wp_kses_post($this->$type);
+            echo wp_kses_post((string)$this->$type);
 
             if ($span)
                 echo '</span>';
@@ -109,11 +109,11 @@ class Element_Textboxsortable extends Element
         if ($type === "prepend")
             echo '<li class="appendable_options rm-deletable-options"><span class="rm_sortable_handle"><img alt="" src="'.  esc_url(plugin_dir_url(dirname(dirname(dirname(__FILE__))))).'images/rm-drag-label.png"></span>';
         if ($type === "append")
-            echo '<div class="rm_actions" onClick ="rm_delete_appended_field(this,rm_sortable_elements_'.esc_attr($suffix).')"><a href="javascript:void(0)">' . wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")) . '</a></div></li>';
+            echo '<div class="rm_actions" onClick ="rm_delete_appended_field(this,rm_sortable_elements_'.esc_attr($suffix).')"><a href="javascript:void(0)">' . wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")) . '</a></div></li>';
         if ($type === "close")
             echo '</ul>';
         if($type === "add_action")
-            echo '<div class="rm_action_container" id="rm_action_container_id"><div class="rm_action" id="rm_action_field_container" onclick="rm_append_field(\'li\',this)"><input type="text" name="rm_dump" id="rm_append_option" class="rm_action_field" required="" readonly="true" value="' .wp_kses_post(RM_UI_Strings::get("VALUE_CLICK_TO_ADD")). ' "></div><div id="rmaddotheroptiontextdiv" style="display:none"><div onclick="jQuery.rm_append_textbox_other(this)">'.wp_kses_post(RM_UI_Strings::get('LABEL_ADD_OTHER')).'</div></div></div>';
+            echo '<div class="rm_action_container" id="rm_action_container_id"><div class="rm_action" id="rm_action_field_container" onclick="rm_append_field(\'li\',this)"><input type="text" name="rm_dump" id="rm_append_option" class="rm_action_field" required="" readonly="true" value="' .wp_kses_post((string)RM_UI_Strings::get("VALUE_CLICK_TO_ADD")). ' "></div><div id="rmaddotheroptiontextdiv" style="display:none"><div onclick="jQuery.rm_append_textbox_other(this)">'.wp_kses_post((string)RM_UI_Strings::get('LABEL_ADD_OTHER')).'</div></div></div>';
     }
 
     public function renderOthers(array $others, $curr_index)
@@ -168,7 +168,7 @@ class Element_Textboxsortable extends Element
             }
             $str .= ">";
         }
-        echo wp_kses($str, RM_Utilities::expanded_allowed_tags());
+        echo wp_kses((string)$str, RM_Utilities::expanded_allowed_tags());
     }
 
 }

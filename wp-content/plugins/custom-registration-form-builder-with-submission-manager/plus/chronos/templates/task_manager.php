@@ -13,31 +13,31 @@
 <!-----Operations bar Starts----->
 
     <div class="operationsbar">
-        <div class="rmtitle"><?php echo wp_kses_post(RM_Chronos_UI_Strings::get("LABEL_TASK_MANAGER")); ?></div>
+        <div class="rmtitle"><?php echo wp_kses_post((string)RM_Chronos_UI_Strings::get("LABEL_TASK_MANAGER")); ?></div>
         <div class="icons">
 <!--            <a href="?page=rm_options_payment"><img alt="" src="<?php //echo plugin_dir_url(dirname(dirname(__FILE__))) . 'images/rm-payments.png'; ?>"></a>-->
         </div>
         <div class="nav">
             <ul class="rm-automation">
-                <li id="rm-back-task" onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>                
-                <li id="rm-new-task"><a href="?page=rm_ex_chronos_edit_task&rm_form_id=<?php echo esc_html($data->form_id); ?>"><?php echo wp_kses_post(RM_Chronos_UI_Strings::get('LABEL_NEW_TASK'));?></a></li>
-                <li id="rm-duplicate-task" class="rm_deactivated" onclick="rmc_duplicate_tasks_batch()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DUPLICATE'));?></a></li>
-                <li id="rm-enable-task" class="rm_deactivated" onclick="rmc_set_state_tasks_batch('enable')"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_Chronos_UI_Strings::get('LABEL_ENABLE'));?></a></li>
-                <li id="rm-disable-task" class="rm_deactivated" onclick="rmc_set_state_tasks_batch('disable')"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_Chronos_UI_Strings::get('LABEL_DISABLE'));?></a></li>
-                <li id="rm-delete-task" class="rm_deactivated" onclick="rmc_delete_tasks_batch()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REMOVE')); ?></a></li>
+                <li id="rm-back-task" onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>                
+                <li id="rm-new-task"><a href="?page=rm_ex_chronos_edit_task&rm_form_id=<?php echo esc_html($data->form_id); ?>"><?php echo wp_kses_post((string)RM_Chronos_UI_Strings::get('LABEL_NEW_TASK'));?></a></li>
+                <li id="rm-duplicate-task" class="rm_deactivated" onclick="rmc_duplicate_tasks_batch()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DUPLICATE'));?></a></li>
+                <li id="rm-enable-task" class="rm_deactivated" onclick="rmc_set_state_tasks_batch('enable')"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_Chronos_UI_Strings::get('LABEL_ENABLE'));?></a></li>
+                <li id="rm-disable-task" class="rm_deactivated" onclick="rmc_set_state_tasks_batch('disable')"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_Chronos_UI_Strings::get('LABEL_DISABLE'));?></a></li>
+                <li id="rm-delete-task" class="rm_deactivated" onclick="rmc_delete_tasks_batch()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_REMOVE')); ?></a></li>
                 <li><a target="_blank" href="https://registrationmagic.com/complete-automation-guide-wordpress-forms/"><?php _e('Documentation','custom-registration-form-builder-with-submission-manager'); ?></a></li>
                 <li class="rm-form-toggle">
                     <?php if (count($data->forms) !== 0)
                     {
-                        echo wp_kses_post(RM_UI_Strings::get('LABEL_TOGGLE_FORM'));
+                        echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TOGGLE_FORM'));
                         ?>
                         <select id="rm_form_dropdown" name="form_id" onchange="on_form_change()">
                             <?php
                             foreach ($data->forms as $form_id => $form)
                                 if ($data->form_id == $form_id)
-                                    echo "<option value=".esc_attr($form_id)." selected>".wp_kses_post($form)."</option>";
+                                    echo "<option value=".esc_attr($form_id)." selected>".wp_kses_post((string)$form)."</option>";
                                 else
-                                    echo "<option value=".esc_attr($form_id).">".wp_kses_post($form)."</option>";
+                                    echo "<option value=".esc_attr($form_id).">".wp_kses_post((string)$form)."</option>";
                             ?>
                         </select>
                         <?php
@@ -52,7 +52,7 @@
     <!-----  Show Notice if WP-Cron is disabled    ----->
     <?php
     if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON)
-        echo "<div class='rmnotice'>".wp_kses_post(RM_Chronos_UI_Strings::get('CRON_DISABLED_WARNING'))."</div>";
+        echo "<div class='rmnotice'>".wp_kses_post((string)RM_Chronos_UI_Strings::get('CRON_DISABLED_WARNING'))."</div>";
     ?>
     
     <!----Field Selector Starts---->
@@ -79,9 +79,9 @@
                         <?php $task_state = $task_data->is_active == 1?'Enabled':'Disabled'; ?>
                             <div class="rmc-taskslab-info-task-state"><?php echo esc_html($task_state); ?></div>
                         <div class="rm-slab-buttons">                            
-                            <a href="javascript:void(0)" id="id_rmc_run_task_now_<?php echo esc_attr($task_data->task_id); ?>" onclick="rmc_run_task_now(<?php echo esc_attr($task_data->task_id); ?>)"><?php echo wp_kses_post(RM_Chronos_UI_Strings::get("LABEL_RUN_NOW")); ?></a>
-                            <a href="<?php echo esc_url("?page=rm_ex_chronos_edit_task&rm_form_id={$data->form_id}&rmc_task_id={$task_data->task_id}"); ?>"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_EDIT")); ?></a>
-                            <a href="<?php echo esc_url("?page=rm_ex_chronos_manage_tasks&rm_form_id={$data->form_id}&rmc_task_id={$task_data->task_id}&rmc_action=delete"); ?>"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a>
+                            <a href="javascript:void(0)" id="id_rmc_run_task_now_<?php echo esc_attr($task_data->task_id); ?>" onclick="rmc_run_task_now(<?php echo esc_attr($task_data->task_id); ?>)"><?php echo wp_kses_post((string)RM_Chronos_UI_Strings::get("LABEL_RUN_NOW")); ?></a>
+                            <a href="<?php echo esc_url("?page=rm_ex_chronos_edit_task&rm_form_id={$data->form_id}&rmc_task_id={$task_data->task_id}"); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_EDIT")); ?></a>
+                            <a href="<?php echo esc_url("?page=rm_ex_chronos_manage_tasks&rm_form_id={$data->form_id}&rmc_task_id={$task_data->task_id}&rmc_action=delete"); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a>
                         </div>
                     </div>
                 </li>
@@ -89,11 +89,13 @@
             }
         } else
         {
-            echo "<div class='rmnotice'>".wp_kses_post(RM_Chronos_UI_Strings::get('NO_TASKS_MSG'))."</div>";
+            echo "<div class='rmnotice'>".wp_kses_post((string)RM_Chronos_UI_Strings::get('NO_TASKS_MSG'))."</div>";
         }
         ?>
     </ul>
 </div>
+<?php include_once RM_ADMIN_DIR . 'views/template_rm_footer.php'; ?>
+<?php include_once RM_ADMIN_DIR . 'views/template_rm_promo_banner_bottom.php'; ?>
 <pre class="rm-pre-wrapper-for-script-tags"><script type="text/javascript">
     
     jQuery(document).ready(function(){

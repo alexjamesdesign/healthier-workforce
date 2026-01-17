@@ -27,26 +27,26 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 
     <!-----Operations bar Starts----->
     <div class="operationsbar">
-        <div class="rmtitle"><?php echo wp_kses_post(RM_UI_Strings::get("TITLE_SENT_EMAILS_MANAGER")); ?></div>
+        <div class="rmtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get("TITLE_SENT_EMAILS_MANAGER")); ?></div>
         <div class="nav">
             <ul>
                 
-                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
                 
-                <li id="rm-delete-email" class="rm_deactivated"  onclick="jQuery.rm_do_action('rm_sent_emails_action_form', 'rm_sent_emails_remove')"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a></li>
+                <li id="rm-delete-email" class="rm_deactivated"  onclick="jQuery.rm_do_action('rm_sent_emails_action_form', 'rm_sent_emails_remove')"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a></li>
 
                 <li class="rm-form-toggle">
                     <?php if (count($data->forms) !== 0)
                     {
-                        echo wp_kses_post(RM_UI_Strings::get('LABEL_TOGGLE_FORM'));
+                        echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TOGGLE_FORM'));
                         ?>
                         <select id="rm_form_dropdown" name="form_id" onchange = "reset_search()">
                             <?php
                             foreach ($data->forms as $form_id => $form)
                                 if ($data->filter->form_id == $form_id)
-                                    echo "<option value=".esc_attr($form_id)." selected>".wp_kses_post($form)."</option>";
+                                    echo "<option value=".esc_attr($form_id)." selected>".wp_kses_post((string)$form)."</option>";
                                 else
-                                    echo "<option value=".esc_attr($form_id).">".wp_kses_post($form)."</option>";
+                                    echo "<option value=".esc_attr($form_id).">".wp_kses_post((string)$form)."</option>";
                             ?>
                         </select>
                         <?php
@@ -66,7 +66,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
     if(count($data->forms) === 0){
         ?><div class="rmnotice-container">
             <div class="rmnotice">
-        <?php echo wp_kses_post(RM_UI_Strings::get('MSG_NO_FORM_SUB_MAN')); ?>
+        <?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_FORM_SUB_MAN')); ?>
             </div>
         </div><?php
     }
@@ -77,13 +77,13 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 
             <div class="sidebar">
                 <div class="sb-filter">
-                    <?php echo wp_kses_post(RM_UI_Strings::get("LABEL_TIME")); ?>
-                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="all"   <?php if ($data->filter->filters['rm_interval'] == "all") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_ALL")); ?> </div>
-                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="today" <?php if ($data->filter->filters['rm_interval'] == "today") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_TODAY")); ?> </div>
-                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="week"  <?php if ($data->filter->filters['rm_interval'] == "week") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_THIS_WEEK")); ?></div>
-                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="month" <?php if ($data->filter->filters['rm_interval'] == "month") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_THIS_MONTH")); ?></div>
-                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="year"  <?php if ($data->filter->filters['rm_interval'] == "year") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_THIS_YEAR")); ?></div>
-                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="custom"  <?php if ($data->filter->filters['rm_interval'] == "custom") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_CUSTOM_RANGE")); ?></div>
+                    <?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_TIME")); ?>
+                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="all"   <?php if ($data->filter->filters['rm_interval'] == "all") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_ALL")); ?> </div>
+                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="today" <?php if ($data->filter->filters['rm_interval'] == "today") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_TODAY")); ?> </div>
+                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="week"  <?php if ($data->filter->filters['rm_interval'] == "week") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_THIS_WEEK")); ?></div>
+                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="month" <?php if ($data->filter->filters['rm_interval'] == "month") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_THIS_MONTH")); ?></div>
+                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="year"  <?php if ($data->filter->filters['rm_interval'] == "year") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_THIS_YEAR")); ?></div>
+                    <div class="filter-row"><input type="radio" onclick='resubmit_search()' name="filter_between_dispf" value="custom"  <?php if ($data->filter->filters['rm_interval'] == "custom") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_CUSTOM_RANGE")); ?></div>
                     <?php if($data->filter->filters['rm_interval'] == "custom") 
                             {
                                 ?>
@@ -97,20 +97,20 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                               <?php
                             }  
                     ?>
-                        <div class="filter-row"><span><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_CUSTOM_RANGE_FROM_DATE")); ?></span><input type="text" onchange='resubmit_search()' class="rm_custom_subfilter_dates" id="rm_id_custom_subfilter_date_from" name="rm_custom_subfilter_date_from_dispf" value="<?php echo esc_attr($data->filter->filters['rm_fromdate']); ?>"<?php if ($data->filter->filters['rm_interval'] != "custom") echo "disabled"; ?>></div>
-                        <div class="filter-row"><span><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_CUSTOM_RANGE_UPTO_DATE")); ?></span> <input type="text" onchange='resubmit_search()' class="rm_custom_subfilter_dates" id="rm_id_custom_subfilter_date_upto" name="rm_custom_subfilter_date_upto_dispf" value="<?php echo esc_attr($data->filter->filters['rm_dateupto']); ?>"<?php if ($data->filter->filters['rm_interval'] != "custom") echo "disabled"; ?>></div>
+                        <div class="filter-row"><span><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_CUSTOM_RANGE_FROM_DATE")); ?></span><input type="text" onchange='resubmit_search()' class="rm_custom_subfilter_dates" id="rm_id_custom_subfilter_date_from" name="rm_custom_subfilter_date_from_dispf" value="<?php echo esc_attr($data->filter->filters['rm_fromdate']); ?>"<?php if ($data->filter->filters['rm_interval'] != "custom") echo "disabled"; ?>></div>
+                        <div class="filter-row"><span><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_CUSTOM_RANGE_UPTO_DATE")); ?></span> <input type="text" onchange='resubmit_search()' class="rm_custom_subfilter_dates" id="rm_id_custom_subfilter_date_upto" name="rm_custom_subfilter_date_upto_dispf" value="<?php echo esc_attr($data->filter->filters['rm_dateupto']); ?>"<?php if ($data->filter->filters['rm_interval'] != "custom") echo "disabled"; ?>></div>
                     </div>
                 </div>
                 
                
                 
                 <div class="sb-filter">
-                    <?php echo wp_kses_post(RM_UI_Strings::get("LABEL_MATCH_FIELD")); ?>
+                    <?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_MATCH_FIELD")); ?>
                         <div class="filter-row">
                             <select name="rm_field_to_search_dispf">
-                                <option value="to" <?php if($data->filter->filters['rm_field_to_search'] === 'to')echo "selected";?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_EMAIL_TO")); ?></option>
-                                <option value="sub" <?php if($data->filter->filters['rm_field_to_search'] === 'sub')echo "selected";?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_EMAIL_SUB")); ?></option>
-                                <option value="body" <?php if($data->filter->filters['rm_field_to_search'] === 'body')echo "selected";?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_EMAIL_BODY")); ?></option>
+                                <option value="to" <?php if($data->filter->filters['rm_field_to_search'] === 'to')echo "selected";?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_EMAIL_TO")); ?></option>
+                                <option value="sub" <?php if($data->filter->filters['rm_field_to_search'] === 'sub')echo "selected";?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_EMAIL_SUB")); ?></option>
+                                <option value="body" <?php if($data->filter->filters['rm_field_to_search'] === 'body')echo "selected";?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_EMAIL_BODY")); ?></option>
                             </select>
                         </div>
 
@@ -125,7 +125,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 <form method="post" action="" name="rm_sent_emails_manage" id="rm_sent_emails_action_form">
     <input type="hidden" name="rm_search_state" value="<?php echo esc_attr($data->search_state_query); ?>" id="rm_search_state_input_field" />
                 <input type="hidden" name="rm_slug" value="" id="rm_slug_input_field" />
-                <table class="rmagic-table rmagic-table-wrap">
+                <table class="rmagic-table rm-sent-email-manage-table">
                     <?php 
                     if ($data->mails)
                     {
@@ -133,10 +133,11 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                         <tr>
 <!--                            <th>&nbsp;</th>-->
                             <th>&nbsp;</th>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_EMAIL_TO")); ?></th>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_EMAIL_SUB")); ?></th>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_EMAIL_BODY")); ?></th>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("ACTION")); ?></th></tr>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_EMAIL_TO")); ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_EMAIL_SUB")); ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_EMAIL_SENT_ON")); ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_EMAIL_BODY")); ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("ACTION")); ?></th></tr>
 
                         <?php
                        
@@ -162,11 +163,16 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                     </td>
                                     <td class="rm_data">
                                         <?php
-                                            echo esc_html(strip_tags(htmlspecialchars_decode($mail->body)));
+                                            echo esc_html(RM_Utilities::localize_time($mail->sent_on));
+                                        ?>
+                                    </td>
+                                    <td class="rm_data">
+                                        <?php
+                                            echo esc_html(strip_tags(htmlspecialchars_decode((string)$mail->body)));
                                         ?>
                                     </td>
                                     <td>
-                                        <a href="?page=rm_sent_emails_view&rm_search_state=<?php echo wp_kses_post($data->search_state_query); ?>&rm_sent_email_id=<?php echo esc_attr($mail->mail_id); ?>"><?php echo wp_kses_post(RM_UI_Strings::get("VIEW")); ?></a>
+                                        <a href="?page=rm_sent_emails_view&rm_search_state=<?php echo wp_kses_post((string)$data->search_state_query); ?>&rm_sent_email_id=<?php echo esc_attr($mail->mail_id); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get("VIEW")); ?></a>
                                     </td>
                                 </tr>
 
@@ -178,14 +184,14 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     {
                         ?>
                         <tr><td>
-                        <?php echo wp_kses_post(RM_UI_Strings::get('MSG_NO_SENT_EMAIL_MATCHED')); ?>
+                        <?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_SENT_EMAIL_MATCHED')); ?>
                             </td></tr>
                     <?php
                     } else
                     {
                         ?>
                         <tr><td>
-                        <?php echo wp_kses_post(RM_UI_Strings::get('MSG_NO_SENT_EMAIL_INTERVAL')); ?>
+                        <?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_SENT_EMAIL_INTERVAL')); ?>
                             </td></tr>
     <?php }
     ?>
@@ -197,12 +203,12 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
            </div>
         </div>
         <?php
-        echo wp_kses_post($data->filter->render_pagination());
+        echo wp_kses_post((string)$data->filter->render_pagination());
     }else
     {
         ?><div class="rmnotice-container">
             <div class="rmnotice">
-        <?php echo wp_kses_post(RM_UI_Strings::get('MSG_NO_SENT_EMAILS_MAN')); ?>
+        <?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_SENT_EMAILS_MAN')); ?>
             </div>
         </div>
     <?php
@@ -210,7 +216,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 ?>            
     <?php     
     //$rm_promo_banner_title = "Unlock export submissions and more by upgrading";
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
     
     

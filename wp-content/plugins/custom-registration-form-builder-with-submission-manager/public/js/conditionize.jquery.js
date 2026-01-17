@@ -513,8 +513,8 @@
             $section.prop('disabled',true);
             $.fn.updateConditionalFieldsIds(subject.attr('name'),0);
         }
-        
-     }
+    }
+    rm_init_total_pricing();
     }
     
      // Add hidden field names for server side tracking

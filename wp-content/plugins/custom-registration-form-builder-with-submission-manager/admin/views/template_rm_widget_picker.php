@@ -5,62 +5,62 @@ if (!defined('WPINC')) {
 if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_rm_widget_picker.php'); else {
 ?>
 <ul class="rm-widget-selector-view">
-    <li title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_HTMLH")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('HTMLH')">
+    <li title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_HTMLH")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('HTMLH')">
 
         <div class="rm-difl rm-widget-icon rm-widget-heading"><i class="fa fa-header" aria-hidden="true"></i></div>
-        <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("WIDGET_TYPE_HEADING")); ?></a>
+        <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("WIDGET_TYPE_HEADING")); ?></a>
             
         </div>
     </li>
-    <li title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_HTMLP")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('HTMLP')">
+    <li title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_HTMLP")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('HTMLP')">
         <div class="rm-difl rm-widget-icon rm-widget-paragraph"><i class="fa fa-paragraph" aria-hidden="true"></i></div> 
-        <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("WIDGET_TYPE_PARAGRAPH")); ?></a>
+        <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("WIDGET_TYPE_PARAGRAPH")); ?></a>
         </div>
     </li>
-    <li title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_Divider")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('Divider')">
+    <li title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_Divider")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('Divider')">
         <div class="rm-difl rm-widget-icon rm-widget-divider"><i class="fa fa-arrows-h" aria-hidden="true"></i></div> 
-        <div class="rm-difl rm-widget-head"> <a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("WIDGET_TYPE_DIVIDER")); ?></a>
+        <div class="rm-difl rm-widget-head"> <a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("WIDGET_TYPE_DIVIDER")); ?></a>
    
         </div>
     </li>
             
-    <li title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_Spacing")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('Spacing')">
+    <li title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_Spacing")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('Spacing')">
         <div class="rm-difl rm-widget-icon rm-widget-spacing"><i class="material-icons">&#xE256;</i></div> 
-        <div class="rm-difl rm-widget-head"> <a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("WIDGET_TYPE_SPACING")); ?></a>
+        <div class="rm-difl rm-widget-head"> <a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("WIDGET_TYPE_SPACING")); ?></a>
  
         </div>
     </li>  
-    <li title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_RICHTEXT")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('RichText')">
+    <li title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_RICHTEXT")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('RichText')">
         <div class="rm-difl rm-widget-icon rm-widget-richtext"><i class="material-icons">&#xE165;</i></div> 
-        <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("WIDGET_TYPE_RICHTEXT")); ?></a>
+        <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("WIDGET_TYPE_RICHTEXT")); ?></a>
   
 
         </div>
     </li>  
     
-    <li title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_TIMER")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('Timer')">
+    <li title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_TIMER")); ?>" class="rm_button_like_links" onclick="add_new_widget_to_page('Timer')">
         <div class="rm-difl rm-widget-icon rm-widget-richtext"><i class="material-icons">&#xE425;</i></div> 
-        <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("WIDGET_TYPE_TIMER")); ?></a>
+        <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("WIDGET_TYPE_TIMER")); ?></a>
         </div>
     </li> 
     
-    <li class="rm_button_like_links" onclick="add_new_widget_to_page('Link')" title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_LINK")); ?>">
+    <li class="rm_button_like_links" onclick="add_new_widget_to_page('Link')" title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_LINK")); ?>">
 
         <div class="rm-difl rm-widget-icon rm-widget-add-link">
             <i class="material-icons">&#xE157;</i>
         </div>
-        <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("WIDGET_TYPE_LINK")); ?></a>
+        <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("WIDGET_TYPE_LINK")); ?></a>
             
         </div>
     </li>
     
-    <li class="rm_button_like_links" onclick="add_new_widget_to_page('YouTubeV')" title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_YOUTUBE")); ?>">
+    <li class="rm_button_like_links" onclick="add_new_widget_to_page('YouTubeV')" title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_YOUTUBE")); ?>">
         <div class="rm-difl rm-widget-icon rm-widget-youtube"><i class="fa fa-youtube-play" aria-hidden="true"></i></div> 
         <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php _e('YouTube Video','custom-registration-form-builder-with-submission-manager') ?></a>
         </div>
     </li> 
     
-    <li class="rm_button_like_links" onclick="add_new_widget_to_page('Iframe')" title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_IFRAME")); ?>">
+    <li class="rm_button_like_links" onclick="add_new_widget_to_page('Iframe')" title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_IFRAME")); ?>">
         <div class="rm-difl rm-widget-icon rm-widget-iframe-embed"><i class="material-icons">&#xE86F;</i></div> 
         <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"><?php _e('iFrame Embed','custom-registration-form-builder-with-submission-manager') ?></a>
   
@@ -68,19 +68,19 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         </div>
     </li> 
   
-    <li class="rm_button_like_links" onclick="add_new_widget_to_page('ImageV')" title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_IMAGEV")); ?>">
+    <li class="rm_button_like_links" onclick="add_new_widget_to_page('ImageV')" title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_IMAGEV")); ?>">
         <div class="rm-difl rm-widget-icon rm-widget-add-image"><i class="material-icons">&#xE439;</i></div> 
         <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"> <?php _e('Image','custom-registration-form-builder-with-submission-manager') ?></a>
         </div>
     </li>
     
-    <li class="rm_button_like_links" onclick="add_new_widget_to_page('PriceV')" title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_PRICEV")); ?>">
+    <li class="rm_button_like_links" onclick="add_new_widget_to_page('PriceV')" title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_PRICEV")); ?>">
         <div class="rm-difl rm-widget-icon rm-widget-add-image"><i class="material-icons">&#xE263;</i></div> 
         <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"> <?php _e('Price','custom-registration-form-builder-with-submission-manager') ?></a>
         </div>
     </li>
     
-    <li class="rm_button_like_links rm-widget-lg" onclick="add_new_widget_to_page('SubCountV')" title="<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_SUB_COUNDOWN")); ?>">
+    <li class="rm_button_like_links rm-widget-lg" onclick="add_new_widget_to_page('SubCountV')" title="<?php echo wp_kses_post((string)RM_UI_Strings::get("FIELD_HELP_TEXT_SUB_COUNDOWN")); ?>">
         <div class="rm-difl rm-widget-icon rm-widget-add-image"><i class="material-icons">&#xE439;</i></div> 
         <div class="rm-difl rm-widget-head"><a href="javascript:void(0)"> <?php _e('Submission Countdown','custom-registration-form-builder-with-submission-manager') ?></a>
         </div>

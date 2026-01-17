@@ -18,13 +18,13 @@ $submit_btn_label = !empty($buttons['login_btn']) ? $buttons['login_btn'] : 'Log
 
         echo '<style>';
                 if(isset($design['btn_hover_color']))
-                    echo '.rm_btn_selector .rm_btn_focus:hover{ background-color:'.wp_kses_post($design['btn_hover_color']).' !important; }';
+                    echo '.rm_btn_selector .rm_btn_focus:hover{ background-color:'.wp_kses_post((string)$design['btn_hover_color']).' !important; }';
                 if(isset($design['field_bg_focus_color']) || isset($design['text_focus_color'])){
                     echo '.rmagic .rmrow .rm_field_focus_bg:focus{';
                     if(isset($design['field_bg_focus_color']))
-                        echo 'background-color:'.wp_kses_post($design['field_bg_focus_color']).' !important; } ';
+                        echo 'background-color:'.wp_kses_post((string)$design['field_bg_focus_color']).' !important; } ';
                     if(isset($design['text_focus_color']))
-                        echo '.rmagic .rmrow .rm_field_focus_text:focus { color:'.wp_kses_post($design['text_focus_color']).' !important; }';
+                        echo '.rmagic .rmrow .rm_field_focus_text:focus { color:'.wp_kses_post((string)$design['text_focus_color']).' !important; }';
 
                 }
         echo '</style>';
@@ -33,11 +33,11 @@ $submit_btn_label = !empty($buttons['login_btn']) ? $buttons['login_btn'] : 'Log
 
 <div class="rmagic" ng-controller="formStyleCtrl"  ng-app="formStyleApp">
     <div class="operationsbar rm-form-design-view-head">
-        <div class="rmtitle"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FORM_PRESENTATION')); ?></div>
+        <div class="rmtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FORM_PRESENTATION')); ?></div>
         <div class="nav">
             <ul>
-               <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
-               <li><a href="javascript:void(0)" ng-click='resetAll()' id="rm-field-selection-popup"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_RESET')); ?></a></li>
+               <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+               <li><a href="javascript:void(0)" ng-click='resetAll()' id="rm-field-selection-popup"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_RESET')); ?></a></li>
             </ul>
         </div>
     </div>
@@ -49,14 +49,14 @@ $submit_btn_label = !empty($buttons['login_btn']) ? $buttons['login_btn'] : 'Log
     <!--Dialogue Box Starts-->
     <fieldset class="rm_form_presentation_fs">
         <div class="rm_form_container">
-            <div class="rm_style_container" id="rm_style_container"  style='<?php echo wp_kses_post($design['style_form']); ?>'>
+            <div class="rm_style_container" id="rm_style_container"  style='<?php echo wp_kses_post((string)$design['style_form']); ?>'>
                 <div class="rm_element_selector"> <input class="rm_selector" type="button"  id="rm_form_selector" value="Form Selector" ng-click="selectForm()"/></div>
                 <?php $loop_index = 0; ?>
                 <?php foreach ($fields as $key => $field): $loop_index++; ?>
                         <div class="rmrow rm_edit_form_ui">
-                            <div class="rmfield" style="<?php echo !empty($design['style_label']) ? wp_kses_post($design['style_label']) : ''; ?>" id="rm_field_label"><?php echo esc_html($field['field_label']); ?></div>
+                            <div class="rmfield" style="<?php echo !empty($design['style_label']) ? wp_kses_post((string)$design['style_label']) : ''; ?>" id="rm_field_label"><?php echo esc_html($field['field_label']); ?></div>
                             <div class="rminput">
-                                <input class="rm_field_focus_bg rm_field_focus_text" style='<?php echo wp_kses_post($design['style_textfield']); ?>' type="text"  placeholder="<?php echo esc_attr($field['placeholder']); ?>" id="rm_textfield" <?php echo !empty($design['field_bg_focus_color']) ? 'data-field-bg-focus-color="'.wp_kses_post($design['field_bg_focus_color']).'"' : ''; ?> <?php echo !empty($design['text_focus_color']) ? 'data-field-text-focus-color="'.wp_kses_post($design['text_focus_color']).'"' : ''; ?>/>
+                                <input class="rm_field_focus_bg rm_field_focus_text" style='<?php echo wp_kses_post((string)$design['style_textfield']); ?>' type="text"  placeholder="<?php echo esc_attr($field['placeholder']); ?>" id="rm_textfield" <?php echo !empty($design['field_bg_focus_color']) ? 'data-field-bg-focus-color="'.wp_kses_post((string)$design['field_bg_focus_color']).'"' : ''; ?> <?php echo !empty($design['text_focus_color']) ? 'data-field-text-focus-color="'.wp_kses_post((string)$design['text_focus_color']).'"' : ''; ?>/>
                             </div>
                         <?php if ($loop_index == 1) : ?>
                                     <div class="rm_element_selector">
@@ -74,7 +74,7 @@ $submit_btn_label = !empty($buttons['login_btn']) ? $buttons['login_btn'] : 'Log
                 <?php endforeach; ?>
                 
                 <div class="rm_btn_selector">
-                    <input class="rm_btn_focus" type="button" style='<?php echo wp_kses_post($design['style_btnfield']); ?>' value="<?php echo esc_attr($submit_btn_label); ?>" id="rm_btnfield" <?php echo !empty($design['btn_hover_color']) ? 'data-btn-hover-color="'.wp_kses_post($design['btn_hover_color']).'"' : ''; ?>/>
+                    <input class="rm_btn_focus" type="button" style='<?php echo wp_kses_post((string)$design['style_btnfield']); ?>' value="<?php echo esc_attr($submit_btn_label); ?>" id="rm_btnfield" <?php echo !empty($design['btn_hover_color']) ? 'data-btn-hover-color="'.wp_kses_post((string)$design['btn_hover_color']).'"' : ''; ?>/>
                     <input type="button" class="rm_selector"   id="rm_button_field_selector" value="" ng-click="selectButtonField()"/>
                     <div class="rm_style_action" ng-show="selectedElement == 'rm_btnfield'" >
                         <style-action-box selected-element="rm_btnfield" el-btn="true"></style-action-box>
@@ -86,7 +86,7 @@ $submit_btn_label = !empty($buttons['login_btn']) ? $buttons['login_btn'] : 'Log
         </div>
     </fieldset>
     
-        <div class="rmnotice rm-invite-field-row" style="text-transform:none"><?php echo wp_kses_post(RM_UI_Strings::get('DISCLAIMER_FORM_VIEW_SETTING')); ?></div>
+        <div class="rmnotice rm-invite-field-row" style="text-transform:none"><?php echo wp_kses_post((string)RM_UI_Strings::get('DISCLAIMER_FORM_VIEW_SETTING')); ?></div>
 
     <div class="buttonarea popup-button-group" style="">
         <div class="cancel">
@@ -118,49 +118,49 @@ $submit_btn_label = !empty($buttons['login_btn']) ? $buttons['login_btn'] : 'Log
         <div class="rm_pop_up_tab">
             <div id="rm_field_styling_options" ng-show="elText"> 
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LABEL_COLOR')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LABEL_COLOR')); ?> </label>
                     <input type="text" id="rm_label_color" class="jscolor" ng-model="styles.label_color" ng-change="executeAction()" >
                 </div>
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_TEXT_COLOR')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TEXT_COLOR')); ?> </label>
                     <input type="text" id="rm_text_color" class="jscolor" ng-model="styles.text_color" ng-change="executeAction()" >
                 </div>
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PLACEHOLDER_COLOR')); ?></label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PLACEHOLDER_COLOR')); ?></label>
                     <input type="text" id="rm_placeholder_color" class="jscolor" ng-model="styles.placeholder_color" ng-change="executeAction()" >
                 </div>
                 
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_OUTLINE_COLOR')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_OUTLINE_COLOR')); ?> </label>
                     <input type="text" id="rm_outline_color" class="jscolor" ng-model="styles.text_outline_color" ng-change="executeAction()" >
                 </div>
                 
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FOCUS_COLOR')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FOCUS_COLOR')); ?> </label>
                     <input type="text" id="rm_field_focus_color" class="jscolor" ng-model="styles.text_focus_color" ng-change="executeAction()" >
                 </div>
                 
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FOCUS_BG_COLOR')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FOCUS_BG_COLOR')); ?> </label>
                     <input type="text" id="rm_field_bg_focus_color" class="jscolor" ng-model="styles.field_bg_focus_color" ng-change="executeAction()" >
                 </div>
                 
             </div>
             <div id="rm_form_styling_options" ng-show="elForm">
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FORM_PADDING')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FORM_PADDING')); ?> </label>
                     <input type="text" id="rm_padding" ng-model="styles.padding" value="0" ng-change="executeAction()" >
                 </div>
             </div>
             <div id="rm_section_styling_options" ng-show="elForm">
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SECTION_TEXT_COLOR')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SECTION_TEXT_COLOR')); ?> </label>
                     <input type="text" class="jscolor" id="rm_section_text_color" ng-model="styles.section_text_color" ng-change="executeAction()" >
                 </div>
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SECTION_TEXT_STYLE')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SECTION_TEXT_STYLE')); ?> </label>
                     <select id="rm_section_text_style" ng-model="styles.section_text_style" ng-change="executeAction()" >
-                        <option selected value=""><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SELECT')); ?></option>
+                        <option selected value=""><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SELECT')); ?></option>
                         <option  value="inherited">inherited</option>
                         <option  value="italic">italic</option>
                         <option  value="normal">normal</option>
@@ -170,21 +170,21 @@ $submit_btn_label = !empty($buttons['login_btn']) ? $buttons['login_btn'] : 'Log
             </div>
             <div id="rm_border_styling_options">
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_BORDER_COLOR')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_BORDER_COLOR')); ?> </label>
                     <input type="text" id="rm_border_color" class="jscolor" ng-model="styles.border_color" ng-change="executeAction()" >
                 </div>
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_BORDER_WIDTH')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_BORDER_WIDTH')); ?> </label>
                     <input type="number" id="rm_border_width" ng-model="styles.border_width" ng-change="executeAction()">
                 </div>
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_BORDER_RADIUS')); ?> </label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_BORDER_RADIUS')); ?> </label>
                     <input type="number" id="rm_border_radius" ng-model="styles.border_radius" ng-change="executeAction()" >
                 </div>
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_BORDER_STYLE')); ?></label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_BORDER_STYLE')); ?></label>
                     <select id="rm_border_style" ng-model="styles.border_style" ng-change="executeAction()" >
-                        <option selected value=""><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SELECT')); ?></option>
+                        <option selected value=""><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SELECT')); ?></option>
                         <option><?php _e('solid','custom-registration-form-builder-with-submission-manager'); ?></option>
                         <option><?php _e('dashed','custom-registration-form-builder-with-submission-manager'); ?></option>
                         <option><?php _e('dotted','custom-registration-form-builder-with-submission-manager'); ?></option>
@@ -201,14 +201,14 @@ $submit_btn_label = !empty($buttons['login_btn']) ? $buttons['login_btn'] : 'Log
                 </div>
             </div>
             <div class="rm_pop_up_row">
-                <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_BACKGROUND_IMAGE')); ?></label>
+                <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_BACKGROUND_IMAGE')); ?></label>
                 <input type="button" class="upload-btn" value="Upload" ng-click="mediaUploader()">
                 <input type="button" class="rm_trash" ng-click="removeBackImage()" value="Remove">
             </div>
             <div class="rm_pop_up_row">
-                <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_IMAGE_REPEAT')); ?> </label>
+                <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_IMAGE_REPEAT')); ?> </label>
                 <select id="rm_image_repeat" ng-model="styles.image_repeat" ng-change="executeAction()" >
-                     <option selected value=""><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SELECT')); ?></option>
+                     <option selected value=""><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SELECT')); ?></option>
                     <option><?php _e('repeat','custom-registration-form-builder-with-submission-manager'); ?></option>
                     <option><?php _e('inherit','custom-registration-form-builder-with-submission-manager'); ?></option>
                     <option><?php _e('initial','custom-registration-form-builder-with-submission-manager'); ?></option>
@@ -221,23 +221,23 @@ $submit_btn_label = !empty($buttons['login_btn']) ? $buttons['login_btn'] : 'Log
             </div>
             <div id="rm_btn_styling_options" ng-show="elBtn">
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_BUTTON_LABEL')); ?></label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_BUTTON_LABEL')); ?></label>
                     <input type="text" class="ng-pristine ng-untouched ng-valid" ng-change="executeAction()" ng-model="styles.btn_label">
                 </div>
                 <div class="rm_pop_up_row">
-                    <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FONT_COLOR')); ?></label>
+                    <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FONT_COLOR')); ?></label>
                     <input type="text" class="jscolor" ng-change="executeAction()" ng-model="styles.btn_font_color"  >
                 </div>
                 
                 <div class="rm_pop_up_tab">
                     <div class="rm_pop_up_row">
-                        <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_HOVER_COLOR')); ?></label>
+                        <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_HOVER_COLOR')); ?></label>
                         <input type="text" class="jscolor" id="rm_btn_hover_color" ng-model="styles.btn_hover_color" ng-change="executeAction()"  >
                     </div>   
                 </div>
             </div>
             <div class="rm_pop_up_row">
-                <label><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_BACKGROUND_COLOR')); ?></label>
+                <label><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_BACKGROUND_COLOR')); ?></label>
                 <input type="text" class="jscolor" id="rm_background_border" ng-model="styles.background_color" ng-change="executeAction()"  >
             </div>
             
@@ -246,7 +246,7 @@ $submit_btn_label = !empty($buttons['login_btn']) ? $buttons['login_btn'] : 'Log
         </div>
         
         <?php if(isset($design['placeholder_css'])) : ?>
-            <div id="rm_custom_style"><style><?php echo wp_kses_post($design['placeholder_css']); ?></style></div>
+            <div id="rm_custom_style"><style><?php echo wp_kses_post((string)$design['placeholder_css']); ?></style></div>
         <?php endif; ?>    
     </div>
 </div>

@@ -51,7 +51,7 @@ class RM_Login_Controller{
         
         if ($this->mv_handler->validateForm($login_form_slug))
         {
-            $username = isset($request->req['username']) ? $request->req['username'] : '';
+            $username = isset($request->req['username']) ? sanitize_user($request->req['username']) : '';
             $pwd = isset($request->req['pwd']) ? $request->req['pwd'] : '';
             // Prodeeding with normal username and password authentication die('in');
             $status= $login_service->check_login($username,$pwd);
@@ -162,7 +162,7 @@ class RM_Login_Controller{
         }
         
         
-        $login_form= json_decode($login_service->get_form(),true);
+        $login_form= is_string($login_service->get_form()) ? json_decode($login_service->get_form(),true) : $login_service->get_form();
         if(!empty($login_form)){
            $data->fields= $login_form['form_fields'];
         }
@@ -181,83 +181,86 @@ class RM_Login_Controller{
     }
     
     public function lost_password($model,$service,$request,$params){
-        $login_service= new RM_Login_Service();
-        $data= new stdClass();
-        $data->form_type= 'rm_recovery_form';
-        if(!defined('REGMAGIC_ADDON'))
-            $token = 11;
-        if(isset($request->req['reset_token']))
-        {
-            
-            $token= $_SERVER['REQUEST_METHOD']=== 'POST' ? $request->req['token_val'] : $request->req['reset_token'];
-            $users= get_users(array('meta_key' => 'rm_pass_token', 'meta_value' =>$token));
+        $login_service = new RM_Login_Service();
+        $data = new stdClass();
+        $data->form_type = 'rm_recovery_form';
+        if(isset($request->req['reset_token'])) {
+            $token = $_SERVER['REQUEST_METHOD'] === 'POST' ? $request->req['token_val'] : $request->req['reset_token'];
+            $users = get_users(array('meta_key' => 'rm_pass_token', 'meta_value' => $token));
             if(empty($users)){
                 $data->form_type= 'rm_token_form';
                 $data->invalid_token = 1;
-            }
-            else{
-                
-                $tk= get_user_meta($users[0]->ID,'rm_pass_expiry_token', true);
-                $token_expired= false;
-                if(!empty($tk) && $tk<time()){
+            } else {
+                $tk = get_user_meta($users[0]->ID,'rm_pass_expiry_token', true);
+                $token_expired = false;
+                if(!empty($tk) && $tk<time()) {
                     $token_expired= true;
                 }
-                if($token_expired){
+                if($token_expired) {
                     $data->expired_token = 1;
                     $data->form_type= 'rm_recovery_form';
-                }
-                else{
+                } else {
                     $data->form_type= 'rm_reset_password_form';
                     $data->sec_token= $token;
                 }
             }
         }
-        if(isset($request->req['rm_form_sub_id']))
-        {
-            if($request->req['rm_form_sub_id']=='rm_recovery_form'){
-                $user= get_user_by('email',$request->req['user_email']);
+        if(isset($request->req['rm_form_sub_id'])) {
+            if($request->req['rm_form_sub_id']=='rm_recovery_form') {
+                $user = get_user_by('email',$request->req['user_email']);
                 $data->valid_email= empty($user) ? 0 : 1;
-                if(!empty($data->valid_email)){
+                if (get_option('rm_option_enable_captcha') == "yes") {
+                    if (!isset($_POST["g-recaptcha-response"])) {
+                        echo RM_UI_Strings::get('ERROR_INVALID_RECAPTCHA');
+                        return;
+                    }
+                    require_once(RM_EXTERNAL_DIR . "PFBC/Resources/recaptchalib.php");
+                    $recaptcha_response = rm_recaptcha_check_answer(get_option('rm_option_recaptcha_v') === 'v3' ? 3 : 2, get_option('rm_option_recaptcha_v') === 'v3' ? get_option('rm_option_private_key3') : get_option('rm_option_private_key'), $_SERVER["REMOTE_ADDR"], sanitize_text_field($_POST["g-recaptcha-response"]));
+                    if (!$recaptcha_response->is_valid) {
+                        echo $recaptcha_response->error;
+                        return;
+                    }
+                }
+                if(!empty($data->valid_email)) {
                     $email_sent= RM_Email_Service::notify_lost_password_token($user);
                 }
-            
-            }else if($request->req['rm_form_sub_id']=='rm_token_form'){
-                $token= $request->req['token_val'];
-                $users= get_users(array('meta_key' => 'rm_pass_token', 'meta_value' =>$token));
-                if(empty($users)){
+            } else if($request->req['rm_form_sub_id'] == 'rm_token_form') {
+                $token = $request->req['token_val'];
+                $users = get_users(array('meta_key' => 'rm_pass_token', 'meta_value' => $token));
+                if(empty($users)) {
                     $data->invalid_copy_token = 1;
                 }
-            }else if($request->req['rm_form_sub_id']=='rm_reset_password_form'){
-                if($request->req['password']!=$request->req['confirm_password']){
+            } else if($request->req['rm_form_sub_id'] == 'rm_reset_password_form') {
+                if($request->req['password'] != $request->req['confirm_password']) {
                     $data->password_mismatch = 1;
-                }
-                else{
+                } else {
                     $error = $login_service->validate_password($request->req['password']);
-                    if (!empty($error)) {
+                    if(!empty($error)) {
                         $data->error = $error;
-                    }else{
-                        $token= $request->req['token_val'];
-                        $users= get_users(array('meta_key' => 'rm_pass_token', 'meta_value' =>$token));
-                        if(!empty($users)){
-                            $user_id = wp_update_user(array('ID'=>$users[0]->ID,'user_pass' => $request->req['password']));
-                            if(is_wp_error($user_id)){
-                                $data->password_updated = 0;
-                            }
-                            else
-                            {
-                                delete_user_meta($users[0]->ID,'rm_pass_token');
-                                delete_user_meta($users[0]->ID,'rm_pass_expiry_token');
-                                $data->password_updated = 1;
+                    } else {
+                        $token = $request->req['token_val'];
+                        if(empty($token)) {
+                            $data->invalid_copy_token = 1;
+                        } else {
+                            $users = get_users(array('meta_key' => 'rm_pass_token', 'meta_value' => $token));
+                            if(!empty($users)){
+                                $user_id = wp_update_user(array('ID'=>$users[0]->ID,'user_pass' => $request->req['password']));
+                                if(is_wp_error($user_id)) {
+                                    $data->password_updated = 0;
+                                } else {
+                                    delete_user_meta($users[0]->ID,'rm_pass_token');
+                                    delete_user_meta($users[0]->ID,'rm_pass_expiry_token');
+                                    $data->password_updated = 1;
+                                }
                             }
                         }
                     }
                 }
             }
         }
-        $data->buttons= $login_service->get_button_config();
-        $data->options= $login_service->get_recovery_options();
-        
-        $view= $this->mv_handler->setView('pass_recovery',true);
+        $data->buttons = $login_service->get_button_config();
+        $data->options = $login_service->get_recovery_options();
+        $view = $this->mv_handler->setView('pass_recovery',true);
         return $view->read($data);
     }
 }

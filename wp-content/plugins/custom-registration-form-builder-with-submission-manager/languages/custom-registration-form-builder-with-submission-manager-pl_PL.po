@@ -1724,7 +1724,7 @@ msgstr "Ustaw oba (cokolwiek nastąpi wcześniej)"
 
 #: admin/views/template_rm_form_manager.php:37
 msgid "Welcome to RegistrationMagic"
-msgstr "Witamy w Registration Magic"
+msgstr "Witamy w RegistrationMagic"
 
 #: admin/views/template_rm_form_manager.php:39
 msgid ""

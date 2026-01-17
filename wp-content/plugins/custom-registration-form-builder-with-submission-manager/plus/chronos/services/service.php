@@ -133,10 +133,10 @@ class RM_Chronos_Service extends RM_Services {
             
             foreach($fv_rule_ids as $index => $fid) {
                 $fval = $fv_rule_values[$index];
-                $fval = trim($fval);
+                $fval = trim((string)$fval);
                 if(!$fid || !$fval)
                     continue;
-                $array_fval = explode("|",$fval);
+                $array_fval = explode("|",(string)$fval);
                 $array_fval = array_filter(array_map("trim",$array_fval));
                 $final_array_fval = array();
                 foreach ($array_fval as $fv)
@@ -375,21 +375,21 @@ class RM_Chronos_Service extends RM_Services {
         } 
     }
     public function insert_cron_on_activate_plugin(){
-        $crons = new RM_Chronos;
-        $tasks = $crons->get_tasks(null, 'active');
+        //$crons = new RM_Chronos;
+        $tasks = RM_Chronos::get_tasks(null, 'active');
         if ( empty( $tasks ) ) {
-		return ;
-	}
+            return;
+        }
         foreach($tasks as $task) { 
             $this->update_edit_delete_cron($task->task_id, 'add');
         }
     }
     public function delete_cron_on_deactivate_plugin(){
-        $crons = new RM_Chronos;
-        $tasks = $crons->get_tasks(null, 'active');
+        //$crons = new RM_Chronos;
+        $tasks = RM_Chronos::get_tasks(null, 'active');
         if ( empty( $tasks ) ) {
-		return ;
-	}
+            return;
+        }
         foreach($tasks as $task) { 
             $this->update_edit_delete_cron($task->task_id, 'delete');
         }

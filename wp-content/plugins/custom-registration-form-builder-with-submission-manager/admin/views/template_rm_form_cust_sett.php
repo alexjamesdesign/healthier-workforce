@@ -38,7 +38,7 @@ $form->render();
     </div>
     
     <?php
-    if(!defined('REGMAGIC_ADDON')) include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //if(!defined('REGMAGIC_ADDON')) include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
 </div>
 

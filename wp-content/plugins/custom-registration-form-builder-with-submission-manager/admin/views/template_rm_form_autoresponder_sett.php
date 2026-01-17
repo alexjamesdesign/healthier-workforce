@@ -40,7 +40,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 
         $form->addElement(new Element_Textbox("<b>" . RM_UI_Strings::get('LABEL_AR_EMAIL_SUBJECT') . "</b>", "form_email_subject", array("id" => "rm_form_name", "value" => $data->model->form_options->form_email_subject, "longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_AUTO_RESP_SUB'))));
 
-        $form->addElement(new Element_TinyMCEWP("<b>" . RM_UI_Strings::get('LABEL_AR_EMAIL_BODY') . "</b>(".__('Mail Merge and HTML Supported', 'custom-registration-form-builder-with-submission-manager')."):", $data->model->form_options->form_email_content, "form_email_content", array('editor_class' => 'rm_TinydMCE', 'editor_height' => '100px'), array("longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_AUTO_RESP_MSG'))));
+        $form->addElement(new Element_TinyMCEWP("<b>" . RM_UI_Strings::get('LABEL_AR_EMAIL_BODY') . "</b>(".__('Mail Merge and HTML Supported', 'custom-registration-form-builder-with-submission-manager')."):", (string)$data->model->form_options->form_email_content, "form_email_content", array('editor_class' => 'rm_TinydMCE', 'editor_height' => '100px'), array("longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_AUTO_RESP_MSG'))));
         $form->addElement(new Element_HTML('</div>'));
 
         $form->addElement(new Element_HTMLL('&#8592; &nbsp; '.__('Cancel','custom-registration-form-builder-with-submission-manager'), '?page='.$data->next_page.'&rm_form_id='.$data->model->form_id, array('class' => 'cancel')));
@@ -49,7 +49,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         ?>
     </div>
     <?php 
-    if(!defined('REGMAGIC_ADDON')) include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //if(!defined('REGMAGIC_ADDON')) include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
     
 </div>

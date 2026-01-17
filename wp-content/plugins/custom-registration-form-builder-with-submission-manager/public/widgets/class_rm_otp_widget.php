@@ -30,7 +30,7 @@ class RM_OTP_Widget extends WP_Widget
         wp_enqueue_style( 'style_rm_otpw', RM_BASE_URL."public/widgets/css/otp.css",array(), RM_PLUGIN_VERSION, 'all');
         wp_enqueue_script( 'script_rm_otpw', RM_BASE_URL."public/widgets/js/otp.js",array(), RM_PLUGIN_VERSION, 'all');
         
-        echo wp_kses_post($args['before_widget']);
+        echo wp_kses_post((string)$args['before_widget']);
         
         $rm_public = new RM_front_service(null);
         
@@ -42,7 +42,7 @@ class RM_OTP_Widget extends WP_Widget
         
         include RM_PUBLIC_DIR."widgets/html/otp.php";
         
-        echo wp_kses_post($args['after_widget']);
+        echo wp_kses_post((string)$args['after_widget']);
     }
     /**
      * Back-end widget form.
@@ -76,7 +76,7 @@ class RM_OTP_Widget extends WP_Widget
     public function update($new_instance, $old_instance)
     {
         $instance = array();
-        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
+        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags((string)$new_instance['title']) : '';
         return $instance;
     }
 } // class Foo_Widget

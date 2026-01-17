@@ -8,7 +8,7 @@ if (!$data->rm_public->is_authorized() && !is_user_logged_in())
 {
     if (!empty($data->instance['title']))
     {
-        echo wp_kses_post($data->args['before_title']) . apply_filters('widget_title', $data->instance['title']) . wp_kses_post($data->args['after_title']);
+        echo wp_kses_post((string)$data->args['before_title']) . apply_filters('widget_title', $data->instance['title']) . wp_kses_post((string)$data->args['after_title']);
     }
     $login_service= new RM_Login_Service;
     $recovery_options= $login_service->get_recovery_options();
@@ -89,7 +89,7 @@ if (!$data->rm_public->is_authorized() && !is_user_logged_in())
 
     if (!empty($data->instance['title']))
     {
-        echo wp_kses_post($data->args['before_title']) . apply_filters('widget_title', $data->instance['title']) . wp_kses_post($data->args['after_title']);
+        echo wp_kses_post((string)$data->args['before_title']) . apply_filters('widget_title', $data->instance['title']) . wp_kses_post((string)$data->args['after_title']);
     }
     ?>
     <div id="rm_f_sub_page">

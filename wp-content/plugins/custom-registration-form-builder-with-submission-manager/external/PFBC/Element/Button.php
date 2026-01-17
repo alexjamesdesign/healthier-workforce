@@ -6,7 +6,7 @@ class Element_Button extends Element
     public $_attributes = array("type" => "submit", "value" => "Submit");
     public $icon;
 
-    public function __construct($label = "Submit", $type = "", array $properties = null)
+    public function __construct($label = "Submit", $type = "", $properties = null)
     {
         if (!is_array($properties))
             $properties = array();
@@ -16,7 +16,7 @@ class Element_Button extends Element
 
         $class = "rm-btn";
         if (empty($type) || $type == "submit")
-            $class .= " rm-btn-primary";
+            $class .= " rm-btn-primary button button-primary";
 
         if (!empty($properties["class"]))
             $properties["class"] .= " " . $class;
@@ -38,7 +38,7 @@ class Element_Button extends Element
             {
                 unset($this->_attributes['fgcolor']);
                 unset($this->_attributes['bgcolor']);                
-                echo '<input ', wp_kses_post($this->getAttributes()), '/>';
+                echo '<input ', wp_kses_post((string)$this->getAttributes()), '/>';
                 return;
             }
         }
@@ -63,7 +63,7 @@ class Element_Button extends Element
         else
             $inline_style = "style = '$color_s;$bgcolor_s'";
 
-        echo '<input ', wp_kses_post($inline_style), ' ', wp_kses_post($this->getAttributes()), '/>';
+        echo '<input ', wp_kses_post((string)$inline_style), ' ', wp_kses_post((string)$this->getAttributes()), '/>';
 
         $this->_attributes = $_att_bak;
     }

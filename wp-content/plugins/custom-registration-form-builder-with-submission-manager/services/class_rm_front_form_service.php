@@ -24,16 +24,23 @@ class RM_Front_Form_Service extends RM_Services {
     }
 
     public function get_user_ip() {
+        if(isset($_SERVER['REMOTE_ADDR']) && !empty($_SERVER['REMOTE_ADDR'])) {
+            return $_SERVER['REMOTE_ADDR'];
+        } else {
+            return null;
+        }
+        /*
         switch (true) {
             case (!empty($_SERVER['HTTP_X_REAL_IP'])) : return $_SERVER['HTTP_X_REAL_IP'];
             case (!empty($_SERVER['HTTP_CLIENT_IP'])) : return $_SERVER['HTTP_CLIENT_IP'];
             case (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) :
                 //This might include multiple IPs separated with comma, pick last IP in that case.
-                $ips = explode(',',$_SERVER['HTTP_X_FORWARDED_FOR']);
-                return trim(end($ips));
+                $ips = explode(',',(string)$_SERVER['HTTP_X_FORWARDED_FOR']);
+                return trim((string)end($ips));
             case (!empty($_SERVER['REMOTE_ADDR'])) : return $_SERVER['REMOTE_ADDR'];
             default : return null;
         }
+        */
     }
 
     public function is_ip_banned($user_ip=null) {
@@ -180,9 +187,9 @@ class RM_Front_Form_Service extends RM_Services {
         if (isset($details['merge_fields'])) {
 
             foreach ($details['merge_fields'] as $det) {
-                $mc_tag = trim($det['tag']);
+                $mc_tag = trim((string)$det['tag']);
                 $mc_list_id_tag = $list_id . '_' . $mc_tag;
-                $mc_list_id_tag = trim($mc_list_id_tag);
+                $mc_list_id_tag = trim((string)$mc_list_id_tag);
                 $field_value = null;
                 if (isset($form_options_mc->mailchimp_relations->$mc_list_id_tag)) {
 
@@ -204,7 +211,7 @@ class RM_Front_Form_Service extends RM_Services {
                             $field_value = $request[$field_tag_id];
                     }
 
-                    $field_value = trim($field_value);
+                    $field_value = trim((string)$field_value);
                 } else
                     $field_value = '';
                 if ($field_value != null)
@@ -261,7 +268,8 @@ class RM_Front_Form_Service extends RM_Services {
             $required_params->username = $username;
             $required_params->password = $password;
             $required_params->form_id= $form_id;
-            if ($this->get_setting('send_password') === 'yes' || empty($password_field)) {
+            //if ($this->get_setting('send_password') === 'yes' || empty($password_field)) {
+            if ($this->get_setting('send_password') === 'yes') {
                 RM_Email_Service::notify_new_user($required_params,$user_id);
             }
 
@@ -570,13 +578,13 @@ class RM_Front_Form_Service extends RM_Services {
                     $redir_str .= $url;
                     RM_Utilities::redirect($url, false, 0, true);
                 }
-                return $msg_str . '<br><br>' . $redir_str;
+                return '<div class="rm_form_submit_msg">' . $msg_str . '</div><br><br>' . $redir_str;
             }
         }
         
         if($form_options->auto_login && !is_user_logged_in()) {
             if(isset($_REQUEST['rm_pproc']) && $_REQUEST['rm_pproc']!="success") {
-                return $msg_str."</div>";
+                return '<div class="rm_form_submit_msg">' . $msg_str . "</div></div>";
             }
             $msg_str .= '<div id="rm_ajax_login">'.RM_UI_Strings::get("MSG_ASYNC_LOGIN").'</div><br><br>';
             if(isset($params->form_id)){
@@ -585,7 +593,7 @@ class RM_Front_Form_Service extends RM_Services {
                 RM_Utilities::redirect($current_url, false, 0, true); 
             }
         }
-        return $msg_str;
+        return '<div class="rm_form_submit_msg rm-form-submit-wrap"> <div class="rm-form-submit-message-icon"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill="#000000"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>' . $msg_str . '</div>';
     }
 
     public function send_user($email, $username, $password, $content) {
@@ -628,7 +636,7 @@ class RM_Front_Form_Service extends RM_Services {
         if (is_wp_error($user_id)) {
             foreach ($user_id as $err) {
                 foreach ($err as $error) {
-                    echo wp_kses_post($error[0]);
+                    echo wp_kses_post((string)$error[0]);
                     die;
                 }
             }
@@ -788,7 +796,7 @@ class RM_Front_Form_Service extends RM_Services {
                 return false;
         }
 
-        if(user_can($user_id, 'manage_options')) {
+        if(user_can($user_id, 'manage_options') && get_current_user_id() != $user_id) {
             return false;
         }
 

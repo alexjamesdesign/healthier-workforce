@@ -84,15 +84,17 @@ class Registration_Magic
         $this->loader = new RM_Loader();
         $this->set_locale();
         add_action( 'init', array($this,'set_toolbar') );
+        add_action( 'init', 'registration_magic_include_external_libs' );
+        add_action( 'init', 'RM_Extender::init' );
+        require_once RM_BASE_DIR."plus/chronos/chronos.php";
         $this->define_global_hooks();
-            
         $this->xml_loader = registration_magic_is_addon_enabled() ? RM_XML_Loader::getInstance(plugin_dir_path(__FILE__) . 'rm_config_addon.xml') : RM_XML_Loader::getInstance(plugin_dir_path(__FILE__) . 'rm_config.xml');
-        
         $request = new RM_Request($this->xml_loader);
         $params = array('request' => $request, 'xml_loader' => $this->xml_loader);
         $this->controller = new RM_Main_Controller($params);
         $this->define_public_hooks();
         $this->define_admin_hooks();
+        $this->define_gutenberg_hooks();
         $this->add_ob_start($request->req['rm_slug']);
     }
     
@@ -100,19 +102,20 @@ class Registration_Magic
     {
         if(!is_user_logged_in())
             return;
-        
+
         $val = get_option('rm_option_hide_toolbar', $default = 'no');
         $admin_val = get_option('rm_option_enable_toolbar_for_admin', $default = 'no');
+        $roles = wp_get_current_user()->roles;
 
         if($val == 'yes') {
             if($admin_val == 'yes') {
-                $roles = wp_get_current_user()->roles;
                 if(in_array('administrator',$roles)){
-                    //add_filter('show_admin_bar','__return_true',100); 
+                    add_filter('show_admin_bar','__return_true',100); 
                     return;
                 }
             }
             add_filter('show_admin_bar','__return_false',100);
+            return;
         }
         
         //add_filter('show_admin_bar',$val==='yes' ? '__return_false' : '__return_true',100);
@@ -131,7 +134,8 @@ class Registration_Magic
 
         $rm_i18n = new RM_i18n();
 
-        $this->loader->add_action('plugins_loaded', $rm_i18n, 'load_plugin_textdomain');
+        //$this->loader->add_action('plugins_loaded', $rm_i18n, 'load_plugin_textdomain');
+        $this->loader->add_action('init', $rm_i18n, 'load_plugin_textdomain');
     }
 
     /**
@@ -143,9 +147,12 @@ class Registration_Magic
     public function define_admin_hooks()
     {
         $rm_admin = new RM_Admin($this->get_plugin_name(), $this->get_version(), $this->get_controller());
-        
-        $this->loader->add_action('admin_enqueue_scripts', $rm_admin, 'enqueue_styles');
-        $this->loader->add_action('admin_enqueue_scripts', $rm_admin, 'enqueue_scripts');
+        $rm_utilities = new RM_Utilities();
+        $this->loader->add_action('admin_init', $this, 'create_posts_pages');
+        $this->loader->add_action('admin_enqueue_scripts', $rm_admin, 'enqueue_styles_global');
+        //$this->loader->add_action('admin_enqueue_scripts', $rm_admin, 'enqueue_scripts');
+        $this->loader->add_action('rm_pre_admin_template_render', $rm_admin, 'enqueue_styles');
+        $this->loader->add_action('rm_pre_admin_template_render', $rm_admin, 'enqueue_scripts');
         $this->loader->add_action('admin_menu', $rm_admin, 'add_menu');
         $this->loader->add_action('wp_ajax_rm_sort_form_fields', $this->controller, 'run');
         $this->loader->add_action('wp_ajax_rm_sort_form_rows', $this->controller, 'run');
@@ -169,7 +176,8 @@ class Registration_Magic
         $this->loader->add_filter('plugin_action_links', $this, 'add_plugin_link', 10, 5);
         $this->loader->add_action('media_buttons', $rm_admin, 'add_new_form_editor_button');
         $this->loader->add_action('media_buttons', $rm_admin, 'add_field_autoresponder');
-        $this->loader->add_action('plugins_loaded', 'RM_Utilities', 'safe_login', 10);
+        //$this->loader->add_action('plugins_loaded', 'RM_Utilities', 'safe_login', 10);
+        $this->loader->add_action('init', 'RM_Utilities', 'safe_login', 10);
         $this->loader->add_action('wp_ajax_rm_save_fab_settings', $this->controller, 'run');
         //$this->loader->add_action('wp_ajax_import_data', 'RM_Services', 'import_form');
         $this->loader->add_action('wp_ajax_rm_admin_js_data', 'RM_Utilities', 'load_admin_js_data');
@@ -181,15 +189,14 @@ class Registration_Magic
         //$this->loader->add_action('wp_ajax_form_preview', $rm_admin, 'form_preview');
         $this->loader->add_action('rm_pre_admin_template_render', $rm_admin, 'add_version_header');
         $this->loader->add_action('wp_ajax_rm_one_time_action_update', 'RM_Utilities', 'update_action_state_ajax');
-        //$this->loader->add_action('wp_ajax_rm_post_feedback', $rm_admin, 'post_feedback');
-        //$this->loader->add_action('admin_footer', $rm_admin, 'feedback_dialog');
-        $this->loader->add_action('admin_footer', $rm_admin, 'deactivate_message');
         $this->loader->add_action('wp_ajax_rm_admin_upload_template', $rm_admin, 'upload_template');
         $this->loader->add_action('wp_ajax_rm_update_submit_field', $rm_admin, 'update_submit_field_config');
         $this->loader->add_action('wp_ajax_rm_update_welcome_modal_option', $rm_admin, 'update_welcome_modal_option');
         $this->loader->add_action('wp_ajax_rm_fcm_update_form', $rm_admin, 'fcm_update_form');
         $this->loader->add_action('rm_form_saved', $this, 'form_saved');
         $this->loader->add_action('admin_notices', $rm_admin, 'admin_notices');
+        $this->loader->add_action('admin_notices', $rm_admin, 'admin_premium_sell_and_license_notices');
+        //$this->loader->add_action('all_admin_notices', $rm_admin, 'admin_upsell_notices');
         $this->loader->add_action('wp_ajax_rm_sort_login_fields', $this->controller, 'run');
         $this->loader->add_action('wp_ajax_rm_mark_submission_unread', new RM_Submission_Service(), 'update_unread_status');
         $this->loader->add_action('wp_ajax_rm_update_login_button', $rm_admin, 'update_login_button_config');
@@ -201,13 +208,16 @@ class Registration_Magic
         $this->loader->add_action('wp_ajax_rm_send_email', 'RM_Utilities', 'send_email_to_user');
         $this->loader->add_action('wp_ajax_rm_login_field_view_sett', new RM_Login_Manage_Controller(), 'view_sett');
         $this->loader->add_action('wp_ajax_rm_login_form_view_sett', new RM_Login_Manage_Controller(), 'view_sett');
-        $this->loader->add_action('wp_ajax_rm_delete_data', 'RM_Utilities', 'rm_delete_data');
+        $this->loader->add_action('wp_ajax_rm_delete_data', $rm_utilities, 'rm_delete_data');
         $this->loader->add_filter('wp_privacy_personal_data_exporters', $this, 'register_rm_plugin_exporter', 10, 5);
         $this->loader->add_filter('wp_privacy_personal_data_erasers', $this, 'register_rm_plugin_eraser', 10, 5);
         $this->loader->add_action('admin_init', $this, 'user_online_status');
         $this->loader->add_action('admin_init', $this, 'redirect_after_activation');
         $this->loader->add_action('admin_init', $rm_admin, 'rm_editor_style');
         $this->loader->add_action('wp_ajax_rm_dismiss_upgrade_notice', $this, 'dismiss_upgrade_notice');
+        $this->loader->add_action('wp_ajax_rm_dismiss_sale_banner', $this, 'dismiss_sale_banner');
+        $this->loader->add_action('wp_ajax_rm_dismiss_customize_banner', $this, 'dismiss_customize_banner');
+        $this->loader->add_action('wp_ajax_rm_dismiss_floating_banner', $this, 'dismiss_floating_banner');
         $this->loader->add_action('wp_ajax_rm_load_payment_status_admin_js_data', 'RM_Utilities', 'load_payment_status_admin_js_data');
         $this->loader->add_action('wp_ajax_rm_download_invoice_pdf', $this,'check_for_invoice_print');
         $this->loader->add_action('wp_ajax_rm_send_payment_confirmation', $this,'rm_send_payment_confirmation');
@@ -215,6 +225,7 @@ class Registration_Magic
         add_action('rm_profile_tabs_content', array($rm_admin, 'rm_profile_tabs_content_add'),10,2);
         add_filter('rm_profile_tabs', array($rm_admin,'rm_profile_tabs_add'),15,1);
         $this->loader->add_action('init', $rm_admin, 'rm_reports_email_setup',10,1);
+        //$this->loader->add_action('rm_reports_dashboard_load', $rm_admin, 'rm_reports_email_setup',10,1);
         add_filter('cron_schedules' ,array(new RM_Reports_Service(),'add_cron_interval'));
         $this->loader->add_action('wp_ajax_rm_update_reports_enable_disable', $this, 'rm_update_reports_enable_disable');
         $this->loader->add_action('wp_ajax_rm_fields_conditions_check', $this->controller, 'run');
@@ -222,9 +233,17 @@ class Registration_Magic
         $this->loader->add_action('wp_ajax_nopriv_rm_process_paypal_sdk_payment', new RM_Paypal_Service(),'process_paypal_sdk_payment');
         $this->loader->add_action('wp_ajax_rm_process_paypal_sdk_payment', new RM_Paypal_Service(),'process_paypal_sdk_payment');
         $this->loader->add_action('wp_ajax_rm_set_inbox_entry_depth', $this, 'set_inbox_entry_depth');
+        $this->loader->add_action('wp_ajax_rm_set_forms_entry_depth', $this, 'set_forms_entry_depth');
+        $this->loader->add_action('wp_ajax_rm_forms_view_roll_back', $this, 'rm_forms_view_roll_back');
+        $this->loader->add_action('wp_ajax_rm_save_default_inbox_form', $this, 'set_inbox_default_form');
         $this->loader->add_action('wp_ajax_rm_admin_custom_status_update', $rm_admin, 'custom_status_update');
         $this->loader->add_action('wp_ajax_rm_delete_submissions', new RM_Submissions(), 'delete_submissions');
+        $this->loader->add_action('wp_ajax_rm_update_users_role', new RM_User_Services(),'update_users_role');
+        $this->loader->add_action('wp_ajax_rm_set_user_entry_depth', $this, 'set_user_entry_depth');
+        $this->loader->add_action('wp_ajax_rm_user_additional_details', $this->controller, 'run');
+        $this->loader->add_action('admin_footer', $this, 'design_premium_menu_link');
         if(registration_magic_is_addon_enabled()) {
+            $this->loader->add_action('admin_footer', $rm_admin, 'deactivate_message');
             $this->loader->add_action('wp_ajax_rm_sort_form_pages', $this->controller, 'run');
             $this->loader->add_action('wp_ajax_rm_block_ip', 'RM_Utilities', 'block_ip');
             $this->loader->add_action('wp_ajax_rm_unblock_ip', 'RM_Utilities', 'unblock_ip');
@@ -248,9 +267,24 @@ class Registration_Magic
             $this->loader->add_action('wp_ajax_nopriv_rm_charge_amount_from_stripe', RM_Stripe_Service::get_instance(),'charge');
             $this->loader->add_action('wp_ajax_nopriv_rm_stripe_localize_data', RM_Stripe_Service::get_instance(),'localize_data_json');
             $this->loader->add_filter('wp_ajax_rm_stripe_localize_data',RM_Stripe_Service::get_instance(),'localize_data_json');
+        } else {
+            $this->loader->add_action('admin_footer', $rm_admin, 'feedback_dialog');
+            $this->loader->add_action('wp_ajax_rm_post_feedback', $rm_admin, 'post_feedback');
         }
+        $this->loader->add_action( 'wp_ajax_rm_activate_license', $rm_admin, 'activate_license' );
+        $this->loader->add_action( 'wp_ajax_rm_deactivate_license', $rm_admin, 'deactivate_license' );
+        $this->loader->add_action( 'admin_init', $rm_admin, 'rm_check_licenses');
+                            
    }
    
+    public function define_gutenberg_hooks() {
+        require_once RM_BLOCKS_DIR . 'class-reg-magic-block.php';
+        $plugin_block = new Reg_Magic_Block($this->get_plugin_name(), $this->get_version());
+        $this->loader->add_action( 'init', $plugin_block, 'reg_magic_block_register' );
+        $this->loader->add_action( 'rest_api_init', $plugin_block, 'reg_magic_register_rest_route' );
+        $this->loader->add_action( 'block_categories_all', $plugin_block, 'reg_magic_block_categories_all' );
+        $this->loader->add_action( 'enqueue_block_editor_assets', $plugin_block, 'enqueue_block_editor_assets', 50 );
+    }
    
    function register_rm_plugin_exporter( $exporters ) {//echo 'yyyy'.plugin_basename( __FILE__ );die;
         $exporters[] = array(
@@ -624,10 +658,11 @@ class Registration_Magic
         
         $this->loader->add_action('init', $rm_public, 'cron');
         $this->loader->add_action('init', $rm_public, 'logs_retention');
-        $this->loader->add_action('wp_enqueue_scripts', $rm_public, 'enqueue_styles');
-        $this->loader->add_action('wp_enqueue_scripts', $rm_public, 'enqueue_scripts');
+        //$this->loader->add_action('wp_enqueue_scripts', $rm_public, 'enqueue_styles');
+        //$this->loader->add_action('wp_enqueue_scripts', $rm_public, 'enqueue_scripts');
         $this->loader->add_shortcode('RM_Login', $rm_public, 'rm_login');
         $this->loader->add_shortcode('RM_Form', $rm_public, 'rm_user_form_render');
+        $this->loader->add_shortcode('RM_Forms', $rm_public, 'rm_new_form_render');
         $this->loader->add_shortcode('RM_password_recovery', $rm_public, 'password_recovery');
         $this->loader->add_shortcode('RM_Front_Submissions', $rm_public, 'rm_front_submissions');
         $this->loader->add_action('widgets_init', $rm_public, 'register_otp_widget');
@@ -644,6 +679,9 @@ class Registration_Magic
         $this->loader->add_action('wp_ajax_rm_toggle_form_option', $this->controller, 'run');
         //Ajax calls for Username checking
         $this->loader->add_action('wp_ajax_nopriv_rm_user_exists', $this->controller, 'run');
+        $this->loader->add_action('wp_ajax_nopriv_check_user_exists', $this, 'check_user_exists');
+        $this->loader->add_action('wp_ajax_nopriv_check_username_validity', $this, 'check_username_validity');
+        $this->loader->add_action('wp_ajax_nopriv_check_email_exists', $this, 'check_email_exists');
         //Ajax call to get the state field
         $this->loader->add_action('wp_ajax_rm_get_state', 'RM_Utilities', 'get_state');
         $this->loader->add_action('wp_ajax_nopriv_rm_get_state', 'RM_Utilities', 'get_state');
@@ -701,15 +739,17 @@ class Registration_Magic
         //$this->loader->add_action('wp_initialize_site', 'RM_Table_Tech', 'on_create_blog',10,6);
         $this->loader->add_filter('wpmu_drop_tables', 'RM_Table_Tech', 'on_delete_blog');
         $this->loader->add_filter('init', $this, 'run_onload_tasks');
+        $this->loader->add_filter('init', $this, 'include_jquery_exp');
         // using clear_auth_cookie instead of wp_logout as wp_logout do not retain user after wordpress version 5.2
         //$this->loader->add_filter('clear_auth_cookie', $this, 'after_logout_redirect',5);
         $this->loader->add_filter('wp_logout', $this, 'after_logout_redirect',5);
         $this->loader->add_filter('wp_authenticate_user', $this, 'authenticate',10,2);
         $this->loader->add_action('rm_ip_unblocked',new RM_Login_Service(),'unblock_ip_from_log');
         $this->loader->add_filter('lostpassword_url',$this, 'lost_password_page',10,2);
-        $this->loader->add_filter('wp_mail_content_type',$this, 'set_html_mail_content_type');
+        //$this->loader->add_filter('wp_mail_content_type',$this, 'set_html_mail_content_type');
         //$this->loader->add_action('wp_mail_failed', $this, 'display_email_error', 10, 1);
         $this->loader->add_action('rm_payment_completed', 'RM_Email_Service', 'notify_payment_invoice_to_user', 10, 3);
+        $this->loader->add_action('user_register', $this, 'verify_user', 10, 2);
     }
 
     /**
@@ -925,14 +965,19 @@ class Registration_Magic
             'rm_submission_export',
             'rm_front_log_off',
             'rm_form_export',
-            'rm_login_sett_manage'
+            'rm_login_sett_manage',
+            'rm_reports_login_download',
+            'rm_reports_submission_export',
+            'rm_reports_attachments_download_all',
+            'rm_reports_payments_download'
         );
 
-        if (in_array($slug, $pass))
+        if (in_array($slug, $pass)) {
             if(defined('REGMAGIC_ADDON')) {
                 define('RM_BUFFER_STARTED',true);
             }
             ob_start();
+        }
 
         // Incase facebook
         if (isset($_REQUEST['rm_target']) && $_REQUEST['rm_target'] == 'fbcb')
@@ -1174,12 +1219,13 @@ class Registration_Magic
         }
     }
     public function rm_options_default_payment_method(){
-        if(!empty($_REQUEST['payment_method'])) {
-            update_option('rm_option_default_payment_method',$_REQUEST['payment_method']);
-            
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            if(!empty($_REQUEST['payment_method'])) {
+                update_option('rm_option_default_payment_method',sanitize_text_field($_REQUEST['payment_method']));
+            }
+            echo 'success';
+            die;
         }
-        echo 'success';
-        die;
     }
     public function redirect_after_activation() {
     	if (get_option('rm_redirect_after_activation', false)) {
@@ -1195,6 +1241,27 @@ class Registration_Magic
         }
 	}
 
+    public function dismiss_sale_banner() {
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            if (isset($_SESSION['rm_dismiss_sale_banner']) && $_SESSION['rm_dismiss_sale_banner'] == 1) {
+                return;
+            }
+            $_SESSION['rm_dismiss_sale_banner'] = 1;
+        }
+	}
+
+    public function dismiss_customize_banner() {
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            update_option('rm_dismiss_customize_banner', 1);
+        }
+	}
+
+    public function dismiss_floating_banner() {
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            update_option('rm_dismiss_floating_banner', 1);
+        }
+	}
+
     public function set_inbox_entry_depth() {
         if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
             $value = absint(sanitize_text_field($_POST['value']));
@@ -1202,7 +1269,143 @@ class Registration_Magic
             echo wp_send_json_success($result);
             die;
         }
+    }
+
+    public function set_forms_entry_depth() {
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            $value = absint(sanitize_text_field($_POST['value']));
+            $result['return'] = update_option('rm_forms_entry_depth', $value);
+            echo wp_send_json_success($result);
+            die;
+        }
+    }
+
+    public function rm_forms_view_roll_back() {
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            $value = absint(sanitize_text_field($_POST['value']));
+            if($value == 0) {
+                $result['return'] = update_option('rm_forms_view_roll_back', 1);
+            } else {
+                $result['return'] = update_option('rm_forms_view_roll_back', 0);
+            }
+            echo wp_send_json_success($result);
+            die;
+        }
+    }
+    
+    public function set_user_entry_depth() {
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            $value = absint(sanitize_text_field($_POST['value']));
+            $result['return'] = update_option('rm_user_entry_depth', $value);
+            echo wp_send_json_success($result);
+            die;
+        }
+    }
+
+    public function set_inbox_default_form() {
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            $form = sanitize_text_field($_POST['form']);
+            if($form == 'all')
+                $result = update_option('rm_inbox_default_form', 0);
+            else
+                $result = update_option('rm_inbox_default_form', absint($form));
+            echo wp_send_json_success();
+            die;
+        }
 	}
+
+    public function check_user_exists() {
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            $username = sanitize_user($_POST['username']);
+            if(username_exists($username)) {
+                echo wp_send_json_error();
+                die;
+            } else {
+                echo wp_send_json_success();
+                die;
+            }
+        } else {
+            echo wp_send_json_error();
+            die;
+        }
+	}
+
+    public function check_username_validity() {
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            $username = sanitize_text_field($_POST['username']);
+            $form_id = absint($_POST['form_id']);
+            if(username_exists($username)) {
+                echo wp_send_json_error(array(
+                    'msg' => esc_html__("This username is already taken", 'custom-registration-form-builder-with-submission-manager'),
+                ));
+                die;
+            } else {
+                $username_character_error = RM_Utilities::validate_username_characters($username, $form_id);
+                if(!empty($username_character_error)) {
+                    echo wp_send_json_error(array(
+                        'msg' => $username_character_error,
+                    ));
+                    die;
+                } else {
+                    echo wp_send_json_success();
+                    die;
+                }
+            }
+        } else {
+            echo wp_send_json_error(
+                array(
+                    'msg' => esc_html__('Security check failed', 'custom-registration-form-builder-with-submission-manager'),
+                )
+            );
+            die;
+        }
+	}
+
+    public function check_email_exists() {
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce')) {
+            $email = sanitize_email($_POST['email']);
+            if(email_exists($email)) {
+                echo wp_send_json_error();
+                die;
+            } else {
+                echo wp_send_json_success();
+                die;
+            }
+        } else {
+            echo wp_send_json_error();
+            die;
+        }
+	}
+
+    public function verify_user($user_id, $user_data) {
+        $user_approval = get_option('rm_option_user_auto_approval', false);
+        if ($user_approval === 'verify' && defined('REGMAGIC_ADDON')) {
+            update_user_meta($user_id, 'rm_user_status', 1);
+            do_action('rm_user_deactivated', $user_id);
+
+            RM_Email_Service::send_activation_link($user_id);
+            return;
+        }
+    }
+
+    public function create_posts_pages() {
+        if(get_option('rm_create_posts_pages', false)) {
+            delete_option('rm_create_posts_pages');
+            RM_Activator::setup_submission_page();
+            RM_Activator::setup_recovery_page();
+            RM_Activator::setup_login_page();
+        }
+    }
+
+    public function design_premium_menu_link() {
+        echo '<script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery("div.rm-premium-link").parents("li").addClass("rm-premium-link-li");
+            jQuery("div.rm-premium-link").parents("a").prop("href","admin.php?page=rm_support_premium_page");
+           
+        });
+        </script>';
+    }
     
     public function set_html_mail_content_type() {
     	return 'text/html';
@@ -1213,5 +1416,9 @@ class Registration_Magic
         print_r($wp_error);
         echo "</pre>";
 	}
+
+    public function include_jquery_exp() {
+        wp_enqueue_script('jquery');
+    }
 
 }

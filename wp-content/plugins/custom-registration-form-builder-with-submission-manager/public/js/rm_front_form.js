@@ -44,12 +44,14 @@ function rmFontColor(rmColor) {
             return;
         }
         var rmRgb = rmColor.substr(3);
+        //console.log(rmRgb);
         rmRgb = rmRgb.split(',');
         rmRgb[0] = parseFloat((rmRgb[0].substr(1)) / 255);
         rmRgb[1] = parseFloat(rmRgb[1] / 255);
         rmRgb[2] = parseFloat((rmRgb[2].substring(0, rmRgb[2].length-1)) / 255);
         rmRgb.sort(function(a, b){return a-b});
         rmLum = Math.ceil(((rmRgb[2] + rmRgb[1]) * 100) / 2);
+        //console.log(rmLum);
         if (rmLum > 80) {jQuery(".rmnote").css("color", "black");}
 }
 
@@ -97,7 +99,6 @@ function initialize_validation_strings(){
 }
 
 function rm_init_total_pricing() {
-    
     var ele_rm_forms = jQuery("form[name='rm_form']");
     if(ele_rm_forms.length > 0) {
         ele_rm_forms.each(function(i) {
@@ -150,6 +151,9 @@ function rm_calc_total_pricing(form_id){
         var tot_price = 0;
         price_elems.each(function(i){
            var el = jQuery(this);
+           if(el.attr('disabled') == 'disabled') {
+            return;
+           }
            var qty = 1;
            if(el.prop("tagName") == "INPUT") {
                 var el_type = el.attr('type');
@@ -274,9 +278,9 @@ function rm_calc_total_pricing(form_id){
             tot_price_ele.html(price_formatting.loc_total_text.replace("%s",f_tot_price));
             if(rm_ajax.tax_enabled == 'yes' && tot_price > 0) {
                 if(price_formatting.pos == 'after') {
-                    tot_price_ele.append('<span class="rm-total-price-taxt-info">(Included '+tax_value.toFixed(2)+price_formatting.symbol+' Tax)</span>');
+                    tot_price_ele.append('<span class="rm-total-price-taxt-info">(Included '+tax_value.toFixed(2)+price_formatting.symbol+' '+rm_ajax.tax_rename+')</span>');
                 } else {
-                    tot_price_ele.append('<span class="rm-total-price-taxt-info">(Included '+price_formatting.symbol+tax_value.toFixed(2)+' Tax)</span>');
+                    tot_price_ele.append('<span class="rm-total-price-taxt-info">(Included '+price_formatting.symbol+tax_value.toFixed(2)+' '+rm_ajax.tax_rename+')</span>');
                 }
             }
         }
@@ -514,7 +518,7 @@ jQuery(document).ready(function(){
 //PassWord field Show Hide
 
 if(jQuery('[name="pwd"]').length > 0) {
-    jQuery('[name="pwd"]').closest('div').addClass('rm-password-toggle-wrap');
+    jQuery('[name="pwd"]').closest('div').addClass('rm-password-toggle-wrap').parent().addClass('rm-password-field-col');;
     jQuery(".rm-password-toggle-wrap").prepend('<span class="rm-togglePassword"></span>');
 
     const togglePassword = document.querySelector(".rm-togglePassword");

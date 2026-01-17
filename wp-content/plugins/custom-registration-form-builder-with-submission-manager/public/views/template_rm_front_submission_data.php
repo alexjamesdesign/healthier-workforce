@@ -124,6 +124,17 @@ if ($data->form_is_unique_token) {
             <div class="rm-submission-label"><?php echo RM_UI_Strings::get('LABEL_ENTRY_TYPE'); ?></div>
             <div class="rm-submission-value"><?php echo esc_html($data->form_type); ?></div>
         </div>
+        
+        <?php if(defined('RM_SAVE_SUBMISSION_BASENAME')) { ?>
+        <div class="rm-submission-field-row">
+            <div class="rm-submission-label"><?php esc_html_e('Submission Status','custom-registration-form-builder-with-submission-manager'); ?></div>
+            <?php if(isset($data->submission->is_pending) && $data->submission->is_pending == 1) { ?>
+            <div class="rm-submission-value"><span class="rm-submission-status rm-submission-pending"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PENDING')); ?></span></div>
+            <?php } else { ?>
+            <div class="rm-submission-value"><span class="rm-submission-status rm-submission-approved"><?php esc_html_e('Completed','custom-registration-form-builder-with-submission-manager'); ?></span></div>
+            <?php } ?>
+        </div>
+        <?php } ?>
 <?php
 if ($data->form_type_status == "1" && !empty($data->user)) {
     $user_roles_dd = RM_Utilities::user_role_dropdown();
@@ -171,10 +182,10 @@ if ($data->form_type_status == "1" && !empty($data->user)) {
         if (is_array($sub_data)) {
 
             $i = 0;
-
-            //If submitted data is a file.
-
-            if (isset($sub_data['rm_field_type']) && $sub_data['rm_field_type'] == 'File') {
+            $additional_fields = apply_filters('rm_additional_fields', array());
+            if(in_array($sub->type, $additional_fields)){
+                echo wp_kses_post(do_action('rm_additional_fields_data',$sub->type, $sub_data));
+            }elseif (isset($sub_data['rm_field_type']) && $sub_data['rm_field_type'] == 'File') {
                 unset($sub_data['rm_field_type']);
 
                 foreach ($sub_data as $sub) {
@@ -200,29 +211,44 @@ if ($data->form_type_status == "1" && !empty($data->user)) {
                                     $sub .= '<b>'.__('Zip Code','custom-registration-form-builder-with-submission-manager').'</b> : ' . $sub_data['zip'] . '<br/>';
                                     $sub .= '<b>'.__('Country','custom-registration-form-builder-with-submission-manager').'</b> : ' . $sub_data['country'];
                                 }
-                                echo wp_kses_post($sub);
+                                echo wp_kses_post((string)$sub);
                             }  elseif ($sub->type == 'Time') {
-                                //echo wp_kses_post($sub_data['time']) . ", Timezone: " . wp_kses_post($sub_data['timezone']);
+                                //echo wp_kses_post((string)$sub_data['time']) . ", Timezone: " . wp_kses_post((string)$sub_data['timezone']);
                                 echo esc_html(date('h:i a', strtotime($sub_data['time'])));
                             }  elseif ($sub->type == 'Checkbox') {   
                                 echo implode(', ',RM_Utilities::get_lable_for_option($field_id, $sub_data));
+                            } elseif ($sub->type == 'URL') {
+                                $url = esc_url($sub_data['url']);
+                                echo wp_kses_post("<a href='$url'>$url</a>");
                             } else {
                                 $sub = implode(', ', $sub_data);
-                                echo wp_kses_post($sub);
+                                echo wp_kses_post((string)$sub);
                             }
                         } else {
                             $additional_fields = apply_filters('rm_additional_fields', array());
                             if(in_array($sub->type, $additional_fields)){
-                                echo do_action('rm_additional_fields_data',$sub->type, $sub_data);
+                                echo wp_kses_post(do_action('rm_additional_fields_data',$sub->type, $sub_data));
                             }
                             elseif ($sub->type == 'Rating') {
                                 if(defined('REGMAGIC_ADDON'))
                                     echo RM_Utilities::enqueue_external_scripts('script_rm_rating', RM_ADDON_BASE_URL . 'public/js/rating3/jquery.rateit.js');
-                                echo '<div class="rateit" id="rateit5" data-rateit-min="0" data-rateit-max="5" data-rateit-value="' . wp_kses_post($sub_data) . '" data-rateit-ispreset="true" data-rateit-readonly="true"></div>';
+                                echo '<div class="rateit" id="rateit5" data-rateit-min="0" data-rateit-max="5" data-rateit-value="' . wp_kses_post((string)$sub_data) . '" data-rateit-ispreset="true" data-rateit-readonly="true"></div>';
                             } elseif ($sub->type == 'Radio' || $sub->type == 'Select') {   
                                 echo RM_Utilities::get_lable_for_option($field_id, $sub_data);                                
+                            } elseif($sub->type == 'DigitalSign'){
+                                if(!empty($sub_data)){
+                                    $sign_url  = RM_BASE_URL . 'plus/signature/signature-access.php?file='.$sub_data;
+                                                
+                                    ?>
+                                    <div class="rm-submission-attachment">
+                                        <img src="<?php echo esc_url($sign_url);?>" style="max-width:100px;">
+                                        <div class="rm-submission-attachment-field"><a href="<?php echo esc_url($sign_url); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
+                                    </div>
+
+                                                <?php
+                                            }
                             } else {
-                                echo wp_kses_post($sub_data);
+                                echo wp_kses_post((string)$sub_data);
                             }
                         }
                         ?>
@@ -306,7 +332,7 @@ if ($data->notes && (is_object($data->notes) || is_array($data->notes))) {
     foreach ($data->notes as $note) {
         ?>
             <div class="rm-submission-note" style="border-left: 4px solid #<?php echo esc_attr(maybe_unserialize($note->note_options)->bg_color); ?>">
-                <div class="rm-submission-note-text"><?php echo esc_html($note->notes); ?></div>
+                <div class="rm-submission-note-text"><?php echo wp_kses_post($note->notes); ?></div>
                 <div class="rm-submission-note-attribute">
 
             <?php

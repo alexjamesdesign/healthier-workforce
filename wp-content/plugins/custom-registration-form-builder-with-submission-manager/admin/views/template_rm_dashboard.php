@@ -3,10 +3,11 @@ if (!defined('WPINC')) {
     die('Closed');
 }
 
+ wp_enqueue_style('style_rm_dashboard', RM_BASE_URL . 'admin/css/style_rm_dashboard.css');
 
 wp_enqueue_script('chart_js');
-
 //wp_enqueue_style('style_rm_dashboard');
+$last_form_id = 0;
 
 if(defined('REGMAGIC_ADDON') && class_exists('RM_Dashboard_Widget_Service_Addon') ) {include_once(RM_ADDON_ADMIN_DIR . 'views/template_rm_dashboard.php'); } else {
 $premium_class = 'rm-locked-section';
@@ -17,26 +18,30 @@ $premium_class = 'rm-locked-section';
 </div>
 
 
-<div class="rm-dashboard-main-container">
+<div class="rm-dashboard-main-container rmagic-page-fadein">
     
      <!---  Head Section---->
     
-     <div class="rm-dashboard-header rm-box-border rm-box-white-bg rm-box-mb-25">
+     <div class="rm-dashboard-header rm-box-border rm-box-white-bg rm-box-mb-25 ">
     <?php if (isset($data->statics)): ?>
             <div class="rm-box-row">
-                <?php foreach ($data->statics as $statics): ?>
+                <?php foreach ($data->statics as $statics):
+                    if($statics['title'] == RM_UI_Strings::get('DASHBOARD_STATICS_FORMS_TITLE')) {
+                        $last_form_id = $statics['state'];
+                    }
+                    ?>
                     <div class="rm-box-col-3 rm-box-border-right">
                         <div class="rm-bullet-title">
-                            <?php echo wp_kses_post($statics['title']); ?>
+                            <?php echo wp_kses_post((string)$statics['title']); ?>
                         </div>
                         <div class="rm-bullet-statics">
-                            <?php echo wp_kses_post($statics['state']); ?>
+                            <?php echo wp_kses_post((string)$statics['state']); ?>
                         </div>
                         <div class="rm-bullet-link">
                             <?php if($statics['link'] == 'rm_form_setup') { ?>
-                                <a href="#rm_add_new_form_popup" onclick="CallModalBox(this)"><?php echo wp_kses_post($statics['link_label']);?> <span class="material-icons"> navigate_next </span></a>
+                                <a href="#rm_add_new_form_popup" onclick="CallModalBox(this)"><?php echo wp_kses_post((string)$statics['link_label']);?> <span class="material-icons"> navigate_next </span></a>
                             <?php } else { ?>
-                                <a href="<?php echo admin_url("admin.php?page=".wp_kses_post($statics['link']));?>"><?php echo wp_kses_post($statics['link_label']);?> <span class="material-icons"> navigate_next </span></a>
+                                <a href="<?php echo admin_url("admin.php?page=".wp_kses_post((string)$statics['link']));?>"><?php echo wp_kses_post((string)$statics['link_label']);?> <span class="material-icons"> navigate_next </span></a>
                             <?php } ?>
                         </div>
                         
@@ -60,7 +65,7 @@ $premium_class = 'rm-locked-section';
                 <div class="rm-box-row rm-box-h-100">
                     <div class="rm-box-col-6">
                         <div class="rm-box-border rm-box-white-bg  rm-dash-counter-chart rm-box-animated">
-                            <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_COUNTER')); ?></div>
+                            <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_COUNTER')); ?></div>
                             <div class="rm-dash-counter-chart-container">                            
                                 <canvas id="formCounter" width="100%" height="80%"></canvas>
                              
@@ -77,7 +82,7 @@ $premium_class = 'rm-locked-section';
                     </div>
                     <div class="rm-box-col-6">          
                         <div class="rm-box-border rm-box-white-bg  rm-dash-popular-chart rm-box-animated">
-                              <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_FORMS_CHART_TITLE')); ?></div>
+                              <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_FORMS_CHART_TITLE')); ?></div>
                             <div class="rm-dash-popular-chart-container">                              
                                 <canvas id="formChart"></canvas>                           
                             </div>
@@ -97,14 +102,14 @@ $premium_class = 'rm-locked-section';
             <div class="rm-box-col-3">
 
                     <div class="rm-box-border rm-box-white-bg rm_dash_submissions rm-box-animated">
-                        <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_WIDGET_TABLE_CAPTION')); ?></div>
+                        <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_WIDGET_TABLE_CAPTION')); ?></div>
                         <?php if (!empty($data->submissions)): ?>
                         
                                     <?php foreach ($data->submissions as $submission): ?>
                                         <div class="rm-submissions-box">            
                                             <div class="rm-submissions-image"> 
                                                 <?php 
-                                                $user = get_user_by( 'email', $submission->user_email );
+                                                $user = get_user_by( 'email', (string)$submission->user_email );
                                                 if($user):
                                                     if(class_exists('Profile_Magic')):
                                                         $pg_user_avatar_id = get_user_meta( $user->ID, 'pm_user_avatar', true );
@@ -131,7 +136,7 @@ $premium_class = 'rm-locked-section';
                                                                 if ($submission->name)
                                                                     echo esc_html($submission->name);
                                                                 else
-                                                                    echo wp_kses_post(RM_UI_Strings::get('LABEL_FORM_DELETED'));
+                                                                    echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FORM_DELETED'));
                                                                 ?>
                                                 </div>
                                                 <div class="rm-form-submissions-date">
@@ -155,7 +160,7 @@ $premium_class = 'rm-locked-section';
                                             <div class="rm-more-submissions"><a href="<?php echo admin_url("admin.php?page=rm_submission_view&rm_submission_id=".$submission->submission_id);?>"><span class="material-icons"> navigate_next </span></a></div>
                                         </div>
                                   <?php endforeach; ?>
-                                <div class="rm-more-btn"><a href="<?php echo admin_url("admin.php?page=rm_submission_manage");?>"> <?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_MORE')); ?> <span class="material-icons"> navigate_next </span></a></div>
+                                <div class="rm-more-btn"><a href="<?php echo admin_url("admin.php?page=rm_submission_manage");?>"> <?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_MORE')); ?> <span class="material-icons"> navigate_next </span></a></div>
                         <?php else: ?>
                                         <div class="rm-form-no-submissions"><svg width="100%" height="100%" viewBox="0 0 501 384" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve" xmlns:serif="http://www.serif.com/" style="fill-rule:evenodd;clip-rule:evenodd;stroke-miterlimit:1.5;">
                                             <g id="Without-Data" serif:id="Without Data" transform="matrix(1.38229,0,0,2.27989,-839.953,-1176.43)">
@@ -218,7 +223,7 @@ $premium_class = 'rm-locked-section';
             
             <div class="rm-box-col-6">
                 <div class="rm-box-border rm-box-white-bg rm-dash-users-chart">
-                    <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_USERS_CHART_TITLE')); ?></div>
+                    <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_USERS_CHART_TITLE')); ?></div>
                     <div class="rm-dash-users-chart-wrap">
                         <div class="rm-center-stats-box">
                             <div class="rm-timerange-toggle">
@@ -246,7 +251,7 @@ $premium_class = 'rm-locked-section';
                      
             <div class="rm-box-col-6">
                 <div class="rm-box-white-bg rm-box-border rm-dashboard-users-loggedin">
-                    <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_LOGIN_LOGS'));?></div>
+                    <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_LOGIN_LOGS'));?></div>
                     <div class="rm-dash-loggin-chart-wrap">
                         <div class="rm-center-stats-box">
                             <div class="rm-timerange-toggle">
@@ -269,7 +274,7 @@ $premium_class = 'rm-locked-section';
                         </div>
                         
                     </div>
-                    <div class="rm-more-btn"><a href="<?php echo admin_url("admin.php?page=rm_login_analytics");?>"> <?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_MORE')); ?> <span class="material-icons"> navigate_next </span></a></div>
+                    <div class="rm-more-btn"><a href="<?php echo admin_url("admin.php?page=rm_login_analytics");?>"> <?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_MORE')); ?> <span class="material-icons"> navigate_next </span></a></div>
                 </div>
             </div>
         </div>
@@ -286,33 +291,33 @@ $premium_class = 'rm-locked-section';
               <div class="rm-box-row">
                       <div class="rm-box-col-5">
                           <div class="rm-box-border rm-box-white-bg rm-dash-submission-card-range">
-                              <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_COUNTER')); ?></div>
+                              <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_COUNTER')); ?></div>
                               <div class="rm-card-range-list-wrap">
                               <ul class="rm-dash-list rm-dash-count-present">
                                   <li>
-                                      <label class="rm-dash-list-today-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_TODAY')); ?></label>
+                                      <label class="rm-dash-list-today-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TODAY')); ?></label>
                                       <span class="rm-dash-list-today-value"><?php echo esc_html($data->count->today); ?></span>
                                   </li>
                                   <li>
-                                      <label class="rm-dash-list-week-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_THIS_WEEK')); ?></label>
+                                      <label class="rm-dash-list-week-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_THIS_WEEK')); ?></label>
                                       <span class="rm-dash-list-week-value"><?php echo esc_html($data->count->this_week); ?></span>
                                   </li>
                                   <li>
-                                      <label class="rm-dash-list-month-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_THIS_MONTH')); ?></label>
+                                      <label class="rm-dash-list-month-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_THIS_MONTH')); ?></label>
                                       <span class="rm-dash-list-month-value"><?php echo esc_html($data->count->this_month); ?></span>
                                   </li>
                               </ul>
                               <ul class="rm-dash-list rm-dash-count-past">
                                   <li>
-                                      <label class="rm-dash-list-today-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_YESTERDAY')); ?></label>
+                                      <label class="rm-dash-list-today-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_YESTERDAY')); ?></label>
                                       <span class="rm-dash-list-today-value"><?php echo esc_html($data->count->yesterday); ?></span>
                                   </li>
                                    <li>
-                                      <label class="rm-dash-list-today-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LAST_WEEK')); ?></label>
+                                      <label class="rm-dash-list-today-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LAST_WEEK')); ?></label>
                                       <span class="rm-dash-list-today-value"><?php echo esc_html($data->count->last_week); ?></span>
                                   </li>
                                   <li>
-                                      <label class="rm-dash-list-today-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_LAST_MONTH')); ?></label>
+                                      <label class="rm-dash-list-today-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_LAST_MONTH')); ?></label>
                                       <span class="rm-dash-list-today-value"><?php echo esc_html($data->count->last_month); ?></span>
                                   </li>
                               </ul>
@@ -322,16 +327,16 @@ $premium_class = 'rm-locked-section';
                       </div>
                   <div class="rm-box-col-7">
                       <div class="rm-box-border rm-box-white-bg rm-latest-forms">
-                           <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_LATEST_FORMS')); ?></div>
+                           <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_LATEST_FORMS')); ?></div>
                            <?php if(!empty($data->latest_forms)):?>
 				<div class="rm-latest-forms-table-card">
 			
 				<?php foreach($data->latest_forms as $form):?>
                                     <div class="rm-latest-forms-row">
-                                        <div class="rm-latest-forms-name"><?php echo wp_kses_post($form->form_name);?></div>
-                                        <div class="rm-latest-forms-shortcode" ><span id="rmformshortcode<?php echo esc_attr($form->form_id);?>"><?php echo "[RM_Form id='".esc_html($form->form_id)."']";?></span> <span class="rm-shortcode-copy-icon material-icons" onclick="rm_copy_to_clipboard_dashboard(document.getElementById('rmformshortcode<?php echo esc_attr($form->form_id);?>'), this)"> content_copy </span></div>
-					<div class="rm-latest-forms-field-link"><a href="<?php echo admin_url("admin.php?page=rm_field_manage&rm_form_id=".$form->form_id);?>" ><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_FIELDS')); ?> <span class="material-icons"> navigate_next </span></a></div>
-                                        <div class="rm-latest-forms-dash-link"><a href="<?php echo admin_url("admin.php?page=rm_form_sett_manage&rm_form_id=".$form->form_id);?>" ><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD')); ?> <span class="material-icons"> navigate_next </span></a></div>
+                                        <div class="rm-latest-forms-name"><?php echo wp_kses_post((string)$form->form_name);?></div>
+                                        <div class="rm-latest-forms-shortcode" ><span id="rmformshortcode<?php echo esc_attr($form->form_id);?>"><?php echo "[RM_Forms id='".esc_html($form->form_id)."']";?></span> <span class="rm-shortcode-copy-icon material-icons" onclick="rm_copy_to_clipboard_dashboard(document.getElementById('rmformshortcode<?php echo esc_attr($form->form_id);?>'), this)"> content_copy </span></div>
+					<div class="rm-latest-forms-field-link"><a href="<?php echo admin_url("admin.php?page=rm_field_manage&rm_form_id=".$form->form_id);?>" ><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_FIELDS')); ?> <span class="material-icons"> navigate_next </span></a></div>
+                                        <div class="rm-latest-forms-dash-link"><a href="<?php echo admin_url("admin.php?page=rm_form_sett_manage&rm_form_id=".$form->form_id);?>" ><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD')); ?> <span class="material-icons"> navigate_next </span></a></div>
                                     </div>
 				<?php endforeach;?>
 				</div>
@@ -351,7 +356,7 @@ $premium_class = 'rm-locked-section';
           
           <div class="rm-box-col-3">
               <div class="rm-box-border rm-box-white-bg rm-important-shortcodes">
-                    <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_IMP_SHORTCODES')); ?></div>
+                    <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_IMP_SHORTCODES')); ?></div>
                 <div class="rm-important-shortcodes-wrap">
                     <div class="rm-latest-forms-row">
                        <div class="rm-latest-forms-name"><?php _e('Login Form', 'custom-registration-form-builder-with-submission-manager'); ?></div> 
@@ -359,7 +364,7 @@ $premium_class = 'rm-locked-section';
                     </div> 
                     <div class="rm-latest-forms-row">
                        <div class="rm-latest-forms-name"><?php _e('Register Forms', 'custom-registration-form-builder-with-submission-manager'); ?></div> 
-                       <div class="rm-latest-forms-shortcode" ><span id="rmformshortcode-form">[RM_Form id='x']</span> <span class="rm-shortcode-copy-icon material-icons" onclick="rm_copy_to_clipboard_dashboard(document.getElementById('rmformshortcode-form'), this)"> content_copy </span></div>
+                       <div class="rm-latest-forms-shortcode" ><span id="rmformshortcode-form">[RM_Forms id='x']</span> <span class="rm-shortcode-copy-icon material-icons" onclick="rm_copy_to_clipboard_dashboard(document.getElementById('rmformshortcode-form'), this)"> content_copy </span></div>
                     </div>      
                     <div class="rm-latest-forms-row">
                        <div class="rm-latest-forms-name"><?php _e('User Directory', 'custom-registration-form-builder-with-submission-manager'); ?></div> 
@@ -374,7 +379,7 @@ $premium_class = 'rm-locked-section';
                        <div class="rm-latest-forms-shortcode" ><span id="rmformshortcode-submission">[RM_Front_Submissions]</span> <span class="rm-shortcode-copy-icon material-icons" onclick="rm_copy_to_clipboard_dashboard(document.getElementById('rmformshortcode-submission'), this)"> content_copy </span></div>
                     </div> 
                 </div>
-                <div class="rm-more-btn"><a target="__blank" href="https://registrationmagic.com/wordpress-registration-shortcodes-list/"> <?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_MORE')); ?> <span class="material-icons"> navigate_next </span></a></div>    
+                <div class="rm-more-btn"><a target="__blank" href="https://registrationmagic.com/wordpress-registration-shortcodes-list/"> <?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_MORE')); ?> <span class="material-icons"> navigate_next </span></a></div>    
           </div>
 
       </div>
@@ -390,7 +395,7 @@ $premium_class = 'rm-locked-section';
         <div class="rm-box-row rm-box-mb-25">
             <div class="rm-box-col-5">
                 <div class="rm-box-border rm-box-white-bg rm-dashboard-users-logged-in-logs">
-                    <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_LOGIN_LOGS')); ?></div>
+                    <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_LOGIN_LOGS')); ?></div>
                     <table class="rm-latest-login-table">
                         <tbody>
                             <?php
@@ -409,7 +414,7 @@ $premium_class = 'rm-locked-section';
                                                     <a href="#">
                                                         <?php echo get_avatar($login_log->email) ? get_avatar($login_log->email) : '<img src="' . RM_IMG_URL . 'default_person.png">'; ?>
                                                     </a>
-                                                    <?php $user = get_user_by('email', $login_log->email); ?>
+                                                    <?php $user = get_user_by('email', (string)$login_log->email); ?>
                                                     <?php if (!empty($user)): ?>
                                                         <span class="rm-login-user-status <?php echo (RM_Utilities::is_user_online($user->ID)) ? 'rm-login-user-online' : '' ?>"><i class="fa fa-circle"></i></span>
                                                     <?php else: ?>
@@ -454,13 +459,13 @@ $premium_class = 'rm-locked-section';
                             ?>
                         </tbody>
                     </table>
-                    <?php if (!empty($data->login_logs)): ?><div class="rm-more-btn"><a href="<?php echo admin_url("admin.php?page=rm_login_analytics"); ?>"> <?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_MORE')); ?> <span class="material-icons"> navigate_next </span></a></div><?php endif; ?>
+                    <?php if (!empty($data->login_logs)): ?><div class="rm-more-btn"><a href="<?php echo admin_url("admin.php?page=rm_login_analytics"); ?>"> <?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_MORE')); ?> <span class="material-icons"> navigate_next </span></a></div><?php endif; ?>
                 </div>
 
             </div> 
             <div class="rm-box-col-3">
                 <div class="rm-box-border rm-box-white-bg rm-dashboard-setting">
-                    <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_SETTINGS')); ?></div>
+                    <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_SETTINGS')); ?></div>
 
                     <div class="rm-dashboard-setting-wrap">
                         <ul>
@@ -508,14 +513,14 @@ $premium_class = 'rm-locked-section';
 
                     </div>
 
-                    <div class="rm-more-btn"><a href="<?php echo admin_url("admin.php?page=rm_options_manage"); ?>"> <?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_MORE')); ?> <span class="material-icons"> navigate_next </span></a></div>
+                    <div class="rm-more-btn"><a href="<?php echo admin_url("admin.php?page=rm_options_manage"); ?>"> <?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_MORE')); ?> <span class="material-icons"> navigate_next </span></a></div>
                 </div> 
 
             </div>
             <div class="rm-box-col-4">
 
                 <div class="rm-box-border rm-box-white-bg rm-dash-export-section <?php echo esc_attr($premium_class); ?>">
-                    <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_EXPORT_TITLE')); ?></div>
+                    <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_EXPORT_TITLE')); ?></div>
                     <div class="rm-dash-export-submissions">
                         <form method="post" action="" name="rm_submission_manage" id="rm_submission_manager_form">
                             <input type="hidden" name="rm_slug" value="" id="rm_slug_input_field" />
@@ -568,7 +573,7 @@ $premium_class = 'rm-locked-section';
     <div class="rm-box-row rm-box-mb-25">
         <div class="rm-box-col-6">
             <div class="rm-box-border rm-box-white-bg rm-dash-attachment">
-                <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_LATEST_ATTACHMENTS')); ?></div>
+                <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_LATEST_ATTACHMENTS')); ?></div>
                 <div class="rm-dash-content-row">
                     <a href="<?php echo admin_url('admin.php?page=rm_support_premium_page'); ?>"><div class="rm-box-premium"><span class="material-icons"> <?php _e('workspace_premium', 'custom-registration-form-builder-with-submission-manager');?> </span> <?php _e('Premium', 'custom-registration-form-builder-with-submission-manager');?></div></a>
                       <?php if(defined('REGMAGIC_ADDON')):?>
@@ -581,7 +586,7 @@ $premium_class = 'rm-locked-section';
         </div>
         <div class="rm-box-col-6">
         <div class="rm-box-border rm-box-white-bg rm-dash-payment-report">
-                <div class="rm-dash-card-title"><?php echo wp_kses_post(RM_UI_Strings::get('DASHBOARD_LATEST_PAYMENTS')); ?></div>
+                <div class="rm-dash-card-title"><?php echo wp_kses_post((string)RM_UI_Strings::get('DASHBOARD_LATEST_PAYMENTS')); ?></div>
                 <div class="rm-latest-payments-table-card rm-latest-forms-table-card">
                     <table class="rm-dash-payment-report-table" cellspacing="0" cellpadding="0">
                         <tbody>
@@ -592,20 +597,20 @@ $premium_class = 'rm-locked-section';
                     <tr class="rm-dash-payment-report-row">
                         <td class="rm-latest-forms-icon"><span class="material-icons"> description </span></td>
                         <td class="rm-payments-col rm-latest-forms-name">
-                            <?php echo wp_kses_post($payments->form_name);?>
+                            <?php echo wp_kses_post((string)$payments->form_name);?>
                         </td>
                         <td class="rm-payments-col rm-latest-forms-shortcode">
-                            <?php echo wp_kses_post($payments->user_email);?>
+                            <?php echo wp_kses_post((string)$payments->user_email);?>
                         </td>
                         <td class="rm-payments-col rm-payment-currency">
-                            <?php echo wp_kses_post(RM_Utilities::get_formatted_price($payments->total_amount));?>
+                            <?php echo wp_kses_post((string)RM_Utilities::get_formatted_price($payments->total_amount));?>
                         </td>
                         <td class="rm-payments-col rm-latest-forms-dash-link">
                             <?php 
                             if(strtolower($payments->status) =='completed' || strtolower($payments->status) =='succeeded'):
-                                echo wp_kses_post('Completed');
+                                echo wp_kses_post((string)'Completed');
                             else:
-                                echo wp_kses_post($payments->status);
+                                echo wp_kses_post((string)$payments->status);
                             endif;
                             ?>
                         </td>
@@ -830,23 +835,31 @@ $premium_class = 'rm-locked-section';
         <div class="rm-modal-overlay rm-form-popup-overlay-fade-in"></div>
         <div class="rm_add_new_form_wrap rm-create-new-from rm-form-popup-out">
             <div class="rm-box-row rm-box-center rm-box-secondary-bg">
-                <div class="rm-box-col-6 rm-box-white-bg rm-form-box">                       
+                <div class="rm-box-col-12 rm-box-white-bg rm-form-box">                       
                     <div class="rm-modal-titlebar rm-new-form-popup-header">
                             <div class="rm-modal-title">
                                 <?php _e('Quick Create Form', 'custom-registration-form-builder-with-submission-manager'); ?>
                             </div>
-                        <div class="rm-modal-subtitle"><?php _e('Creates a new form with all the essential settings.', 'custom-registration-form-builder-with-submission-manager'); ?></div>
+                             <div class="rm-modal-subtitle">
+                                <a href="<?php echo admin_url("admin.php?page=rm_form_setup");?>" title=" <?php _e('Form Template', 'custom-registration-form-builder-with-submission-manager'); ?>" class="rm-text-small">
+                                <?php _e('Or choose from a template.', 'custom-registration-form-builder-with-submission-manager'); ?>
+                               </a>
+                            </div>
+                        
+                        <span class="rm-modal-close material-icons">close</span>
                     </div>
                     <div class="rm-modal-container">
                         <?php require RM_ADMIN_DIR . 'views/template_rm_new_form_exerpt.php'; ?>
                     </div>
                 </div>
+               <!--
                 <div class="rm-box-col-6 rm-form-box">
                     <span  class="rm-modal-close material-icons">close</span>
                     <div class="rm-template-modal-heading"><?php _e('Looking for form templates?', 'custom-registration-form-builder-with-submission-manager'); ?></div>
                     <div class="rm-template-modal-subheading"><?php _e('Build using our form wizard to create awesome looking ready-to-use forms within minutes!', 'custom-registration-form-builder-with-submission-manager'); ?></div>
                     <div class="rm-template-modal-button"><a href="<?php echo admin_url("admin.php?page=rm_form_setup");?>"><?php _e('Start Now!', 'custom-registration-form-builder-with-submission-manager'); ?></a></div>
                 </div>
+                -->
             </div>
         </div>
     </div>
@@ -860,7 +873,8 @@ jQuery(window).load(function(e){
 	load_form_counter();
 	load_popular_forms();
 	load_user_charts();
-        drawTimewiseStat();
+    //drawTimewiseStat();
+    rm_on_form_selection_change();
 });
 	function load_form_counter(){
 		var formCounter = document.getElementById("formCounter");
@@ -1075,7 +1089,7 @@ jQuery(window).load(function(e){
                             }
 			  };
 
-		// Chart declaration:
+        // Chart declaration:
 		var myBarChart = new Chart(ctx, {
 		    type: 'line',
 		    data: data,
@@ -1086,9 +1100,16 @@ jQuery(window).load(function(e){
     
     
     jQuery(document).ready(function($){
-        var rmDash_top_head = $( '.rm-dash-head-wrap' );
-        $( '#wpbody-content' ).prepend( rmDash_top_head );
-        rmDash_top_head.delay( 0 ).slideDown();
+       var rmDash_top_head = $('.rm-dash-head-wrap');
+       var upgradeNotice = $('.rm-upgrade-notice-info');
+
+       if (upgradeNotice.length) {
+           upgradeNotice.after(rmDash_top_head);
+       } else {
+           $('#wpbody-content').prepend(rmDash_top_head);
+       }
+
+       rmDash_top_head.delay(0).slideDown();
         
         //var rmDash_header = $( '.rm-dashboard-header' );
          //rmDash_header.delay( 1000 ).slideDown();

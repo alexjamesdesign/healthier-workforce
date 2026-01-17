@@ -100,8 +100,13 @@ jQuery(function ($) {
 			}});
 		});
 
-        // Smooth scroll for anchor links
+        // Smooth scroll for anchor links (exclude mmenu links)
         $('a[href*="#"]:not([href="#"])').click(function() {
+            // Skip if this is the mmenu trigger or inside mmenu
+            if ($(this).attr('href') === '#mmenu' || $(this).closest('#mmenu').length > 0 || $(this).hasClass('mm-next')) {
+                return;
+            }
+            
             if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
                 var target = $(this.hash);
                 target = target.length ? target : $('[name=' + this.hash.slice(1) +']');

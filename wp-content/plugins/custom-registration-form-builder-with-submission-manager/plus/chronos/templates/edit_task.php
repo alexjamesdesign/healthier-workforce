@@ -238,7 +238,7 @@ $action_data = $data->init_field_config->action_data;
                                                    echo "checked";
                                            ?>
                                     >
-                                    <span><?php echo wp_kses_post($pproc_label); ?></span>
+                                    <span><?php echo wp_kses_post((string)$pproc_label); ?></span>
                                 </li>
                                 <?php endforeach; ?>                            
                             </ul>
@@ -366,7 +366,7 @@ $action_data = $data->init_field_config->action_data;
                     </div>
                     <div class="rmnote">
                         <div class="rmprenote"></div>
-                        <div class="rmnotecontent"><?php _e("Assign role(s) to user accounts associated with selected submissions. Please note that while the selected roles will be assigned to the users with this task, their existing roles will get unassigned.",'custom-registration-form-builder-with-submission-manager') ?> <a target='_blank' class='rm-more' href='https://registrationmagic.com/knowledgebase/task-settings/#htsendemail'><?php _e("More",'custom-registration-form-builder-with-submission-manager') ?></a><br/><br/><?php if(!defined('REGMAGIC_ADDON')) echo wp_kses_post(RM_UI_Strings::get('MSG_BUY_PRO_INLINE'));?></div>
+                        <div class="rmnotecontent"><?php _e("Assign role(s) to user accounts associated with selected submissions. Please note that while the selected roles will be assigned to the users with this task, their existing roles will get unassigned.",'custom-registration-form-builder-with-submission-manager') ?> <a target='_blank' class='rm-more' href='https://registrationmagic.com/knowledgebase/task-settings/#htsendemail'><?php _e("More",'custom-registration-form-builder-with-submission-manager') ?></a><br/><br/><?php if(!defined('REGMAGIC_ADDON')) echo wp_kses_post((string)RM_UI_Strings::get('MSG_BUY_PRO_INLINE'));?></div>
                     </div>
                 </div>
                 <div class="rmrow">
@@ -387,7 +387,7 @@ $action_data = $data->init_field_config->action_data;
                     </div>
                     <div class="rmnote">
                         <div class="rmprenote"></div>
-                        <div class="rmnotecontent"><?php _e("Send an email to the user accounts associated with selected submissions.",'custom-registration-form-builder-with-submission-manager') ?> <a target='_blank' class='rm-more' href='https://registrationmagic.com/knowledgebase/task-settings/#htsendemail'><?php _e("More",'custom-registration-form-builder-with-submission-manager') ?></a><br/><br/><?php if(!defined('REGMAGIC_ADDON')) echo wp_kses_post(RM_UI_Strings::get('MSG_BUY_PRO_INLINE'));?></div>
+                        <div class="rmnotecontent"><?php _e("Send an email to the user accounts associated with selected submissions.",'custom-registration-form-builder-with-submission-manager') ?> <a target='_blank' class='rm-more' href='https://registrationmagic.com/knowledgebase/task-settings/#htsendemail'><?php _e("More",'custom-registration-form-builder-with-submission-manager') ?></a><br/><br/><?php if(!defined('REGMAGIC_ADDON')) echo wp_kses_post((string)RM_UI_Strings::get('MSG_BUY_PRO_INLINE'));?></div>
                     </div>
                 </div>
 
@@ -511,5 +511,6 @@ $action_data = $data->init_field_config->action_data;
             </div> 
         </form>
     </div> 
-</div> 
-
+</div>
+<?php include_once RM_ADMIN_DIR . 'views/template_rm_footer.php'; ?>
+<?php include_once RM_ADMIN_DIR . 'views/template_rm_promo_banner_bottom.php'; ?>

@@ -59,7 +59,7 @@ $form->render();
 ?>
     </div>
         <?php
-        include RM_ADMIN_DIR . 'views/template_rm_promo_banner_bottom.php';
+        //include RM_ADMIN_DIR . 'views/template_rm_promo_banner_bottom.php';
         ?>
 </div>
 

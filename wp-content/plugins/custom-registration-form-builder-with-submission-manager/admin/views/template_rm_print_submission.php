@@ -213,7 +213,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                 {
                     ?>
                     <tr class="rm-submission-field-row">
-                        <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_UNIQUE_TOKEN_SHORT')); ?> :</td>
+                        <td class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_UNIQUE_TOKEN_SHORT')); ?> :</td>
                         <td class="rm-submission-value"><?php echo esc_html($data->submission->get_unique_token()); ?></td>
                     </tr>
                     <?php
@@ -221,12 +221,12 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                 ?>
 
                 <tr class="rm-submission-field-row">
-                    <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_ENTRY_ID')); ?> :</td>
+                    <td class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_ENTRY_ID')); ?> :</td>
                     <td class="rm-submission-value"><?php echo esc_html($data->submission->get_submission_id()); ?></td>
                 </tr>
 
                 <tr class="rm-submission-field-row">
-                    <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_ENTRY_TYPE')); ?> :</td>
+                    <td class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_ENTRY_TYPE')); ?> :</td>
                     <td class="rm-submission-value"><?php echo esc_html($data->form_type); ?></td>
                 </tr>
                 <?php
@@ -235,18 +235,18 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     $user_roles_dd = RM_Utilities::user_role_dropdown();
                     ?>
                     <tr class="rm-submission-field-row">
-                        <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DISPLAY_NAME')); ?> :</td>
+                        <td class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DISPLAY_NAME')); ?> :</td>
                         <td class="rm-submission-value"><?php echo esc_html($data->user->display_name); ?></td>
                     </tr>
 
                     <tr class="rm-submission-field-row">
-                        <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_USER_ROLES')); ?> :</td>
+                        <td class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_USER_ROLES')); ?> :</td>
                         <td class="rm-submission-value">
                             <?php
                             if(isset($data->user->roles[0],$user_roles_dd[$data->user->roles[0]]))
                                 echo esc_html($user_roles_dd[$data->user->roles[0]]);
                             else
-                                echo "<i>".wp_kses_post(RM_UI_Strings::get('MSG_USER_ROLE_NOT_ASSIGNED'))."</i>";
+                                echo "<i>".wp_kses_post((string)RM_UI_Strings::get('MSG_USER_ROLE_NOT_ASSIGNED'))."</i>";
                             ?>
                         </td>
                     </tr>
@@ -315,7 +315,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                         }
                         } else
                         {
-                             echo wp_kses_post(nl2br($sub_data));
+                             echo wp_kses_post((string)nl2br($sub_data));
                               
                         }
                         ?>
@@ -347,27 +347,27 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     }
                     ?>
                     <tr class="rm-submission-field-row">
-                        <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_INVOICE')); ?> :</td>
+                        <td class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_INVOICE')); ?> :</td>
                         <td class="rm-submission-value"><?php if (isset($data->payment->invoice)) echo esc_html($data->payment->invoice); ?></td>
                     </tr>
                     <tr class="rm-submission-field-row">
-                        <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_TAXATION_ID')); ?> :</td>
+                        <td class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TAXATION_ID')); ?> :</td>
                         <td class="rm-submission-value"><?php if (isset($data->payment->txn_id)) echo esc_html($data->payment->txn_id); ?></td>
                     </tr>
                     <tr class="rm-submission-field-row">
-                        <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_STATUS_PAYMENT')); ?> :</td>
+                        <td class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_STATUS_PAYMENT')); ?> :</td>
                         <td class="rm-submission-value"><?php if (isset($data->payment->status)) echo esc_html($display_status); ?></td>
                     </tr>
                     <tr class="rm-submission-field-row">
-                        <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PAID_AMOUNT')); ?> :</td>
+                        <td class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PAID_AMOUNT')); ?> :</td>
                         <td class="rm-submission-value"><?php if (isset($data->payment->total_amount)) echo esc_html($data->payment->total_amount); ?></td>
                     </tr>
                     <tr class="rm-submission-field-row">
-                        <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PAID_TAX')); ?> :</td>
+                        <td class="rm-submission-label"><?php echo wp_kses_post((string)$data->tax_label); ?> :</td>
                         <td class="rm-submission-value"><?php if (isset($data->payment->tax)) echo esc_html($data->payment->tax); ?></td>
                     </tr>
                     <tr class="rm-submission-field-row">
-                        <td class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DATE_OF_PAYMENT')); ?> :</td>
+                        <td class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DATE_OF_PAYMENT')); ?> :</td>
                         <td class="rm-submission-value"><?php if (isset($data->payment->posted_date)) echo esc_html(RM_Utilities::localize_time($data->payment->posted_date, get_option('date_format'))); ?></td>
                     </tr>
                     <?php

@@ -25,10 +25,10 @@ class Element_Checksort extends Element_Sort {
             $value = $this->getOptionValue($value);
             if(!empty($this->inline) && $count > 0)
                 echo ' ';
-            echo '<label class="', esc_attr($labelClass), '"><input id="', esc_attr($this->_attributes["id"]), '-', esc_attr($count), '"', wp_kses_post($this->getAttributes(array("id", "value", "checked", "name", "onclick", "required"))), ' value="', wp_kses_post($this->filter($value)), '"';
+            echo '<label class="', esc_attr($labelClass), '"><input id="', esc_attr($this->_attributes["id"]), '-', esc_attr($count), '"', wp_kses_post((string)$this->getAttributes(array("id", "value", "checked", "name", "onclick", "required"))), ' value="', wp_kses_post((string)$this->filter($value)), '"';
             if(in_array($value, $this->_attributes["value"]))
                 echo ' checked="checked"';
-            echo ' onclick="updateChecksort(this, \'', str_replace(array('"', "'"), array('&quot;', "\'"), wp_kses_post($text)), '\');"/>', wp_kses_post($text), '</label>';
+            echo ' onclick="updateChecksort(this, \'', str_replace(array('"', "'"), array('&quot;', "\'"), wp_kses_post((string)$text)), '\');"/>', wp_kses_post((string)$text), '</label>';
 
 			if(in_array($value, $this->_attributes["value"]))
 				$existing .= '<li id="' . $this->_attributes["id"] . "-sort-" . $count . '" class="ui-state-default"><input type="hidden" name="' . $this->_attributes["name"] . '" value="' . $value . '"/>' . $text . '</li>';
@@ -36,7 +36,7 @@ class Element_Checksort extends Element_Sort {
             ++$count;
         }
 
-		echo '<ul id="', esc_attr($this->_attributes["id"]), '">', wp_kses_post($existing), '</ul>';
+		echo '<ul id="', esc_attr($this->_attributes["id"]), '">', wp_kses_post((string)$existing), '</ul>';
 	}
 
 	function renderJS() {

@@ -179,7 +179,7 @@ h5 { font-size: 1.1em; }
     color: $noir;
     background: $blanc;
     padding: 1.5em;
-    overflow: auto;
+    overflow: visible;
 
     p {
         margin-bottom: 1em;        
@@ -213,6 +213,7 @@ h5 { font-size: 1.1em; }
 
     &--registration{
         padding-top: 2.5em;
+        overflow: visible!important; 
     }
     &--no-pad{
         padding: 0em;

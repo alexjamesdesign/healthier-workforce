@@ -15,12 +15,12 @@
  * Plugin Name:       RegistrationMagic
  * Plugin URI:        http://www.registrationmagic.com
  * Description:       A powerful system for customizing registration forms, setting up paid registrations, tracking submissions, managing users, assigning user roles, analyzing stats, and much more!!
- * Version:           5.2.3.1
+ * Version:           6.0.7.2
  * Tags:              registration, form, custom, analytics, simple, submissions
- * Requires at least: 4.6.0
- * Requires PHP:      5.6
- * Author:            RegistrationMagic
- * Author URI:        https://registrationmagic.com/
+ * Requires at least: 5.2.0
+ * Requires PHP:      7.2
+ * Author:            Metagauss User Registration Forms
+ * Author URI:        https://profiles.wordpress.org/registrationmagicforms/
  * Text Domain:       custom-registration-form-builder-with-submission-manager
  * Domain Path:       /languages
  */
@@ -78,7 +78,7 @@ if (is_plugin_active_for_network($rmgold) || is_plugin_active($rmgold) ||
 */
 if(!defined('RM_PLUGIN_VERSION')) {
     define('RM_PLUGIN_BASENAME', plugin_basename(__FILE__ ));
-    define('RM_PLUGIN_VERSION', '5.2.3.1');
+    define('RM_PLUGIN_VERSION', '6.0.7.2');
     define('RM_DB_VERSION', 5.9);
     define('RM_SHOW_WHATSNEW_SPLASH', false);  //Set it to 'false' to disable whatsnew screen.
     //define FB SDK req flags. Flags should be combined using logical OR and should be checked using AND.
@@ -117,7 +117,7 @@ if(!defined('RM_PLUGIN_VERSION')) {
     define('RM_IMG_URL', plugin_dir_url(__FILE__) . 'images/');
     define('RM_INCLUDES_DIR', RM_BASE_DIR . 'includes/');
     define('RM_EXTERNAL_DIR', RM_BASE_DIR . 'external/');
-
+    define('RM_BLOCKS_DIR', RM_BASE_DIR. 'blocks/');
     //form types
     define('RM_BASE_FORM', 99);
     define('RM_CONTACT_FORM', 0);
@@ -142,6 +142,9 @@ if(!defined('RM_PLUGIN_VERSION')) {
     //Check for plugin requirements before proceeding
 
     function registration_magic_get_installed_addons() {
+        if(!function_exists('get_plugins')) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
         $plugins = get_plugins();
         $installed_premiums = array();
         foreach($plugins as $plugin_dir => $plugin_data) {
@@ -208,13 +211,17 @@ if(!defined('RM_PLUGIN_VERSION')) {
      */
     function registration_magic_include_external_libs() {
         $installed_php_version = phpversion();
-        $gopts = new RM_Options;
+        //$gopts = new RM_Options;
         require_once RM_EXTERNAL_DIR . 'session/rm_wpdb_sessions.php';
         // Skip session start if theme editor operation 
         $theme_editing = isset($_REQUEST['action']) && $_REQUEST['action']=='edit-theme-plugin-file' ? true : null;
+        $code_profiler_request = isset($_REQUEST['action']) && $_REQUEST['action'] == 'codeprofiler_start_profiler' ? true : false;
         //if(!session_id() && !$theme_editing)
-        if(session_status() === PHP_SESSION_NONE && !headers_sent())
-            session_start();
+        if(strpos($_SERVER['REQUEST_URI'], '/wiki/') === false) {
+            if(session_status() === PHP_SESSION_NONE && !headers_sent() && !$code_profiler_request) {
+                session_start();
+            }
+        }
         
         if(is_admin()) {
             if((isset($_REQUEST['page']) && $_REQUEST['page'] === 'health-check') || (isset($_REQUEST['health-check-troubleshoot-enable-plugin'])) || (isset($_REQUEST['health-check-troubleshoot-disable-plugin'])) || (isset($_REQUEST['action']) && in_array($_REQUEST['action'], array('health-check-site-status','health-check-loopback-requests','jupiterx_system_status'))) || (isset($_SERVER['REQUEST_URI']) && strpos($_SERVER['REQUEST_URI'], 'site-health'))) {
@@ -224,7 +231,7 @@ if(!defined('RM_PLUGIN_VERSION')) {
         }
         
         require_once RM_EXTERNAL_DIR . 'PFBC/Form.php';
-        require_once RM_EXTERNAL_DIR . 'mailchimp/class_rm_mailchimp.php';
+        //require_once RM_EXTERNAL_DIR . 'mailchimp/class_rm_mailchimp.php';
         require_once RM_EXTERNAL_DIR . 'AWeber/class_rm_aweber.php';
         require_once RM_EXTERNAL_DIR . 'cron/cron_helper.php';
         //check for FB SDK v5 requirements and setup the global var accordingly.
@@ -248,12 +255,12 @@ if(!defined('RM_PLUGIN_VERSION')) {
         else if($pgws == 'paypal'){            
             require_once RM_EXTERNAL_DIR . 'PayPal/paypal.php';
         }*/
-        require_once RM_EXTERNAL_DIR . 'PayPal/paypal.php';
-
+        //require_once RM_EXTERNAL_DIR . 'PayPal/paypal.php';
+        //require_once RM_BLOCKS_DIR . 'class-reg-magic-block.php';
     }
 
     registration_magic_register_autoload();
-    registration_magic_include_external_libs();
+    //registration_magic_include_external_libs();
 
     register_activation_hook(__FILE__, 'RM_Activator::activate');
     register_deactivation_hook(__FILE__, 'RM_Deactivator::deactivate');
@@ -274,10 +281,10 @@ if(!defined('RM_PLUGIN_VERSION')) {
         $plugin = new Registration_Magic();
         $plugin->run();
     }
-
+    
     run_registration_magic();
     
     //Kick extender
-    RM_Extender::init();
+    //RM_Extender::init();
 
 }

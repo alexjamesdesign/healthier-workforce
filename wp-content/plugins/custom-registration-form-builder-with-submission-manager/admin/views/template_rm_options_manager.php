@@ -12,7 +12,7 @@ global $rm_env_requirements;
 ?>
 
 <?php if (!($rm_env_requirements & RM_REQ_EXT_CURL)){ ?>
- <div class="shortcode_notification ext_na_error_notice"><p class="rm-notice-para"><?php echo wp_kses_post(RM_UI_Strings::get('RM_ERROR_EXTENSION_CURL'));?></p></div>
+ <div class="shortcode_notification ext_na_error_notice"><p class="rm-notice-para"><?php echo wp_kses_post((string)RM_UI_Strings::get('RM_ERROR_EXTENSION_CURL'));?></p></div>
  <?php } ?>
  
 <div class="rmagic">
@@ -44,8 +44,18 @@ global $rm_env_requirements;
                     <div class="rm-settings-description">
 
                     </div>
-                    <div class="rm-settings-subtitle"><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_GENERAL')); ?></div>
-                    <span><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_GENERAL_EXCERPT')); ?></span>
+                    <div class="rm-settings-subtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_GENERAL')); ?></div>
+                    <span><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_GENERAL_EXCERPT')); ?></span>
+                </div></a>
+            
+            <a href="admin.php?page=rm_licensing">
+                <div class="rm-settings-box">
+                    <img class="rm-settings-icon" src="<?php echo esc_url($image_path); ?>rm-license-icon.png">
+                    <div class="rm-settings-description">
+
+                    </div>
+                    <div class="rm-settings-subtitle"><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_LICENSE')); ?></div>
+                    <span><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_LICENSE_EXCERPT')); ?></span>
                 </div></a>
             
             <a href="admin.php?page=rm_options_fab">
@@ -54,8 +64,8 @@ global $rm_env_requirements;
                     <div class="rm-settings-description">
 
                     </div>
-                    <div class="rm-settings-subtitle"><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_FAB')); ?></div>
-                    <span><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_FAB_EXCERPT')); ?></span>
+                    <div class="rm-settings-subtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_FAB')); ?></div>
+                    <span><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_FAB_EXCERPT')); ?></span>
                 </div></a>
 
             <a href="admin.php?page=rm_options_security">
@@ -64,8 +74,8 @@ global $rm_env_requirements;
                     <div class="rm-settings-description">
 
                     </div>
-                    <div class="rm-settings-subtitle"><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_SECURITY')); ?></div>
-                    <span><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_SECURITY_EXCERPT')); ?></span>
+                    <div class="rm-settings-subtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_SECURITY')); ?></div>
+                    <span><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_SECURITY_EXCERPT')); ?></span>
                 </div></a>
 
             <a href="admin.php?page=rm_options_user">
@@ -74,8 +84,8 @@ global $rm_env_requirements;
                     <div class="rm-settings-description">
 
                     </div>
-                    <div class="rm-settings-subtitle"><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_USER')); ?></div>
-                    <span><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_USER_EXCERPT')); ?></span>
+                    <div class="rm-settings-subtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_USER')); ?></div>
+                    <span><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_USER_EXCERPT')); ?></span>
                 </div></a>
 
             <a href="admin.php?page=rm_options_autoresponder">
@@ -84,8 +94,8 @@ global $rm_env_requirements;
                     <div class="rm-settings-description">
 
                     </div>
-                    <div class="rm-settings-subtitle"><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_EMAIL_NOTIFICATIONS')); ?></div>
-                    <span><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_EMAIL_NOTIFICATIONS_EXCERPT')); ?></span>
+                    <div class="rm-settings-subtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_EMAIL_NOTIFICATIONS')); ?></div>
+                    <span><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_EMAIL_NOTIFICATIONS_EXCERPT')); ?></span>
                 </div></a>
 
             <a href="admin.php?page=rm_options_thirdparty">
@@ -94,8 +104,8 @@ global $rm_env_requirements;
                     <div class="rm-settings-description">
 
                     </div>
-                    <div class="rm-settings-subtitle"><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_EXTERNAL_INTEGRATIONS')); ?></div>
-                    <span><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_EXTERNAL_INTEGRATIONS_EXCERPT')); ?></span>
+                    <div class="rm-settings-subtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_EXTERNAL_INTEGRATIONS')); ?></div>
+                    <span><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_EXTERNAL_INTEGRATIONS_EXCERPT')); ?></span>
                 </div></a>
 
             <a href="admin.php?page=rm_options_payment">
@@ -104,8 +114,8 @@ global $rm_env_requirements;
                     <div class="rm-settings-description">
 
                     </div>
-                    <div class="rm-settings-subtitle"><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_PAYMENT')); ?></div>
-                    <span><?php echo wp_kses_post(RM_UI_Strings::get('GLOBAL_SETTINGS_PAYMENT_EXCERPT')); ?></span>
+                    <div class="rm-settings-subtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_PAYMENT')); ?></div>
+                    <span><?php echo wp_kses_post((string)RM_UI_Strings::get('GLOBAL_SETTINGS_PAYMENT_EXCERPT')); ?></span>
                 </div></a>
             
             <a href="admin.php?page=rm_options_default_pages">
@@ -180,7 +190,7 @@ global $rm_env_requirements;
         </div>
     </div>
     <?php 
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
 </div>
 <?php } ?>

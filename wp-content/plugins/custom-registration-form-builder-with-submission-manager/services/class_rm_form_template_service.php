@@ -124,6 +124,7 @@ class RM_form_template_service{
     }
     public function create_contact_template_c2($form_id){
         //description
+        /*
         $field_desc_id = $this->create_template_richtext_field($form_id, $page=1, "rich text", "<p>Note for Admin (Delete before publishing)</p>
 <p>1. Enquires will be stored inside RegistraitonMagic's INBOX in addition to being sent via Email.</p>
 <p>2. Premium features include an option to append user history, such as previous submissions, and purchases to the form data.</p>
@@ -134,6 +135,7 @@ class RM_form_template_service{
         //divider
         $field_div_id = $this->create_template_divider_field($form_id, $page=1, "Divider","",2);
         $this->create_template_row_structure($form_id, array($field_div_id), 1, '1');
+        */
         // Name
         $field_first_id = $this->create_template_first_name_field($form_id, 1, 'First Name', 'Enter First Name', '',1, 3);
         $field_last_id = $this->create_template_last_name_field($form_id, 1, 'Last Name', 'Enter Last Name', '',1, 4);
@@ -1867,7 +1869,7 @@ Phone: 900000000 contact@registrationmagic.com', 'I accept the terms of service.
     public function create_registration_template_r1($form_id){
         
         //Username
-        $field_user_id = $this->create_default_username_field($form_id, 1, 'Username', 'Select a username', 'rm-reg-username', 4, 70, 'This username has already been taken. Please try something different.' );
+        $field_user_id = $this->create_default_username_field($form_id, 1, 'Username', 'Select a username', 'rm-reg-username', 4, 70, 'This username has already been taken. Please try again with a different username.' );
         $this->create_template_row_structure($form_id, array($field_user_id), 1, '1');
 
         //Email
@@ -1889,7 +1891,7 @@ Phone: 900000000 contact@registrationmagic.com', 'I accept the terms of service.
         $field_email_id = $this->create_template_email_field($form_id, 1, 0, 'Email' , '', 3);
         $this->create_template_row_structure($form_id, array($field_email_id), 1, '1');  
         //Username
-        $field_user_id = $this->create_default_username_field($form_id, 1, 'Username', 'Select a username', 'rm-reg-username', 4, 70, 'This username has already been taken. Please try something different.' );
+        $field_user_id = $this->create_default_username_field($form_id, 1, 'Username', 'Select a username', 'rm-reg-username', 4, 70, 'This username has already been taken. Please try again with a different username.' );
         $this->create_template_row_structure($form_id, array($field_user_id), 1, '1'); 
 
         //Field
@@ -2082,19 +2084,20 @@ Phone: 900000000 contact@registrationmagic.com', 'I accept the terms of service.
             'is_field_primary' => 1,
             'field_order'=>$order,
             'en_confirm_pwd'=>array(1),
-            'pass_mismatch_err'=>'Your passwords do not match. Please check again.',
+            'pass_mismatch_err'=>esc_html__('Your passwords do not match. Please check again.','custom-registration-form-builder-with-submission-manager'),
             'en_pass_strength'=>array(1),
             'pwd_strength_type'=>array(1),
             'pwd_short_msg'=>'Too Short',
             'pwd_weak_msg'=>'Weak',
             'pwd_medium_msg'=>'Medium',
             'pwd_strong_msg'=>'Strong',
-            'help_text'=>'Password must be at least 7 characters long.'));
+            'help_text'=>esc_html__('Password must be at least 7 characters long.','custom-registration-form-builder-with-submission-manager')
+        ));
 
         return $field->insert_into_db();
     }
 
-   public function create_default_username_field($form_id, $page=1, $label='Username', $placeholder='Select a username', $class='', $order=-2, $max_length=70, $exists_error='This username has already been taken. Please try something different.' ) {
+   public function create_default_username_field($form_id, $page=1, $label='Username', $placeholder='Select a username', $class='', $order=-2, $max_length=70, $exists_error='This username has already been taken. Please try again with a different username.' ) {
 
         $field = new RM_Fields;
         $field->set(array('form_id' => $form_id,

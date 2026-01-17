@@ -4,6 +4,7 @@ class RM_Chronos_Query_Builder {
     protected $user_query_arg;
     protected $sub_query_arg;
     protected $has_build_started;
+    protected $submission_query_arg;
     protected $form_id;
     const QUERY_ARG_NO_EFFECT = '__no_effect'; // This query argument has no effect, unset it.
     const QUERY_ARG_NULL_SET = '__null_set'; // This query argument guaranttees null data set, return empty data.
@@ -125,7 +126,11 @@ class RM_Chronos_Query_Builder {
         $sub_fields_table = RM_Table_Tech::get_table_name_for('SUBMISSION_FIELDS');
         $pay_log_table = RM_Table_Tech::get_table_name_for('PAYPAL_LOGS');
         
-        $query = "SELECT st.submission_id, st.user_email FROM $subs_table st WHERE st.form_id = {$this->form_id} AND st.submission_id IN (SELECT MAX(submission_id) FROM `$subs_table` WHERE `form_id` = {$this->form_id} GROUP BY `user_email`)";
+        if(defined('RM_SAVE_SUBMISSION_BASENAME')) {
+            $query = "SELECT st.submission_id, st.user_email FROM $subs_table st WHERE st.form_id = {$this->form_id} AND st.is_pending = 0 AND st.submission_id IN (SELECT MAX(submission_id) FROM `$subs_table` WHERE `form_id` = {$this->form_id} GROUP BY `user_email`)";
+        } else {
+            $query = "SELECT st.submission_id, st.user_email FROM $subs_table st WHERE st.form_id = {$this->form_id} AND st.submission_id IN (SELECT MAX(submission_id) FROM `$subs_table` WHERE `form_id` = {$this->form_id} GROUP BY `user_email`)";
+        }
                 
         //Submissions time rule
         $extended_where = "";
@@ -185,6 +190,7 @@ class RM_Chronos_Query_Builder {
         
         $wpdb->query('SET time_zone = "+00:00"');
         $result = $wpdb->get_results($query);
+        
         if(!$result)
             return array();
         else
@@ -205,7 +211,11 @@ class RM_Chronos_Query_Builder {
             $submitters = $wpdb->get_results("SELECT `ID` FROM `$user_table` WHERE `user_email` IN ('$subs_emails')", OBJECT_K);
         } else {
             $subs = $this->get_submissions($prime_joiner);
-            $submitters = $wpdb->get_results("SELECT `ID` FROM `$user_table` WHERE `user_email` IN (SELECT `user_email` FROM $rm_subs_table WHERE `form_id` = {$this->form_id})", OBJECT_K);
+            if(defined('RM_SAVE_SUBMISSION_BASENAME')) {
+                $submitters = $wpdb->get_results("SELECT `ID` FROM `$user_table` WHERE `user_email` IN (SELECT `user_email` FROM $rm_subs_table WHERE `form_id` = {$this->form_id} AND `is_pending` = 0)", OBJECT_K);
+            } else {
+                $submitters = $wpdb->get_results("SELECT `ID` FROM `$user_table` WHERE `user_email` IN (SELECT `user_email` FROM $rm_subs_table WHERE `form_id` = {$this->form_id})", OBJECT_K);
+            }
         }
         
         if(!$submitters or count($submitters) == 0) {
@@ -226,6 +236,7 @@ class RM_Chronos_Query_Builder {
         if(count($this->sub_query_arg) > 0 && !empty($this->sub_query_arg['custom_status_attr'])){
             $result_set->cus_status = $this->sub_query_arg['custom_status_attr'];
         }
+        
         return $result_set;             
     }
     
@@ -250,13 +261,15 @@ class RM_Chronos_Query_Builder {
                 //$ext_query .= "";
                 $ext_query = $query;
                 $ival_q = "";
-                foreach($value_array as $val => $op) {                    
+                
+                foreach($value_array as $val => $op) {
+                    $val = html_entity_decode($val);
                     if($ival_q != "")
                         $ival_q .= " OR ";
                     //Remove multiple spaces
                     $search_val = preg_replace('!\s+!', ' ', $val);
                     $search_val = $wpdb->esc_like($search_val);
-                    $search_val = str_replace(" ", "%",$search_val);
+                    //$search_val = str_replace(" ", "%",$search_val);
                     $ival_q .= "`value` $op '%$search_val%'";
                 }
                 

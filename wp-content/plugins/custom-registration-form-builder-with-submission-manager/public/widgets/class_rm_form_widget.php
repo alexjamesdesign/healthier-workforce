@@ -15,7 +15,23 @@ class RM_Form_Widget extends WP_Widget
             __('RegistrationMagic Form', 'custom-registration-form-builder-with-submission-manager'), // Name
             array('description' => __('Attaches RegistrationMagic form.', 'custom-registration-form-builder-with-submission-manager'),) // Args
         );
+        add_action('wp_enqueue_scripts', array($this, 'register_assets'));
     }
+    
+    public function register_assets() {
+        wp_enqueue_style(RM_PLUGIN_BASENAME, RM_BASE_URL . 'public/css/style_rm_front_end.css', array(), RM_PLUGIN_VERSION, 'all');
+        wp_enqueue_style('rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.css', array(), RM_PLUGIN_VERSION, 'all');
+        $theme = get_option('rm_option_theme','default');
+        
+        if(in_array($theme,array('default','classic','matchmytheme'))) {
+            wp_enqueue_style('rm-form-revamp-theme', RM_BASE_URL . "public/css/rm-form-theme-{$theme}.css", array(), RM_PLUGIN_VERSION);
+        } else {
+            wp_enqueue_style('rm-form-revamp-theme', RM_BASE_URL . "public/css/rm-form-theme-custom.css", array(), RM_PLUGIN_VERSION);
+        }
+        wp_enqueue_style('rm-form-revamp-style', RM_BASE_URL . 'public/css/rm-form-common-utility.css', array(), RM_PLUGIN_VERSION);
+        
+    }
+    
     /**
      * Front-end display of widget.
      *
@@ -26,12 +42,13 @@ class RM_Form_Widget extends WP_Widget
      */
     public function widget($args, $instance)
     {
-        echo wp_kses_post($args['before_widget']);
+        echo wp_kses_post((string)$args['before_widget']);
         if(isset($instance['rm_form']) && !empty($instance['rm_form'])){
-                echo do_shortcode("[RM_Form id='".$instance['rm_form']."']");
+            //echo do_shortcode("[RM_Form id='".$instance['rm_form']."']");
+            echo do_shortcode("[RM_Forms id='".$instance['rm_form']."']");
         }
         
-        echo wp_kses_post($args['after_widget']);
+        echo wp_kses_post((string)$args['after_widget']);
     }
     /**
      * Back-end widget form.
@@ -75,7 +92,7 @@ class RM_Form_Widget extends WP_Widget
     public function update($new_instance, $old_instance)
     {
         $instance = array();
-        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags($new_instance['title']) : '';
+        $instance['title'] = (!empty($new_instance['title'])) ? strip_tags((string)$new_instance['title']) : '';
         $instance['rm_form'] = (!empty($new_instance['rm_form']) ) ? $new_instance['rm_form'] : '';
         return $instance;
     }

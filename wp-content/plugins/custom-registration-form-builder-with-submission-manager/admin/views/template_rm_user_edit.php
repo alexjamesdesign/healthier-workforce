@@ -43,7 +43,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
     </div>
     <?php     
     //$rm_promo_banner_title = "Unlock export submissions and more by upgrading";
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
 </div>
 <?php } ?>

@@ -53,7 +53,9 @@ class RM_Chronos_Toolkit {
                     $field_values[$key] =  implode(', ', $val->value);
                 } elseif ($val->type == 'Checkbox') {   
                     $field_values[$key] = implode(', ',RM_Utilities::get_lable_for_option($field_id, $val->value));                    
-                }else {
+                } elseif ($val->type == 'URL') {
+                    $field_values[$key] = $val->value['url'];
+                } else {
                     $field_values[$key] = implode(', ', $val->value);
                 }
             } else {
@@ -121,8 +123,8 @@ class RM_Chronos_Toolkit {
         } else {
             $prev_subs = json_decode($res->sub_ids);
             $prev_uids = json_decode($res->user_ids);
-            $subs = array_unique(array_merge($prev_subs, $subs));
-            $uids = array_unique(array_merge($prev_uids, $uids));
+            $subs = array_unique(array_merge((array)$prev_subs, (array)$subs));
+            $uids = array_unique(array_merge((array)$prev_uids, (array)$uids));
             $subs = json_encode($subs);
             $uids = json_encode($uids);
             $meta = json_encode($meta);
@@ -144,13 +146,13 @@ class RM_Chronos_Toolkit {
         
         if(is_array($array[$key])) {
             foreach($array[$key] as $index => $item) {
-                $array[$key][$index] = wp_kses_post($item);
+                $array[$key][$index] = wp_kses_post((string)$item);
                 //$array[$key][$index] = $item;
             }
             return $array[$key];
         }
 
-        return wp_kses_post($array[$key]);
+        return wp_kses_post((string)$array[$key]);
         //return $array[$key];
     }
     

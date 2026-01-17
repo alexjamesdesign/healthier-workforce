@@ -58,7 +58,7 @@ class RM_Analytics_Service extends RM_Services
                     case 'Checkbox':
                         if(defined('REGMAGIC_ADDON'))
                             $vals = RM_Utilities::process_field_options($vals);
-                        $temp = RM_DBManager::run_query("SELECT value FROM `$subf_table` sf, `$subs_table` ss WHERE  `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 ORDER BY `sub_field_id`", 'col');
+                        $temp = defined('RM_SAVE_SUBMISSION_BASENAME') ? RM_DBManager::run_query("SELECT value FROM `$subf_table` sf, `$subs_table` ss WHERE  `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 AND ss.is_pending = 0 ORDER BY `sub_field_id`", 'col') : RM_DBManager::run_query("SELECT value FROM `$subf_table` sf, `$subs_table` ss WHERE  `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 ORDER BY `sub_field_id`", 'col');
 
                         if (!$temp)
                             break;
@@ -78,11 +78,11 @@ class RM_Analytics_Service extends RM_Services
 
                             //Fix for rare case of CRF migration not working properly
                             if ($single_sub && !is_array($single_sub))
-                                $single_sub = explode(',', $single_sub);
+                                $single_sub = explode(',', (string)$single_sub);
 
                             foreach ($single_sub as $f_v) {
                                 if(defined('REGMAGIC_ADDON'))
-                                    $f_v = stripslashes($f_v);
+                                    $f_v = stripslashes((string)$f_v);
                                 if (isset($vals[$f_v], $res[$f_v]))
                                     $res[$f_v] += 1;
                                 else
@@ -94,12 +94,12 @@ class RM_Analytics_Service extends RM_Services
 
                         //IMPORTANT: Checkbox is a multiple value type submission,
                         //hence we can't just add up the submissions of individual option to get the total submissions.              
-                        $tmp_obj->total_sub = (int) RM_DBManager::run_query("SELECT COUNT(sub_field_id) FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0", 'var');
+                        $tmp_obj->total_sub = defined('RM_SAVE_SUBMISSION_BASENAME') ? (int) RM_DBManager::run_query("SELECT COUNT(sub_field_id) FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 AND ss.is_pending = 0", 'var') : (int) RM_DBManager::run_query("SELECT COUNT(sub_field_id) FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0", 'var');
 
                         break;
 
                     case 'Country':
-                        $temp = RM_DBManager::run_query("SELECT `value`, COUNT(*) AS `count` FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 GROUP BY `value`");
+                        $temp = defined('RM_SAVE_SUBMISSION_BASENAME') ? RM_DBManager::run_query("SELECT `value`, COUNT(*) AS `count` FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 AND ss.is_pending = 0 GROUP BY `value`") : RM_DBManager::run_query("SELECT `value`, COUNT(*) AS `count` FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 GROUP BY `value`");
 
                         if (!$temp)
                             break;
@@ -120,16 +120,31 @@ class RM_Analytics_Service extends RM_Services
                         break;
                     case 'Gender':
                          //Set options for Gender field and let it fall through. Note that it must be same as in the Field Factory caode for Gender field.
-                         $vals = array("Male" => RM_UI_Strings::get("LABEL_GENDER_MALE"), "Female" => RM_UI_Strings::get("LABEL_GENDER_FEMALE"));
+                         /*$vals = array(
+                             "Male" => RM_UI_Strings::get("LABEL_GENDER_MALE"), 
+                             "Female" => RM_UI_Strings::get("LABEL_GENDER_FEMALE"),
+                             );*/
+                        $vals = array(
+                             RM_UI_Strings::get("LABEL_GENDER_MALE"), 
+                             RM_UI_Strings::get("LABEL_GENDER_FEMALE"),
+                             RM_UI_Strings::get("LABEL_GENDER_NONBINARY"),
+                             RM_UI_Strings::get("LABEL_GENDER_GENDERQUEER"),
+                             RM_UI_Strings::get("LABEL_GENDER_GENDERFLUID"),
+                             RM_UI_Strings::get("LABEL_GENDER_AGENDER"),
+                             RM_UI_Strings::get("LABEL_GENDER_TRANSGENDER"),
+                             RM_UI_Strings::get("LABEL_GENDER_TWOSPIRIT"),
+                             RM_UI_Strings::get("LABEL_GENDER_NOTPREFER"),
+                             RM_UI_Strings::get("LABEL_GENDER_OTHER"),
+                             );
                     case 'Radio':
                     case 'Select':
                         if(defined('REGMAGIC_ADDON'))
                             $vals = RM_Utilities::process_field_options($vals);
                         else
                             if ($field->field_type == 'Select')
-                                $vals = explode(',', $field->field_value);
+                                $vals = explode(',', (string)$field->field_value);
 
-                        $temp = RM_DBManager::run_query("SELECT `value`, COUNT(*) AS `count` FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 GROUP BY `value`");
+                        $temp = defined('RM_SAVE_SUBMISSION_BASENAME') ? RM_DBManager::run_query("SELECT `value`, COUNT(*) AS `count` FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 AND ss.is_pending = 0 GROUP BY `value`") : RM_DBManager::run_query("SELECT `value`, COUNT(*) AS `count` FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 GROUP BY `value`");
 
                         if (!$temp)
                             break;
@@ -138,7 +153,7 @@ class RM_Analytics_Service extends RM_Services
                         foreach ($temp as $single_sub)
                         {
                             if(defined('REGMAGIC_ADDON'))
-                                $single_sub->value = stripslashes($single_sub->value);
+                                $single_sub->value = stripslashes((string)$single_sub->value);
                             if (in_array($single_sub->value, $vals))
                             {
                                 $res[$single_sub->value] = (int) $single_sub->count;
@@ -157,7 +172,7 @@ class RM_Analytics_Service extends RM_Services
                         break;
                         
                         case 'Multi-Dropdown':
-                            $temp = RM_DBManager::run_query("SELECT `value`, COUNT(*) AS `count` FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 GROUP BY `value`");
+                            $temp = defined('RM_SAVE_SUBMISSION_BASENAME') ? RM_DBManager::run_query("SELECT `value`, COUNT(*) AS `count` FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 AND ss.is_pending = 0 GROUP BY `value`") : RM_DBManager::run_query("SELECT `value`, COUNT(*) AS `count` FROM `$subf_table` sf, `$subs_table` ss WHERE `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 GROUP BY `value`");
 
                             if(!$temp)
                               break;
@@ -185,7 +200,7 @@ class RM_Analytics_Service extends RM_Services
                            break;
                         
                     default:
-                        $temp = RM_DBManager::run_query("SELECT value FROM `$subf_table` sf, `$subs_table` ss WHERE  `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 ORDER BY `sub_field_id`", 'col');
+                        $temp = defined('RM_SAVE_SUBMISSION_BASENAME') ? RM_DBManager::run_query("SELECT value FROM `$subf_table` sf, `$subs_table` ss WHERE  `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 AND ss.is_pending = 0 ORDER BY `sub_field_id`", 'col') : RM_DBManager::run_query("SELECT value FROM `$subf_table` sf, `$subs_table` ss WHERE  `field_id` = $field->field_id AND sf.submission_id = ss.submission_id AND ss.child_id = 0 ORDER BY `sub_field_id`", 'col');
                         
                         if(empty($temp))
                             break;
@@ -422,7 +437,7 @@ class RM_Analytics_Service extends RM_Services
         wp_enqueue_script('google_charts', 'https://www.gstatic.com/charts/loader.js');
         wp_enqueue_script("rm_chart_widget", RM_BASE_URL . "public/js/google_chart_widget.js");
         if (isset($_GET['action']) && $_GET['action'] == 'registrationmagic_embedform') {
-            echo '<script>var rm_chart_conversion_data=' . wp_kses_post(json_encode($chart_data)) . '; </script>';
+            echo '<script>var rm_chart_conversion_data=' . wp_kses_post((string)json_encode($chart_data)) . '; </script>';
         } else {
             wp_localize_script('rm_chart_widget', 'rm_chart_conversion_data', $chart_data);
         }
@@ -446,7 +461,7 @@ class RM_Analytics_Service extends RM_Services
         ?>
         <script>
             function browser_usage_chart() {
-                var data = new google.visualization.DataTable('<?php echo wp_kses_post($json_table); ?>');
+                var data = new google.visualization.DataTable('<?php echo wp_kses_post((string)$json_table); ?>');
 
                 // Set chart options
                 var options = {/*is3D : true,*/
@@ -486,7 +501,7 @@ class RM_Analytics_Service extends RM_Services
             function draw_browser_conversion()
             {
                 var data = google.visualization.arrayToDataTable([
-                    ['Browser', 'Total Visits', 'Submissions'],<?php echo wp_kses_post($data_string); ?>]);
+                    ['Browser', 'Total Visits', 'Submissions'],<?php echo wp_kses_post((string)$data_string); ?>]);
 
                 var options = {
                     chartArea: {width: '50%'},
@@ -535,7 +550,7 @@ class RM_Analytics_Service extends RM_Services
         <script>
             function draw_timewise_stat() {
                 var data = google.visualization.arrayToDataTable([
-                    ['Date', 'Visits', 'Submissions'],<?php echo wp_kses_post($data_string); ?>]);
+                    ['Date', 'Visits', 'Submissions'],<?php echo wp_kses_post((string)$data_string); ?>]);
 
                 var options = {
                     chartArea: {width: '90%'},

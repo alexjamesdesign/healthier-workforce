@@ -23,9 +23,13 @@ class RM_Submission_Controller
         
         $filter = new RM_Submission_Filter($request,$service);
         $form_id = $filter->get_form();
+        if(!empty($form_id)) {
+            $data->form = new RM_Forms();
+            $data->form->load_from_db($form_id);
+        }
         $data->forms = RM_Utilities::get_forms_dropdown($service);
         $data->fields = empty($form_id) ? array() : $service->get_all_form_fields($form_id);
-        
+        $data->form_id = $form_id;
         $data->filter = $filter;
         $data->rm_slug = $request->req['page'];
         $data->submissions = $filter->get_records();
@@ -37,7 +41,7 @@ class RM_Submission_Controller
         $adv_filters = array('filter_tags', 'custom_status_ind', 'rm_field_to_search');
         foreach($adv_filters as $adv_filter) {
             if(isset($data->filter->filters[$adv_filter]) && !empty($data->filter->filters[$adv_filter])) {
-                if($adv_filter == 'filter_tags' && count(explode(',', $data->filter->filters[$adv_filter])) == 1 && (str_contains($data->filter->filters[$adv_filter], 'Read') || str_contains($data->filter->filters[$adv_filter], 'Unread'))) {
+                if($adv_filter == 'filter_tags' && count(explode(',', (string)$data->filter->filters[$adv_filter])) == 1 && (str_contains((string)$data->filter->filters[$adv_filter], 'Read') || str_contains((string)$data->filter->filters[$adv_filter], 'Unread'))) {
                     continue;
                 }
                 $data->is_adv_filter_active = true;
@@ -84,6 +88,8 @@ class RM_Submission_Controller
                     $data->submission = $model;
 
                     $data->payment = $service->get('PAYPAL_LOGS', array('submission_id' => $service->get_oldest_submission_from_group($model->get_submission_id())), array('%d'), 'row', 0, 99999);
+
+                    $data->tax_label = $settings->get_value_of('tax_rename');
 
                     if ($data->payment != null)
                     {
@@ -172,12 +178,18 @@ class RM_Submission_Controller
 
     public function remove($model, RM_Services $service, $request, $params)
     {
-       $form_id= (isset($request->req['rm_form_id']) && is_numeric($request->req['rm_form_id'])) ? $request->req['rm_form_id'] : null; 
-         $selected = isset($request->req['rm_selected']) ? $request->req['rm_selected'] : null;
-        if($selected !=null){
-        $service->remove_submissions($selected);
-        $service->remove_submission_notes($selected);
-        $service->remove_submission_payment_logs($selected);
+        //Filtering keys
+        foreach($request->req as $key => $val) {
+            $filtered_key = sanitize_text_field($key);
+            unset($request->req[$key]);
+            $request->req[$filtered_key] = $val;
+        }
+        $form_id = (isset($request->req['rm_form_id']) && is_numeric($request->req['rm_form_id'])) ? $request->req['rm_form_id'] : null; 
+        $selected = isset($request->req['rm_selected']) ? $request->req['rm_selected'] : null;
+        if($selected != null){
+            $service->remove_submissions($selected);
+            $service->remove_submission_notes($selected);
+            $service->remove_submission_payment_logs($selected);
         }
         RM_Utilities::redirect('?page=rm_submission_manage&rm_form_id='.$form_id);
     }

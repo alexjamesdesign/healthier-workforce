@@ -116,8 +116,8 @@ class RM_Migrator
                     $insert_cols_dst .= "`$dst_name`,";
                 }
             }
-            $insert_cols_src = trim($insert_cols_src, ',');
-            $insert_cols_dst = trim($insert_cols_dst, ',') . ')';
+            $insert_cols_src = trim((string)$insert_cols_src, ',');
+            $insert_cols_dst = trim((string)$insert_cols_dst, ',') . ')';
 
             $qry = "INSERT INTO $dest_tbl_name $insert_cols_dst SELECT $insert_cols_src FROM $src_tbl_name";
 //die($qry);
@@ -270,8 +270,8 @@ class RM_Migrator
                 case 'checkbox':
                     $res[$index]['Type'] = 'multisel';
                 case 'dropdown':
-                    $res[$index]['Option_Label'] = maybe_serialize(explode(',', $res[$index]['Option_Label']));
-                    $res[$index]['Option_Price'] = maybe_serialize(explode(',', $res[$index]['Option_Price']));
+                    $res[$index]['Option_Label'] = maybe_serialize(explode(',', (string)$res[$index]['Option_Label']));
+                    $res[$index]['Option_Price'] = maybe_serialize(explode(',', (string)$res[$index]['Option_Price']));
                     $res[$index]['Option_Value'] = null;
                     $res[$index]['extra_options'] = 'yes';
                     break;
@@ -409,7 +409,7 @@ class RM_Migrator
         $qry = "";
         $data_mapping = $this->value_map['forms'];
         $dst_data = array();
-        $valid_options = array('form_is_opt_in_checkbox', 'form_opt_in_text', 'form_should_user_pick', 'form_is_unique_token', 'form_description', 'form_user_field_label', 'form_custom_text', 'form_success_message', 'form_email_subject', 'form_email_content', 'form_submit_btn_label', 'form_submit_btn_color', 'form_submit_btn_bck_color', 'form_expired_by', 'form_submissions_limit', 'form_expiry_date', 'form_message_after_expiry', 'mailchimp_list', 'mailchimp_mapped_email', 'mailchimp_mapped_first_name', 'mailchimp_mapped_last_name');
+        $valid_options = array('form_is_opt_in_checkbox', 'form_opt_in_text', 'form_should_user_pick', 'form_is_unique_token', 'unique_token_opt', 'form_description', 'form_user_field_label', 'form_custom_text', 'form_success_message', 'form_email_subject', 'form_email_content', 'form_submit_btn_label', 'form_submit_btn_color', 'form_submit_btn_bck_color', 'form_expired_by', 'form_submissions_limit', 'form_expiry_date', 'form_message_after_expiry', 'mailchimp_list', 'mailchimp_mapped_email', 'mailchimp_mapped_first_name', 'mailchimp_mapped_last_name');
         $dbcolumns = array('form_id', 'form_name', 'form_type', 'form_user_role', 'default_user_role', 'form_should_send_email', 'form_redirect', 'form_redirect_to_page', 'form_redirect_to_url', 'form_should_auto_expire', 'form_options', 'published_pages');
         $table_name_src = $wpdb->prefix . 'crf_forms';
         $table_name_dst = $wpdb->prefix . 'rm_forms';
@@ -435,14 +435,14 @@ class RM_Migrator
                         {
                             if (isset($form_options[$a]) && $form_options[$a])
                             {
-                                $x = explode('-', $form_options[$a]);
+                                $x = explode('-', (string)$form_options[$a]);
                                 $form_options[$a] = $x[1] . '/' . $x[2] . '/' . $x[0];
                             }
                         } elseif ($a === 'expiry_type')
                         {
                             if (isset($form_options[$a]))
                             {
-                                if ('submission' === trim($form_options[$a]))
+                                if ('submission' === trim((string)$form_options[$a]))
                                     $form_options[$a] = 'submissions';
                             }
                         }
@@ -455,7 +455,7 @@ class RM_Migrator
                                     $form_options[$a] = null;
                                 } else
                                 {
-                                    $e = explode('_', $form_options[$a]);
+                                    $e = explode('_', (string)$form_options[$a]);
                                     $id = array_pop($e);
                                     if (is_numeric($id))
                                     {
@@ -481,7 +481,7 @@ class RM_Migrator
                                 }
                             } elseif (isset($form_options[$a]))
                             {
-                                $el = explode('_', $form_options[$a]);
+                                $el = explode('_', (string)$form_options[$a]);
                                 $f_id = array_pop($el);
                                 if (is_numeric($f_id))
                                 {
@@ -735,8 +735,8 @@ class RM_Migrator
                         switch ($s->Type)
                         {
                             case 'checkbox' :
-                                $tmp = explode(',', $value);
-                                if (trim($tmp[count($tmp) - 1]) === 'chl_other')
+                                $tmp = explode(',', (string)$value);
+                                if (trim((string)$tmp[count($tmp) - 1]) === 'chl_other')
                                 {
                                     array_pop($tmp);
                                     if ($b === 'field_is_other_option')
@@ -762,7 +762,7 @@ class RM_Migrator
                                     $value = null;
                                 else
                                 {
-                                    $tmp = explode(',', $value);
+                                    $tmp = explode(',', (string)$value);
                                     $value = maybe_serialize($tmp);
                                 }
                                 break;
@@ -892,7 +892,7 @@ class RM_Migrator
             }
         }
 
-        $cols = trim($cols, ',');
+        $cols = trim((string)$cols, ',');
         $values = '';
 
         foreach ($array_data as $index => $row)
@@ -913,7 +913,7 @@ class RM_Migrator
             $value = "(" . $value . "),";
             $values .= $value;
         }
-        $values = trim($values, ',');
+        $values = trim((string)$values, ',');
         $sql = "INSERT INTO `$table_name`($cols) VALUES $values";
 //die($sql);
 //$sql = esc_sql($sql);
@@ -1032,13 +1032,13 @@ class RM_Migrator
                                         $value = $fields[$f_id]->Id;
 
                                         $dst_data_sub[$s->submission_id]['data'][$value] = new stdClass;
-                                        $dst_data_sub[$s->submission_id]['data'][$value]->label = stripslashes($fields[$f_id]->Name);
-                                        $dst_data_sub[$s->submission_id]['data'][$value]->value = stripslashes($s->value);
+                                        $dst_data_sub[$s->submission_id]['data'][$value]->label = stripslashes((string)$fields[$f_id]->Name);
+                                        $dst_data_sub[$s->submission_id]['data'][$value]->value = stripslashes((string)$s->value);
                                     } else
                                     {
                                         $dst_data_sub[$s->submission_id]['data']['first_name'] = new stdClass;
                                         $dst_data_sub[$s->submission_id]['data']['first_name']->label = 'first_name';
-                                        $dst_data_sub[$s->submission_id]['data']['first_name']->value = stripslashes($s->value);
+                                        $dst_data_sub[$s->submission_id]['data']['first_name']->value = stripslashes((string)$s->value);
                                     }
 
                                     if (!isset($users[$s->submission_id]))
@@ -1052,13 +1052,13 @@ class RM_Migrator
                                         $value = $fields[$f_id]->Id;
 
                                         $dst_data_sub[$s->submission_id]['data'][$value] = new stdClass;
-                                        $dst_data_sub[$s->submission_id]['data'][$value]->label = stripslashes($fields[$f_id]->Name);
-                                        $dst_data_sub[$s->submission_id]['data'][$value]->value = stripslashes($s->value);
+                                        $dst_data_sub[$s->submission_id]['data'][$value]->label = stripslashes((string)$fields[$f_id]->Name);
+                                        $dst_data_sub[$s->submission_id]['data'][$value]->value = stripslashes((string)$s->value);
                                     } else
                                     {
                                         $dst_data_sub[$s->submission_id]['data']['last_name'] = new stdClass;
                                         $dst_data_sub[$s->submission_id]['data']['last_name']->label = 'last_name';
-                                        $dst_data_sub[$s->submission_id]['data']['last_name']->value = stripslashes($s->value);
+                                        $dst_data_sub[$s->submission_id]['data']['last_name']->value = stripslashes((string)$s->value);
                                     }
                                     if (!isset($users[$s->submission_id]))
                                         $users[$s->submission_id] = array();
@@ -1070,13 +1070,13 @@ class RM_Migrator
                                         $f_id = $form_field[$s->form_id]['description'];
                                         $value = $fields[$f_id]->Id;
                                         $dst_data_sub[$s->submission_id]['data'][$value] = new stdClass;
-                                        $dst_data_sub[$s->submission_id]['data'][$value]->label = stripslashes($fields[$f_id]->Name);
-                                        $dst_data_sub[$s->submission_id]['data'][$value]->value = stripslashes($s->value);
+                                        $dst_data_sub[$s->submission_id]['data'][$value]->label = stripslashes((string)$fields[$f_id]->Name);
+                                        $dst_data_sub[$s->submission_id]['data'][$value]->value = stripslashes((string)$s->value);
                                     } else
                                     {
                                         $dst_data_sub[$s->submission_id]['data']['description'] = new stdClass;
                                         $dst_data_sub[$s->submission_id]['data']['description']->label = 'description';
-                                        $dst_data_sub[$s->submission_id]['data']['description']->value = stripslashes($s->value);
+                                        $dst_data_sub[$s->submission_id]['data']['description']->value = stripslashes((string)$s->value);
                                     }
 
                                     if (!isset($users[$s->submission_id]))
@@ -1095,7 +1095,7 @@ class RM_Migrator
                                     $dst_data_sub[$s->submission_id]['user_email'] = $s->value;
                                     $dst_data_sub[$s->submission_id]['data']['user_email'] = new stdClass;
                                     $dst_data_sub[$s->submission_id]['data']['user_email']->label = 'user_email';
-                                    $dst_data_sub[$s->submission_id]['data']['user_email']->value = stripslashes($s->value);
+                                    $dst_data_sub[$s->submission_id]['data']['user_email']->value = stripslashes((string)$s->value);
                                     if (!isset($users[$s->submission_id]))
                                         $users[$s->submission_id] = array();
                                     $users[$s->submission_id]['user_email'] = $s->value;
@@ -1144,7 +1144,7 @@ class RM_Migrator
                                     break;
 
                                 default :
-                                    $tmp = explode('_', $s->$a);
+                                    $tmp = explode('_', (string)$s->$a);
                                     $f_id = array_pop($tmp);
                                     if (is_numeric($f_id))
                                     {
@@ -1156,16 +1156,16 @@ class RM_Migrator
                                             {
                                                 case 'checkbox':
                                                 case 'repeatable_text' :
-                                                    $s->value = maybe_serialize(explode(',', $s->value));
+                                                    $s->value = maybe_serialize(explode(',', (string)$s->value));
                                                     break;
 
                                                 case 'DatePicker' :
-                                                    $x = explode('-', $s->value);
+                                                    $x = explode('-', (string)$s->value);
                                                     $s->value = $x[1] . '/' . $x[2] . '/' . $x[0];
                                                     break;
 
                                                 case 'file' :
-                                                    $x = explode(',', $s->value);
+                                                    $x = explode(',', (string)$s->value);
                                                     $x['rm_field_type'] = 'File';
                                                     $s->value = maybe_serialize($x);
                                                     break;
@@ -1181,10 +1181,10 @@ class RM_Migrator
                                                     if ($pfields[$fields[$f_id]->Value]->Type === 'checkbox')
                                                     {
                                                         $v = array();
-                                                        $ab = explode(',', $s->value);
+                                                        $ab = explode(',', (string)$s->value);
                                                         foreach ($ab as $ba)
                                                         {
-                                                            $ac = explode('_', $ba);
+                                                            $ac = explode('_', (string)$ba);
                                                             $pr = array_pop($ac);
                                                             $pr_name = implode('_', $ac);
                                                             $v[] = $pr_name . '(' . $options->get_formatted_amount($pr, $curr) . ')';
@@ -1193,7 +1193,7 @@ class RM_Migrator
                                                         $s->value = maybe_serialize($v);
                                                     } elseif ($pfields[$fields[$f_id]->Value]->Type === 'checkbox')
                                                     {
-                                                        $ac = explode('_', $ba);
+                                                        $ac = explode('_', (string)$ba);
                                                         $pr = array_pop($ac);
                                                         $pr_name = implode('_', $ac);
                                                         $s->value = $pr_name . '(' . $options->get_formatted_amount($pr, $curr) . ')';
@@ -1211,12 +1211,12 @@ class RM_Migrator
                                             }
 
                                             $dst_data_sub[$s->submission_id]['data'][$f_id] = new stdClass;
-                                            $dst_data_sub[$s->submission_id]['data'][$f_id]->label = stripslashes($fields[$f_id]->Name);
+                                            $dst_data_sub[$s->submission_id]['data'][$f_id]->label = stripslashes((string)$fields[$f_id]->Name);
                                             $dst_data_sub[$s->submission_id]['data'][$f_id]->value = maybe_unserialize($s->value);
                                         } else
                                         {
                                             $dst_data_sub[$s->submission_id]['data'][$f_id] = new stdClass;
-                                            $dst_data_sub[$s->submission_id]['data'][$f_id]->label = stripslashes($label);
+                                            $dst_data_sub[$s->submission_id]['data'][$f_id]->label = stripslashes((string)$label);
                                             $dst_data_sub[$s->submission_id]['data'][$f_id]->value = maybe_unserialize($s->value);
                                         }
                                     } else
@@ -2027,7 +2027,7 @@ class RM_Migrator
             }
         }
 
-        $values = trim($values, ',');
+        $values = trim((string)$values, ',');
 
         if (!$values)
             return;

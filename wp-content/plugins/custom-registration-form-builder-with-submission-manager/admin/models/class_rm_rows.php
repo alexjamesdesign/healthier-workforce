@@ -335,7 +335,7 @@ class RM_Rows extends RM_Base_Model {
             $this->bmargin = absint($result->bmargin);
             $this->width = absint($result->width);
             $this->heading = sanitize_text_field($result->heading);
-            $this->subheading = sanitize_text_field($result->subheading);
+            $this->subheading = sanitize_textarea_field($result->subheading);
             $this->field_ids = maybe_unserialize($result->field_ids);
             $this->set_row_options(maybe_unserialize($result->row_options));
         } else {

@@ -22,10 +22,10 @@ class View_UserFormTwoCols extends View_UserForm{
         {
             //echo '<label class="control-label" for="', $element->getAttribute("id"), '">';
             $field_class = trim("rmfield ".$element->getAdvanceAttr('exclass_field'));
-            echo '<div class="'.esc_attr($field_class).'" for="', wp_kses_post($element->getAttribute("id")), '" style="',wp_kses_post($element->getAttribute("labelstyle")),'"><label>';
+            echo '<div class="'.esc_attr($field_class).'" for="', wp_kses_post((string)$element->getAttribute("id")), '" style="',wp_kses_post((string)$element->getAttribute("labelstyle")),'"><label>';
             
             
-            echo wp_kses_post($label);
+            echo wp_kses_post((string)$label);
             if ($element->isRequired()  && ($element->show_asterix()=='yes'))
             {
                 echo '<sup class="required">&nbsp;*</sup>';
@@ -33,7 +33,7 @@ class View_UserFormTwoCols extends View_UserForm{
             //check if label contains a field hint (text shown after label)
             $hint = $element->getAttribute("field_hint");                               
             if($hint)
-                echo "<span class='rm-field-hint'>".wp_kses_post($hint)."</span>";
+                echo "<span class='rm-field-hint'>".wp_kses_post((string)$hint)."</span>";
             echo '</label></div>';
         }
     }

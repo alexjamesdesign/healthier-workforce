@@ -13,7 +13,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'views/template
 <div class="rmagic">
     <div class="rmnotice-container">
         <div class="rmnotice">
-            <?php echo wp_kses_post($data); ?>
+            <?php echo wp_kses_post((string)$data); ?>
         </div>
     </div>   
 </div>

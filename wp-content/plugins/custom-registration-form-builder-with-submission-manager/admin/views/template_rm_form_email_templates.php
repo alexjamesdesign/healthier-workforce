@@ -26,7 +26,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
             $form->addElement(new Element_Hidden("form_id", $data->model->form_id));
         }
         
-        $form->addElement(new Element_HTML('<div class="rmrow"><h3>'.__('Notification Templates for User', 'registrationmagic-addon').'</h3></div>'));
+        $form->addElement(new Element_HTML('<div class="rmrow"><h3>'.__('Notification Templates for User', 'custom-registration-form-builder-with-submission-manager').'</h3></div>'));
         
         $form->addElement(new Element_Textbox("<b>" . RM_UI_Strings::get('LABEL_NEW_USER_EMAIL_SUB') . "</b>", "form_nu_notification_sub", array("class" => "rm_static_field", "value" =>  $data->model->form_options->form_nu_notification_sub, "longDesc"=>RM_UI_Strings::get('HELP_ADD_FORM_NU_EMAIL_SUB'))));
         $form->addElement(new Element_TinyMCEWP("<b>" . RM_UI_Strings::get('LABEL_NEW_USER_EMAIL') . "</b>(".__('Mail Merge and HTML Supported', 'custom-registration-form-builder-with-submission-manager')."):", $data->model->get_notification_messages('form_nu_notification'), "form_nu_notification", array('editor_class' => 'rm_TinydMCE', 'editor_height' => '100px'), array("longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_NU_EMAIL_MSG'))));

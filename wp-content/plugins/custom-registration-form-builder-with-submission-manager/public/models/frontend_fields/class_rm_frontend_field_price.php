@@ -44,9 +44,11 @@ class RM_Frontend_Field_Price extends RM_Frontend_Field_Base
             $name = $this->field_name;
 
             $properties = array();
-
+            $cond_class = '';
+            
             if (isset($this->field_options['required']))
                 $properties['required'] = '1';
+
             if (isset($this->field_options['style']))
                 $properties['style'] = $this->field_options['style'];  
             
@@ -59,6 +61,26 @@ class RM_Frontend_Field_Price extends RM_Frontend_Field_Base
             if (isset($this->field_options['labelStyle']))
                 $properties['labelStyle'] = $this->field_options['labelStyle'];
             
+            if(isset($this->field_model->field_options->conditions)) {
+                $rule_counter = 1;
+                if(!empty($parent_model->field_model->field_options->conditions['rules'])) {
+                    foreach($this->field_model->field_options->conditions['rules'] as $rule) {
+                        $field = new RM_Fields();
+                        $field->load_from_db(absint($rule['controlling_field']));
+                        $ftype = $field->get_field_type();
+                        $properties['data-cond-option'] = $rule_counter > 1 ? $properties['data-cond-option'] . '|' . $ftype . '_' . $rule['controlling_field'] : $ftype . '_' . $rule['controlling_field'];
+                        $properties['data-cond-operator'] = $rule_counter > 1 ? $properties['data-cond-operator'] . '|' . $rule['op'] : $rule['op'];
+                        $properties['data-cond-value'] = $rule_counter > 1 ? $properties['data-cond-value'] . '|' . $rule['values'][0] : $rule['values'][0];
+                        $rule_counter++;
+                    }
+                    $cond_class = 'data-conditional';
+                    if(isset($this->field_model->field_options->conditions['settings']['combinator'])) {
+                        $properties['data-cond-comb'] = $this->field_model->field_options->conditions['settings']['combinator'];
+                    }
+                    $properties['data-cond-action'] = $this->field_model->field_options->conditions['action'];
+                }
+            }
+
             $properties['data-rmfieldtype'] = 'price';
             
             $quantity_field = ($paypal_field->get_extra_options('allow_quantity') == 'yes') ? new Element_Number('&times;',$name."_qty", array('title' => 'Quantity', 'value' => 1, 'min' => 0, 'step' => 1, 'class' => 'rm_price_field_quantity')) : null;
@@ -72,14 +94,15 @@ class RM_Frontend_Field_Price extends RM_Frontend_Field_Base
                     else
                         $properties['value'] = $paypal_field->get_name() . " (" . $paypal_field->get_value() . " " . $this->curr_symbol . ")";
                     $properties['readonly'] = 1;
-                    $properties['class'] = $paypal_field->get_class();
+                    $properties['class'] = $paypal_field->get_class() . " " . $cond_class;
+
                     $properties['data-rmfieldprice'] = $paypal_field->get_value();
-                    if ($paypal_field->get_extra_options('show_on_form') != 'yes')
+                    if ($paypal_field->get_extra_options('show_on_form') != 'yes') {
                         $element = new Element_Hidden($name, $properties['value'], $properties);
-                    else
+                    } else {
                         $element = new Element_Textbox($label, $name, $properties, array('exclass_row'=>'rm_pricefield_row','sub_element'=>$quantity_field));
+                    }
                     break;
-                
             }
 
             $pfbc_field_array[] = $element;
@@ -144,10 +167,15 @@ class RM_Frontend_Field_Price extends RM_Frontend_Field_Base
         switch ($paypal_field->get_type())
         {
             case "fixed":
+                if(!isset($request[$this->field_name])) {
+                    break;
+                }
+
                 if(isset($request[$this->field_name."_qty"]) && intval($request[$this->field_name."_qty"]) > -1)
                     $quantity = intval($request[$this->field_name."_qty"]);
                 else
                     $quantity = 1;
+
                 $price = floatval($paypal_field->get_value());
                 $total_price = $price * $quantity;
                 $tmp_billing = (object)array('label'=>$paypal_field->get_name(), 'price'=>$price, 'qty' => $quantity);

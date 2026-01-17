@@ -75,7 +75,7 @@ class RM_EX_LMSupport {
     }
     
     public function create_admin_page() {
-        add_submenu_page("", "Landing Page", "Landing Page", "manage_options", "rm_ex_lmsupport", array($this,'display_promo_page'));        
+        add_submenu_page("rm_dummy_string",  __('Landing Page', 'custom-registration-form-builder-with-submission-manager'),  __('Landing Page', 'custom-registration-form-builder-with-submission-manager'), "manage_options", "rm_ex_lmsupport", array($this,'display_promo_page'));        
     }
     
     public function get_lm_install_url() {

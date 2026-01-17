@@ -38,7 +38,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         }
         $form->addElement(new Element_HTML('<div class="rmnotice rm-invite-field-row"><b>' . RM_UI_Strings::get("GLOBAL_OVERRIDES_NOTE") . '</b></div>     
 '));
-        $mails = explode(',',$data->model->form_options->admin_email);
+        $mails = explode(',',(string)$data->model->form_options->admin_email);
         $form->addElement(new Element_Checkbox(RM_UI_Strings::get('LABEL_FORM_NOTIFS_TO'), "admin_notification", array("yes" => ''),array("id" => "id_rm_admin_notify_cb", "class" => "id_rm_admin_notify_cb" , "disabled" => 1,"value" =>$data->model->form_options->admin_notification,  "onclick" => "hide_show(this)" , "longDesc" => RM_UI_Strings::get('MSG_BUY_PRO_BOTH_INLINE'))));
         
         if ($data->model->form_options->admin_notification == 'yes')

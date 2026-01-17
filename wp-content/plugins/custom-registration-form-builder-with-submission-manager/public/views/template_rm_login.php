@@ -4,36 +4,39 @@ if (!defined('WPINC')) {
 }
 
 wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.css' );
-    
 if (!empty($data->show_otp) && defined('REGMAGIC_ADDON'))  // 2 Factor OTP form
 {
     echo '<div class="rmagic"><div class="rmcontent rm-login-wrapper">';
     $form = new RM_PFBC_Form($data->otp_form_slug);
-    $form->configure(array(
+    $configure_arr = array(
         "prevent" => array("bootstrap", "jQuery"),
         "action" => "",
-        "style" => isset($data->design['style_form'])?$data->design['style_form']:null
-    ));
+        "style" => isset($data->design['style_form'])?$data->design['style_form']:null,
+    );
+    if($data->disable_autocomplete) {
+        $configure_arr['autocomplete'] = "off";
+    }
+    $form->configure($configure_arr);
     
     if(isset($data->design['placeholder_css'])){		
         $p_css = '<style>'.str_replace("::-", ' #'.$data->otp_form_slug.' ::-', $data->design['placeholder_css']);		
-        echo str_replace("}:-", '} #'.wp_kses_post($data->otp_form_slug).' ::-', wp_kses_post($p_css)).'</style>';	
+        echo str_replace("}:-", '} #'.wp_kses_post((string)$data->otp_form_slug).' ::-', wp_kses_post((string)$p_css)).'</style>';	
         //$form->addElement(new Element_HTML($p_css));		
     }
     if(isset($data->design['style_label'])){	
-         echo '<style>#'.wp_kses_post($data->otp_form_slug).' .rmrow .rmfield label { '.wp_kses_post($data->design['style_label']).' }</style>';
+         echo '<style>#'.wp_kses_post((string)$data->otp_form_slug).' .rmrow .rmfield label { '.wp_kses_post((string)$data->design['style_label']).' }</style>';
          //$form->addElement(new Element_HTML($p_css));		
     }
     if(isset($data->design['text_focus_color'])){
-        echo '<style>#'.wp_kses_post($data->otp_form_slug).' .rmrow .rminput input[type=text]:focus, #'.wp_kses_post($data->otp_form_slug).' .rmrow .rminput input[type=password]:focus { color: '.wp_kses_post($data->design['text_focus_color']).' !important; }</style>';
+        echo '<style>#'.wp_kses_post((string)$data->otp_form_slug).' .rmrow .rminput input[type=text]:focus, #'.wp_kses_post((string)$data->otp_form_slug).' .rmrow .rminput input[type=password]:focus { color: '.wp_kses_post((string)$data->design['text_focus_color']).' !important; }</style>';
         //$form->addElement(new Element_HTML($p_css));
     }
     if(isset($data->design['field_bg_focus_color'])){
-        echo '<style>#'.wp_kses_post($data->otp_form_slug).' .rmrow .rminput input[type=text]:focus, #'.wp_kses_post($data->otp_form_slug).' .rmrow .rminput input[type=password]:focus { background-color: '.wp_kses_post($data->design['field_bg_focus_color']).' !important; }</style>';
+        echo '<style>#'.wp_kses_post((string)$data->otp_form_slug).' .rmrow .rminput input[type=text]:focus, #'.wp_kses_post((string)$data->otp_form_slug).' .rmrow .rminput input[type=password]:focus { background-color: '.wp_kses_post((string)$data->design['field_bg_focus_color']).' !important; }</style>';
         //$form->addElement(new Element_HTML($p_css));
     }
     if(isset($data->design['btn_hover_color'])){
-        echo '<style>#'.wp_kses_post($data->otp_form_slug).' .buttonarea input[type=submit]:hover { background-color: '.wp_kses_post($data->design['btn_hover_color']).' !important; }</style>';
+        echo '<style>#'.wp_kses_post((string)$data->otp_form_slug).' .buttonarea input[type=submit]:hover { background-color: '.wp_kses_post((string)$data->design['btn_hover_color']).' !important; }</style>';
         //$form->addElement(new Element_HTML($p_css));
     }
     $form->addElement(new Element_Hidden("rm_slug", "rm_login_form"));
@@ -55,36 +58,40 @@ if (!empty($data->show_otp) && defined('REGMAGIC_ADDON'))  // 2 Factor OTP form
 else // Normal form with username and password
 {
     if(!empty($data->ban)){
-        echo wp_kses_post($data->ban_error_msg);
+        echo wp_kses_post((string)$data->ban_error_msg);
         return;
     }
 
     $form = new RM_PFBC_Form($data->login_form_slug);
-    $form->configure(array(
+    $configure_arr = array(
         "prevent" => array("bootstrap", "jQuery"),
         "action" => "",
-         "style" => isset($data->design['style_form'])?$data->design['style_form']:null
-    ));
+        "style" => isset($data->design['style_form'])?$data->design['style_form']:null,
+    );
+    if(isset($data->disable_autocomplete) && $data->disable_autocomplete) {
+        $configure_arr['autocomplete'] = "off";
+    }
+    $form->configure($configure_arr);
 
     if(isset($data->design['placeholder_css'])){		
         $p_css = str_replace("::-", '#'.$data->login_form_slug.' ::-', $data->design['placeholder_css']);		
-        echo '<style>'.str_replace("}:-", '} #'.wp_kses_post($data->login_form_slug).' ::-', wp_kses_post($p_css)).'</style>';		
+        echo '<style>'.str_replace("}:-", '} #'.wp_kses_post((string)$data->login_form_slug).' ::-', wp_kses_post((string)$p_css)).'</style>';		
         //$form->addElement(new Element_HTML($p_css));	
     }
     if(isset($data->design['style_label'])){	
-        echo "<style>#".wp_kses_post($data->login_form_slug)." .rmrow .rmfield label { ".wp_kses_post($data->design['style_label'])." }</style>";
+        echo "<style>#".wp_kses_post((string)$data->login_form_slug)." .rmrow .rmfield label { ".wp_kses_post((string)$data->design['style_label'])." }</style>";
         //$form->addElement(new Element_HTML($p_css));
     }
     if(isset($data->design['text_focus_color'])){
-        echo "<style>#".wp_kses_post($data->login_form_slug)." .rmrow .rminput input[type=text]:focus, #".wp_kses_post($data->login_form_slug)." .rmrow .rminput input[type=password]:focus { color: ".wp_kses_post($data->design['text_focus_color'])." !important; }</style>";
+        echo "<style>#".wp_kses_post((string)$data->login_form_slug)." .rmrow .rminput input[type=text]:focus, #".wp_kses_post((string)$data->login_form_slug)." .rmrow .rminput input[type=password]:focus { color: ".wp_kses_post((string)$data->design['text_focus_color'])." !important; }</style>";
         //$form->addElement(new Element_HTML($p_css));
     }
     if(isset($data->design['field_bg_focus_color'])){
-        echo "<style>#".wp_kses_post($data->login_form_slug)." .rmrow .rminput input[type=text]:focus, #".wp_kses_post($data->login_form_slug)." .rmrow .rminput input[type=password]:focus { background-color: ".wp_kses_post($data->design['field_bg_focus_color'])." !important; }</style>";
+        echo "<style>#".wp_kses_post((string)$data->login_form_slug)." .rmrow .rminput input[type=text]:focus, #".wp_kses_post((string)$data->login_form_slug)." .rmrow .rminput input[type=password]:focus { background-color: ".wp_kses_post((string)$data->design['field_bg_focus_color'])." !important; }</style>";
         //$form->addElement(new Element_HTML($p_css));
     }
     if(isset($data->design['btn_hover_color'])){
-        echo "<style>#".wp_kses_post($data->login_form_slug)." .buttonarea input[type=submit]:hover { background-color: ".wp_kses_post($data->design['btn_hover_color'])." !important; }</style>";
+        echo "<style>#".wp_kses_post((string)$data->login_form_slug)." .buttonarea input[type=submit]:hover { background-color: ".wp_kses_post((string)$data->design['btn_hover_color'])." !important; }</style>";
         //$form->addElement(new Element_HTML($p_css));
     }
     $form->addElement(new Element_Hidden("rm_slug", "rm_login_form"));
@@ -104,7 +111,7 @@ else // Normal form with username and password
 
             if(isset($user_info->errors)) {
                 foreach($user_info->errors as $error) {
-                    echo "<p>".wp_kses_post($error->message)."</p>";
+                    echo "<p>".wp_kses_post((string)$error->message)."</p>";
                 }
                 echo "<p>".__('Login Failed', 'custom-registration-form-builder-with-submission-manager')."</p>";
             } else {
@@ -161,9 +168,9 @@ else // Normal form with username and password
                     if(isset($this->field_options)){
                         $this->x_opts = (object)array('icon' => $this->field_options->icon);
                     }
-                   $form->addElement(new Element_Textbox($field['field_label'], "username", array("required" => "1","class"=>$field['field_css_class'], "minlength"=>isset($field['field_min_length'])?$field['field_min_length']:0, "maxlength"=>isset($field['field_max_length'])?$field['field_max_length']:'', "placeholder" => $field['placeholder'],'style'=>isset($data->design['style_textfield'])?$data->design['style_textfield']:null)));
+                   $form->addElement(new Element_Textbox($field['field_label'], "username", array("required" => "1","class"=>$field['field_css_class'], "minlength"=>isset($field['field_min_length'])?$field['field_min_length']:0, "maxlength"=>isset($field['field_max_length'])?$field['field_max_length']:'', "placeholder" => $field['placeholder'],'style'=>isset($data->design['style_textfield'])?$data->design['style_textfield']:null, "autocomplete" => isset($data->disable_autocomplete) && $data->disable_autocomplete ? "off" : null)));
                 } else if ($field['field_type'] == 'password') {
-                    $form->addElement(new Element_Password($field['field_label'], "pwd", array("required" => "1", "class"=>$field['field_css_class'], "minlength"=>isset($field['field_min_length'])?$field['field_min_length']:0, "maxlength"=>isset($field['field_max_length'])?$field['field_max_length']:'', "placeholder" => $field['placeholder'],'style'=>isset($data->design['style_textfield'])?$data->design['style_textfield']:null)));
+                    $form->addElement(new Element_Password($field['field_label'], "pwd", array("required" => "1", "class"=>$field['field_css_class']. ' ' .'rm_login_pwd_field', "minlength"=>isset($field['field_min_length'])?$field['field_min_length']:0, "maxlength"=>isset($field['field_max_length'])?$field['field_max_length']:'', "placeholder" => $field['placeholder'],'style'=>isset($data->design['style_textfield'])?$data->design['style_textfield']:null, "autocomplete" => isset($data->disable_autocomplete) && $data->disable_autocomplete ? "off" : null)));
                 } else {
                     /* Get widget data in field options format to comply with existing field structure */
                     $login_model = new RM_Login_Fields();
@@ -191,6 +198,7 @@ else // Normal form with username and password
         if (get_option('rm_option_enable_captcha') == "yes" && !empty($data->show_captcha))
             $form->addElement(new Element_Captcha());
 
+        do_action('rm_extend_login_field_before_submit', $form, $data);
 
         if($data->buttons['align']=='left' || $data->buttons['align']=='right'){
             if(empty($data->design['style_btnfield'])){
@@ -237,13 +245,13 @@ else // Normal form with username and password
                 <?php if (!is_user_logged_in() || (isset($_GET['form_prev']) && $_GET['form_prev']==1 && isset($_GET['form_type']) && $_GET['form_type']=='login')) : ?>
                     <div class="rm-thirdp-login-button-wrap">
                     <?php
-                        echo html_entity_decode(wp_kses($data->facebook_html,RM_Utilities::expanded_allowed_tags()));
+                        echo html_entity_decode(wp_kses((string)$data->facebook_html,RM_Utilities::expanded_allowed_tags()));
                         if(defined('REGMAGIC_ADDON')) {
-                            echo html_entity_decode(wp_kses($data->google_html,RM_Utilities::expanded_allowed_tags()));
-                            echo html_entity_decode(wp_kses($data->linkedin_html,RM_Utilities::expanded_allowed_tags()));
-                            echo html_entity_decode(wp_kses($data->windows_html,RM_Utilities::expanded_allowed_tags()));
-                            echo html_entity_decode(wp_kses($data->twitter_html,RM_Utilities::expanded_allowed_tags()));
-                            echo html_entity_decode(wp_kses($data->instagram_html,RM_Utilities::expanded_allowed_tags()));
+                            echo html_entity_decode(wp_kses((string)$data->google_html,RM_Utilities::expanded_allowed_tags()));
+                            echo html_entity_decode(wp_kses((string)$data->linkedin_html,RM_Utilities::expanded_allowed_tags()));
+                            echo html_entity_decode(wp_kses((string)$data->windows_html,RM_Utilities::expanded_allowed_tags()));
+                            echo html_entity_decode(wp_kses((string)$data->twitter_html,RM_Utilities::expanded_allowed_tags()));
+                            //echo html_entity_decode(wp_kses((string)$data->instagram_html,RM_Utilities::expanded_allowed_tags()));
                         }
                     ?>
                     </div>
@@ -261,34 +269,7 @@ else // Normal form with username and password
 
 <?php } ?>
 
-<script>
 
-
-//PassWord field Show Hide
-
-if (jQuery('.rm-login-wrapper [name="pwd"]').length > 0) {
-    const passwordInput = jQuery('.rm-login-wrapper [name="pwd"]:not(.rm-login-widget-modal .rm-login-wrapper [name="pwd"])');
-    const closestDiv = passwordInput.closest('div.rminput');
-    
-    console.log(closestDiv);
-    closestDiv.addClass('rm-password-toggle-wrap');
-    closestDiv.prepend('<span class="rm-togglePassword"></span>');
-
-    const togglePassword = document.querySelector(".rm-togglePassword");
-    if (togglePassword) {
-        togglePassword.addEventListener("click", function () {
-            const password = document.querySelector("input[name='pwd']");
-            const type = password.getAttribute("type") === "password" ? "text" : "password";
-            password.setAttribute("type", type);
-            this.classList.toggle("rm-togglePassword-show");
-        });
-    }
-}
-
-
-
-
-</script>
 
 <?php
 /*

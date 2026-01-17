@@ -43,7 +43,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
     else
     {
     $rm_promo_banner_title = __('Unlock Custom User Area Tabs by upgrading to ','custom-registration-form-builder-with-submission-manager');
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     }
     ?>
     <style>

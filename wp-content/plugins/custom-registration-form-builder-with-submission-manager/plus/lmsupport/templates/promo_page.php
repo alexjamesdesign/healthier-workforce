@@ -2,7 +2,7 @@
     <div  class="rmcontent">
         <div class="rmheader"><?php _e( 'LeadMagic', 'custom-registration-form-builder-with-submission-manager' ); ?></div>  
 <?php if(!$data->is_lm_activated): ?>
-    <div class="rmrow rmlms-banner"><img src="<?php echo esc_url(RM_EX_LMS()->base_url); ?>images/lm_sshot.jpg"/></div>
+    <!--<div class="rmrow rmlms-banner"><img src="<?php echo esc_url(RM_EX_LMS()->base_url); ?>images/lm_sshot.jpg"/></div>-->
 
 <div class="rmrow rmlms-prag"><strong><?php _e( 'LeadMagic', 'custom-registration-form-builder-with-submission-manager' ); ?></strong> 
     <?php _e( 'solves two problems that 

@@ -45,8 +45,6 @@ class PostmanConfigurationController {
 		$this->options = PostmanOptions::getInstance();
 		$this->settingsRegistry = new PostmanSettingsRegistry();
 
-		PostmanUtils::registerAdminMenu( $this, 'addSetupWizardSubmenu' );
-
 		// hook on the init event
 		add_action( 'init', array(
 				$this,
@@ -60,6 +58,8 @@ class PostmanConfigurationController {
 		) );
 
 		add_action( 'admin_menu', array( $this, 'add_submenu_page' ), 21 );
+		add_action( 'admin_menu', array( $this, 'addSetupWizardSubmenu' ), 21 );
+		add_filter( 'submenu_file', array( $this, 'hide_submenu_item' ) );
 
 	}
 
@@ -169,7 +169,13 @@ class PostmanConfigurationController {
 	 * Register the Setup Wizard screen
 	 */
 	public function addSetupWizardSubmenu() {
-		$page = add_submenu_page( '', sprintf( __( '%s Setup', 'post-smtp' ), __( 'Postman SMTP', 'post-smtp' ) ), __( 'Postman SMTP', 'post-smtp' ), Postman::MANAGE_POSTMAN_CAPABILITY_NAME, PostmanConfigurationController::CONFIGURATION_WIZARD_SLUG, array(
+		$page = add_submenu_page( 
+			PostmanViewController::POSTMAN_MENU_SLUG, 
+			sprintf( __( '%s Setup', 'post-smtp' ), __( 'Postman SMTP', 'post-smtp' ) ), 
+			__( 'Postman SMTP', 'post-smtp' ), 
+			Postman::MANAGE_POSTMAN_CAPABILITY_NAME, 
+			PostmanConfigurationController::CONFIGURATION_WIZARD_SLUG, 
+			array(
 				$this,
 				'outputWizardContent',
 		) );
@@ -178,6 +184,24 @@ class PostmanConfigurationController {
 				$this,
 				'enqueueWizardResources',
 		) );
+	}
+
+	/**
+	 * Hides submenu 
+	 */
+	public function hide_submenu_item( $submenu_file ) {
+
+		$hidden_submenus = array(
+			PostmanConfigurationController::CONFIGURATION_WIZARD_SLUG => true,
+		);
+
+		// Hide the submenu.
+		foreach ( $hidden_submenus as $submenu => $unused ) {
+			remove_submenu_page( PostmanViewController::POSTMAN_MENU_SLUG, $submenu );
+		}
+
+		return $submenu_file;
+
 	}
 
 	/**
@@ -218,17 +242,17 @@ class PostmanConfigurationController {
 		PostmanViewController::outputChildPageHeader( __( 'Settings', 'post-smtp' ), 'advanced_config' );
 
 		$config_tabs = apply_filters( 'post_smtp_admin_tabs', array(
-		    'account_config' => __( 'Account', 'post-smtp' ),
-		    'fallback' => __( 'Fallback', 'post-smtp' ),
-		    'message_config' => __( 'Message', 'post-smtp' ),
-		    'logging_config' => __( 'Logging', 'post-smtp' ),
-		    'advanced_options_config' => __( 'Advanced', 'post-smtp' ),
+		    'connections_config' => sprintf( '<span class="dashicons dashicons-networking"></span> %s', __( 'Connections', 'post-smtp' ) ),
+		    'fallback' => sprintf( '<span class="dashicons dashicons-backup"></span> %s', __( 'Fallback', 'post-smtp' ) ),
+		    'message_config' => sprintf( '<span class="dashicons dashicons-email"></span> %s', __( 'Message', 'post-smtp' ) ),
+		    'logging_config' => sprintf( '<span class="dashicons dashicons-list-view"></span> %s', __( 'Logging', 'post-smtp' ) ),
+		    'advanced_options_config' => sprintf( '<span class="dashicons dashicons-admin-tools"></span> %s', __( 'Advanced', 'post-smtp' ) )
         ) );
 
 		print '<div id="config_tabs"><ul>';
 
 		foreach ( $config_tabs as $slug => $tab ) :
-            printf( '<li><a href="#%s">%s</a></li>', esc_attr( $slug ), esc_html( $tab ) );
+            printf( '<li><a href="#%s">%s</a></li>', esc_attr( $slug ), wp_kses_post( $tab ) );
         endforeach;
 
 		print '</ul>';
@@ -240,8 +264,8 @@ class PostmanConfigurationController {
 		// This prints out all hidden setting fields
 		settings_fields( PostmanAdminController::SETTINGS_GROUP_NAME );
 
-		// account_config
-		print '<section id="account_config">';
+		// connections_config
+		print '<section id="connections_config">';
 		if ( sizeof( PostmanTransportRegistry::getInstance()->getTransports() ) > 1 ) {
 			do_settings_sections( 'transport_options' );
 		} 
@@ -268,11 +292,32 @@ class PostmanConfigurationController {
 		print '<div id="sendgrid_settings" class="authentication_setting non-basic non-oauth2">';
 		do_settings_sections( PostmanSendGridTransport::SENDGRID_AUTH_OPTIONS );
 		print '</div>';
+		print '<div id="emailit_settings" class="authentication_setting non-basic non-oauth2">';
+		do_settings_sections( PostmanEmailitTransport::EMAILIT_AUTH_OPTIONS );
+		print '</div>';
+		print '<div id="maileroo_settings" class="authentication_setting non-basic non-oauth2">';
+		do_settings_sections( PostmanMailerooTransport::MAILEROO_AUTH_OPTIONS );
+		print '</div>';
+		print '<div id="mailersend_settings" class="authentication_setting non-basic non-oauth2">';
+		do_settings_sections( PostmanMailerSendTransport::MAILERSEND_AUTH_OPTIONS );
+		print '</div>';
 		print '<div id="mailgun_settings" class="authentication_setting non-basic non-oauth2">';
 		do_settings_sections( PostmanMailgunTransport::MAILGUN_AUTH_OPTIONS );
 		print '</div>';
         print '<div id="sendinblue_settings" class="authentication_setting non-basic non-oauth2">';
         do_settings_sections( PostmanSendinblueTransport::SENDINBLUE_AUTH_OPTIONS );
+        print '</div>';
+        print '<div id="mailtrap_settings" class="authentication_setting non-basic non-oauth2">';
+        do_settings_sections( PostmanMailtrapTransport::MAILTRAP_AUTH_OPTIONS );
+        print '</div>';
+        print '<div id="resend_settings" class="authentication_setting non-basic non-oauth2">';
+        do_settings_sections( PostmanResendTransport::RESEND_AUTH_OPTIONS );
+        print '</div>';
+		print '<div id="mailjet_settings" class="authentication_setting non-basic non-oauth2">';
+        do_settings_sections( PostmanMailjetTransport::MAILJET_AUTH_OPTIONS );
+		print '</div>';
+		print '<div id="sendpulse_settings" class="authentication_setting non-basic non-oauth2">';
+        do_settings_sections( PostmanSendpulseTransport::SENDPULSE_AUTH_OPTIONS );
         print '</div>';
         print '<div id="postmark_settings" class="authentication_setting non-basic non-oauth2">';
         do_settings_sections( PostmanPostmarkTransport::POSTMARK_AUTH_OPTIONS );
@@ -283,6 +328,10 @@ class PostmanConfigurationController {
 		print '<div id="elasticemail_settings" class="authentication_setting non-basic non-oauth2">';
         do_settings_sections( PostmanElasticEmailTransport::ELASTICEMAIL_AUTH_OPTIONS );
         print '</div>';
+
+		print '<div id="smtp2go_settings" class="authentication_setting non-basic non-oauth2">';
+		do_settings_sections( PostmanSmtp2GoTransport::SMTP2GO_AUTH_OPTIONS );
+		print '</div>';
 
 		do_action( 'post_smtp_settings_sections' );
 
@@ -637,7 +686,7 @@ class PostmanConfigurationController {
 			
 			?>
 			<h2><?php esc_html_e( 'Select notification service', 'post-smtp' ); ?></h2>
-			<p><?php printf( esc_html( 'Select a service to notify you when an email delivery will fail. It helps keep track, so you can resend any such emails from the %s if required.', 'post-smtp' ), '<a href="'.$logs_url.'" target="_blank">log section</a>' ) ?></p>
+			<p><?php printf( esc_html__( 'Select a service to notify you when an email delivery will fail. It helps keep track, so you can resend any such emails from the %s if required.', 'post-smtp' ), '<a href="'.$logs_url.'" target="_blank">log section</a>' ) ?></p>
 			<div class="ps-notify-radios">
 				<div class="ps-notify-radio-outer">
 					<div class="ps-notify-radio">
@@ -687,19 +736,6 @@ class PostmanConfigurationController {
 					</div>
 					<h4>Pushover</h4>
 				</div>
-				<?php if( !class_exists( 'PostSMTPTwilio' ) ): ?>
-				<a href="https://postmansmtp.com/extensions/twilio-extension-pro/" target="_blank">
-					<div class="ps-notify-radio-outer">
-						<div class="ps-notify-radio pro-container">
-							<label for="ps-notify-twilio-pro">
-								<img src="<?php echo esc_url( POST_SMTP_ASSETS . 'images/icons/pro.png' ) ?>" class="pro-icon" />
-								<img src="<?php echo esc_url( POST_SMTP_ASSETS . 'images/icons/twilio.png' ) ?>" />
-							</label>
-						</div>
-						<h4>Twilio(SMS)</h4>
-					</div>
-				</a>
-				<?php endif; ?>
 			</div>
 			<div id="email_notify" style="display: none;">
 				<input type="text" name="postman_options[notification_email]" value="<?php echo esc_attr( $notification_emails ); ?>" />

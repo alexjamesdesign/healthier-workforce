@@ -21,5 +21,5 @@
 <?php else: ?>
     <a href="<?php echo esc_url($data->lm_page_url); ?>"><?php _e('Create/Manage Landing Pages','custom-registration-form-builder-with-submission-manager'); ?></a>.
 <?php endif; ?>
-    <img src="<?php echo esc_url(RM_EX_LMS()->base_url); ?>images/lm_sshot_fe_primer.jpg" class="content-asset">
+    <!--<img src="<?php echo esc_url(RM_EX_LMS()->base_url); ?>images/lm_sshot_fe_primer.jpg" class="content-asset">-->
 </div>

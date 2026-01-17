@@ -31,7 +31,7 @@ class RM_Map_MailChimp_Controller {
 
             $content = $mailchimp->mc_field_mapping($form_id, $form->form_options, $list);
 
-            echo wp_kses($content,RM_Utilities::expanded_allowed_tags());
+            echo wp_kses((string)$content,RM_Utilities::expanded_allowed_tags());
         }
         die;
     }

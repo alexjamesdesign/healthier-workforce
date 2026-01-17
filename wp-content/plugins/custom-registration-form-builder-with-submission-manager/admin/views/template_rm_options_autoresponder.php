@@ -33,7 +33,7 @@ $image_path = plugin_dir_url(dirname(dirname(__FILE__))) . 'images/';
         $form->addElement(new Element_Checkbox(RM_UI_Strings::get('LABEL_NOTIFICATIONS_TO_ADMIN'), "admin_notification", array("yes" => ''),array("id" => "id_rm_admin_notify_cb", "class" => "id_rm_admin_notify_cb" , "value" =>  $data['admin_notification'],  "onclick" => "hide_show(this)" , "longDesc" => RM_UI_Strings::get('HELP_OPTIONS_ARESP_ADMIN_NOTIFS'))));
 
 
-        $mails = explode(",", $data['admin_email']);
+        $mails = explode(",", (string)$data['admin_email']);
   if ($data['admin_notification'] == 'yes')
             $form->addElement(new Element_HTML('<div class="childfieldsrow" id="id_rm_admin_notify_cb_childfieldsrow">'));
         else
@@ -98,7 +98,8 @@ $image_path = plugin_dir_url(dirname(dirname(__FILE__))) . 'images/';
             $form->addElement(new Element_HTML('</div>'));
 
              $form->addElement(new Element_HTML('</div>'));
-        
+
+        $form->addElement(new Element_Hidden('rm_sec_nonce',wp_create_nonce('rm_sec_nonce')));
         $form->addElement(new Element_HTMLL('&#8592; &nbsp; '.__('Cancel','custom-registration-form-builder-with-submission-manager'), '?page=rm_options_manage', array('class' => 'cancel')));
         $form->addElement(new Element_Button(RM_UI_Strings::get('LABEL_SAVE')));
 
@@ -107,7 +108,7 @@ $image_path = plugin_dir_url(dirname(dirname(__FILE__))) . 'images/';
         ?>
     </div>
     <?php 
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
 </div>
 <?php } ?>

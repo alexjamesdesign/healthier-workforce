@@ -32,6 +32,10 @@ $submitBorderColour: darken($noir, 10%);
     clear: both;
 }
 
+.nf-form-content label {
+	font-size: 16px!important;
+} 
+
 form {
 	width: 100%;
 	max-width: 1200px;

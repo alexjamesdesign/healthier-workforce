@@ -80,7 +80,7 @@ $form->render();
 </div>
 <?php     
     $rm_promo_banner_title = __("Unlock multiple pricing configurations by upgrading",'custom-registration-form-builder-with-submission-manager');
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
 ?>
 </div>
 <script type="text/javascript">
@@ -99,8 +99,17 @@ $form->render();
     
     
     jQuery('input#id_paypal_field_min_quantity').change(function(e) {
+        if(jQuery(this).val() == "") {
+            jQuery(this).val(0);
+        }
         var maxVal = jQuery('input#id_paypal_field_max_quantity');
         maxVal.attr('min', jQuery(this).val());
+    });
+
+    jQuery('input#id_paypal_field_max_quantity').change(function(e) {
+        if(jQuery(this).val() == "") {
+            jQuery(this).val(jQuery(this).attr('min'));
+        }
     });
 </script>
 <?php }

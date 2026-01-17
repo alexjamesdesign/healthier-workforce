@@ -12,7 +12,7 @@ if($data->forms){
 ?>
 <?php if( current_user_can('administrator') ) {  ?>
 <select id="rm_editor_add_form">
-    <option value="0"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_ADD_FORM")); ?></option>
+    <option value="0"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_ADD_FORM")); ?></option>
     <?php echo esc_html($option_string); ?>
 </select>
 <?php } ?>

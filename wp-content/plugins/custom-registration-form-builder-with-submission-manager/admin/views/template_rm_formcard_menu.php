@@ -11,7 +11,7 @@ $rdrto = "rm_form_manage";
     <span class="rm-formcard-menu-nub"></span>
     <div class="rm-formcard-menu-header"> 
         <span class="rm-formcard-menu-form-name rm_formname_display_span" title="<?php _e('Click to edit form name', 'custom-registration-form-builder-with-submission-manager') ?>">
-            <?php echo htmlentities(stripslashes($entry->form_name)); ?>
+            <?php echo htmlentities(stripslashes((string)$entry->form_name)); ?>
         </span>
         <span class="rm_formname_display_span rm_formname_edit_link_span" title="<?php _e('Click to edit form name', 'custom-registration-form-builder-with-submission-manager') ?>">
             <?php _e('Edit', 'custom-registration-form-builder-with-submission-manager') ?>
@@ -23,7 +23,7 @@ $rdrto = "rm_form_manage";
             <i class="material-icons">&#xE86C;</i>
         </span>
         <input class="rm_formname_edit_input" 
-            value="<?php echo htmlentities(stripslashes($entry->form_name)); ?>"
+            value="<?php echo htmlentities(stripslashes((string)$entry->form_name)); ?>"
             style="display:none;"
         />
         <span class="rm-formcard-menu-close"><i class="material-icons">&#xE5CD;</i></span>
@@ -68,7 +68,7 @@ $rdrto = "rm_form_manage";
                     
                 <div class="rm-formcard-tab-item"> 
                     <?php add_thickbox(); ?>
-                <a id="rm_form_preview_action" class="thickbox rm_form_preview_btn rm_fd_link" href="<?php echo add_query_arg(array('form_prev' => '1','form_id' => $entry->form_id), get_permalink(get_site_option('rm_option_front_sub_page_id'))); ?>&TB_iframe=true&width=900&height=600">
+                    <a id="rm_form_preview_action" class="rm_form_preview_btn rm_fd_link" href="javascript:void(0)" data-content="<?php echo esc_attr($entry->form_id); ?>">
                         <img class="rm-formcard-icon" src="<?php echo RM_IMG_URL; ?>rm_form-preview.png">
                         <div class="rm-formcard-label"><?php echo RM_UI_Strings::get('FD_LABEL_PRIVIEW'); ?></div>
                     </a>

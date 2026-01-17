@@ -15,7 +15,7 @@ class RM_Frontend_Field_Select extends RM_Frontend_Field_Multivalue
         if(isset($options['value']))
         {
             if(!is_array($options['value']))
-                $options['value'] = RM_Utilities::trim_array(explode(',', $options['value']));
+                $options['value'] = RM_Utilities::trim_array(explode(',', (string)$options['value']));
             else
                 $options['value'] = $options['value'];
         }
@@ -31,7 +31,8 @@ class RM_Frontend_Field_Select extends RM_Frontend_Field_Multivalue
         if($multiple=='multiple')
               $options = array(null => RM_UI_Strings::get('SELECT_FIELD_MULTI_OPTION')) + $options;
         else
-             $options = array(null => RM_UI_Strings::get('SELECT_FIELD_FIRST_OPTION')) + $options;
+            $options = array(null => $this->field_model->field_options->field_select_label) + $options;
+            //$options = array(null => RM_UI_Strings::get('SELECT_FIELD_FIRST_OPTION')) + $options;
         
         $this->field_value = $options;        
     }

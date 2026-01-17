@@ -53,11 +53,11 @@ class RM_Utilities {
 
             echo '<pre class="rm-pre-wrapper-for-script-tags"><script type="text/javascript">';
             if ($delay === true) {
-                echo "window.setTimeout(function(){" . wp_kses_post($prefix) . "window.location.href = '" . $url . "';}, 5000);";
+                echo "window.setTimeout(function(){" . wp_kses_post((string)$prefix) . "window.location.href = '" . $url . "';}, 5000);";
             } elseif ((int) $delay) {
-                echo "window.setTimeout(function(){" . wp_kses_post($prefix) . "window.location.href = '" . $url . "';}, " . wp_kses_post((int) $delay) . ");";
+                echo "window.setTimeout(function(){" . wp_kses_post((string)$prefix) . "window.location.href = '" . $url . "';}, " . wp_kses_post((string)(int) $delay) . ");";
             } else {
-                echo wp_kses_post($prefix) . 'window.location = "' . $url . '"';
+                echo wp_kses_post((string)$prefix) . 'window.location = "' . $url . '"';
             }
 
             echo '</script></pre>';
@@ -138,6 +138,7 @@ class RM_Utilities {
             'Checkbox' => __('Checkbox','custom-registration-form-builder-with-submission-manager'),
             'jQueryUIDate' => __('Date','custom-registration-form-builder-with-submission-manager'),
             'Email' => __('Email','custom-registration-form-builder-with-submission-manager'),
+            'URL' => __('URL','custom-registration-form-builder-with-submission-manager'),
             'Number' => __('Number','custom-registration-form-builder-with-submission-manager'),
             'Country' => __('Country','custom-registration-form-builder-with-submission-manager'),
             'Timezone' => __('Timezone','custom-registration-form-builder-with-submission-manager'),
@@ -191,6 +192,7 @@ class RM_Utilities {
             'WCShipping' => __('Woocommerce Shipping','custom-registration-form-builder-with-submission-manager'),
             'WCBillingPhone' => __('WooCommerce Billing Phone','custom-registration-form-builder-with-submission-manager'),
             'ESign' => __('ESign','custom-registration-form-builder-with-submission-manager'),
+            'DigitalSign' => __('Digital Signature','custom-registration-form-builder-with-submission-manager'),
         );
         if($form_type==0){
             $field_types['Feed']= __('Submission Feed','custom-registration-form-builder-with-submission-manager');
@@ -208,6 +210,7 @@ class RM_Utilities {
                 "Iframe"=>__('Embed Iframe','custom-registration-form-builder-with-submission-manager')));
         }
         $field_types['Activeuser'] = __('User Drop-down','custom-registration-form-builder-with-submission-manager');
+        $field_types['Subscription'] = __('Subscription','custom-registration-form-builder-with-submission-manager');
         return apply_filters('rm_add_field_types',$field_types);
     }
     
@@ -224,14 +227,12 @@ class RM_Utilities {
         }
         $login_service = new RM_Login_Service();
         $red = $login_service->get_redirections();
-        if ($red['redirection_type'] == 'common') {
-            $is_admin = user_can($user->ID, 'manage_options');
+        $is_admin = user_can($user->ID, 'manage_options');
+        if($is_admin && !empty($red['admin_redirection_link'])) {
+            $redirect_to = admin_url();
+        } else if ($red['redirection_type'] == 'common') {
             if (!empty($red['redirection_link'])) {
-                if($is_admin && !empty($red['admin_redirection_link'])) {
-                    $redirect_to = admin_url();
-                } else {
-                    $redirect_to = get_permalink($red['redirection_link']);
-                }
+                $redirect_to = get_permalink($red['redirection_link']);
             }
         } else if ($red['redirection_type'] == 'role_based' && !empty($user)) {
             $user_meta = get_userdata($user->ID);
@@ -299,7 +300,7 @@ class RM_Utilities {
         $query = '';
         if (!empty($parts['query'])) {
             // drop known fb params
-            $params = explode('&', $parts['query']);
+            $params = explode('&', (string)$parts['query']);
             $retained_params = array();
             foreach ($params as $param) {
                 $retained_params[] = $param;
@@ -329,7 +330,7 @@ class RM_Utilities {
     public static function site_has_submissions() {
         global $wpdb;
         $table_name = RM_Table_Tech::get_table_name_for('SUBMISSIONS');
-        $result = $wpdb->get_var("SELECT COUNT(*) as num_rows FROM $table_name");
+        $result = defined('RM_SAVE_SUBMISSION_BASENAME') ? $wpdb->get_var("SELECT COUNT(*) as num_rows FROM $table_name WHERE `is_pending` = 0") : $wpdb->get_var("SELECT COUNT(*) as num_rows FROM $table_name");
         if(intval($result) > 0)
             return true;
         else
@@ -339,7 +340,7 @@ class RM_Utilities {
     public static function get_latest_active_form() {
         global $wpdb;
         $table_name = RM_Table_Tech::get_table_name_for('SUBMISSIONS');
-        $result = $wpdb->get_var("SELECT form_id FROM $table_name ORDER BY submission_id DESC LIMIT 1");
+        $result = defined('RM_SAVE_SUBMISSION_BASENAME') ? $wpdb->get_var("SELECT form_id FROM $table_name WHERE `is_pending` = 0 ORDER BY submission_id DESC LIMIT 1") : $wpdb->get_var("SELECT form_id FROM $table_name ORDER BY submission_id DESC LIMIT 1");
         return intval($result);
     }
     
@@ -422,7 +423,7 @@ class RM_Utilities {
                 else
                     $var->$key = self::trim_array($var_);
         else
-            $var = trim($var);
+            $var = trim((string)$var);
 
         return $var;
     }
@@ -435,7 +436,7 @@ class RM_Utilities {
                 else
                     $var->$key = self::escape_array($var_);
         else
-            $var = addslashes($var);
+            $var = addslashes((string)$var);
 
         return $var;
     }
@@ -448,7 +449,7 @@ class RM_Utilities {
                 else
                     $var->$key = self::strip_slash_array($var_);
         else
-            $var = stripslashes($var);
+            $var = stripslashes((string)$var);
 
         return $var;
     }
@@ -584,7 +585,7 @@ class RM_Utilities {
 
 // set document information
         $pdf->SetCreator(PDF_CREATOR);
-        $pdf->SetAuthor('Registration Magic');
+        $pdf->SetAuthor('RegistrationMagic');
         $pdf->SetTitle('Submission');
         $pdf->SetSubject(__('PDF for Submission','custom-registration-form-builder-with-submission-manager'));
         $pdf->SetKeywords('submission,pdf,print');
@@ -740,7 +741,7 @@ class RM_Utilities {
     }
 
     //Sends a generic mail to a given address.
-    public static function quick_email($to, $sub, $body, $mail_type = RM_EMAIL_GENERIC, array $extra_params = null) {
+    public static function quick_email($to, $sub, $body, $mail_type = RM_EMAIL_GENERIC, $extra_params = []) {
         $params = new stdClass;
         $params->type = $mail_type;
         $params->to = $to;
@@ -801,10 +802,24 @@ class RM_Utilities {
             $result = get_date_from_gmt($date_string, $dateformatstring);
         } else {
             //$result = date_i18n($dateformatstring, strtotime($date_string));
-            $result = wp_date($dateformatstring, strtotime($date_string));
+            $result = wp_date($dateformatstring, strtotime((string)$date_string));
         }
         //$result = get_date_from_gmt($date_string, $dateformatstring);
         return $result;
+    }
+
+    public static function localize_time_short($date_string, $dateformatstring = null, $advanced = false, $is_timestamp = false) {
+        if ($is_timestamp) {
+            $date_string = gmdate('Y-m-d H:i:s', $date_string);
+        }
+
+        if (!$dateformatstring) {
+            $df = get_option('date_format', null) ?: 'd M Y';
+            $tf = get_option('time_format', null) ?: 'h:ia';
+        }
+        $date = wp_date($df, strtotime($date_string));
+        $time = wp_date($tf, strtotime($date_string));
+        return $date.'<br>'.$time;
     }
 
     public static function mime_content_type($filename) {
@@ -858,7 +873,7 @@ class RM_Utilities {
             'odt' => 'application/vnd.oasis.opendocument.text',
             'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
         );
-        $arr = explode('.', $filename);
+        $arr = explode('.', (string)$filename);
         $ext = array_pop($arr);
         $ext = strtolower($ext);
         if (array_key_exists($ext, $mime_types)) {
@@ -887,8 +902,11 @@ class RM_Utilities {
             $phpmailer->From = $options->get_value_of('senders_email');
         }
         $phpmailer->FromName = $options->get_value_of('senders_display_name');
-        if (empty($phpmailer->AltBody))
-            $phpmailer->AltBody = self::html_to_text_email($phpmailer->Body);
+        
+        $phpmailer->addReplyTo($phpmailer->From, $phpmailer->FromName);
+        
+        //if(empty($phpmailer->AltBody))
+            //$phpmailer->AltBody = self::html_to_text_email($phpmailer->Body);
 
         return;
     }
@@ -914,7 +932,7 @@ class RM_Utilities {
                 'senders_display_name' => isset($_POST['FromName']) ? sanitize_text_field($_POST['FromName']) : null
             ));
             if (!$email) {
-                echo 'blank_email ' . wp_kses_post(RM_UI_Strings::get('LABEL_WORDPRESS_DEFAULT_EMAIL_REQUIRED_MESSAGE'));
+                echo 'blank_email ' . wp_kses_post((string)RM_UI_Strings::get('LABEL_WORDPRESS_DEFAULT_EMAIL_REQUIRED_MESSAGE'));
                 $options->set_values($bckup);
                 die;
             }
@@ -927,9 +945,9 @@ class RM_Utilities {
             $test_email->header = '';
             $test_email->attachments = array();
             if (self::send_mail($test_email))
-                echo wp_kses_post(RM_UI_Strings::get('LABEL_SMTP_SUCCESS_MESSAGE'));
+                echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SMTP_SUCCESS_MESSAGE'));
             else
-                echo wp_kses_post(RM_UI_Strings::get('LABEL_SMTP_FAIL_MESSAGE'));
+                echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SMTP_FAIL_MESSAGE'));
 
             $options->set_values($bckup);
         }
@@ -944,19 +962,19 @@ class RM_Utilities {
             $bckup = $options->get_all_options();
 
             $to = isset($_POST['test_email']) ? sanitize_email($_POST['test_email']) : null;
-            $message = isset($_POST['message']) ? wp_kses_post($_POST['message']) : null;
+            $message = isset($_POST['message']) ? wp_kses_post((string)$_POST['message']) : null;
             $from = isset($_POST['From']) ? sanitize_email($_POST['From']) : null;
             $headers = "From:" . $from;
 
             if (!$to) {
-                echo 'blank_email ' . wp_kses_post(RM_UI_Strings::get('LABEL_WORDPRESS_DEFAULT_EMAIL_REQUIRED_MESSAGE'));
+                echo 'blank_email ' . wp_kses_post((string)RM_UI_Strings::get('LABEL_WORDPRESS_DEFAULT_EMAIL_REQUIRED_MESSAGE'));
 
                 die;
             }
             if (wp_mail($to, __('Test Mail','custom-registration-form-builder-with-submission-manager'), $message, $headers)) {
-                echo wp_kses_post(RM_UI_Strings::get('LABEL_WORDPRESS_DEFAULT_EMAIL_SUCCESS_MESSAGE'));
+                echo wp_kses_post((string)RM_UI_Strings::get('LABEL_WORDPRESS_DEFAULT_EMAIL_SUCCESS_MESSAGE'));
             } else {
-                echo wp_kses_post(RM_UI_Strings::get('LABEL_WORDPRESS_DEFAULT_EMAIL_FAIL_MESSAGE'));
+                echo wp_kses_post((string)RM_UI_Strings::get('LABEL_WORDPRESS_DEFAULT_EMAIL_FAIL_MESSAGE'));
             }
         }
         die;
@@ -1274,21 +1292,21 @@ class RM_Utilities {
 
             if ($user_data->activation_code == get_user_meta($user_data->user_id, 'rm_activation_code', true)) {
                 if (!delete_user_meta($user_data->user_id, 'rm_activation_code')) {
-                    echo '<div class="rm_fail_del">' . wp_kses_post(RM_UI_Strings::get('ACT_AJX_FAILED_DEL')) . '</div>';
+                    echo '<div class="rm_fail_del">' . wp_kses_post((string)RM_UI_Strings::get('ACT_AJX_FAILED_DEL')) . '</div>';
                     die;
                 }
 
                 if ($user_service->activate_user_by_id($user_data->user_id)) {
                     $users = array($user_data->user_id);
                     $user_service->notify_users($users, 'user_activated');
-                    echo '<h1 class="rm_user_msg_ajx">' . wp_kses_post(RM_UI_Strings::get('ACT_AJX_ACTIVATED')) . '</h1>';
+                    echo '<h1 class="rm_user_msg_ajx">' . wp_kses_post((string)RM_UI_Strings::get('ACT_AJX_ACTIVATED')) . '</h1>';
                     $user = get_user_by('id', $user_data->user_id);
-                    echo '<div class = rm_user_info><div class="rm_field_cntnr"><div class="rm_user_label">' . wp_kses_post(RM_UI_Strings::get('LABEL_USER_NAME')) . ' : </div><div class="rm_label_value">' . esc_html($user->user_login) . '</div></div><div class="rm_field_cntnr"><div class="rm_user_label">' . wp_kses_post(RM_UI_Strings::get('LABEL_USEREMAIL')) . ' : </div><div class="rm_label_value">' . esc_html($user->user_email) . '</div></div></div>';
-                    echo '<div class="rm_user_msg_ajx">' . wp_kses_post(RM_UI_Strings::get('ACT_AJX_ACTIVATED2')) . '</div>';
+                    echo '<div class = rm_user_info><div class="rm_field_cntnr"><div class="rm_user_label">' . wp_kses_post((string)RM_UI_Strings::get('LABEL_USER_NAME')) . ' : </div><div class="rm_label_value">' . esc_html($user->user_login) . '</div></div><div class="rm_field_cntnr"><div class="rm_user_label">' . wp_kses_post((string)RM_UI_Strings::get('LABEL_USEREMAIL')) . ' : </div><div class="rm_label_value">' . esc_html($user->user_email) . '</div></div></div>';
+                    echo '<div class="rm_user_msg_ajx">' . wp_kses_post((string)RM_UI_Strings::get('ACT_AJX_ACTIVATED2')) . '</div>';
                 } else
-                    echo '<div class="rm_not_authorized_ajax rm_act_fl">' . wp_kses_post(RM_UI_Strings::get('ACT_AJX_ACTIVATE_FAIL')) . '</div>';
+                    echo '<div class="rm_not_authorized_ajax rm_act_fl">' . wp_kses_post((string)RM_UI_Strings::get('ACT_AJX_ACTIVATE_FAIL')) . '</div>';
             } else
-                echo '<div class="rm_not_authorized_ajax">' . wp_kses_post(RM_UI_Strings::get('ACT_AJX_NO_ACCESS')) . '</div>';
+                echo '<div class="rm_not_authorized_ajax">' . wp_kses_post((string)RM_UI_Strings::get('ACT_AJX_NO_ACCESS')) . '</div>';
 
             echo '</div></div></html></body>';
             /* ?>
@@ -1306,9 +1324,9 @@ class RM_Utilities {
         $html = str_replace('<br/>', "\r\n", $html);
         $html = str_replace('</br>', "\r\n", $html);
 
-        $html = strip_tags($html);
+        $html = strip_tags((string)$html);
         $html = html_entity_decode($html);
-        return trim($html);
+        return trim((string)$html);
     }
     
     public static function get_language_array() {
@@ -1344,12 +1362,25 @@ class RM_Utilities {
         if(defined('REGMAGIC_ADDON')) {
             return RM_Utilities_Addon::safe_login();
         }
-        if (isset($_SESSION['RM_SLI_UID'])) {
-            $user_status_flag = get_user_meta($_SESSION['RM_SLI_UID'], 'rm_user_status', true);
-            if ($user_status_flag === '0' || $user_status_flag === '') {
-                wp_set_auth_cookie($_SESSION['RM_SLI_UID']);
-                wp_set_current_user($_SESSION['RM_SLI_UID']);
+        
+        if(isset($_SESSION['RM_SLI_UID'])) {
+            if(empty($_SESSION['RM_SLI_UID']))
+                return;
+
+            $user_id = absint($_SESSION['RM_SLI_UID']);
+            if ($user_id > 0) {
+                $user = get_user_by('ID', $user_id);
+                if ($user) {
+                    $user_status_flag = get_user_meta($user_id, 'rm_user_status', true);
+                    if($user_status_flag == '0' || $user_status_flag == '') {
+                        wp_clear_auth_cookie();
+                        wp_set_current_user($user_id);
+                        wp_set_auth_cookie($user_id);
+                        do_action('wp_login', $user->user_login, $user);
+                    }
+                }
             }
+
             unset($_SESSION['RM_SLI_UID']);
         }
     }
@@ -1428,7 +1459,7 @@ class RM_Utilities {
                     $selected='';
                 $state_arr .= '<option '.$selected.' value="'.$key.'">'.$value.'</option>';
             }
-            echo wp_kses($state_arr,self::expanded_allowed_tags());
+            echo wp_kses((string)$state_arr,self::expanded_allowed_tags());
         }
         exit;
     }
@@ -1444,7 +1475,7 @@ class RM_Utilities {
                 return RM_Utilities_Addon::load_admin_js_data();
             }
             $data = new stdClass();
-            echo wp_kses_post(json_encode($data));
+            echo wp_kses_post((string)json_encode($data));
         }
         die;
     }
@@ -1454,7 +1485,7 @@ class RM_Utilities {
                 return RM_Utilities_Addon::load_payment_status_admin_js_data();
             }
             $data = new stdClass();
-            echo wp_kses_post(json_encode($data));
+            echo wp_kses_post((string)json_encode($data));
         }
         die;
     }
@@ -1532,19 +1563,19 @@ class RM_Utilities {
         $p_options = array();
 
         if (!is_array($value))
-            $tmp_options = explode(',', $value);
+            $tmp_options = explode(',', (string)$value);
         else
             $tmp_options = $value;
 
         foreach ($tmp_options as $val) {
-            $val = trim($val);
-            $val = trim($val, "|");
-            $t = explode("|", $val);
+            $val = trim((string)$val);
+            $val = trim((string)$val, "|");
+            $t = explode("|", (string)$val);
 
-            if (count($t) <= 1 || trim($t[1]) === "")
+            if (count($t) <= 1 || trim((string)$t[1]) === "")
                 $p_options[$val] = $val;
             else
-                $p_options[trim($t[1])] = trim($t[0]);
+                $p_options[trim((string)$t[1])] = trim((string)$t[0]);
         }
 
         return $p_options;
@@ -1653,8 +1684,7 @@ class RM_Utilities {
         if(defined('REGMAGIC_ADDON')) {
             return RM_Utilities_Addon::get_allowed_conditional_fields();
         }
-        return array('Textbox', 'Select', 'Radio', 'Checkbox', 'jQueryUIDate', 'Email', 'Number', 'Country', 'Website',
-            'Language', 'Timezone', 'Fname', 'Lname', 'Phone', 'Mobile', 'Nickname', 'Bdate', 'Gender', 'Custom', 'Repeatable', 'Password', 'Terms', 'Textarea', 'Address');
+        return array('Textbox', 'Select', 'Radio', 'Checkbox', 'jQueryUIDate', 'Email', 'Number', 'Country', 'Website', 'Language', 'Timezone', 'Fname', 'Lname', 'Phone', 'Mobile', 'Nickname', 'Bdate', 'Gender', 'Custom', 'Repeatable', 'Password', 'Terms', 'Textarea', 'Address', 'File', 'Image', 'HTMLH', 'HTMLP', 'RichText', 'Price');
     }
 
     public static function get_fields_dropdown($config = array()) {
@@ -1662,7 +1692,7 @@ class RM_Utilities {
         $fields = $service->get_all_form_fields($config['form_id']);
         $options = '';
         if (isset($config['full']))
-            echo '<select name="' . esc_attr($config['name']) . '" id="' . (isset($config['id']) ? esc_attr($config['id']) : esc_attr($config['name'])) . '" onchange="' . (isset($config['change']) ? esc_attr($config['change'].'(this)') : ' ') . '">';
+            echo '<select name="' . esc_attr($config['name']) . '" id="' . (isset($config['id']) ? esc_attr($config['id']) : esc_attr($config['name'])) . '" onchange="' . (isset($config['change']) ? esc_attr($config['change'].'(this)') : ' ') . '" required>';
         if ($fields)
             foreach ($fields as $field) {
                 if (!empty($config['exclude']) && in_array($field->field_id, $config['exclude']))
@@ -1857,8 +1887,8 @@ class RM_Utilities {
     }
     public static function get_cond_action_dd($config = array()) {
         $options = array(
-            'show'=>__('Show Field <span>(the field will be visible on form load)</span>','custom-registration-form-builder-with-submission-manager'),
-            'hide'=>__('Hide Field <span>(the field will be hidden on form load)</span>','custom-registration-form-builder-with-submission-manager'),
+            'show'=>__('Show Field <span>(the field will be hidden on form load)</span>','custom-registration-form-builder-with-submission-manager'),
+            'hide'=>__('Hide Field <span>(the field will be visible on form load)</span>','custom-registration-form-builder-with-submission-manager'),
             'disable'=>__('Disable Field <span>(the field will be editable on form load)</span>','custom-registration-form-builder-with-submission-manager')
             );
         foreach($options as $key => $value){
@@ -2242,6 +2272,7 @@ class RM_Utilities {
             "Swaziland[SZ]" => __("Swaziland","custom-registration-form-builder-with-submission-manager"),
             "Sweden[SE]" => __("Sweden","custom-registration-form-builder-with-submission-manager"),
             "Switzerland[CH]" => __("Switzerland","custom-registration-form-builder-with-submission-manager"),
+            "Syria[SY]" => __("Syria","custom-registration-form-builder-with-submission-manager"),
             "Taiwan[TW]" => __("Taiwan","custom-registration-form-builder-with-submission-manager"),
             "Tajikistan[TJ]" => __("Tajikistan","custom-registration-form-builder-with-submission-manager"),
             "Tanzania, United Republic Of[TZ]" => __("Tanzania, United Republic Of","custom-registration-form-builder-with-submission-manager"),
@@ -2583,7 +2614,7 @@ class RM_Utilities {
         
         $count= RM_DBManager::count('LOGIN', array('m_key'=>'validations'));
         if($count==0){
-            RM_DBManager::insert_row('LOGIN', array('m_key'=>'validations','value'=>'{"un_error_msg":"The login credentials you entered are incorrect. Please try again.","pass_error_msg":"The login credentials you entered are incorrect. Please try again.","sub_error_msg":"You must be logged in to view contents of this page.","en_recovery_link":1,"en_failed_user_notification":0,"en_failed_admin_notification":0,"en_captcha":0,"allowed_failed_attempts":3,"allowed_failed_duration":60,"en_ban_ip":0,"allowed_attempts_before_ban":6,"allowed_duration_before_ban":60,"ban_type":"temp","ban_duration":1440,"ban_error_msg":"<div style=\"font-weight: 400;\" class=\"rm-failed-ip-error\">Your IP has been banned by the Admin due to repeated failed login attempts.<\/div>","notify_admin_on_ban":1}'), array('%s','%s'));
+            RM_DBManager::insert_row('LOGIN', array('m_key'=>'validations','value'=>'{"un_error_msg":"The login credentials you entered are incorrect. Please try again.","pass_error_msg":"The login credentials you entered are incorrect. Please try again.","sub_error_msg":"You must be logged in to view contents of this page.","en_recovery_link":1,"en_failed_user_notification":0,"en_failed_admin_notification":0,"en_captcha":0,"allowed_failed_attempts":3,"allowed_failed_duration":60,"en_ban_ip":0,"allowed_attempts_before_ban":6,"allowed_duration_before_ban":60,"ban_type":"temp","ban_duration":1440,"ban_error_msg":"<div style=\"font-weight: 400;\" class=\"rm-failed-ip-error\">Your IP has been banned by the Admin due to repeated failed login attempts.<\/div>","notify_admin_on_ban":1,"disable_autocomplete":0}'), array('%s','%s'));
         }
         
         $count= RM_DBManager::count('LOGIN', array('m_key'=>'recovery'));
@@ -2599,7 +2630,7 @@ class RM_Utilities {
         
         $count= RM_DBManager::count('LOGIN', array('m_key'=>'email_templates'));
         if($count==0){
-            RM_DBManager::insert_row('LOGIN', array('m_key'=>'email_templates','value'=>'{"failed_login_err":"<span style=\"font-weight: 400;\">There was a failed login attempt using your account username\/ password {{username}} on our site {{sitename}} from IP {{Login_IP}} on {{login_time}}. If you have forgotten your password, you can easily reset it by visiting login page on our site. <\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\">If you think it was an unauthorized login attempt, please contact site admin immediately.<\/span>","otp_message":"<span style=\"font-weight: 400;\">Here is your one-time-password (OTP) for logging into {{site_name}}. The OTP will automatically expire after {{OTP_expiry}} minutes.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\">{{OTP}}<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\">If you think it was an unauthorized login attempt, please contact site admin immediately. <\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\"><\/span>","failed_login_err_admin":"<span style=\"font-weight: 400;\">There was a failed login attempt using username\/ password {{username}} on your site {{sitename}} from IP {{Login_IP}} on {{login_time}}.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\">If you think this is an unauthorized login attempt<\/span><i><span style=\"font-weight: 400;\">, <\/span><\/i><span style=\"font-weight: 400;\">you can also immediately ban the IP by clicking <\/span><span style=\"font-weight: 400;\"><a href=\"'.admin_url().'admin.php?page=rm_options_security\">here</a><\/span><span style=\"font-weight: 400;\">. <\/span>\r\n\r\n<span style=\"font-weight: 400;\">You can managed the blocked IPs and\/ or usernames by visiting <\/span><span style=\"font-weight: 400;\"><a href=\"'.admin_url().'admin.php?page=rm_options_security\">this link</a><\/span> <i><span style=\"font-weight: 400;\">Global Settings \u2192 Security page link<\/span><\/i>","ban_message_admin":"<span style=\"font-weight: 400;\">There were multiple failed login attempts from IP {{login_IP}}. As a preset security measure, RegistrationMagic has blocked the IP. Here are the details of the ban:<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\">Ban Period: {{ban_period}}<\/span>\r\n\r\n<span style=\"font-weight: 400;\">Failed Login Attempts: {{ban_trigger}}<\/span>\r\n\r\n<span style=\"font-weight: 400;\">If you think this IP is secure, you can lift the ban by clicking <\/span><span style=\"font-weight: 400;\"><a href=\"'.admin_url().'admin.php?page=rm_options_security\">here</a><\/span><span style=\"font-weight: 400;\">. <\/span>\r\n\r\n<span style=\"font-weight: 400;\">You can managed the blocked IPs and\/ or usernames by visiting <\/span><span style=\"font-weight: 400;\"><a href=\"'.admin_url().'admin.php?page=rm_options_security\">this link</a><\/span> <i><span style=\"font-weight: 400;\">Global Settings \u2192 Security page link<\/span><\/i>"}'), array('%s','%s'));
+            RM_DBManager::insert_row('LOGIN', array('m_key'=>'email_templates','value'=>'{"failed_login_err_sub":"Failed Login Attempt","failed_login_err":"<span style=\"font-weight: 400;\">There was a failed login attempt using your account username\/ password {{username}} on our site {{sitename}} from IP {{Login_IP}} on {{login_time}}. If you have forgotten your password, you can easily reset it by visiting login page on our site. <\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\">If you think it was an unauthorized login attempt, please contact site admin immediately.<\/span>","otp_message_sub":"OTP","otp_message":"<span style=\"font-weight: 400;\">Here is your one-time-password (OTP) for logging into {{site_name}}. The OTP will automatically expire after {{OTP_expiry}} minutes.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\">{{OTP}}<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\">If you think it was an unauthorized login attempt, please contact site admin immediately. <\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\"><\/span>","failed_login_err_admin_sub":"Failed Login Attempt","failed_login_err_admin":"<span style=\"font-weight: 400;\">There was a failed login attempt using username\/ password {{username}} on your site {{sitename}} from IP {{Login_IP}} on {{login_time}}.<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\">If you think this is an unauthorized login attempt<\/span><i><span style=\"font-weight: 400;\">, <\/span><\/i><span style=\"font-weight: 400;\">you can also immediately ban the IP by clicking <\/span><span style=\"font-weight: 400;\"><a href=\"'.admin_url().'admin.php?page=rm_options_security\">here</a><\/span><span style=\"font-weight: 400;\">. <\/span>\r\n\r\n<span style=\"font-weight: 400;\">You can managed the blocked IPs and\/ or usernames by visiting <\/span><span style=\"font-weight: 400;\"><a href=\"'.admin_url().'admin.php?page=rm_options_security\">this link</a><\/span> <i><span style=\"font-weight: 400;\">Global Settings \u2192 Security page link<\/span><\/i>","ban_message_admin_sub":"IP Blocked","ban_message_admin":"<span style=\"font-weight: 400;\">There were multiple failed login attempts from IP {{login_IP}}. As a preset security measure, RegistrationMagic has blocked the IP. Here are the details of the ban:<\/span>\r\n\r\n&nbsp;\r\n\r\n<span style=\"font-weight: 400;\">Ban Period: {{ban_period}}<\/span>\r\n\r\n<span style=\"font-weight: 400;\">Failed Login Attempts: {{ban_trigger}}<\/span>\r\n\r\n<span style=\"font-weight: 400;\">If you think this IP is secure, you can lift the ban by clicking <\/span><span style=\"font-weight: 400;\"><a href=\"'.admin_url().'admin.php?page=rm_options_security\">here</a><\/span><span style=\"font-weight: 400;\">. <\/span>\r\n\r\n<span style=\"font-weight: 400;\">You can managed the blocked IPs and\/ or usernames by visiting <\/span><span style=\"font-weight: 400;\"><a href=\"'.admin_url().'admin.php?page=rm_options_security\">this link</a><\/span> <i><span style=\"font-weight: 400;\">Global Settings \u2192 Security page link<\/span><\/i>"}'), array('%s','%s'));
         }
         
         $count= RM_DBManager::count('LOGIN', array('m_key'=>'btn_config'));
@@ -2701,10 +2732,7 @@ class RM_Utilities {
               return;
       $form_options= $form_model->get_form_options();
       if(empty($username_field)){
-            $form_options->hide_username= 1;
-       }
-       else{
-           $form_options->hide_username= 0;
+            $form_options->hide_username = 1;
        }
         $form_model->set_form_options($form_options);
         $form_model->update_into_db();
@@ -2721,7 +2749,7 @@ class RM_Utilities {
                 $max_len = $pw_rests->max_len;
         }
         
-        $regex = '[A-Za-z\d\W+]{' . $min_len . ',' . $max_len . '}';
+        $regex = '(?=.*[a-zA-Z\d\W+]).{' . $min_len . ',' . $max_len . '}';
         
         if(is_array($pw_rests->selected_rules)){
             if (in_array('PWR_UC', $pw_rests->selected_rules))
@@ -2732,6 +2760,7 @@ class RM_Utilities {
                 $regex = '(?=.*\W+)' . $regex;
         }   
 
+        $regex = '^' . $regex . '$';
         return $regex;
     }
     
@@ -3129,10 +3158,10 @@ class RM_Utilities {
   public function send_email_to_user(){
       if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce') && current_user_can('manage_options')) {
           $mail_subject = 'RM LOGIN EMAIL';
-          if(trim($_REQUEST['user_subject'])!=''){
+          if(trim((string)$_REQUEST['user_subject'])!=''){
               $mail_subject = sanitize_text_field($_REQUEST['user_subject']);
           }
-          self::quick_email(sanitize_email($_REQUEST['user_email']), $mail_subject, wp_kses_post($_REQUEST['user_message']), RM_EMAIL_GENERIC,array('do_not_save'=>true));
+          self::quick_email(sanitize_email($_REQUEST['user_email']), $mail_subject, wp_kses_post((string)$_REQUEST['user_message']), RM_EMAIL_GENERIC,array('do_not_save'=>true));
           echo 'success';
       }
       die;
@@ -3252,7 +3281,7 @@ class RM_Utilities {
 
     public static function prepare_csv_content($data) {
         $triggers = array( '=', '+', '-', '@', '|', '%');
-        if ( in_array( mb_substr( $data, 0, 1 ), $triggers, true ) ) {
+        if ( in_array( mb_substr( (string)$data, 0, 1 ), $triggers, true ) ) {
             $data = "'" . $data . "'";
         }
         return $data;
@@ -3320,7 +3349,10 @@ class RM_Utilities {
             'for'     => array(),
             'data-rmpriceformat' => array(),
             'data-bmargin' => array(),
-            'data-rmt-tabcontent' => array()
+            'data-rmt-tabcontent' => array(),
+            'data-sitekey' => array(),
+            'data-theme' => array(),
+            'data-size' => array()
         );
         // anchor
         $my_allowed['a'] = array(
@@ -3401,7 +3433,7 @@ class RM_Utilities {
                     } elseif(is_object($data_item)) {
                         $data[$key] = self::sanitize_output_data($data_item);
                     } else {
-                        $data[$key] = is_null($data_item) ? $data_item : wp_kses_post($data_item);
+                        $data[$key] = is_null($data_item) ? $data_item : wp_kses_post((string)$data_item);
                     }
                 }
             } elseif(is_object($data)) {
@@ -3414,7 +3446,7 @@ class RM_Utilities {
                     } elseif(is_array($data_item)) {
                         $data->$key = self::sanitize_output_data($data_item);
                     } else {
-                        $data->$key = is_null($data_item) ? $data_item : wp_kses_post($data_item);
+                        $data->$key = is_null($data_item) ? $data_item : wp_kses_post((string)$data_item);
                     }
                 }
             }
@@ -3463,8 +3495,9 @@ class RM_Utilities {
         return $data;
     }
     
-    public static function rm_user_payments_details($user_email){
+    public static function rm_user_payments_details($user_email, $start_date='', $end_date='', $status=''){
         $payment_service = new RM_Payments_Service(); 
-        return $payment_service->rm_user_payments_details($user_email);
+        return $payment_service->rm_user_payments_details($user_email, $start_date, $end_date, $status);
     }
+
 }

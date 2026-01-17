@@ -75,7 +75,7 @@ class RM_User_Services extends RM_Services
         else
             return false;
     }
-    
+
     public function edit_role($role_name, $display_name, $capability, $additional_data = null) {
         if(defined('REGMAGIC_ADDON')) {
             $addon_service = new RM_User_Services_Addon();
@@ -122,6 +122,7 @@ class RM_User_Services extends RM_Services
     }
     
     public function delete($users,$reassign=null) {
+        
         if (is_array($users) && !empty($users)) {
             $curr_user = wp_get_current_user();
             if (isset($curr_user->ID))
@@ -154,7 +155,9 @@ class RM_User_Services extends RM_Services
                 $params->email = $user->user_email;                
                 $params->sub_id = get_user_meta($id, 'RM_UMETA_SUB_ID', true);
                 $params->form_id = get_user_meta($id, 'RM_UMETA_FORM_ID', true);
-                RM_Email_Service::notify_user_on_activation($params);
+                $send_act_email = get_option('rm_option_send_act_email');
+                if($send_act_email == 'yes' || $send_act_email == false)
+                    RM_Email_Service::notify_user_on_activation($params);
             }
         }
     }
@@ -165,7 +168,7 @@ class RM_User_Services extends RM_Services
         {
             $to = sanitize_email($_POST['to']);
             $sub = sanitize_text_field($_POST['sub']);
-            $body = wp_kses_post($_POST['body']);
+            $body = wp_kses_post((string)$_POST['body']);
 
             RM_Utilities::quick_email($to, $sub, $body);
         }
@@ -237,9 +240,14 @@ class RM_User_Services extends RM_Services
         return $total_users;
     }
 
-    public function get_users($offset = '', $number = '', $search_str = '', $user_status = 'all', $interval = 'all', $sort = 'latest', $user_ids = array(), $fields_to_return = 'all') {
-        $args = array('number' => $number, 'offset' => $offset, 'include' => $user_ids, 'search' => '*' . $search_str . '*');
-
+    public function get_users($offset = '', $number = '', $search_str = '', $user_status = 'all', $interval = 'all', $sort = 'latest', $role='all', $user_ids = array(), $fields_to_return = 'all') {
+        
+        //$args = array('number' => $number, 'offset' => $offset, 'include' => $user_ids, 'search' => '*' . $search_str . '*');
+        $args = array('number' => $number, 'offset' => $offset,'search' => '*' . $search_str . '*');
+        
+        if($role != 'all'){
+            $args['role'] = $role;
+        }
         if(defined('REGMAGIC_ADDON')) {
             $args['fields'] = $fields_to_return;
         }
@@ -267,7 +275,6 @@ class RM_User_Services extends RM_Services
                 ));
                 break;
         }
-
         switch ($interval) {
             case 'today':
                 $args['date_query'] = array(array('after' => date('Y-m-d', strtotime('today')), 'inclusive' => true));
@@ -285,6 +292,17 @@ class RM_User_Services extends RM_Services
                 $args['date_query'] = array(array('year' => date('Y'), 'inclusive' => true));
                 break;
         }
+        if(!empty($interval) && !in_array($interval, array('all','today','week','month','year'))){
+           $date_interval = explode('-',(string)$interval);
+           $start_date = $end_date = '';
+           if(isset($date_interval[0]) && !empty($date_interval[0])){
+               $start_date = date('Y-m-d',strtotime($date_interval[0]));
+           }
+           if(isset($date_interval[1]) && !empty($date_interval[1])){
+               $end_date = date('Y-m-d',strtotime($date_interval[1]));
+           }
+           $args['date_query'] = array(array('before'=>$end_date,'after' => $start_date, 'inclusive' => true));
+        }
         
         switch ($sort) {
             case 'oldest':
@@ -293,12 +311,12 @@ class RM_User_Services extends RM_Services
                 break;
 
             case '0toz':
-                $args['orderby'] = 'display_name';
+                $args['orderby'] = 'user_email';
                 $args['order'] = 'ASC';
                 break;
                 
             case 'zto0':
-                $args['orderby'] = 'display_name';
+                $args['orderby'] = 'user_email';
                 $args['order'] = 'DESC';
                 break;
                 
@@ -310,7 +328,7 @@ class RM_User_Services extends RM_Services
         
         //echo "Args:<pre>", var_dump($args), "</pre>";
         $users = get_users($args);
-
+        
         return $users;
     }
 
@@ -319,39 +337,100 @@ class RM_User_Services extends RM_Services
         return (int) ($total / 2) + (($total % 2) == 0 ? 0 : 1);
     }
 
-    public function get_all_user_data($page = '1', $number = '20', $search_str = '', $user_status = 'all', $interval = 'all', $sort = 'latest', $user_ids = array()) {
+    public function get_all_user_data($page = '1', $number = '20', $search_str = '', $user_status = 'all', $interval = 'all', $sort = 'latest', $role = 'all',$user_ids = array()) {
+       
         $offset = ($page * $number) - $number;
-        $all_user_info = $this->get_users($offset, $number, $search_str, $user_status, $interval, $sort, $user_ids);
-        $all_user_data = array();
-
-        foreach ($all_user_info as $user) {
-
-            $tmpuser = new stdClass();
-            $user_info = get_userdata($user->ID);
-            $is_disabled = (int) get_user_meta($user->ID, 'rm_user_status', true);
-            $tmpuser->ID = $user->ID;
-
-            if (empty($user_info->display_name))
-                $tmpuser->first_name = $user_info->first_name;
-            else
-                $tmpuser->first_name = $user_info->display_name;
-
-            if (isset($user_info->user_email))
-                $tmpuser->user_email = $user_info->user_email;
-            else
-                $tmpuser->user_email = '';
-
-            if ($is_disabled == 1)
-                $tmpuser->user_status = RM_UI_Strings::get('LABEL_DEACTIVATED');
-            else
-                $tmpuser->user_status = RM_UI_Strings::get('LABEL_ACTIVATED');
-
-            $tmpuser->date = $user_info->user_registered;
-
-            $all_user_data[] = $tmpuser;
+        return $all_user_info = $this->get_users_all($offset, $number, $search_str, $user_status, $interval, $sort, $role, $user_ids);
+        
+        
+    }
+    public function get_users_all($offset = '', $number = '', $search_str = '', $user_status = 'all', $interval = 'all', $sort = 'latest', $role='all', $user_ids = array(), $fields_to_return = 'all') {
+        
+        //$args = array('number' => $number, 'offset' => $offset, 'include' => $user_ids, 'search' => '*' . $search_str . '*');
+        $args = empty($search_str) ? array('cache_results' => false, 'number' => $number, 'offset' => $offset): array('cache_results' => false, 'number' => $number, 'offset' => $offset,'search' => '*' . $search_str . '*');
+        
+        if($role != 'all'){
+            $args['role'] = $role;
         }
+        if(defined('REGMAGIC_ADDON')) {
+            $args['fields'] = $fields_to_return;
+        }
+        
+        switch($user_status) {
+            case 'active':
+                $args['meta_query'] = array(
+                    array(
+                        'key' => 'rm_user_status',
+                        'value' => '1',
+                        'compare' => '!='
+                    ),
+                );
+                break;
+            case 'pending':
+                $args['meta_query'] = array(
+                    array(
+                        'key' => 'rm_user_status',
+                        'value' => '1',
+                        'compare' => '='
+                    )
+                );
+                break;
+        }
+        switch ($interval) {
+            case 'today':
+                $args['date_query'] = array(array('after' => date('Y-m-d', strtotime('today')), 'inclusive' => true));
+                break;
 
-        return $all_user_data;
+            case 'week':
+                $args['date_query'] = array(array('after' => date('Y-m-d', strtotime('this week')), 'inclusive' => true));
+                break;
+
+            case 'month':
+                $args['date_query'] = array(array('after' => 'first day of this month', 'inclusive' => true));
+                break;
+
+            case 'year':
+                $args['date_query'] = array(array('year' => date('Y'), 'inclusive' => true));
+                break;
+        }
+        if(!empty($interval) && !in_array($interval, array('all','today','week','month','year'))){
+           $date_interval = explode('-',(string)$interval);
+           $start_date = $end_date = '';
+           if(isset($date_interval[0]) && !empty($date_interval[0])){
+               $start_date = date('Y-m-d',strtotime($date_interval[0]));
+           }
+           if(isset($date_interval[1]) && !empty($date_interval[1])){
+               $end_date = date('Y-m-d',strtotime($date_interval[1]));
+           }
+           $args['date_query'] = array(array('before'=>$end_date,'after' => $start_date, 'inclusive' => true));
+        }
+        
+        switch ($sort) {
+            case 'oldest':
+                $args['orderby'] = 'user_registered';
+                $args['order'] = 'ASC';
+                break;
+
+            case '0toz':
+                $args['orderby'] = 'user_email';
+                $args['order'] = 'ASC';
+                break;
+                
+            case 'zto0':
+                $args['orderby'] = 'user_email';
+                $args['order'] = 'DESC';
+                break;
+                
+            default:
+                $args['orderby'] = 'user_registered';
+                $args['order'] = 'DESC';
+                break;
+        }
+        
+        $wp_user_query  = new WP_User_Query( $args );
+        
+        return $wp_user_query;
+        
     }
 
     public function get_user_by($field, $value) {
@@ -448,7 +527,7 @@ class RM_User_Services extends RM_Services
   FB.login(function(response) {
   var token = response.authResponse.accessToken;
 FB.api('/me',{fields: 'first_name,email'}, function (response) {
-	handle_data('',response.first_name,'facebook',token);
+    handle_data('',response.first_name,'facebook',token);
 
 
 });
@@ -458,7 +537,7 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
   }
 function greet(accessToken) {
 FB.api('/me',{fields: 'first_name,email'}, function (response) {
-	handle_data('',response.first_name,'facebook',accessToken);
+    handle_data('',response.first_name,'facebook',accessToken);
 
 
 });
@@ -529,12 +608,12 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
             } catch (Facebook\Exceptions\FacebookResponseException $e)
             {
                 // When Graph returns an error
-                echo 'Graph returned an error: ' . wp_kses_post($e->getMessage());
+                echo 'Graph returned an error: ' . wp_kses_post((string)$e->getMessage());
                 exit;
             } catch (Facebook\Exceptions\FacebookSDKException $e)
             {
                 // When validation fails or other local issues
-                echo 'Facebook SDK returned an error: ' . wp_kses_post($e->getMessage());
+                echo 'Facebook SDK returned an error: ' . wp_kses_post((string)$e->getMessage());
                 exit;
             }
 
@@ -543,10 +622,10 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
                 if ($helper->getError())
                 {
                     header('HTTP/1.0 401 Unauthorized');
-                    echo "Error: " . wp_kses_post($helper->getError()) . "\n";
-                    echo "Error Code: " . wp_kses_post($helper->getErrorCode()) . "\n";
-                    echo "Error Reason: " . wp_kses_post($helper->getErrorReason()) . "\n";
-                    echo "Error Description: " . wp_kses_post($helper->getErrorDescription()) . "\n";
+                    echo "Error: " . wp_kses_post((string)$helper->getError()) . "\n";
+                    echo "Error Code: " . wp_kses_post((string)$helper->getErrorCode()) . "\n";
+                    echo "Error Reason: " . wp_kses_post((string)$helper->getErrorReason()) . "\n";
+                    echo "Error Description: " . wp_kses_post((string)$helper->getErrorDescription()) . "\n";
                 } else
                 {
                     header('HTTP/1.0 400 Bad Request');
@@ -581,7 +660,7 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
                     $accessToken2 = $oAuth2Client->getLongLivedAccessToken($accessToken);
                 } catch (Facebook\Exceptions\FacebookSDKException $e)
                 {
-                    echo "<p>Error getting long-lived access token: " . wp_kses_post($helper->getMessage()) . "</p>\n\n";
+                    echo "<p>Error getting long-lived access token: " . wp_kses_post((string)$helper->getMessage()) . "</p>\n\n";
                     exit;
                 }
 
@@ -601,11 +680,11 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
                 $response = $fb->get('/me?fields=id,name,email,first_name,last_name', (string) $accessToken);
             } catch (Facebook\Exceptions\FacebookResponseException $e)
             {
-                echo 'Graph returned an error: ' . wp_kses_post($e->getMessage());
+                echo 'Graph returned an error: ' . wp_kses_post((string)$e->getMessage());
                 exit;
             } catch (Facebook\Exceptions\FacebookSDKException $e)
             {
-                echo 'Facebook SDK returned an error: ' . wp_kses_post($e->getMessage());
+                echo 'Facebook SDK returned an error: ' . wp_kses_post((string)$e->getMessage());
                 exit;
             }
 
@@ -720,7 +799,7 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
                         }
                     }
                 } else
-                    die('Error: Unable to fetch email address from Facebbok.');
+                    die(esc_html__('Error: Unable to fetch email address from Facebook.', 'custom-registration-form-builder-with-submission-manager'));
             }
         }
 
@@ -790,6 +869,7 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
                 if(empty($accessToken))
                     break;
 
+                
                 $gopts = new RM_Options;
                 $fb_app_id = $gopts->get_value_of('facebook_app_id');
                 $fb_app_secret = $gopts->get_value_of('facebook_app_secret');
@@ -805,7 +885,7 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
             case 'google':
                 $login_success = $this->google_login_callback(sanitize_text_field($_POST['token']), $user_email);
                 break;
-            case 'instagram':
+            /* case 'instagram':
                 $response = wp_remote_get('https://graph.instagram.com/v12.0/me?fields=id,username&access_token='.sanitize_text_field($_POST['token']));
                 $response = json_decode(wp_remote_retrieve_body($response));
                 if(isset($response->username)) {
@@ -813,7 +893,7 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
                     $user_fname = '';
                     $login_success = true;
                 }
-                break;
+                break; */
             default:
                 break;
         }
@@ -821,7 +901,7 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
             $resp['code'] = 'allowed';
         } else {
             $resp['msg'] = __('Request denied','custom-registration-form-builder-with-submission-manager');
-            echo wp_kses_post(json_encode($resp)); die;
+            echo wp_kses_post((string)json_encode($resp)); die;
         }
         $user_model = new RM_User;
         $gopts = new RM_Options;
@@ -939,7 +1019,7 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
             if ($resp['code'] == 'allowed')
                 $resp['msg'] = $after_login_url;
 
-            echo wp_kses_post(json_encode($resp));
+            echo wp_kses_post((string)json_encode($resp));
 
             die;
         }
@@ -1048,7 +1128,7 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
                 else
                     RM_Utilities::redirect($after_login_url);
             } else {
-                echo wp_kses_post($resp['msg']);
+                echo wp_kses_post((string)$resp['msg']);
             }
         }
     }
@@ -1081,6 +1161,85 @@ FB.api('/me',{fields: 'first_name,email'}, function (response) {
             array_push($metas,$row->meta_key);
         }
         return $metas;
+    }
+    public function block_user_email($users){
+        
+        $gopt=new RM_Options;
+        $blocked_emails=$gopt->get_value_of('banned_email');
+        if(is_array($users) && !empty($users)){
+            foreach($users as $user_id){
+                $user = get_user_by( 'id', $user_id ); 
+                $user_email = $user->user_email;
+                if(empty($blocked_emails)){
+                    $blocked_emails=array($user_email);
+                }else{
+                    array_push ($blocked_emails, $user_email);
+                }
+            }
+        }
+        
+        update_option('rm_option_banned_email', $blocked_emails, false);
+      
+    }
+    
+    public function unblock_user_email($users){
+        
+        $gopt=new RM_Options;
+        $blocked_emails=array();
+        $blocked_emails=$gopt->get_value_of('banned_email');
+        if(is_array($users) && !empty($users)){
+            foreach($users as $user_id){
+                $user = get_user_by( 'id', $user_id ); 
+                $user_email = $user->user_email;
+                if(empty($blocked_emails)){
+                    return false;
+                 }else{
+                   $blocked_emails= array_diff ($blocked_emails, array($user_email));
+                }
+            }
+        }
+        
+        update_option('rm_option_banned_email', $blocked_emails, false);
+        
+    }
+    public function update_users_role(){
+        if(check_ajax_referer('rm_ajax_secure','rm_sec_nonce') && current_user_can('manage_options')) {
+            $role = isset($_POST['role']) ? strtolower(sanitize_text_field($_POST['role'])) : '';
+            if(!empty($role)){
+                
+                $user_ids = isset($_POST['user_ids']) && !empty($_POST['user_ids']) ? $_POST['user_ids'] : array();
+                if(!empty($user_ids)){
+                    foreach($user_ids as $user_id){
+                        $user = new WP_User( $user_id );
+                        $user->set_role($role);
+                    }
+                }
+            }
+        }
+        wp_send_json_success(true);
+        die;
+    }
+    
+    public function user_additional_details($user_ids){
+        $all_user_data = array();
+        $rm_service = new RM_Services();
+        foreach ($user_ids as $user_id) {
+
+            $tmpuser = new stdClass();
+            $user_info = get_userdata($user_id);
+            $tmpuser->ID = $user_id;
+            $total_revenue = RM_DBManager::get_total_revenue_by_user_email($user_info->user_email);
+            $tmpuser->total_revenue = !empty($total_revenue) ? RM_Utilities::get_formatted_price(round($total_revenue, 2)) : 0 ;
+            $submissions = $rm_service->get_submissions_by_email($user_info->user_email);
+            $tmpuser->submissions = !empty($submissions) ?  count($submissions) : 0;
+            $sent_emails = $rm_service->get('SENT_EMAILS',array('to' => $user_info->user_email), array('%s'), 'results', 0, 0, '*', null, true);
+            $tmpuser->sent_emails = is_array($sent_emails) && !empty($sent_emails) ? count($sent_emails) : 0;
+            
+
+            $all_user_data[] = $tmpuser;
+        }
+
+        return $all_user_data;
     }
 
 }

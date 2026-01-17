@@ -23,6 +23,7 @@ class RM_Frontend_Field_File extends RM_Frontend_Field_Base
         {
             $pfbc_field_array = array();
             $pfbc_field_array[] = new Element_Hidden($this->field_name, "__RM");
+            parent::set_conditional_properties();
             $label = $this->get_formatted_label();
             $pfbc_field_array[] = new Element_File($label, $this->field_name, $this->field_options);
             $this->pfbc_field = $pfbc_field_array;

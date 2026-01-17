@@ -57,7 +57,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
             RM_CONTACT_FORM => "<span class='rm_form_type_label'>".RM_UI_Strings::get('LABEL_NON_REG_FORM').'</span><div class="rm_formtype_help"><div>'.RM_UI_Strings::get('HELP_SELECT_FORM_TYPE_NON_REG').'</div></div>');
         $form->addElement(new Element_Radio("<b>" . RM_UI_Strings::get('LABEL_SELECT_FORM_TYPE') . "</b>:", "form_type", $form_type_selection_array, array("class" => "rm_user_create", "value" => $data->model->form_type)));
 
-        $form->addElement(new Element_TinyMCEWP("<b>" . RM_UI_Strings::get('LABEL_CONTENT_ABOVE') . "</b>", $data->model->form_options->form_custom_text, "form_custom_text", array('editor_class' => 'rm_TinyMCE', 'editor_height' => '100px'), array("longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_CONTENT_ABOVE_FORM'))));
+        $form->addElement(new Element_TinyMCEWP("<b>" . RM_UI_Strings::get('LABEL_CONTENT_ABOVE') . "</b>", (string)$data->model->form_options->form_custom_text, "form_custom_text", array('editor_class' => 'rm_TinyMCE', 'editor_height' => '100px'), array("longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_CONTENT_ABOVE_FORM'))));
         
         $form->addElement(new Element_Checkbox("<b>" . RM_UI_Strings::get('LABEL_SHOW_TOTAL_PRICE') . "</b>", "show_total_price", array(1 => ""), array("id" => "rm_", "value" => $data->model->form_options->show_total_price, "longDesc" => RM_UI_Strings::get('HELP_SHOW_TOTAL_PRICE'))));
         
@@ -73,7 +73,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
     </div>
     
     <?php 
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
 </div>
 

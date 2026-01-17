@@ -23,7 +23,7 @@ class RM_Submission_Filter extends RM_Filter {
         parent::__constuct($request,$service, $params, $default_param_values);
         
         $this->set_form($service);
-        if ((isset($this->params['rm_field_to_search']) && (int) $this->params['rm_field_to_search']) || isset($this->params['filter_tags'])) {
+        if ((isset($this->params['rm_field_to_search']) && !empty($this->params['rm_field_to_search'])) || isset($this->params['filter_tags'])) {
             $this->searched = true;
         } 
        
@@ -39,7 +39,9 @@ class RM_Submission_Filter extends RM_Filter {
             //if(empty($this->form_id)) {
                 //$this->form_id = $service->get('FORMS', 1, array('%d'), 'var', 0, 15, $column = 'form_id', null, true);
             //}
-            $this->form_id = null;
+            $saved_form = get_option('rm_inbox_default_form');
+            $this->form_id = empty($saved_form) ? null : $saved_form;
+            $this->form_id = apply_filters('rm_aps_form_filter', $this->form_id);
         }
     }
 
@@ -70,7 +72,7 @@ class RM_Submission_Filter extends RM_Filter {
         
         $this->pagination->set_total_entries(count($total_entries));
         
-        if(str_contains($this->filters['filter_tags'],'Unread')) {
+        if(str_contains((string)$this->filters['filter_tags'],'Unread')) {
             $this->filters['filter_tags'] = str_replace("Unread","Read",$this->filters['filter_tags']);
             $this->pagination->filters['filter_tags'] = str_replace("Unread","Read",$this->pagination->filters['filter_tags']);
             $counter_entries = intval(RM_DBManager::get_submissions($this,$this->form_id,"COUNT(*)",'submission_id',true,'var',false));
@@ -82,7 +84,7 @@ class RM_Submission_Filter extends RM_Filter {
                 'read' => $counter_entries,
                 'unread' => count($total_entries),
             );
-        } elseif(str_contains($this->filters['filter_tags'],'Read')) {
+        } elseif(str_contains((string)$this->filters['filter_tags'],'Read')) {
             $this->filters['filter_tags'] = str_replace("Read","Unread",$this->filters['filter_tags']);
             $this->pagination->filters['filter_tags'] = str_replace("Read","Unread",$this->pagination->filters['filter_tags']);
             $counter_entries = intval(RM_DBManager::get_submissions($this,$this->form_id,"COUNT(*)",'submission_id',true,'var',false));

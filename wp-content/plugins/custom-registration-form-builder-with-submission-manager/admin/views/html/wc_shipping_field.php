@@ -360,7 +360,7 @@ $form->render();
     // Intitializes field settings on page load
     jQuery(document).ready(function(){
         
-       var address_type= "<?php echo wp_kses_post($address_type); ?>";  
+       var address_type= "<?php echo wp_kses_post((string)$address_type); ?>";  
        if(address_type=="ca")
            jQuery("#rm_field_is_ca").attr('checked', 'checked');
        else 
@@ -369,7 +369,7 @@ $form->render();
        rm_address_type_changed(address_type); 
        
        
-       var wcs_state_type= "<?php echo wp_kses_post($wcs_state_type); ?>";
+       var wcs_state_type= "<?php echo wp_kses_post((string)$wcs_state_type); ?>";
        jQuery("#rm_wcs_state_" + wcs_state_type).attr('checked',true);
        rm_show_state_country_fields(wcs_state_type);
        
@@ -377,12 +377,12 @@ $form->render();
            america_can_country_changed();
        });
        
-       if("<?php echo wp_kses_post($state_codes_enabled); ?>"==1){
+       if("<?php echo wp_kses_post((string)$state_codes_enabled); ?>"==1){
            jQuery("#rm_field_wcs_state_as_codes input").attr('checked',true);
        }
        
        if(jQuery("#rm_wcs_state_america_can").is(":checked")){
-           jQuery("#rm_field_wcs_country_america_can").val("<?php echo wp_kses_post($wcs_country_america_can); ?>");
+           jQuery("#rm_field_wcs_country_america_can").val("<?php echo wp_kses_post((string)$wcs_country_america_can); ?>");
            america_can_country_changed();
        }
        

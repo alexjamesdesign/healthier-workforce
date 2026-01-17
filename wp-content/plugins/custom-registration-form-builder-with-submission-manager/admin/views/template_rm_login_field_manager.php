@@ -102,7 +102,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
 
                     <li id="rm_form_toggle" class="rm-form-toggle">
 
-<?php echo wp_kses_post(RM_UI_Strings::get('LABEL_TOGGLE_FORM')); ?>
+<?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TOGGLE_FORM')); ?>
 
                         <select onchange="rm_load_page(this, 'field_manage')">
 
@@ -111,7 +111,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
 
                             foreach ($data['all_forms'] as $form_id => $form_name):
 
-                                echo "<option value='".esc_attr($form_id)."'>".wp_kses_post($form_name)."</option>";
+                                echo "<option value='".esc_attr($form_id)."'>".wp_kses_post((string)$form_name)."</option>";
 
                             endforeach;
                             ?>
@@ -166,7 +166,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
 
                         </div>
 
-                        <div class="rm-field-manager-sorting"><?php echo wp_kses_post(RM_UI_Strings::get('SORT_FIELD_ORDER_DISC')); ?></div>
+                        <div class="rm-field-manager-sorting"><?php echo wp_kses_post((string)RM_UI_Strings::get('SORT_FIELD_ORDER_DISC')); ?></div>
 
                     </div>
 
@@ -305,7 +305,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
 
                         <div><input type="checkbox" id="rm_display_register" <?php echo $buttons['display_register'] == 1 ? 'checked' : ''; ?>/><?php echo _e('Display "Register" Button', 'custom-registration-form-builder-with-submission-manager'); ?></div>
 
-                        <div class="rm-field-submit-field-hint"><?php echo wp_kses_post(RM_UI_Strings::get('EDIT_BUTTON_LABEL_DISC')); ?></div>
+                        <div class="rm-field-submit-field-hint"><?php echo wp_kses_post((string)RM_UI_Strings::get('EDIT_BUTTON_LABEL_DISC')); ?></div>
 
                     </div>
 

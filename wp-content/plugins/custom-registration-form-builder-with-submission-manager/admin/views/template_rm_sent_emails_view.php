@@ -16,7 +16,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
     <!-----Operations bar Starts----->
 
     <div class="operationsbar">
-        <div class="rmtitle"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_EMAIL_TO')).': '. esc_html($data->email->to); ?></div>
+        <div class="rmtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_EMAIL_TO')).': '. esc_html($data->email->to); ?></div>
         <div class="icons">
             <a href="?page=rm_options_manage"><img alt="" src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . 'images/global-settings.png'); ?>"></a>
 
@@ -24,16 +24,16 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         <div class="nav">
             <ul>
                 <?php if($data->search_state) {?>
-                <li><a href="?page=rm_sent_emails_manage&<?php echo esc_attr($data->search_state); ?>"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+                <li><a href="?page=rm_sent_emails_manage&<?php echo esc_attr($data->search_state); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
                 <?php } else { ?>
-                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
                 <?php } ?>
                 
 <!--                <li onclick="jQuery.rm_do_action('rm_view_submission_page_form', 'rm_submission_print_pdf')"><a href="javascript:void(0)"><?php // echo RM_UI_Strings::get("LABEL_PRINT"); ?></a></li>-->
                 <?php if($data->search_state) {?>
-                <li><a href="?page=rm_sent_emails_view&<?php echo esc_attr($data->search_state); ?>&rm_sent_email_id=<?php echo esc_attr($data->email->mail_id); ?>&rm_action=delete"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a></li>
+                <li><a href="?page=rm_sent_emails_view&<?php echo esc_attr($data->search_state); ?>&rm_sent_email_id=<?php echo esc_attr($data->email->mail_id); ?>&rm_action=delete"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a></li>
                 <?php } else { ?>
-                <li><a href="?page=rm_sent_emails_view&rm_sent_email_id=<?php echo esc_attr($data->email->mail_id); ?>&rm_action=delete"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a></li>
+                <li><a href="?page=rm_sent_emails_view&rm_sent_email_id=<?php echo esc_attr($data->email->mail_id); ?>&rm_action=delete"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a></li>
                 <?php } ?>
               <?php
               $user_email=$data->email->to;
@@ -72,25 +72,25 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
             <input type="hidden" name="rm_slug" value="" id="rm_slug_input_field">
 
             <div class="rm-submission-field-row">
-                <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_EMAIL_SENT_ON')); ?></div>
+                <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_EMAIL_SENT_ON')); ?></div>
                 <div class="rm-submission-value"><?php echo esc_html(RM_Utilities::localize_time($data->email->sent_on)); ?></div>
             </div>
 
             <div class="rm-submission-field-row">
-                <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_EMAIL_SUB')); ?></div>
-                <div class="rm-submission-value"><?php echo wp_kses_post(htmlspecialchars_decode($data->email->sub)); ?></div>
+                <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_EMAIL_SUB')); ?></div>
+                <div class="rm-submission-value"><?php echo wp_kses_post((string)htmlspecialchars_decode($data->email->sub)); ?></div>
             </div>
             
             <div class="rm-submission-field-row">
-                <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_EMAIL_BODY')); ?></div>
-                <div class="rm-submission-value"><?php echo wp_kses_post(htmlspecialchars_decode($data->email->body)); ?></div>
+                <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_EMAIL_BODY')); ?></div>
+                <div class="rm-submission-value"><?php echo wp_kses_post((string)htmlspecialchars_decode($data->email->body)); ?></div>
             </div>
             
         </form>
     </div>  
     <?php     
     $rm_promo_banner_title = __('Unlock Note,Print,Block Email/IP and Send Message options, by upgrading','custom-registration-form-builder-with-submission-manager');
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
     
     

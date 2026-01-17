@@ -2,14 +2,14 @@
 abstract class ErrorView extends Base {
 	public $_form;
 
-	public function __construct(array $properties = null) {
+	public function __construct($properties = null) {
 		$this->configure($properties);
 	}
 
 	public abstract function applyAjaxErrorResponse();
 
 	public function clear() {
-		echo 'jQuery("#', wp_kses_post($this->_form->getAttribute("id")), ' .alert-error").remove();';
+		echo 'jQuery("#', wp_kses_post((string)$this->_form->getAttribute("id")), ' .alert-error").remove();';
 	}
 
 	public abstract function render();

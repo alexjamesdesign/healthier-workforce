@@ -413,7 +413,7 @@ $form->render();
        }
        
        if(jQuery("#rm_wcb_state_america_can").is(":checked")){
-           jQuery("#rm_field_wcb_country_america_can").val("<?php echo wp_kses_post($wcb_country_america_can); ?>");
+           jQuery("#rm_field_wcb_country_america_can").val("<?php echo wp_kses_post((string)$wcb_country_america_can); ?>");
            america_can_country_changed();
        }
        

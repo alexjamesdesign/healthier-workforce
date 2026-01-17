@@ -11,6 +11,7 @@ class RM_Reports_Controller
     }
     public function dashboard($model, $service, $request, $params){
         $data = new stdClass;
+        do_action('rm_reports_dashboard_load', null);
         $view = $this->mv_handler->setView("reports_dashboard");
         $view->render($data);
     }
@@ -22,15 +23,15 @@ class RM_Reports_Controller
         if($_GET && (isset($request->req['rm_filter_date']) || isset($request->req['rm_form_id']))){
             $filter_date = $request->req['rm_filter_date'];
             if($filter_date){
-                $date = explode('-',$filter_date);
+                $date = explode('-',(string)$filter_date);
                 $start_date = $date[0];
                 $end_date = $date[1];
             }
             $req_data->start_date = $start_date;
             $req_data->end_date = $end_date;
             $req_data->filter_date = $filter_date;
-            $req_data->form_id = $request->req['rm_form_id'];
-            $req_data->email = isset($request->req['rm_email']) ? $request->req['rm_email'] : '';
+            $req_data->form_id = is_numeric($request->req['rm_form_id']) ? absint($request->req['rm_form_id']) : 'all';
+            $req_data->email = isset($request->req['rm_email']) ? sanitize_email($request->req['rm_email']) : '';
             $data->req = $req_data;
             $parameter = $service->generate_reports_data($req_data,5);
             $submissions_data = $service->get_submission($parameter,5);
@@ -59,7 +60,7 @@ class RM_Reports_Controller
         if($_POST && (isset($request->req['rm_filter_date']) || isset($request->req['rm_form_id']))){
             $filter_date = $request->req['rm_filter_date'];
             if($filter_date){
-                $date = explode('-',$filter_date);
+                $date = explode('-',(string)$filter_date);
                 $start_date = $date[0];
                 $end_date = $date[1];
             }
@@ -67,7 +68,7 @@ class RM_Reports_Controller
             $req_data->start_date = $start_date;
             $req_data->end_date = $end_date;
             $req_data->filter_date = $filter_date;
-            $req_data->form_id = $request->req['rm_form_id'];
+            $req_data->form_id = is_numeric($request->req['rm_form_id']) ? absint($request->req['rm_form_id']) : 'all';
             $parameter = $service->generate_reports_data($req_data,0);
             $submission_ids = $service->get_submission($parameter,0);
             if(empty($submission_ids->submissions)) return false;
@@ -138,7 +139,7 @@ class RM_Reports_Controller
         if($_GET && (isset($request->req['rm_filter_date']) || isset($request->req['rm_login_status']))){
             $filter_date = $request->req['rm_filter_date'];
             if($filter_date){
-                $date = explode('-',$filter_date);
+                $date = explode('-',(string)$filter_date);
                 $start_date = $date[0];
                 $end_date = $date[1];
             }
@@ -177,7 +178,7 @@ class RM_Reports_Controller
         if($_GET && (isset($request->req['rm_filter_date']) || isset($request->req['rm_login_status']))){
             $filter_date = $request->req['rm_filter_date'];
             if($filter_date){
-                $date = explode('-',$filter_date);
+                $date = explode('-',(string)$filter_date);
                 $start_date = $date[0];
                 $end_date = $date[1];
             }

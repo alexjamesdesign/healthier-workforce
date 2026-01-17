@@ -54,7 +54,7 @@ class RM_Export_POST implements RM_Exporter
                         $values = array();
                         foreach ($data_row->value as $value){
                             $tmp = array();
-                            $tmp = explode('&times;', $value);
+                            $tmp = explode('&times;', (string)$value);
                             $values[] = implode('quantity',$tmp);
                         }
                         $data_row->value = implode(',',$values);
@@ -66,13 +66,13 @@ class RM_Export_POST implements RM_Exporter
             else{
                 if(isset($data_row->type) && $data_row->type == 'Price'){
                     $tmp = array();
-                    $tmp = explode('&times;', $data_row->value);
+                    $tmp = explode('&times;', (string)$data_row->value);
                     $data_row->value = implode('quantity',$tmp);
                     
                 }
             }
             
-            $this->data_prepared[$data_row->label] = stripslashes($data_row->value);
+            $this->data_prepared[$data_row->label] = stripslashes((string)$data_row->value);
             
         }
         

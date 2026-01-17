@@ -11,11 +11,11 @@ $rdrto = urlencode("rm_field_manage&astep=config");
 
     <!-----Operationsbar Starts----->
     <div class="operationsbar">
-        <div class="rmtitle"><?php echo wp_kses_post(RM_UI_Strings::get("TITLE_FORMFLOW_CONFIG_PAGE")); ?></div>
+        <div class="rmtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get("TITLE_FORMFLOW_CONFIG_PAGE")); ?></div>
         
         <div class="nav">
             <ul>  
-                <!-- <li onclick="window.history.back()"><a href="javascript:void(0)"><?php // echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK"); ?></a></li> -->
+                <!-- <li onclick="window.history.back()"><a href="javascript:void(0)"><?php // echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK"); ?></a></li> -->
 
                 <li><a class="thickbox rm_form_preview_btn" id="rm_form_preview_action_2" href="<?php echo add_query_arg(array('form_prev' => '1','form_id' => $data->form_id),  get_permalink($data->prev_page)); ?>&TB_iframe=true&width=900&height=600"><?php _e('Preview','custom-registration-form-builder-with-submission-manager'); ?></a></li>
                 
@@ -31,7 +31,7 @@ $rdrto = urlencode("rm_field_manage&astep=config");
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-settings.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_GEN_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_GEN_SETT')); ?></div>
                 </a>
             </div>
             
@@ -40,7 +40,7 @@ $rdrto = urlencode("rm_field_manage&astep=config");
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-accounts.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_ACC_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_ACC_SETT')); ?></div>
 
                 </a>
             </div> 
@@ -50,7 +50,7 @@ $rdrto = urlencode("rm_field_manage&astep=config");
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>post-submission.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_PST_SUB_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_PST_SUB_SETT')); ?></div>
                 </a>
             </div>
             
@@ -59,7 +59,7 @@ $rdrto = urlencode("rm_field_manage&astep=config");
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>auto-responder.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_AUTO_RESP_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_AUTO_RESP_SETT')); ?></div>
                 </a>
             </div>       
 
@@ -68,7 +68,7 @@ $rdrto = urlencode("rm_field_manage&astep=config");
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-limits.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_LIM_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_LIM_SETT')); ?></div>
                 </a>
             </div>
             
@@ -77,7 +77,7 @@ $rdrto = urlencode("rm_field_manage&astep=config");
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-access.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_ACTRL_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_ACTRL_SETT')); ?></div>
                 </a>
             </div>
             
@@ -86,7 +86,7 @@ $rdrto = urlencode("rm_field_manage&astep=config");
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>email_templates.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_EMAIL_TEMPLATES_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_EMAIL_TEMPLATES_SETT')); ?></div>
                 </a>
             </div>
 
@@ -95,13 +95,13 @@ $rdrto = urlencode("rm_field_manage&astep=config");
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-overrides.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_OVERRIDES_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_OVERRIDES_SETT')); ?></div>
                 </a>
             </div>
         </div>
         <div class="rm-grid-section dbfl" id="rm-section-icons"> 
             <div class="rm-grid-section-title dbfl" id="rm-thirdparty-section">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_ADD_APPS_TO_FORM')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_ADD_APPS_TO_FORM')); ?>
             </div>
             <!-- icons for external integrations -->
             <div class="rm-grid-icon difl">  
@@ -109,7 +109,7 @@ $rdrto = urlencode("rm_field_manage&astep=config");
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>mailchimp.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_F_MC_SETT')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_F_MC_SETT')); ?></div>
 
                 </a>
             </div> 
@@ -119,7 +119,7 @@ $rdrto = urlencode("rm_field_manage&astep=config");
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>logo-aweber.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_AWEBER_OPTION')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_AWEBER_OPTION')); ?></div>
 
                 </a>
             </div> 

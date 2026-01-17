@@ -56,7 +56,7 @@ if (isset($data->model->form_id)) {
     </div>
     
     <?php 
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
 </div>
 <pre class='rm-pre-wrapper-for-script-tags'><script>

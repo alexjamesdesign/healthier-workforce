@@ -1,10 +1,10 @@
 === RegistrationMagic - Custom Registration Forms, User Registration, Payment, and User Login ===
-Contributors: registrationmagic, metagauss
+Contributors: registrationmagic, metagauss, registrationmagicforms
 Donate link: http://registrationmagic.com/
 Tags: user registration, registration, WooCommerce registration form, payment form, event registration
-Requires at least: 4.6
-Tested up to: 6.3
-Stable tag: 5.2.3.1
+Requires at least: 5.2
+Tested up to: 6.9
+Stable tag: 6.0.7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -14,90 +14,63 @@ Create customized user registration forms, accept payments, track submissions, m
 
 = WordPress User Registration Forms Plugin =
 
-Create custom WordPress Registration Forms, allow user registration, accept payments, track submissions, manage users, analyze stats, assign user roles, automate processes, send bulk emails and much more. If you need to build a custom WordPress Registration Forms process, look no further!
-
->Take total control of user registrations on your site, with powerful building, configuring, publishing, managing, analyzing and automation toolkit.
+Create custom WordPress registration forms, publish signup and login pages, enable user registrations, approve new users, accept payments, track submissions, manage users, analyze user registration data, assign user roles, apply registration status, send bulk emails, automate registration form processes, launch event registration forms, integrate WooCommerce, and much more. If you are looking for a powerful WordPress user registration plugin with custom registration form builder, look no further than RegistrationMagic! 
 
 = So, what exactly is RegistrationMagic? =
 
-[RegistrationMagic](https://registrationmagic.com) is a powerful WordPress user registration plugin and WordPress Registration form builder which gives you TOTAL CONTROL of user registrations on your website. You can create different WordPress Registration Forms for your users with different pre-defined form fields. You can also set up payments for [paid user registrations](https://registrationmagic.com/setup-payments-on-registrationmagic-form-using-products/) and build any type of WordPress payment form. [A Front-End user registration area](https://registrationmagic.com/how-create-custom-user-area-page-in-wordpress/) allows your users to login, reset password, check payment transaction history, download their form submissions, etc. This is the only WordPress Registration Form plugin you will ever need!
-
-The new drag-and-drop form builder allows you to create rich custom layouts for your registration forms using standard row and column structure.
+[RegistrationMagic](https://registrationmagic.com/) will let you take TOTAL CONTROL of user registration on your WordPress site, with its powerful building, configuring, publishing, managing, analyzing and automation toolkit. You can create different WordPress Registration Forms for your users with pre-defined form fields using an intuitive drag-and-drop registration form builder. Choose from ready-to-use registration forms library to quickly create your forms with a few simple clicks! You can also set up payments for [paid user registrations](https://registrationmagic.com/setup-payments-on-registrationmagic-form-using-products/) and build any type of WordPress payment form. [A Front-End user registration area](https://registrationmagic.com/how-create-custom-user-area-page-in-wordpress/) allows your users to login, reset password, check payment transaction history, download their form submissions, and more.
 
 [Get started with RegistrationMagic using our Starter Guide.](https://registrationmagic.com/create-wordpress-registration-page-starter-guide/)
 
 https://youtu.be/1AvhmIifzjg
 
-RegistrationMagic tracks all incoming form submissions and activities, which can be monitored from individual form dashboard, allowing you to make informed decisions about your form tweaks. You can also accept attachments (single or multiple), and view or download them from a single area inside the dashboard. Advanced filters allow you to track form submissions for a specific form within a time period.
+RegistrationMagic tracks all incoming registration form submissions and activities, which can be monitored from individual form dashboard, allowing you to make informed decisions about your form tweaks. You can also accept attachments (single or multiple), and view or download them from a single area inside the dashboard. Advanced filters allow you to track form submissions for a specific registration form within a time period.
 
 There is also a full-fledged [User Management module](https://registrationmagic.com/wordpress-user-management-plugin-guide/) integrated with RegistrationMagic. It goes a step ahead of default WordPress User manager by connecting user registration and payment activities with individual user accounts. User Manager is the central hub for RegistrationMagic's user management system, which provides important information about each user within individual user pages. User management also offers enhanced options like suspending and re-activating users.
 
-RegistrationMagic not only allows you to create [new user roles](https://registrationmagic.com/register-users-specific-role-wordpress-site/) but integrate them with your login and registration system easily. You can even create paid user roles using in-built manager!
+RegistrationMagic not only allows you to create [new user roles](https://registrationmagic.com/register-users-specific-role-wordpress-site/) but also lets you easily integrate these roles with your login and registration systems. You can even create paid user roles using the in-built manager!
 
-Full integration with WordPress' default user-meta system means you can hook your form fields with existing user-meta keys, or create new ones right from the comfort of your registration form dashboard. Therefore, not only all registration form submissions are visible inside WordPress User pages as table, you can also go ahead and map individual form fields to user profile fields (or create new ones from scratch)! This also opens a world of opportunity for integrations with other plugins using WP user-meta. 
-
-The in-built user login management system is robust and secure, featuring advance configuration options for both first timers and pro users. No need to install separate login management plugins! The login data feeds into to RegistrationMagic User Manager and Security system offering you centralized view of registration forms, login activity and user specific data, all in a beautiful graphical view. There's more information about the login system below.
+Full integration with WordPress' default user-meta system means you can hook your registration fields with existing user-meta keys, or create new ones right from the comfort of your registration form dashboard. Therefore, not only all registration form submissions are visible inside WordPress User pages as table, you can also go ahead and map individual registration form fields to user profile fields (or create new ones from scratch)! This also opens a world of opportunity for integrations with other plugins using WP user-meta. 
 
 [Learn more about RegistrationMagic features here.](https://registrationmagic.com/features/)
 
-Not happy with default WordPress registration page? You can define and replace default WordPress registration page with your own custom-built form. RegistrationMagic provides you with more control and flexibility over your WordPress registration page. It redefined the user experience by combining specialized roles of both login and registration plugin.
+Not happy with default WordPress registration page? You can define and replace default WordPress registration page with your own custom-built registration form. RegistrationMagic provides you with more control and flexibility over your WordPress registration page. It redefined the user experience by combining specialized roles of both login and registration plugin.
 
-Running a WooCommerce store? WooCommerce user registration is another area where RegistrationMagic comes in handy. We understand limited registration options in WooCommerce can bog you down. RegistrationMagic can help you improve [WooCommerce user registration](https://registrationmagic.com/customize-woocommerce-checkout-form-page/) experience by allowing you to add custom fields to checkout registration form. User Manager can display WooCommerce revenue, addresses and downloads information. You can also add WooCommerce Billing and Shipping field to your standard registration forms. 
+With RegistrationMagic you can build anything from simple to complex [registration approval system](https://registrationmagic.com/manual-approval-of-registered-users/) to enable or disable user registration. Powerful Custom Status feature offers an option to create multi-step registration approval process. [Automations](https://registrationmagic.com/complete-automation-guide-wordpress-forms/) can be used for [automated registration approval](https://registrationmagic.com/automate-wordpress-user-account-activation-deactivation-deletion/) mechanism. These features allow you to use RegistrationMagic for industry specific registration systems, like [WordPress event registration plugin](https://registrationmagic.com/event-registration-form-plugin/) for online or physical events, member registration plugin for teams, WordPress application form plugin for businesses and WordPress enrollment plugin for sport camps. If you are [registering with limited seats](https://registrationmagic.com/restrict-limit-user-registration-wordpress/), the Limits feature can help you build WordPress event registration form, which has both a booking time window and option to limit the number of bookings. You can also [generate token numbers](https://registrationmagic.com/assign-unique-registration-token-number-to-user/) for every booking for these event registration forms. Another example would be to use it as [WordPress course registration plugin](https://registrationmagic.com/best-wordpress-class-registration-plugin/) for classes. 
 
-With RegistrationMagic you can build anything from simple to complex [registration approval system](https://registrationmagic.com/manual-approval-of-registered-users/). Powerful Custom Status feature offers an option to create multi-step registration approval process. [Automations](https://registrationmagic.com/complete-automation-guide-wordpress-forms/) can be used for [automated registration approval](https://registrationmagic.com/automate-wordpress-user-account-activation-deactivation-deletion/) mechanism. These features allow you to use RegistrationMagic for industry specific registration systems, for example, a [WordPress event registration form](https://registrationmagic.com/event-registration-form-plugin/). If you are [registering with limited seats](https://registrationmagic.com/restrict-limit-user-registration-wordpress/), the Limits feature can help you build WordPress event registration form, which has both a booking time window and option to limit the number of bookings. You can also [generate token numbers](https://registrationmagic.com/assign-unique-registration-token-number-to-user/) for every booking for these event registration forms.
-
-Another example would be to use it as [WordPress course registration](https://registrationmagic.com/best-wordpress-class-registration-plugin/) plugin. 
-
-[Custom Status Guide](https://registrationmagic.com/wordpress-user-registration-status-guide/): The Custom Status system allows combining multiple actions in a single click. (Just like your very own macros!) This enables you to move submissions through a vetting process. Every action can prompt user to fulfill certain requirements. With advance Inbox filters and saved searches, It's a cinch to sort and mark submissions. Failed registration attempts can be routed through different registration setup.  
-
-
-That being said, RegistrationMagic is an equally powerful [contact form](https://registrationmagic.com/create-super-intelligent-forms-wordpress/) system. Intelligent contact forms are one of its many unique features built on real world case scenarios. Since registration and contact forms are neatly displayed inside a single All Forms section, you get a single place to manage all your user submissions and workflows.
+[Custom Status Guide](https://registrationmagic.com/wordpress-user-registration-status-guide/): The Custom Registration Status system allows combining multiple actions in a single click. (Just like your very own macros!) This enables you to move submissions through a vetting process. Every action can prompt user to fulfill certain requirements. With advance Inbox filters and saved searches, It's a cinch to sort and mark submissions. Failed registration attempts can be routed through different registration setup.  
 
 = Frontend =
 
-Customer journey on your site starts with the sign-up process. There are multiple configuration settings in RegistrationMagic to curate sign-up experience for your users. These include different types of limits along with granular access controls, offering them to select user roles, display and [hide signup form fields using preset conditions](https://registrationmagic.com/add-conditions-to-fields-in-wordpress-form/), etc. You also have complete control over [redirections after sign-up](https://registrationmagic.com/redirect-user-to-specific-page-after-form-submission/), sending users email updates and even add automation to take care of recurring tasks. [Signup form can be styled](https://registrationmagic.com/design-registration-form-frontend-in-wordpress/) using the Visual Design Editor in the form dashboard allowing you to match it with your theme and branding.
-
-RegistrationMagic provides shortcode for its own member area to manage accounts, payments, messages and more! The integrated member area is beautifully rendered with individual tabs for different types of information for the users. You can even display Member area in an overlay using RegistrationMagic's MagicPopup system!
-
-The user area also has many productivity features. For example, users can check status of their submissions, download filled forms as PDFs, find all emails sent by you, etc. all from a single user area published using a single shortcode. In fact, the user area is built in such a way that it fits inside any WordPress theme you are using, by automatically picking theme's accent colors. One thing less to worry about!
+Customer journey on your site starts with the sign-up process. There are multiple configuration settings in RegistrationMagic to curate sign-up experience for your users. These include different types of limits along with granular access controls, offering them to select user roles, display and [hide signup form fields using preset conditions](https://registrationmagic.com/add-conditions-to-fields-in-wordpress-form/), etc. You also have complete control over [redirections after sign-up](https://registrationmagic.com/redirect-user-to-specific-page-after-form-submission/), sending users email updates and even add automation to take care of recurring tasks.
 
 = The Login System =
 
-[Read our WordPress User Login Guide](https://registrationmagic.com/wordpress-user-login-plugin-guide/): With the release of RegistrationMagic 4, Login Logout system has been substantially revamped. While login has always been an integral part of RegistrationMagic, it wasn't as feature rich as the registration part. But now, with its own central management area, The Login Form Dashboard, it is much more capable and scalable system. You can now edit both Username and Password fields including custom errors and labels. You get a multi-level login validation process that uses reCAPTCHA, IP Filters (Premium) and Two-Factor Authentication (Premium). As with other forms, you can tweak visual elements of the login form. We have included four new custom email templates attached to login events. We have further introduced a new, multipurpose Login Logout button Widget. It renders Login Logout buttons based on user login state, displays login form as a pop-up or page, and important information about the current user on cursor hovering. We have moved all external integration services specific to login under a single section and added Login Analytics with user login timeline under it. Login Timeline also features advance filtering. A new Login tab now appears on user pages inside User Manager, with a chronological list of login events specific to the user.
-
-New privacy options allow you to delete personal user data collected through forms. RegistrationMagic also integrates with WordPress default Export and Erase Personal User Data system. Additionally, You can add privacy policy field to your contact and registration forms, with checkbox asking user to accept it before form submission. 
-
-In short, RegistrationMagic is the missing user registration system for WordPress and a powerful addition to any WordPress admin's arsenal. From building any type of WordPress signup form, it can serve as industry specific solution like WordPress event registration and WordPress course registration plugin. It combines the role of both a powerful login and a registration plugin.
-
-And that's not all! RegistrationMagic is in active development with new features being rolled out every fortnight. Keep an eye on the changelog! If you feel anything is missing, just request our team and you may see it in the very next release.
+[Read our WordPress User Login Guide](https://registrationmagic.com/wordpress-user-login-plugin-guide/): The Login Form Dashboard is much more capable and scalable system. You can now edit both Username and Password fields including custom errors and labels. You get a multi-level login validation process that uses reCAPTCHA, IP Filters (Premium) and Two-Factor Authentication (Premium). As with other forms, you can tweak visual elements of the login form. We have included four new custom email templates attached to login events. We have further introduced a new, multipurpose Login Logout button Widget. It renders Login Logout buttons based on user login state, displays login form as a pop-up or page, and important information about the current user on cursor hovering. We have moved all external integration services specific to login under a single section and added Login Analytics with user login timeline under it. Login Timeline also features advance filtering. A new Login tab now appears on user pages inside User Manager, with a chronological list of login events specific to the user.
 
 = Payment Forms =
 
-A lot of professional and business users require collecting information along with payments. RegistrationMagic is tailor made for such users by acting as a powerful WordPress payment form system. With RegistrationMagic you can build PayPal forms, Stripe forms, registration forms with payment and more! PayPal integration is baked-in inside the standard version, so you can use it as your default WordPress payment plugin. With advanced pricing options in Premium version, we bet you will find it hard to discover a more robust payment solution!
+A lot of professional and business users require collecting information along with payments. RegistrationMagic is tailor made for such users by acting as a powerful WordPress payment form system. With RegistrationMagic you can build PayPal forms, Stripe forms, registration forms with payment and more!
 
 = GDPR and Privacy Laws =
 
-RegistrationMagic forms data and submission records work with WordPress' Export Personal Data and Erase Personal Data tools, allowing you to offer greater privacy control to your users and compliance with your local privacy laws. An in-built option also allows you to erase all plugin data from the database, if required, with a single click. Moreover, you can add link to your Privacy Policy page in your forms as a custom field.
-
-= Admin Menu Access Controls =
-
-Admin menu access control allows you to reorder RegistrationMagic WordPress admin menu and delegate access to specific menu pages to specific user roles on your website. This comes handy when you are working with teams and wish to distribute registration data among different users on your website. Admin menu access is available in the Global Settings area starting version 5.2.1.0.
+RegistrationMagic forms data and submission records work with WordPress' Export Personal Data and Erase Personal Data tools, allowing you to offer greater privacy control to your users and compliance with your local privacy laws.
 
 = Forms Manager =
 
 * Unified User Registration Forms Manager.
 * Unlimited Online User Registration Forms.
-* Form Cards with at-the-glance information.
-* Quick and simple drag and drop form builder.
+* Registration Form Cards with at-the-glance information.
+* Quick and simple drag-drop registration form and login form builder.
 * Built in User Login form.
-* Submission counter on form card.
-* Default form selector.
-* Short-code system for forms.
+* Submission counter on registration form card.
+* Default registration forms selector.
+* Short-code system for all registration forms.
 * Submissions Dashboard Widget.
 * Submissions under User profiles.
-* Sort form cards alphabetically or chronologically.
-* Duplicate forms.
-* HTML Embed code for forms (Premium).
+* Sort registration form cards alphabetically or chronologically.
+* Duplicate registration forms.
+* HTML Embed code for registration forms (Premium).
 * Terms and Condition Checkbox.
 * Custom WordPress user registration URL.
 * Default register page.
@@ -106,14 +79,14 @@ Admin menu access control allows you to reorder RegistrationMagic WordPress admi
 
 New overview feature introduces powerful bird's eye view of all registration related user activities on your website through charts and tables widgets on a single page. These include:
 
-* Form submission comparison bar graphs.
-* Trending forms.
+* Registration form submission comparison bar graphs.
+* Trending registration forms.
 * Latest submissions timeline.
 * User registrations line graph.
 * User logins line graph.
 * Submission counters.
-* Latest forms.
-* Latest logins timeline.
+* Latest registration forms.
+* Latest logins timeline from login forms.
 * Quick access to global settings.
 
 = General Settings =
@@ -128,17 +101,6 @@ New overview feature introduces powerful bird's eye view of all registration rel
 * Custom Text on Submissions PDF and print (Premium).
 * Display RegistrationMagic Floating Button, Popup Menu and Sliding Panels.
 * Define accent color of RegistrationMagic Button, Popup Menu and Sliding Panels.
-
-= Security =
-
-[Security Guide](https://registrationmagic.com/security-guide-for-wordpress-forms/).
-
-* Google reCaptcha Support (User Registration form login captcha to control user registration spam).
-* Form Submission Limit on a device.
-* Custom Password restriction (Premium).
-* Banned IP Addresses from accessing form (Premium).
-* Banned Email Addresses from Accessing form (Premium).
-* Blacklist and Reserve Usernames (Premium).
 
 = User Accounts =
 
@@ -156,27 +118,14 @@ New overview feature introduces powerful bird's eye view of all registration rel
 = External Integration =
 
 * Social login register using Facebook, LinkedIn, Microsoft, Twitter, Instagram and Google Accounts (User registration form with front-end login).
-* Integrate with MailChimp (MailChimp Custom Fields and MailChimp User registration Form).
-* Integrate with MailPoet (MailPoet Custom Fields, and MailPoet User registration Form).
-* Integrate with WooCommerce (WooCommerce Custom Fields, WooCommerce user registration Form * WooCommerce Vendor Registration & WooCommerce Floating Cart).
+* Integrate with MailChimp Custom Fields and MailChimp User registration Form.
+* Integrate with MailPoet Custom Fields and Mailpoet User registration Form.
+* Integrate with WooCommerce (WooCommerce Custom Fields, WooCommerce user registration Form, WooCommerce Vendor Registration & WooCommerce Floating Cart).
 * Integrate with DropBox.
-* Integrate with NewsLetter Plugin (NewsLetter Custom Fields & NewsLetter User Registration Form).
+* Integrate with NewsLetter Plugin Custom Fields & NewsLetter User Registration Form
+
+.
 * Integrate with Google Maps API key. (Premium)
-
-= Payments =
-
-* PayPal Integration. Full support for WordPress PayPal form creation.
-* Stripe Integration (Premium).
-* Authorize.net Integration (Premium).
-* PayPal custom checkout page.
-* Currency definition.
-* Currency position.
-
-= Visual form editor =
-
-* Define border, border-width, border-color, border-radius, background-color, background Image and padding for the form.
-* Define border, border-width, border-color, border-radius, background-color, background Image and padding for the input fields.
-* Define border, border-width, border-color, border-radius, background-color, background Image padding, font color and label for the submit button.
 
 = Accounts =
 
@@ -196,28 +145,21 @@ New overview feature introduces powerful bird's eye view of all registration rel
 
 * Custom Email Subject and Body with mail merge fails.
 
-= Limits =
+= Registration Limits =
 
 * Limit the user submissions based on number, date or both.
 * Define the number of submissions allowed.
-* Set a deadline for form submission.
+* Set a deadline for registration form submission.
 * Custom message to the user after submission is complete.
-
-= MailChimp Registration =
-
-* Select a list to Map.
-* Map MailChimp Email, First Name and Last Name fields to your user registration form fields.
-* Map MailChimp advanced custom fields with your user registration form fields (Premium).
-* Show an opt-in box with custom text.
 
 = Access Control =
 
 * Enable date based access. Define age or specific time between dates.
 * Passphrase based access. Define secret question and passphrase.
-* User Role based Access. Define roles that will have access to the form.
+* User Role based Access. Define roles that will have access to registration forms.
 * Custom Denial Message.
 
-= Registration form CUSTOM FIELDS =
+= Registration form Custom Fields =
 
 * All common field types supported.
 * Special Custom Fields (33 in Premium).
@@ -227,13 +169,6 @@ New overview feature introduces powerful bird's eye view of all registration rel
 * Custom Icon from over 900 Google Icons.
 * Define Icon color, background color, background-shape and transparency.
 * Custom CSS class.
-* Help Text as tooltip.
-* Placeholder text, length for supporting field types.
-* Define field as required.
-* Show field on user page inside RegistrationMagic User Manager.
-* Add pages and assign custom fields to them (Premium).
-* Name the pages (Premium).
-* Duplicate fields with a single click.
 
 = Form Submissions =
 
@@ -262,8 +197,6 @@ New overview feature introduces powerful bird's eye view of all registration rel
 
 = Reports =
 
-This feature offers powerful reporting tools for all types of user registrations, registration form submissions and payment forms on your website. Reports containing tabular data can be imported into spreadsheet apps like Microsoft Excel for a more rigorous analysis. For every report, RegistrationMagic also provides visual feedback by accompanying graphs or charts. Here are the reports currently available:
-
 * Form Submissions: Generations reports for registration form submissions.
 * Login Records: Generates reports for user login events.
 * Attachments: Breakdown of files received with file upload field in forms. (Premium)
@@ -273,7 +206,7 @@ This feature offers powerful reporting tools for all types of user registrations
 = Logged In View =
 
 * Define what users see after login page post login.
-* Display custom greetings and message.
+* Display custom greetings and message after user login.
 
 = Login Redirections =
 
@@ -285,6 +218,7 @@ This feature offers powerful reporting tools for all types of user registrations
 * Define Invalid username and password messages.
 * Alert admin and account owners of failed login attempts.
 * Display reCAPTCHA after a set number of failed login attempts.
+* Control fake and spam user registration (Premium).
 * Ban IP temporarily or permanently after a set number of login failures (Premium).
 
 = Two-Factor Authentication (Premium) =
@@ -318,7 +252,7 @@ This feature offers powerful reporting tools for all types of user registrations
 * A separate manager to create and manage prices for forms. 
 * Fixed, Multi-Select, Drop-Down and User Defined price options (Premium).
 * Custom labels for sub-pricing options (Premium).
-* Build WordPress form with payment option.
+* Build WordPress registration form with payment option.
 
 = Payments =
 
@@ -342,14 +276,14 @@ Payments feature is an essential companion to RegistrationMagic's forms. Payment
 
 = Email Users =
 
-* Broadcast email message to all users who have submitted a specific form.
+* Broadcast email message to all users who have submitted a specific registration form.
 * Use Mail merge to send personalized messages.
 * See queues in progress sending messages.
-* Quickly view number of recipients for each form.
+* Quickly view number of recipients for each registration form.
 
 = User Manager =
 
-* User Manager with tabular view of registered users or those who filled out the form.
+* User Manager with tabular view of registered users or those who filled out the registration form.
 * Filter User registrations by day, week, month and year.
 * Filter Users based on their status.
 * Activate or deactivate multiple users.
@@ -366,7 +300,7 @@ Payments feature is an essential companion to RegistrationMagic's forms. Payment
 * Inherit permissions from WP User roles.
 * Paid User roles (Premium).
 
-= Registration Shortcodes and Variables =
+= User Registration Shortcodes and Variables =
 
 [A list of useful shortcodes and variables used in RegistrationMagic](https://registrationmagic.com/wordpress-registration-shortcodes-list/).
 
@@ -374,7 +308,8 @@ Payments feature is an essential companion to RegistrationMagic's forms. Payment
 
 Please check out [this post](https://registrationmagic.com/translate-registrationmagic-to-your-language/) to learn translating RegistrationMagic to your language.
 
-Thank you for reading this far. As you can see, RegistrationMagic is by far the most advanced plugin to build WordPress Registration forms. If you're interested in WordPress user registrations, give it a try. We're confident you will love it! If you find any features you need missing, feel free to write to our support team. We shall try to include them in a future release.
+Thank you for reading this far. As you can see, RegistrationMagic is by far the most advanced WordPress user registration plugin to build custom Registration forms. If you're interested in WordPress user registrations, [give it a try]( https://registrationmagic.com/comparison/).
+
 
 == Installation ==
 
@@ -389,18 +324,18 @@ Detailed instructions can be found here:
 
 == Frequently Asked Questions ==
 
-= Q: I am seeing following error message when visiting the form: "Submission limit reached for this form, please try back after 24 hours" =
-Ans: This is an anti-spam measure built into RegistrationMagic. A form can be submitted only certain number of times from a given device within a period of 24 hours. You can define the limit from Global Settings → Security. Change the value of Form Submission Limit for a Device as required. Set the limit to zero in order to disable the feature altogether, i.e. allow unlimited submissions from a device. 
+= Q: I am seeing following error message when visiting the registration form: "Submission limit reached for this form, please try back after 24 hours" =
+Ans: This is an anti-spam measure built into RegistrationMagic. A registration form can be submitted only certain number of times from a given device within a period of 24 hours. You can define the limit from Global Settings → Security. Change the value of Form Submission Limit for a Device as required. Set the limit to zero in order to disable the feature altogether, i.e. allow unlimited submissions from a device. 
 
 Note that in RegistrationMagic Premium, a global override is also available for this setting in Form Settings → Global Overrides.
 
-= Q: "Access Denied" error when trying to view form? =
+= Q: "Access Denied" error when trying to view registration form? =
 Ans: Please make sure that you haven't accidentally blocked your own IP address! Confirm it from Global Settings → Security → Banned IP addresses from accessing the form.
 
 Also make sure that you are using latest version of RegistrationMagic, as this issue may arise from IPv6 connections, which were addressed in latest versions.
 
 = Q: Submit button not working/does nothing! =
-Ans: Most of the time this happens due to a javascript error from a third-party plugin or theme. You will need to check browser console and see if there are any errors pointing to a file outside of RegistrationMagic repository. If you are able to trace it to a plugin, try disabling it and reload the form.
+Ans: Most of the time this happens due to a javascript error from a third-party plugin or theme. You will need to check browser console and see if there are any errors pointing to a file outside of RegistrationMagic repository. If you are able to trace it to a plugin, try disabling it and reload the registration form.
 
 Another reason can be minification of JS files and inline scripts. Disable these if you are using a plugin for minification and try again.
 
@@ -416,7 +351,7 @@ Ans: RegistrationMagic uses standard WordPress po/mo files for maintaining trans
 As a nice little trick you can even modify texts using this, for example label of username and password fields.
 
 = Q: Can I create early bird user registration forms with it? =
-Ans: RegistrationMagic allows you to set limits to your forms and render a different form once the limit has reached. Limit can be based on number of form submissions or a set date. To create early bird form system, you need to create two different forms - One for Early Bird user registration and the other one for regular user registration. Obviously, you can set different prices for them. After that, set limit on the early bird form by going to Form Card → Settings → Limits. Turn on 'Auto Expires', then define its limits. Below the limits, there's an option 'Post Expiry Action'. Select Display another form. A new drop down will appear below it. Choose your regular user registration form. Now go ahead and publish your early bird form and RegistrationMagic will take care of the rest :)
+Ans: RegistrationMagic allows you to set limits to your registration forms and render a different registration form once the limit has reached. Limit can be based on number of form submissions or a set date. To create early bird form system, you need to create two different forms - One for Early Bird user registration and the other one for regular user registration. Obviously, you can set different prices for them. After that, set limit on the early bird form by going to Form Card → Settings → Limits. Turn on 'Auto Expires', then define its limits. Below the limits, there's an option 'Post Expiry Action'. Select Display another form. A new drop down will appear below it. Choose your regular user registration form. Now go ahead and publish your early bird form and RegistrationMagic will take care of the rest :)
 
 In fact you can daisy chain multiple forms like this to create a system of forms! It opens up a host of new possibilities.
 
@@ -447,27 +382,419 @@ Note, this functionality is limited to Premium version of RegistrationMagic.
 
 == Screenshots ==
 
-1. WooCommerce Cart Integration with RegistrationMagic's Magic Popup.
-2. A simple user registration form with payment option.
-3. Login page using RegistrationMagic.
-4. RegistrationMagic's User Account area with WooCommerce integrated.
-5. A multi-page user registration form styled using RegistrationMagic's visual form editor.
-6. Forms Manager with options to sort, delete and edit forms.
-7. Individual Form Configuration.
-8. One of the form configuration panels.
-9. Form custom fields manager.
-10. Custom field settings. Here's an example of radio box.
-11. Submissions Manager. Data hidden to preserve privacy.
-12. Form Analytics. IPs hidden for privacy.
-13. Field Analytics.
-14. Pricing Manager.
-15. Attachments Manager.
-16. Email Broadcaster.
-17. Users Manager.
-18. User Roles Manager.
-19. Global Settings.
+1. All Forms - Card View: A compact, card-style layout showcasing all forms created within RegistrationMagic, each with essential form details and quick actions for easy management.
+2. All Forms - List View: A list view of all forms, displaying comprehensive form information such as submission count, views, and quick-access configuration options.
+3. Fields Manager / Form Layout Editor: A flexible, drag-and-drop layout editor that allows administrators to add, arrange, and configure custom fields to create tailored user registration forms.
+4. Form Row Properties: Detailed customization panel for form rows, offering control over field arrangement, styling, and advanced properties to match branding and layout preferences.
+5. Form Dashboard: A powerful dashboard for individual forms, showing key metrics, settings, and performance analytics, including submission trends and user engagement statistics.
+6. User Manager: A centralized area for managing users registered through RegistrationMagic forms, complete with user roles, status indicators, and bulk management actions.
+7. Overview: A summary view highlighting RegistrationMagic's key metrics and activity insights, providing a snapshot of form performance and user engagement over time.
+8. Sample Login Form: A customizable login form created using RegistrationMagic, demonstrating login and authentication capabilities seamlessly integrated with WordPress.
+9. Sample Registration Form: A basic registration form showcasing field layout and styling options, designed with RegistrationMagic’s visual editor for a quick start on user onboarding.
+10. Inbox or Submissions Manager: Centralized dashboard for viewing and managing form submissions, with options for sorting, filtering, and responding to entries.
+11. Payments: A dedicated area to view and manage payment transactions made through forms, including payment status, method, and transaction history.
+12. Form Analytics: Detailed analytics for individual forms, displaying submission trends, views, and other performance metrics to help optimize user engagement.
+13. Field Analytics: Insights into the performance of individual fields, showing data on user interactions to optimize field placement and design.
+14. User Roles Manager: Manage and assign user roles for form submissions, allowing fine-tuned control over user access and permissions within your WordPress site.
 
 == Changelog ==
+
+= 6.0.7.2: January 16 2026 =
+* Security improvements.
+* Multiple major bug fixes.
+
+= 6.0.7.1: January 5 2026 =
+* Security improvements.
+* Minor bug fixes.
+
+= 6.0.7.0: December 23 2025 =
+* Security improvements.
+* Minor bug fixes.
+
+= 6.0.6.9: December 13 2025 =
+* Minor improvements.
+
+= 6.0.6.8: December 8 2025 =
+* Security improvements.
+
+= 6.0.6.7: November 25 2025 =
+* Fixed: Widget rendering issue with Elementor.
+* Minor bug fixes.
+
+= 6.0.6.6: November 11 2025 =
+* Minor bug fixes.
+
+= 6.0.6.5: October 28 2025 =
+* Minor bug fixes.
+
+= 6.0.6.4: October 17 2025 =
+* Minor UI improvements & bug fixes.
+
+= 6.0.6.3: October 6 2025 =
+* New: Added option to turn off autocomplete for Login Form. (Premium Only)
+* Fixed: Error on exporting selected form submissions. (Premium Only)
+* Security improvements.
+* Minor bug fixes.
+
+= 6.0.6.2: September 24 2025 =
+* New: Added option to set submission token to the submission ID. (Premium Only)
+* Minor UI improvements & bug fixes.
+
+= 6.0.6.1: September 11, 2025 =
+* Updated: Option to select registration form for MagicPopup in Global Settings.
+* Multiple UI improvements & bug fixes.
+
+= 6.0.6.0: August 29, 2025 =
+* Updated: Validations for payment configuration in Global Settings.
+* Fixed: Mobile responsiveness issues.
+* Fixed: Date format issue with date range selection in Birth Date field. (Premium Only)
+* Multiple other UI improvements, workflow improvements and bug fixes.
+
+= 6.0.5.9: August 18, 2025 =
+* Fixed: Form widget showing error on publishing.
+* Fixed: Force match country option in Mobile field.
+* Fixed: User meta not updating with the File Upload field. (Premium Only)
+
+= 6.0.5.8: August 11, 2025 =
+* Enhancements: reCAPTCHA verification added to password recovery page.
+* Minor UI improvements & bug fixes.
+
+= 6.0.5.7: August 1, 2025 =
+* Enhancements: Minor design adjustments for better UI consistency and user experience.
+
+= 6.0.5.6: July 29, 2025 =
+* Improved: All Forms card view with new UI elements and more modern design language.
+* Improved: General UI design improvements across the board.
+* Minor UI updates & bug fixes.
+
+= 6.0.5.5: July 22, 2025 =
+* Minor bug fixes.
+
+= 6.0.5.4: July 14, 2025 =
+* Minor bug fixes.
+
+= 6.0.5.3: June 30, 2025 =
+* Minor UI bug fixes.
+
+= 6.0.5.2: June 16, 2025 =
+* Fixed: Conditions on the Mobile Number field.
+* Other minor bug fixes.
+
+= 6.0.5.1: June 2, 2025 =
+* Fixed: "Next" button on multi-page forms. (Premium only)
+
+= 6.0.5.0: May 28, 2025 =
+* Fixed: Scheduled automation tasks.
+* Fixed: MailChimp integration.
+* Fixed: Form design issue on mobile view.
+* Fixed: Product quantity validation.
+* Other minor bug fixes.
+
+= 6.0.4.9: May 14, 2025 =
+* Minor bug fixes.
+
+= 6.0.4.8: May 2, 2025 =
+* Fixed: Activation issue on multi-site setup.
+
+= 6.0.4.7: April 30, 2025 =
+* Fixed: Notice for translation loading early.
+* Minor bug fixes.
+
+= 6.0.4.6: April 17, 2025 =
+* Minor bug fixes.
+
+= 6.0.4.5: April 7, 2025 =
+* Minor bug fixes.
+
+= 6.0.4.4: April 1, 2025 =
+* Security improvements.
+
+= 6.0.4.3: March 22, 2025 =
+* Fixed: Email formatting issue.
+
+= 6.0.4.2: March 21, 2025 =
+* Minor bug fixes.
+
+= 6.0.4.1: March 11, 2025 =
+* Minor bug fixes.
+
+= 6.0.4.0: March 07, 2025 =
+* New: Launching Digital Signature form field. (Premium Only)
+* New: Option added to search submissions by unique token. (Premium Only)
+* New: Options added to edit Login Form email subjects.
+* Updated: Field conditions will now apply on "Rich Text" display field as well.
+* Fixed: Field conditions not working properly with the Address field.
+* Minor bug fixes & UI improvements.
+
+= 6.0.3.9: February 22, 2025 =
+* Minor bug fixes & UI improvements.
+
+= 6.0.3.8: February 8, 2025 =
+* Minor bug fixes.
+
+= 6.0.3.7: February 7, 2025 =
+* Fixed: Gender field alignment issue with label-left layout. (Premium Only)
+* Minor bug fixes & UI improvements.
+
+= 6.0.3.6: January 27, 2025 =
+* Fixed: Password field visibility icon issue.
+* Other minor bug fixes.
+
+= 6.0.3.5: January 9, 2025 =
+* Minor bug fixes & UI improvements.
+
+= 6.0.3.4: January 3, 2025 =
+* Minor bug fixes.
+
+= 6.0.3.3: December 20, 2024 =
+* Minor bug fixes & UI improvements.
+
+= 6.0.3.2: December 14, 2024 =
+* Minor bug fixes & UI improvements.
+
+= 6.0.3.1: December 11, 2024 =
+* Minor bug fixes.
+
+= 6.0.3.0: November 29, 2024 =
+* New: Added option to turn on/off account activation email in Global Settings.
+* Fixed: ProfileGrid Avatar field not working with the new form shortcode.
+* Fixed: Unable to delete additional "Other" field from radio and checkbox fields.
+* Fixed: Redundant product creation upon form import.
+* Multiple bug fixes & UI improvements.
+
+= 6.0.2.9: November 19, 2024 =
+* Minor bug fixes.
+
+= 6.0.2.8: November 6, 2024 =
+* Minor bug fixes.
+
+= 6.0.2.7: November 4, 2024 =
+* Security improvements.
+* Minor bug fixes.
+
+= 6.0.2.6: October 28, 2024 =
+* Minor bug fixes.
+
+= 6.0.2.5: October 25, 2024 =
+* Updated: Edit submission functionality migrated to new form design. (Premium Only)
+* Fixed: Gender field showing redundant options in field settings. (Premium Only)
+* Fixed: Field conditions not getting duplicated with form duplication.
+* Multiple minor bug fixes.
+
+= 6.0.2.3: October 21, 2024 =
+* Fixed: Reset button not working in Reports filtering.
+* Fixed: PayPal payment popup not working after form submission.
+* Multiple minor bug fixes.
+
+= 6.0.2.2: October 10, 2024 =
+* Fixed: Existing user error on contact form validation.
+
+= 6.0.2.1: October 2, 2024 =
+* Minor bug fixes.
+* Security improvements.
+
+= 6.0.2.0: September 18, 2024 =
+* New: Completely redesigned the 'Add Field' popup in the Fields Manager with a more intuitive and modern user interface, enhancing the field creation experience.
+* Updated: The form widget now loads the new form layout introduced in v6, offering enhanced design and performance.
+* Fixed: Multiple bug fixes and user interface improvements for a smoother form creation and submission process.
+
+= 6.0.1.7: September 11, 2024 =
+* Fixed: "Reply-to" not working in emails.
+* Fixed: Backend form design changes not working on new form shortcode.
+* Fixed: Password field visibility icon issue with RTL languages.
+* Fixed: Stripe payment form not loading. (Premium Only)
+* Other minor bug fixes and UI changes.
+
+= 6.0.1.5: August 27, 2024 =
+* Bug fixes.
+
+= 6.0.1.4: August 14, 2024 =
+* UI changes.
+
+= 6.0.1.3: August 12, 2024 =
+* UI changes & bug fixes.
+
+= 6.0.1.2: August 6, 2024 =
+* Bug fixes for new form shortcode submission workflow.
+
+= 6.0.1.1: August 2, 2024 =
+* UI Changes.
+* Bug Fixes.
+
+= 6.0.1.0: July 31, 2024 =
+* Updated: New options added to the Gender field. (Premium Only)
+* Updated: Titles changed for the sample forms.
+* UI Changes.
+* Bug Fixes.
+
+= 6.0.0.4: July 25, 2024 =
+* Default All Forms view is now List View.
+* Minimum requirements updated.
+* UI Changes.
+* Bug Fixes.
+
+= 6.0.0.3: July 23, 2024 =
+* Fixed: Issue with scheduled email reports.
+* Other minor bug fixes.
+
+= 6.0.0.2: July 16, 2024 =
+* Updated: Form preview display in the backend.
+* Fixed: Issue with disable WordPress toolbar setting.
+* Fixed: Mobile field not working with Twenty Twenty Four theme.
+* Fixed: Frontend user area not working with Twenty Twenty Four theme.
+* Other minor bug fixes.
+
+= 6.0.0.1: July 11, 2024 =
+* New: Layout option added in Checkbox and Radio fields.
+* Minor bug fixes.
+
+= 6.0.0.0: July 10, 2024 =
+* New: Introducing new form publish shortcode with better design and optimization.
+* Minor bug fixes.
+
+= 5.3.3.9: July 5, 2024 =
+* Updated: Form creation popup in backend.
+* Minor bug fixes.
+
+= 5.3.3.8: June 15, 2024 =
+* Minor bug fix.
+
+= 5.3.3.7: June 14, 2024 =
+* Minor workflow changes.
+
+= 5.3.3.6: June 6, 2024 =
+* Minor bug fixes.
+
+= 5.3.3.5: June 4, 2024 =
+* Fixed: Login issue with login form and login widgets.
+* Translation bug fixes.
+
+= 5.3.3.4: May 25, 2024 =
+* Minor bug fixes.
+
+= 5.3.3.3: May 23, 2024 =
+* Minor UI changes.
+
+= 5.3.3.2: May 21, 2024 =
+* Fixed: Minor UI improvements and bug fixes.
+
+= 5.3.3.1: May 14, 2024 =
+* Fixed: Minor bugs.
+
+= 5.3.3.0: May 3, 2024 =
+* Updated: Form preview feature overhauled for the backend.
+* New: Option to change default selection text for the dropdown field.
+* Fixed: Page reordering bug with multi-page forms. (Premium only)
+* Multiple bug fixes and UI improvements.
+
+= 5.3.2.2: April 16, 2024 =
+* Fixed: Conflict with Avada Builder.
+
+= 5.3.2.1: April 4, 2024 =
+* Security updates.
+
+= 5.3.2.0: March 23, 2024 =
+* New: URL field type
+* New: Option to change position of confirm password field.
+* Security updates.
+* Multiple bug fixes and UI improvements.
+
+= 5.3.1.0: March 11, 2024 =
+* New: Conditions on Product fields.
+* Security updates.
+* Multiple bug fixes and UI improvements.
+
+= 5.3.0.0: March 1, 2024 =
+* New: Updated All Forms view.
+* Security updates.
+* Multiple bug fixes and workflow improvements.
+
+= 5.2.6.0: February 16, 2024 =
+* Security improvements.
+
+= 5.2.5.9: January 30, 2024 =
+* Minor bug fixes.
+
+= 5.2.5.8: January 27, 2024 =
+* Minor UI Changes
+
+= 5.2.5.7: January 20, 2024 =
+* Performance related optimizations
+* Multiple bug fixes and workflow improvements.
+
+= 5.2.5.6: January 12, 2024 =
+* UI Updates.
+* Minor bug fixes.
+
+= 5.2.5.5: December 30, 2023 =
+* Fixed license activation issue.
+
+= 5.2.5.4: December 29, 2023 =
+* Fixed license activation issue.
+
+= 5.2.5.3: December 21, 2023 =
+* Added conditions support for Image Upload field. (Premium Only)
+* Added currency support for Omani Riyal.
+* Multiple bug fixes and workflow improvements.
+
+= 5.2.5.2: December 12, 2023 =
+* Added option to delete username field.
+* Multiple bug fixes and workflow improvements.
+
+= 5.2.5.1: December 5, 2023 =
+* Added conditions feature to the File Upload field. (Premium Only)
+* Improved compatibility with PHP 8.2.
+* Security improvements.
+* Minor bug fixes.
+
+= 5.2.5.0 =
+* Minor bug fixes.
+
+= 5.2.4.9 =
+* Minor UI changes and bug fixes.
+
+= 5.2.4.8 =
+* Minor UI changes and workflow improvements.
+* Fixed minor bugs.
+
+= 5.2.4.7 =
+* Bug fixes.
+
+= 5.2.4.6 =
+* Added compatibility with WordPress 6.4.
+* Minor UI changes and workflow improvements.
+* Fixed minor bugs.
+* Security improvements.
+
+= 5.2.4.5 =
+* Minor UI changes.
+* Fixed minor bugs.
+
+= 5.2.4.4 =
+* Fixed issue with website field URL validation.
+* Added option to rename Tax to any custom text.
+* Added currency support for Indonesian Rupiah.
+* Added localization for Stripe payment form. (Premium only)
+* Minor UI and workflow changes.
+
+= 5.2.4.3 =
+* Minor UI changes.
+
+= 5.2.4.2 =
+* Security improvements.
+* Fixed minor bugs.
+
+= 5.2.4.1 =
+* Fixed payment issue with paid user roles. (Premium Only)
+* Updated Website field validation pattern.
+* Made minor UI changes.
+* Fixed minor functionality bugs.
+
+= 5.2.4.0 =
+* Introducing new design for User Manager in the admin dashboard.
+* Introducing RegistrationMagic Gutenberg blocks.
+* Fixed minor UI issues.
+* Fixed minor bugs.
 
 = 5.2.3.1 =
 * Fixed Read & Unread links on backend Inbox page.
@@ -1222,1072 +1549,397 @@ Note, this functionality is limited to Premium version of RegistrationMagic.
 * Fixed: Cancel button redirection from Global Setting options.
 * Fixed: Plugin's WooCommerce My Account page template removed for better translation support. (Premium Only).
 
-= 4.3.2.6 =
-* Improved help texts.
-* Map field issue in Multipage forms (Premium).
-* Login/Logout redirection filters added.
-* Role based redirection issue.
-
-= 4.3.2.5 =
-* CSS Improvements.
-* Material icon issue fixed.
-* Front end js code bug fixed.
-* WordPress 5.0 compatibility.
-
-= 4.3.2.4 =
-* Constant contact integration discontinued. (Premium only)
-* Help page changes.
-
-= 4.3.2.3 =
-* Improved: Login error message handling.
-* Improved: CSS Optimization.
-* Improved: Outlook SMTP compatibility.
-* Improved: Submission verification page appearance.
-* Improved: Helptexts.
-* Improved: provisional account activation. (Premium Only)
-
-= 4.3.2.2 =
-* Link fixes
-* Password strength JS variables fix
-
-= 4.3.2.1 =
-* Fixed: Submission countdown widget for fresh installation.
-* Fixed: Conditional field Radio button.
-* Fixed: Conditional field with 'contains' operator.
-* Improved: Token number visible after form submission. (Premium Only)
-* Fixed: reCaptcha visible on WooCommerce checkout and MyAccount page.
-* Fixed: Form fields won't be visible within My Account if guest checkout is enabled. (Premium Only)
-* Compatibility fixes and other improvements.
-
-= 4.3.2.0 =
-* Reduced plugin size with Image optimization.
-* CSS fixes and optimizations
-* SVG replacement for front-end icon font.
-* Fixed: Conflict with User Submitted Post plugin.
-* Fixed: Duplicate cron issue.
-* New: Aweber Integration.
-
-= 4.3.1.2 =
-* Fixed: Autoresponder Helptext
-
-= 4.3.1.1 =
-* UI String Improvements
-
-= 4.3.1.0 =
-* Fix for login and logout default redirection issue.
-* Fix for RichText field formatting on front-end.
-* "Add form option" in editor will be available only for admin.
-* Sync default user role with WordPress.
-* Added "Privacy Policy" string for translation.
-
-= 4.3.0.2 =
-* Fixed: Multiple site activation warnings
-* Asset size reduced
-
-= 4.3.0.1 =
-* Fixed: Client side form validation issue
-
-= 4.3.0.0 =
-This new release brings much requested WooCommerce fields to standard version and adds multiple user privacy controls for compliance with local privacy laws. 
-* New: Add WooCommerce Billing Field to your forms
-* New: Add WooCommerce Shipping Field to your forms
-* New: Add WooCommerce Billing Phone Number Field to your forms
-* New: Privacy Policy Field
-* New: Link Privacy Policy field with your privacy policy page
-* New: Privacy section in Global Settings
-* New: Option to delete all recorded personal user data
-* Added: Full integration with WordPress Export Personal Data
-* Added: Full integration with WordPress Export Personal Data
-* Other small fixes and improvements 
-
-= 4.2.1.0 =
-* Improved: PHP 7 compatibility
-* Added: Custom Hooks for submission completion, User sign in, Sign in failure
-* Added: Portuguese language files
-* Fixed: WP Fastest cache conflict
-* Fixed: Twitter integration issues (Premium only)
-* Fixed: Instagram integration issues (Premium only)
-* Fixed: Constant Contact fatal error (Premium only)
-
-= 4.1.2.0 =
-* Fixed: PHP Syntax issue
-* Fixed: Security issue related to username
-* Fixed: Sample form issues
-
-= 4.1.2.0 =
-
-* Improved:Language files.
-* Improved: Access control disabled in Submission Edit Mode.(Premium Only)
-* Improved: Login dashboard intro pop up visibility.
-* Fixed: Confirm Password verification.
-* Fixed: PHP warning in Global Setting's security page.
-* Fixed: Import form fields.
-
-= 4.1.0.0 =
-* Fixed: Product creation issue.
-* Fixed: Username and Password field bug.
-* Fixed: Field design issues.
-* Improved: Translations.
-* Added: Dashboard SSL warning for insecure Facebook login integration.
-
-
-= 4.0.1.0 =
-* Improved: Login Dashboard help-texts.
-* Fixed: Few Login bugs
-* Fixed: Edit submission while editing password protected form.
-* Fixed: Limit restriction removed while editing submission.
-* Fixed: Admin user excluded from automation.
-* Fixed: Facebook login.
-
-= 4.0.0.0 =
-* Improved: Login System has been considerably upgraded!
-* New: Login Form Dashboard
-* New: Login Success Vs. Failure Graph
-* New: Login Activity Tracker on Login Form Dashboard
-* New: Login Form Fields Manager
-* New: Login Form Design options
-* New: Custom Logged-In View
-* New: Role based login and logout redirections
-* New: Conditional reCAPTCHA in Login Form
-* New: Conditional customizable IP Ban on login failures (Premium)
-* New: Two-Factor Authentication (Premium)
-* New: Email notifications for login events with new variables
-* New: Login and logout button widget - RegistrationMagic Login Button
-* New: Login Analytics section
-* New: Login Timeline
-* New: Login Activity on user pages inside User Manager
-* New: Default Pages section in Global Settings
-* New: Customizations of login form, error messages, labels, placeholders etc.
-* Multiple other fixes and improvements 
-
-= 3.8.4.0 =
-* Improved: POT file update
-* Improved: Helptext
-
-= 3.8.3.9 =
-* UI Fixes
-* Strip cards options visibility fix (Premium)
+== Upgrade Notice ==
 
-= 3.8.3.8 =
-* Added: Missing country Iran in Address field. Thanks to @mriago for pointing this out.
+= 6.0.7.2: January 16 2026 =
+* Security improvements.
+* Multiple major bug fixes.
 
-= 3.8.3.7 =
-* Handling of PHP notices in v5.6
+= 6.0.7.1: January 5 2026 =
+* Security improvements.
+* Minor bug fixes.
 
-= 3.8.3.6 =
-* UI Fix
+= 6.0.7.0: December 23 2025 =
+* Security improvements.
+* Minor bug fixes.
 
-= 3.8.3.5 =
-* Navigational Fixes
+= 6.0.6.9: December 13 2025 =
+* Minor improvements.
 
-= 3.8.3.4 =
-* Fixed: UI Issues
-* Reduced menu items to decrease navigational complexity
+= 6.0.6.8: December 8 2025 =
+* Security improvements.
 
-= 3.8.3.3 =
-* Fixed: Submit button label issue.
-* Added: Session Management Option.
-* Other minor fixes.
+= 6.0.6.7: November 25 2025 =
+* Fixed: Widget rendering issue with Elementor.
+* Minor bug fixes.
 
-= 3.8.3.2 =
-* New: Social Fields added to Standard (free) version!
-* Fixed: Default field issue while changing form type.
-* Improved: Form metadata now works via AJAX. RMCB sequence phased out.
+= 6.0.6.6: November 11 2025 =
+* Minor bug fixes.
 
-= 3.8.3.1 =
+= 6.0.6.5: October 28 2025 =
+* Minor bug fixes.
 
-* Fixed: A bug slipped passed in last version which prohibited user from creating contact form in new Fields Manager format.
+= 6.0.6.4: October 17 2025 =
+* Minor UI improvements & bug fixes.
 
-= 3.8.3.0 =
+= 6.0.6.3: October 6 2025 =
+* New: Added option to turn off autocomplete for Login Form. (Premium Only)
+* Fixed: Error on exporting selected form submissions. (Premium Only)
+* Security improvements.
+* Minor bug fixes.
 
-* New: Drag and reposition Username and Password fields in Fields Manager
-* New: Username field is now completely editable
-* New: Custom 'Username Exists' error
-* New: Control over allowed Username characters
-* New: Custom invalid Username error
-* New: Remove Username field from Fields Manager (Premium)
-* New: Password field is completely editable
-* New: Control over password confirmation field
-* New: Custom password mismatch error
-* New: Live password strength meter with color codes
-* New: Editable password strength labels - Weak, Medium, Strong
-* New: Remove password right from Fields Manager
-* Introducing: Mobile Number field in RegistrationMagic Standard
-* New: Completely revamped mobile number field
-* New: Define Format of Mobile Number field
-* New: Customizable dropdown country codes with flags
-* New: Option to position common country mobile codes above other countries
-* New: Sync Mobile country code with Country field
-* New: Lock Mobile country code with Address field
-* New: Option to turn on GeoIP to auto fetch country code
-* New: Custom invalid mobile number error 
+= 6.0.6.2: September 24 2025 =
+* New: Added option to set submission token to the submission ID. (Premium Only)
+* Minor UI improvements & bug fixes.
 
-= 3.8.2.6 =
+= 6.0.6.1: September 11, 2025 =
+* Updated: Option to select registration form for MagicPopup in Global Settings.
+* Multiple UI improvements & bug fixes.
 
-* Fixed: PHP 7.2 warnings
-* Fixed: Minor SMTP issue
-* MagicWidgets renamed and moved to Fields popup
+= 6.0.6.0: August 29, 2025 =
+* Updated: Validations for payment configuration in Global Settings.
+* Fixed: Mobile responsiveness issues.
+* Fixed: Date format issue with date range selection in Birth Date field. (Premium Only)
+* Multiple other UI improvements, workflow improvements and bug fixes.
 
-* Minor fixes
+= 6.0.5.9: August 18, 2025 =
+* Fixed: Form widget showing error on publishing.
+* Fixed: Force match country option in Mobile field.
+* Fixed: User meta not updating with the File Upload field. (Premium Only)
 
-= 3.8.2.5 =
+= 6.0.5.8: August 11, 2025 =
+* Enhancements: reCAPTCHA verification added to password recovery page.
+* Minor UI improvements & bug fixes.
 
-* Minor fixes
+= 6.0.5.7: August 1, 2025 =
+* Enhancements: Minor design adjustments for better UI consistency and user experience.
 
-= 3.8.2.4 =
+= 6.0.5.6: July 29, 2025 =
+* Improved: All Forms card view with new UI elements and more modern design language.
+* Improved: General UI design improvements across the board.
+* Minor UI updates & bug fixes.
 
-* String Changes
-* Form rename bug fixed
-* Tour fixes
+= 6.0.5.5: July 22, 2025 =
+* Minor bug fixes.
 
-= 3.8.2.3 =
+= 6.0.5.4: July 14, 2025 =
+* Minor bug fixes.
 
-* Minor UI tweaks
+= 6.0.5.3: June 30, 2025 =
+* Minor UI bug fixes.
 
+= 6.0.5.2: June 16, 2025 =
+* Fixed: Conditions on the Mobile Number field.
+* Other minor bug fixes.
 
-= 3.8.2.2 =
+= 6.0.5.1: June 2, 2025 =
+* Fixed: "Next" button on multi-page forms. (Premium only)
 
-* Fixed an issue in the previous version
+= 6.0.5.0: May 28, 2025 =
+* Fixed: Scheduled automation tasks.
+* Fixed: MailChimp integration.
+* Fixed: Form design issue on mobile view.
+* Fixed: Product quantity validation.
+* Other minor bug fixes.
 
+= 6.0.4.9: May 14, 2025 =
+* Minor bug fixes.
 
-= 3.8.2.1 =
+= 6.0.4.8: May 2, 2025 =
+* Fixed: Activation issue on multi-site setup.
 
-* New Form Widget: Price
-* New Form Widget: Submission Countdown
-* New Form Widget: Map
-* New Form Widget: Form Data Chart
-* New Form Widget: Form Meta-Data
-* New Form Widget: Registration Feed
+= 6.0.4.7: April 30, 2025 =
+* Fixed: Notice for translation loading early.
+* Minor bug fixes.
 
-= 3.8.2.0 =
+= 6.0.4.6: April 17, 2025 =
+* Minor bug fixes.
 
-* Fixed: String and UI issues
+= 6.0.4.5: April 7, 2025 =
+* Minor bug fixes.
 
+= 6.0.4.4: April 1, 2025 =
+* Security improvements.
 
+= 6.0.4.3: March 22, 2025 =
+* Fixed: Email formatting issue.
 
-= 3.8.1.9 =
+= 6.0.4.2: March 21, 2025 =
+* Minor bug fixes.
 
-* Fixed: Edit Submission bug
+= 6.0.4.1: March 11, 2025 =
+* Minor bug fixes.
 
-* Fixed: Tour guide
-* Other minor fixes
+= 6.0.4.0: March 07, 2025 =
+* New: Launching Digital Signature form field. (Premium Only)
+* New: Option added to search submissions by unique token. (Premium Only)
+* New: Options added to edit Login Form email subjects.
+* Updated: Field conditions will now apply on "Rich Text" display field as well.
+* Fixed: Field conditions not working properly with the Address field.
+* Minor bug fixes & UI improvements.
 
+= 6.0.3.9: February 22, 2025 =
+* Minor bug fixes & UI improvements.
 
-= 3.8.1.8 =
+= 6.0.3.8: February 8, 2025 =
+* Minor bug fixes.
 
-* New: Launching Form Templates
+= 6.0.3.7: February 7, 2025 =
+* Fixed: Gender field alignment issue with label-left layout. (Premium Only)
+* Minor bug fixes & UI improvements.
 
-* New: Introducing Custom Statuses with labels and actions (Premium)
+= 6.0.3.6: January 27, 2025 =
+* Fixed: Password field visibility icon issue.
+* Other minor bug fixes.
 
-* New: Confirm Password translation
-* Fixed: URL hash issue
+= 6.0.3.5: January 9, 2025 =
+* Minor bug fixes & UI improvements.
 
-* Fixed: Duplicate login form while using Register Form and Login Form on same page
-* Fixed: Mcrypt issue 
+= 6.0.3.4: January 3, 2025 =
+* Minor bug fixes.
 
-= 3.8.1.7 =
+= 6.0.3.3: December 20, 2024 =
+* Minor bug fixes & UI improvements.
 
-* Conditional Field Improvements
+= 6.0.3.2: December 14, 2024 =
+* Minor bug fixes & UI improvements.
 
-= 3.8.1.6 =
+= 6.0.3.1: December 11, 2024 =
+* Minor bug fixes.
 
-* Fixed a conflict with Rev. Slider
-* CSS Fix
+= 6.0.3.0: November 29, 2024 =
+* New: Added option to turn on/off account activation email in Global Settings.
+* Fixed: ProfileGrid Avatar field not working with the new form shortcode.
+* Fixed: Unable to delete additional "Other" field from radio and checkbox fields.
+* Fixed: Redundant product creation upon form import.
+* Multiple bug fixes & UI improvements.
 
-= 3.8.1.5 =
-* Fixed Import/Export bug
-* Resolved session table size issue
-* Changes to Helptexts
+= 6.0.2.9: November 19, 2024 =
+* Minor bug fixes.
 
-= 3.8.1.4 =
-* Option to add/edit Subjects for Email Templates
-* Various Minor Improvements
-* Introducing Sender's Code: Now automatically pick sender's name from the form for email notifications header
+= 6.0.2.8: November 6, 2024 =
+* Minor bug fixes.
 
-= 3.8.1.3 =
-* JS Handling
-* SSL fix for auto login
+= 6.0.2.7: November 4, 2024 =
+* Security improvements.
+* Minor bug fixes.
 
-= 3.8.1.2 =
-* User list bug fixes
-* Validation bug fixes
-* Minor design improvements
-* New: Email Account Activation link (Premium)
-* New: User History in Submission Notification (Premium)
-* New: WePay Payment System (Premium)
+= 6.0.2.6: October 28, 2024 =
+* Minor bug fixes.
 
-= 3.8.1.1 =
-* Fixed Activation Notices
+= 6.0.2.5: October 25, 2024 =
+* Updated: Edit submission functionality migrated to new form design. (Premium Only)
+* Fixed: Gender field showing redundant options in field settings. (Premium Only)
+* Fixed: Field conditions not getting duplicated with form duplication.
+* Multiple minor bug fixes.
 
-= 3.8.1.0 =
-* Fixed Submit button in case of JS conflict
-* Added additional encryption system for servers without mcrypt installed
-* Minor HelpText changes
-* Various other minor fixes
+= 6.0.2.3: October 21, 2024 =
+* Fixed: Reset button not working in Reports filtering.
+* Fixed: PayPal payment popup not working after form submission.
+* Multiple minor bug fixes.
 
-= 3.8.0.9 =
-* Added Regular Address Field
-* Patched minor security issue
-* Added submit button handling without JS
-* Improved HelpTexts
-* Added minimum PHP version requirement
+= 6.0.2.2: October 10, 2024 =
+* Fixed: Existing user error on contact form validation.
 
-= 3.8.0.4 =
-* UI Enhancements
+= 6.0.2.1: October 2, 2024 =
+* Minor bug fixes.
+* Security improvements.
 
-= 3.8.0.3 =
-* Minor UI bug fixes
+= 6.0.2.0: September 18, 2024 =
+* New: Add field popup in field manager.
+* Updated: Form widget will now load the new form layout.
+* Multiple bug fixes and UI improvements.
 
-= 3.8.0.2 =
-* Third party theme compatiblity fixes
-* UI bug fixes
-* Submit button issue fix
+= 6.0.1.7: September 11, 2024 =
+* Fixed: "Reply-to" not working in emails.
+* Fixed: Backend form design changes not working on new form shortcode.
+* Fixed: Password field visibility icon issue with RTL languages.
+* Fixed: Stripe payment form not loading. (Premium Only)
+* Other minor bug fixes and UI changes.
 
-= 3.8.0.1 =
-* Third party compatiblity fixes
-* UI bug fixes
-* Added Starter Guide link to the All Forms page
-
-= 3.8.0.0 =
-* Minor UI Enhancements
-
-= 3.7.9.9 =
-* UI Changes
-
-= 3.7.9.8 =
-* Fixed a bug which led the admin sidebar to appear even after logout.
-* Fixed auto logging issue with PayPal payments.
-
-= 3.7.9.7 =
-* Improved handling of emails on slower servers.
-* Added controls for outgoing email notifications.
-* Fixed and issue with Divi theme where shortcode was not rendered properly.
-* Improved behavior of Bowser JS error message.
-
-= 3.7.9.6 =
-* Admin bar is now visible by default.
-
-= 3.7.9.5 =
+= 6.0.1.5: August 27, 2024 =
 * Bug fixes.
 
-= 3.7.9.4 =
-* Better handling of emails.
-* Improved JavaScript implementation.
-* New test feature for outgoing mails.
+= 6.0.1.4: August 14, 2024 =
+* UI changes.
 
-= 3.7.9.3 =
-* Critical security fixes.
+= 6.0.1.3: August 12, 2024 =
+* UI changes & bug fixes.
 
-= 3.7.9.2 =
-* Important bug fixes and stability improvements.
+= 6.0.1.2: August 6, 2024 =
+* Bug fixes for new form shortcode submission workflow.
 
-= 3.7.9.1 =
-* Added Submission page login form
-* BrowserJS disabled message added
-* Other important bug fixes
-
-
-= 3.7.9.0 =
-* Fixed an issue with payments popup in dashboard area.
-
-= 3.7.8.9 =
-* Bug Fixes and other improvements.
-
-= 3.7.8.8 =
+= 6.0.1.1: August 2, 2024 =
+* UI Changes.
 * Bug Fixes.
 
-= 3.7.8.7 =
-* UI Fixes.
-
-= 3.7.8.6 =
-* Added a new option to define login page. Useful in cases where users try to access submission page in logged out state.
-* Bug fixes and improvements.
-
-= 3.7.8.5 =
-* Improved fields picker view.
-* Improved MagicPopup design.
-* Added Link, iFrame, YouTube Video and Timer Widget.
-* Added Introduction Page.
-* Improved design for social login buttons. (Premium)
-* Various bug fixes.
-
-= 3.7.8.2 =
-* Fixed: An issue with MagicPopup not displaying user's name in some cases.
-
-= 3.7.8.1 =
-* Bug fixes
-
-= 3.7.8.0 =
-* New: Introducing Form MagicWidgets
-* New: Introducing Conditional Logic to hide/ view fields
-* Bug fixes
-
-= 3.7.7.7 =
-* New Login Widget
-* UI Changes and Improvements
-
-= 3.7.7.6 =
-* Fixed an issue with Paragraph field.
-
-= 3.7.7.5 =
-* New: Support for WordPress User Meta through additional field option.
-* New: Powerful popup menu to access features directly from form card.
-* Improved: Rearranged and categorized dashboard icons.
-* Multiple UI improvements and bug fixes.
-
-= 3.7.7.3 =
-* UI improvements
-
-= 3.7.7.1 =
-* Multiple GUI fixes
-
-= 3.7.7.0 =
-* New: Totally revamped form setup workflow.
-* New: Submit field in field manager. Edit buttons directly from Fields Manager.
-* New: Conditions Logic (Premium).
-* Fixed: Post submission message misplaced on certain themes. (Reported by: Kylee)
-* Fixed: reCaptcha issue. (Reported by: Ashwin).
-* Fixed: Unable to translate WooCommerce related strings. (Reported by: Masahiro)
-* Added: Ghana currency. (Requested by: Ezekiel)
-* Multiple bug-fixes and UI enhancements.
-
-= 3.7.6.3 =
-* Addresses an issue in the previous release
-* Other improvements and fixes
-
-= 3.7.6.2 =
-* Much improved rating field
-* Major improvements to form views
-* Multiple GUI and bug fixes
-
-= 3.7.6.0 =
-* PHP compatibility fix
-* Other bug fixes
-
-= 3.7.5.9 =
-* UI Fixes
-
-= 3.7.5.8 =
-* Added hidden type field (Requested by: Dallas Hermanson).
-* Fixed: UI distortion in some third-party plugins (Reported by: Simon Mwangi, @dankobler).
-* Considerably improved behavior with caching plugins.
-* Other bug-fixes and UI improvements.
-
-= 3.7.5.7 =
-* Added form widget
-* Various UI and bug fixes
-
-= 3.7.5.6 =
-* Improvement: Faster and simple Form creation flow.
-* New Feature: Configurable submission limit per user email. (Requested by: Pesi A. Unwalla, Li Lin). (Premium)
-* New Feature: Unique field constraint. Useful for accepting data such as Social Security Number, Passport number or other unique ids. (Premium)
-* Fixed: Form not appearing with certain page builders.
-* Other bug-fixes and UI improvements.
-
-= 3.7.5.5 =
-* Lots of usability and workflow related changes.
-
-= 3.7.5.4 =
-*Automation bug fix
-
-= 3.7.5.3 =
-* New: Multiple Passphrase support in Form Access Control. Input multiple phrases separated by pipe (Requested by: Chinedu).
-* New: Now custom user role can be assigned by RM during WooCommerce user registration. Enable override in Global Settings >> WooCommerce (Requested by: Niels).
-* Fixed: RM Automation - email template can't be saved with custom style. (Reported by: Woon Wee Gim)
-* Fixed: reCaptcha cut-off on Login form. (Reported by: Peter)
-* Other bug-fixes and UI improvements.
-
-= 3.7.5.2 =
-* Minor fixes
-
-= 3.7.5.1 =
-* Fixed: Fields analytics not showing up sometimes. (Reported by: Sean D.)
-* Fixed: CSV export not containing payment details for edited submissions. (Reported by: Sean D)
-* Improvement: Email Users queue processing performance improved.
-* Added Support for LeadMagic extension - awesome new way to create WordPress landing pages.
-* Multiple other bug-fixes and UI improvements.
-
-= 3.7.5.0 =
-* Introducing Automation - This new section will allow you to create tasks which run in the background and process actions on form submissions. Each task is attached to a specific form and requires setting rule(s). The tasks are scheduled using WordPress native cron system.
-* Bug fixes and improvements.
-
-= 3.7.3.0 =
-* Fixed: Couldn't save fields sometimes. (Reported by: Cosimo)
-* Bug-fixes and improvements.
-
-= 3.7.2.9 =
-* New: Two-columns layout for match-my-theme.
-* Fixed: Price-fields not included in CSV export.
-* Other bug-fixes and improvements.
-
-= 3.7.2.8 =
-* Improvement: Currencies list now include Naira and Rand. (Requested by: Tally and Gill )
-* Improvement: Conditional loading for external libs. This fixes conflict with WP-Full 
-* Stripe plugin. (Reported by: Grace Combs)
-
-= 3.7.2.7 =
-* Bug-fix and UI improvements.
-
-= 3.7.2.6 =
-* Fixed: php 7.1 compatibility issues.
-* Fixed: WooCommerce 3.0 compatibility issues.
-* Fixed: Email header issue. (Reported by: Peter, Nick)
-* Fixed: Unable to display embedded form even after allowing from server. (Reported by: Brian)
-* Fixed: Warning displayed sometimes on payment settings page. (Reported by: Abraham)
-* Improvement: Map field now put user's locality into focus if allowed. (Reported by: José Manuel)
-* Improvement: Country field now includes Cuba. (Reported by: Bruno)
-* Other bug-fixes and UI improvements.
-
-
-= 3.7.2.5 =
-* Bug fixes and UI improvements
-
-= 3.7.2.4 =
-* Fixed: Email Notifications showing html tags.
-
-= 3.7.2.3 =
-* Bug-fixes and UI improvements.
-* Added: MailPoet integration. (Premium)
-* Added: Newsletter integration. (Premium)
-* Fixed: Gender field not appearing in field analytics. (Premium)
-
-= 3.7.2.2 =
-* Fixed: No hover effect on "cart" menu on magic popup.
-* Other bug-fixes and UI improvements.
-* Added: Dropbox integration (Premium). Take automatic backup of submissions in Dropbox cloud.
-* Added: User inbox (Premium). Logged in users can check all the messages sent by the admin on the front-end.
-
-= 3.7.2.1 =
-* New front-end submission page with theme-adaptive color scheme. This also fixes certain UI distortions due to conflict with third-party plugins/themes.
-* Added: Form preview feature. Click on Preview button on field manager screen to see form preview without leaving the page.
-* Updated language templates, more strings available for translation now.
-* Other bug-fixes and improvements.
-
-= 3.7.2.0 =
-* Added: Authorize.Net payment gateway (Premium edition).
-* Added: Offline payment mode (Premium edition).
-* Added: IPv6 compatibility. This also fixes "Access Denied" error for some servers.
-* Numerous other bug-fixes and UI improvements.
-
-= 3.7.1.4 =
-* CSS Fixes
-
-= 3.7.1.3 =
-* Minor Fixes
-
-= 3.7.1.2 =
-* Fixed: A bug causing blank page with WooCommerce submission when form is not specified for integration. (Reported by: Thomas)
-* Fixed: XML data import causing issue with submission listing. Thanks to @toonwolf for assistance with bug-fixing.
-* Fixed: CSV export including all submissions even when filtered with field value. (Reported by: Kristjan Johanson).
-* Enhancement: Improved behavior with some third-party caching plugins.
-* Other improvements and bug-fixes.
-
-= 3.7.1.1 =
-* Bug fix
-
-= 3.7.1.0 =
-* Added: Now user can specify quantity for the price fields (enable it in price fields' settings). (Requested by: Shaquille)
-* Added: Email templates are customizable now (Available in Form Settings).
-* Added: Admin notification feature can be overridden now on per-form basis. (Requested by: Julie).
-* Added: Submission date and time available in submission details. (Requested by: Camille PICOLET).
-* Fixed: Activity widget on WordPress Dashboard is visible to all users. (Reported by: Sidney Chun).
-* Fixed: Conflict with certain third-party plugins. (Reported by: Chuck Duarte).
-* Norwegian translation updated for front-end. (Contributed by: @toonwolf).
-* Lots of other bug-fixes and improvements.
-
-= 3.7.0.0 =
-* Multiple bug fixes
-* Added new page
-
-= 3.6.1.3 =
-* Fixed: Missing placeholder configuration for Primary Email, Secondary Email, Number, Date and Birth-date fields (Reported by: Dimitri).
-* Fixed: MailChimp, Constant Contact and Aweber opt-in text taking only half width of row (Reported by: Lynda Wildblood).
-* Improvement: reCaptcha is now centered on two-columns layout (Suggested by: Philip Andrianos).
-* Norwegian translation added for front-end (partial) (Contributed by: @toonwolf).
-* Other bug-fixes and improvements.
-
-= 3.6.1.2 =
-* Added: Customizable date format for Date and Birth-date fields. (Requested by @toonwolf).
-* Other bug-fixes and improvements.
-
-= 3.6.1.1 =
-* Added: Now total price can be displayed on the forms with multiple price fields. Enable it in Form Settings >> General Settings.
-* Other bug-fixes and improvements.
-
-= 3.6.1.0 =
-* Transaction log display is now tabular and includes stripe log as well. (Requested by @toonwolf)
-* Added "receipt_email" in stripe payments (mapped to user email). (Requested by @toonwolf)
-* Fixed: default submissions page not being created properly in multi-site env.
-* Fixed: Long email address messing up table layout (submission manager page)
-
-= 3.6.0.9 =
-* Minor Fixes
-
-= 3.6.0.8 =
-* Fixed: Text cuts-off for long entries in submission pdf (reported by: Veronica)
-* Fixed: File upload field validation issue with uppercase extensions (reported by: Peter)
-* Added: Legend on submission manager page for quick information about icons.
-* Improvement: Gender options are now translatable in Gender type field (reported by: @toonwolf)
-* Improvement: long-entries are now truncated on submission manager page.
-Other minor bug-fixes and improvement.
-
-= 3.6.0.7 =
-* Added: Paypal response details now available in submission details.
-* Other bug-fixes and improvements.
-
-= 3.6.0.6 =
-* Added: Post-logout redirection feature (Global Settings >> General) - Requested by @ms416
-* Added: Product tour for form settings dashboard.
-* Expiry detail displayed above the form can now be fully translated with ordered arguments - Reported by Lolita
-* Other bug-fixes and improvements.
-
-= 3.6.0.5 =
-* Fixed: PDF content not displaying Cyrillic characters properly. (Premium)
-* Added: Option to exclude pdf from admin email. (Premium)
-* Other bug-fixes and improvement.
-
-= 3.6.0.4 =
-* Improvement: Front-end error messages can be translated now.
-* Fixed: A rare bug that may cause Magic pop-up panel to go behind site content sometimes.
-* Other minor bug-fixes and improvements.
-
-= 3.6.0.3 =
-* Enhancement: Now different values can be specified for dropdown, radio and check-box fields using pipe(|). Syntax: label|value.
-* Fixed: "This year" filter in submissions.
-* Fixed: Checkbox label not displaying sometimes for Terms and Conditions field.
-* Other minor bug-fixes and improvements.
-
-= 3.6.0.2 =
-* Fixed: Admin notification email missing values for checkbox fields.
-* Fixed: 'Email Users' feature showing wrong count for recipients sometimes.
-* Fixed: 'Email Users' sending multiple emails to same users.
-* Added "Cancel" button to stop email queue.
-* Other minor improvements and bug fixes.
-
-= 3.6.0.1 =
-* Added: Product tour for fresh installations.
-* Added: Sample forms for fresh installation.
-* Fixed: Wrong date of payment when using Stripe.
-* Other minor bugfixes.
-
-= 3.6.0.0 =
-* New: WooCommerce integration. (Platinum bundle)
-* Fixed: Notices appearing with php v7.
-* Fixed: Auto responder email not containing correct values for file, image fields.
-* Fixed: Form design: Placeholder color applying globally.
-* Fixed: Magic popup blocking click to area underneath even after hiding.
-* Lots of other minor fixes and improvements.
-
-= 3.5.4.2 =
-* Fixed: CSV export containing limited submissions.
-* Fixed: rare reCaptcha issue due to 3rd party conflict.
-* Fixed: reCaptcha sometimes overlapping submit button thus rendering it unclickable.
-* Fixed: SMTP email test nullifying banned email settings (Gold bundle).
-* Fixed: Broken support link.
-* Fixed: Conflicts with third party css for certain ui elements.
-* Typo fixes.
-
-= 3.5.4.1 =
-Fixed: Blocks showing up on front-end with some WP themes.
-
-= 3.5.4 =
-* New feature: Browse sent emails with filters.
-* New feature: Send custom email to user directly from User page.
-* New Feature: New shortcode - easily display users list on frontend (Gold Bundle).
-* New Feature: Save submission search criteria as labels (Gold bundle).
-* Fixed: "&nbsp&nbsp" text appearing sometimes alongside fields.
-* Fixed: Plugin causing some layout issues on frontend.
-* Fixed: Plugin JS sometimes not working properly with third party themes and builders.
-* Improvement: Field color now applies to paragraph, checkbox and radio fields as well.
-* Reduced overall plugin package size.
-* Other bug fixes and improvements.
-
-= 3.5.3.3 =
-* CSS fixes for front-end
-* Fixed an issue with toggle button in dashboard area.
-
-= 3.5.3.2 =
-* CSS fixes and improvements
-
-= 3.5.3.1 =
-* UI Improvements
-
-= 3.5.3 =
-* Brand New Form Dashboard
-* Social Login Integration (Google, Twitter, Microsoft, Instagram) in Gold Bundle
-* Allow admin to edit submissions
-* New line graph which tracks submissions over days, weeks or months
-* Revamped RM activity widget for Dashboard
-* Import Export feature now available in Standard bundle
-* Option to mark all Submissions read (Gold bundle)
-* Role specific user registration forms (Silver and Gold bundle)
-* Improved Submission Manager with new icons
-* Improved session mechanism
-
-= 3.5.2.3 =
-* Bug fixes
-
-= 3.5.2.2 =
-* Fixed bug related to field creation due to bypassing DB version null case
-* Fixed bug related to database version
-
-= 3.5.2.1 =
-* Important bug fix related to field creation
-
-= 3.5.2 =
-* WP Login added in Magic PopUp
-* Users can edit their submissions from front-end now
-* Option to use email as username [Silver and Gold bundle]
-* New custom filters added for submissions tracking [Gold Bundle]
-* Send message to submissions [Silver and Gold Bundle]
-* Read/Unread labeling of submissions [Gold Bundle]
-* Customizable links in Magic Pop Up [Silver and Gold Bundle]
-* Block email or IP of a submission [Gold bundle]
-* Submission pdf included in admin notification email [Silver and Gold bundle]
-* Other Improvements
-* Minor bug fixes
-
-= 3.5.1.31 =
-* Important bug fix
-
-= 3.5.1.3 =
-* Added paid user roles [Gold and Silver]
-* New option to select form type in form general settings
-* New Social category for custom fields
-* New Global Setting section added 'Floating Action Button'
-* Added logos for Stripe and PayPal
-* Added option to display alternate form after the form expiry
-* Icon on Magic Popup Button can now be changed.
-* User interface improvements and bug fixes
-
-= 3.5.1.2 =
-* Fixed an issue with date fields
-
-= 3.5.1.1 =
-* CSS fixes
-* Improved Terms and condition custom field
-* Minor bug fixes
-
-= 3.5.1 =
-* Replaced iframe in Magic Popup
-* Replaced PHP native session
-* Bug fixes and improvements
-* Aweber, Constant Contact integration (Gold Bundle)
-* Data Import/Export feature added (Gold Bundle)
-* Global settings override (Gold Bundle)
-* New Fields added (Custom field with regex validation) (Gold Bundle)
-
-= 3.5.0.4 =
-* Fixed a bug with password reset feature
-* Fixed an issue where on some forms register button may hide under bottom area of frontend slide out panel.
-
-= 3.5.0.3 =
-* Improvements to Magic Menu
-* Magic Menu is turned off by default for new installations
-
-= 3.5.0.2 =
-* Multiple minor improvements and fixes
-
-= 3.5.0.1 =
-* Major bug fix
-
-= 3.5 =
-* Added New front end floating button, menu and panels
-* Added default form selection option
-* Added helptext option for custom fields
-* Added form configuration panel in free edition
-* Added 30+ new custom field types (Gold Bundle)
-* Added Label icon, label icon color, background color and shape
-* Added Form Access Control with age, passphrase and role restriction
-* Added visual editor for form editing. 
-* Added styling box for front end
-* Added option to add logo and text to submissions PDF (Gold Bundle)
-* Added password reset feature to user area on front end
-* Numerous bugs fixed and GUI improvements
-* Set password restrictions (Gold Bundle)
-
-= 3.1.7.4 =
-* Fixed an issue with payment forms
-* Bug fixes
-
-= 3.1.7.3 =
-* Sortable field ordering issue fixed
-* Fixed Typo in password validation message
-
-= 3.1.7.2 =
-* Bug fixes
-
-= 3.1.7 =
-* Added an option to send a mail when Admin activates user's account.
-* Fixed a major bug with outgoing emails.
-* Performance enhancements.
-* GUI improvements all across.
-* Compatibility fixes with php 7.
-* Bug fix with Submission Export feature.
-* Improved Session check.
+= 6.0.1.0: July 31, 2024 =
+* Updated: New options added to the Gender field. (Premium Only)
+* Updated: Titles changed for the sample forms.
+* UI Changes.
+* Bug Fixes.
+
+= 6.0.0.4: July 25, 2024 =
+* Default All Forms view is now List View.
+* Minimum requirements updated.
+* UI Changes.
+* Bug Fixes.
+
+= 6.0.0.3: July 23, 2024 =
+* Fixed: Issue with scheduled email reports.
 * Other minor bug fixes.
-* Multi-Page Form Builder (Gold Edition)
-* Ban IP and Email feature. (Gold Edition)
-* Embed forms using HTML code (Gold Edition)
-* Advanced custom fields mapping with MailChimp. (Gold Edition)
 
-= 3.1.5 =
-* Address Field Type (Silver Edition).
-* Map Field Type (Silver Edition).
-* Added Spanish translation.
-* Exception handling for missing extensions.
-* Work around for session path bug.
-* Other bug fixes.
+= 6.0.0.2: July 16, 2024 =
+* Updated: Form preview display in the backend.
+* Fixed: Issue with disable WordPress toolbar setting.
+* Fixed: Mobile field not working with Twenty Twenty Four theme.
+* Fixed: Frontend user area not working with Twenty Twenty Four theme.
+* Other minor bug fixes.
 
-= 3.1.4 =
-* Added user activation through email (Silver Edition).
-* Added French Language.
+= 6.0.0.1: July 11, 2024 =
+* New: Layout option added in Checkbox and Radio fields.
 * Minor bug fixes.
 
-= 3.1.2 =
-* Added 'Export submission to third-party url' feature (Silver Edition).
-* Improved validations on admin side.
-* Improved MTML structure.
-* Fixed a bug in Facebook login.
-* Shortcode now works inside widgets.
-* Fixed a submission issue related with browser caching.
-* Stripe Payment system Integration (Silver Edition).
+= 6.0.0.0: July 10, 2024 =
+Introducing new form publishing shortcode with new code base to load forms faster and a new frontend form design. The new shortcode will allow setting theme of each form individually as shortcode attribute. Already published forms will remain unaffected with the introduction of the new shortcode.
+
+= 5.3.3.9: July 5, 2024 =
+* Updated: Form creation popup in backend.
 * Minor bug fixes.
-* GUI improvements.
 
-= 3.1.1 =
-* Added Option in global settings to enable/disable expiry countdown
-* Other bug fixes or functional improvements.
+= 5.3.3.8: June 15, 2024 =
+* Minor bug fix.
 
-= 3.1.0 =
-* Now users can re-submit forms
-* New Progress bar/Message above the form when auto-expiry is turned on 
-* Fixed compatibility issues with PHP 5.3 version
-* Revamped Support Page
-* Front End user details page
-* CSS fixes and improvements 
+= 5.3.3.7: June 14, 2024 =
+* Minor workflow changes.
 
-= 3.0.2 =
-* Fixed: form always appearing before  post content on front-end.
-* Fixed: CSS issues.
-* Fixed: Typos.
-* Unavailable features in standard edition now have grayed-out links.
-* Forgot Password link visible under login area.
+= 5.3.3.6: June 6, 2024 =
+* Minor bug fixes.
 
+= 5.3.3.5: June 4, 2024 =
+* Fixed: Login issue with login form and login widgets.
+* Translation bug fixes.
 
-= 3.0.1 =
-* CSS Fixes
+= 5.3.3.4: May 25, 2024 =
+* Minor bug fixes.
 
-= 3.0 =
-* Complete code overhaul
-* Plugin-wide GUI improvements
-* New Email Users section
-* New sidebar with filters in table view
-* Latest submissions visible on form card
-* Lot of bug fixes and improvements
-* Style Layouts
+= 5.3.3.3: May 23, 2024 =
+* Minor UI changes.
 
-= 2.5.4 =
-* Maintenance Release
+= 5.3.3.2: May 21, 2024 =
+* Fixed: Minor UI improvements and bug fixes.
 
-= 2.5.3 =
-* Added option for SMTP relay for outgoing mail
-* Random bug fixes
+= 5.3.3.1: May 14, 2024 =
+* Fixed: Minor bugs.
 
-= 2.5.2 =
-* Fixed issues with Multi-Site (network sites) installations
+= 5.3.3.0: May 3, 2024 =
+* Updated: Form preview feature overhauled for the backend.
+* New: Option to change default selection text for the dropdown field.
+* Fixed: Page reordering bug with multi-page forms. (Premium only)
+* Multiple bug fixes and UI improvements.
 
-= 2.5.1 =
+= 5.3.2.2: April 16, 2024 =
+* Fixed: Conflict with Avada Builder.
 
-* Fixed an issue that did not allowed fetching more than 10 MailChimp lists
-* Added a new option in reCaptcha settings for users who get errors while submission
+= 5.3.2.1: April 4, 2024 =
+* Security updates.
 
-= 2.5 =
-* Added "Users" section in left menu
-* Added User Manager
-* Added ability to show custom fields on User Page (Silver Edition).
-* Added option to deactivate existing user (Silver Edition).
-* Added Users Table.
-* Random bug fixes and GUI improvements.
+= 5.3.2.0: March 23, 2024 =
+* New: URL field type
+* New: Option to change position of confirm password field.
+* Security updates.
+* Multiple bug fixes and UI improvements.
 
-= 2.2.2 =
-* Security issue with password encryption fixed
-* Fixed an issue where multiple forms on a single page did not worked properly
+= 5.3.1.0: March 11, 2024 =
+* New: Conditions on Product fields.
+* Security updates.
+* Multiple bug fixes and UI improvements.
 
+= 5.3.0.0: March 1, 2024 =
+* New: Updated All Forms view.
+* Security updates.
+* Multiple bug fixes and workflow improvements.
 
-= 2.2.1 =
-* Fixed some Front-end issues when migrating old data
-* Changes in Database for recording additional data
-* Added user role manager feature
-* Fixed user role label formatting issue in front-end (Silver Edition)
+= 5.2.6.0: February 16, 2024 =
+* Security improvements.
 
-= 2.2 =
-* Added PayPal integration
-* Added option to create different pricing fields
-* Added Attachment browser for form submissions
-* Added User facing area with submission and payments tab
-* Added One Time Password (OTP) system
-* Added option to download submissions as PDF
-* Added option to add notes to submissions
-* Added profile fields in custom fields manager
-* Added dashboard latest submissions widget
-* Added OTP Widget
-* Long list of bug fixes
-* General CSS improvements
-* Increased default list size of submissions to 20
-* Added ability to show admin notes to the user and send email notification
+= 5.2.5.9: January 30, 2024 =
+* Minor bug fixes.
 
-= 2.0.2 =
-* Fixed bugs
-* Added a new view for checkbox and radio button custom fields using CSS Attribute "rm_row"
+= 5.2.5.8: January 27, 2024 =
+* Minor UI Changes
 
-= 2.0.1 =
-* Fixed some bugs
+= 5.2.5.7: January 20, 2024 =
+* Performance related optimizations
+* Multiple bug fixes and workflow improvements.
 
-= 2.0 =
+= 5.2.5.6: January 12, 2024 =
+* UI Updates.
+* Minor bug fixes.
 
-* General structural improvements and bug fixes.
-* Added add form button in WYSIWYG Editor to make it easier to insert short codes.
-* Global Settings is now divided into sections.
-* Added an option to add multiple emails for admin notifications.
-* Added MailChimp integration and default field mapping.
-* Improved search and filtering for submissions.
-* Replaced date picker with one that allows easier changing of years.
-* Made it easier to turn on WordPress user registrations to forms.
-* Added WYSIWYG/ HTML Editors for Form header content and Auto-Responder.
-* Added Mail Merge feature to auto-responder editor.
-* Added ability to chose submit button background and text color.
-* Removed reset button in classic theme.
-* Added short-code for adding login box.
-* Added option to define default WordPress user registration page.
-* GUI Improvements.
-* Added form and field statistics/ analytics.
-* Added ability to define redirection page after successful login.
-* Changed left menu main link title to "Registrations".
+= 5.2.5.5: December 30, 2023 =
+* Fixed license activation issue. (Premium Only)
 
-= 1.5.1 =
-* Fixed some issues with last update
+= 5.2.5.4: December 29, 2023 =
+* Fixed license activation issue. (Premium Only)
 
-= 1.5 =
-* Added option for Facebook login
-* Added option to send Username and Password to users through email
-* GUI Improvements to adding items in checkbox and radio-box
-* Under the hood improvements to handling submissions
-* Made classic theme responsive
+= 5.2.5.3: December 21, 2023 =
+* Added conditions support for Image Upload field. (Premium Only)
+* Added currency support for Omani Riyal.
+* Multiple bug fixes and workflow improvements.
 
+= 5.2.5.2: December 12, 2023 =
+* Added option to delete username field.
+* Multiple bug fixes and workflow improvements.
 
-= 1.4.2 =
-* Improved HTML Structure
-* Fixed a bug where the form was always appearing on top, despite pasting the short-code within content.
-* Fixed a bug that did not allowed showing multiple forms on a page.
+= 5.2.5.1: December 5, 2023 =
+* Added conditions feature to the File Upload field. (Premium Only)
+* Improved compatibility with PHP 8.2.
+* Security improvements.
+* Minor bug fixes.
 
-= 1.4.1 =
-* Minor changes
+= 5.2.5.0 =
+* Minor bug fixes.
 
-= 1.4 =
-* Major Security Updates
-* Form Auto Expiry Option Added
+= 5.2.4.9 =
+* Minor UI changes and bug fixes.
 
-= 1.3.23 =
-* Minor Bug Fixes
+= 5.2.4.8 =
+* Minor UI changes and workflow improvements.
+* Fixed minor bugs.
 
-= 1.3.21 =
-* Minor Bug Fixes
+= 5.2.4.7 =
+* Bug fixes.
 
-= 1.3.19 =
-* Minor Bug Fixes
-* Corrected some file names
-* Fixed a bug in file upload field
-* Added new demo and upgrade options
+= 5.2.4.6 =
+* Added compatibility with WordPress 6.4.
+* Minor UI changes and workflow improvements.
+* Fixed minor bugs.
+* Security improvements.
 
-= 1.3.18 =
-* Stability Improvements
-* Added option for new add-on
+= 5.2.4.5 =
+* Minor UI changes.
+* Fixed minor bugs.
 
-= 1.3.17 =
-* Browser name in entry details is more apparent now 
+= 5.2.4.4 =
+* Fixed issue with website field URL validation.
+* Added option to rename Tax to any custom text.
+* Added currency support for Indonesian Rupiah.
+* Added localization for Stripe payment form. (Premium only)
+* Minor UI and workflow changes.
 
-= 1.3.16 =
-* Added option to change Submit button label
+= 5.2.4.3 =
+* Minor UI changes.
 
-= 1.3.15 =
-* CSS Fixes
+= 5.2.4.2 =
+* Security improvements.
+* Fixed minor bugs.
 
-= 1.3.14 =
-* Bug fixes
-* Fixed an issue with special character labels
-* Default theme CSS fix
+= 5.2.4.1 =
+Important fixes.
 
-= 1.3.13 =
-* Now you can copy short-code by clicking on it.
-* Bug fixes
-
-= 1.3.12 =
-* Required fields now show asterix at their end.
-
-= 1.3.11 =
-* Fixed validation issues in checkbox and radio fields.
-
-= 1.3.10 =
-* Terms and Conditions field is now configurable and easier to use.
-
-= 1.3.9 =
-* Now you can add special characters in field labels
-* Bug fixes
-
-= 1.3.8 =
-* Added default value option for text fields
-* Usability fixes
-
-
-= 1.3.7 =
-* Added timezone field type
-
-= 1.3.6 =
-* Added country list field type
-
-= 1.3.5 =
-* Made it easier to add forms from WordPress default top menu by clicking the New link.
-* Made Paragraph a Text Area field for adding multiple lines of text.
-* Bug fixes
-
-= 1.3.3 =
-* Made left menu link to the plugin more accessible
-
-= 1.3.2 =
-* Added a new theme "Default". Old theme renamed as "Classic". Default theme now picks form elements from active site template for a more uniformed look. Theme settings can be accessed from settings link.
-* Fixed a bug with recaptcha
-
-= 1.3.3 =
-* Global Settings are now easier to access
-
-= 1.3 =
-* GUI Improvements
-* Email notification issues fixed
-* Some CSS issues fixed
-* Pagination bug fixed
-* Added IP capture and browser capture option in global settings
-* Added quick link to view geo location of the IP captured
-* Added View button submission manager
-
-
-= 1.2 =
-* Added From Email feature
-* Bug fixes related to notifications
-* File Addon support added
-
-= 1.1.1 =
-* UI Improvements
-
-= 1.1 =
-* Bug Fixes
-* Added Banner
-
-= 1.0 =
-* First Release
-* Added Custom Fields
-
-== Upgrade Notice ==
+= 5.2.4.0 =
+New additions and multiple fixes.
 
 = 5.2.3.1 =
 Lots of improvements and fixes.
@@ -3184,7 +2836,7 @@ This release mainly focusses on Username, Password and Mobile Number custom fiel
 * New Form Widget: Map
 * New Form Widget: Form Data Chart
 * New Form Widget: Form Meta-Data
-* New Form Widget: Registration Feed
+* New Form Widget: User Registration Feed
 
 
 = 3.8.2.0 =

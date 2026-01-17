@@ -2,7 +2,7 @@
 if (!defined('WPINC')) {
     die('Closed');
 }
-if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_rm_new_form_exerpt.php'); else {
+//if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_rm_new_form_exerpt.php'); else {
 ?>
 <script>
     function rm_handle_new_form_creation(event) {
@@ -41,16 +41,28 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 
     <div class="rm-create-new-from">
             <div class="rm-form-name rm-dbfl">
-                <div class="rm-form-head rm-difl"><?php _e('Name of your form','custom-registration-form-builder-with-submission-manager'); ?></div> 
+                <div class="rm-form-head rm-difl"><?php esc_html_e('Name of your form','custom-registration-form-builder-with-submission-manager'); ?></div> 
                 <div class="rm-form-name-input rm-dbfl"><input type="text" value="" name="form_name" id="form_name" /></div>
-                <div class="rm-form-name-input rm-dbfl"><input type="checkbox" value="" name="rm_form_type" id="rm_form_type" /><label for="rm_form_type"><?php _e('Turn off user registration for this form','custom-registration-form-builder-with-submission-manager'); ?></label></div>
+                <div class="rm-form-name-input rm-dbfl"><input type="checkbox" value="" name="rm_form_type" id="rm_form_type" /><label for="rm_form_type"><?php esc_html_e('Turn off user registration for this form','custom-registration-form-builder-with-submission-manager'); ?></label></div>
             </div>  
         <div class="rm-create-new-from-btn-area">    
-            <input type="submit" value="<?php _e("Save and Close",'custom-registration-form-builder-with-submission-manager') ?>" name="submit" id="rm_submit_btn" onclick="rm_handle_new_form_creation(event)" class="rm_btn btn btn-primary">
+            <input type="submit" value="<?php esc_html_e("Save and Close",'custom-registration-form-builder-with-submission-manager') ?>" name="submit" id="rm_submit_btn" onclick="rm_handle_new_form_creation(event)" class="rm_btn btn btn-primary">
         </div>
         
     </div>
 
 
 </form>
-<?php } ?>
+<?php //} ?>
+
+<script>
+function showOptionalSetting(){
+      jQuery("#rm-form-additional-info").slideToggle();
+      jQuery('.rm-optional-setting-toggle span.dashicons').toggleClass('dashicons-arrow-up');
+      jQuery('.rm-optional-setting-toggle span.dashicons').toggleClass('dashicons-arrow-down');
+     
+
+}
+
+
+</script>

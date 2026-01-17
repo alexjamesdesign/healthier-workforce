@@ -15,8 +15,8 @@ class Element_Sort extends OptionElement {
 	}
 
     public function jQueryDocumentReady() {
-        echo 'jQuery("#', wp_kses_post($this->_attributes["id"]), '").sortable(', wp_kses_post($this->jQueryOptions()), ');';
-        echo 'jQuery("#', wp_kses_post($this->_attributes["id"]), '").disableSelection();';
+        echo 'jQuery("#', wp_kses_post((string)$this->_attributes["id"]), '").sortable(', wp_kses_post((string)$this->jQueryOptions()), ');';
+        echo 'jQuery("#', wp_kses_post((string)$this->_attributes["id"]), '").disableSelection();';
     }
 
     public function render() {
@@ -26,13 +26,13 @@ class Element_Sort extends OptionElement {
         echo '<ul id="', esc_attr($this->_attributes["id"]), '">';
         foreach($this->options as $value => $text) {
             $value = $this->getOptionValue($value);
-            echo '<li class="ui-state-default"><input type="hidden" name="', esc_attr($this->_attributes["name"]), '" value="', esc_attr($value), '"/>', wp_kses_post($text), '</li>';
+            echo '<li class="ui-state-default"><input type="hidden" name="', esc_attr($this->_attributes["name"]), '" value="', esc_attr($value), '"/>', wp_kses_post((string)$text), '</li>';
         }
         echo "</ul>";
     }
 
     public function renderCSS() {
-        echo '#', wp_kses_post($this->_attributes["id"]), ' { list-style-type: none; margin: 0; padding: 0; cursor: pointer; max-width: 400px; }';
-        echo '#', wp_kses_post($this->_attributes["id"]), ' li { margin: 0.25em 0; padding: 0.5em; font-size: 1em; }';
+        echo '#', wp_kses_post((string)$this->_attributes["id"]), ' { list-style-type: none; margin: 0; padding: 0; cursor: pointer; max-width: 400px; }';
+        echo '#', wp_kses_post((string)$this->_attributes["id"]), ' li { margin: 0.25em 0; padding: 0.5em; font-size: 1em; }';
     }
 }

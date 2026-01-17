@@ -10,18 +10,18 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
     <!-----Operations bar Starts-->
 
     <div class="operationsbar">
-        <div class="rmtitle"><?php echo wp_kses_post(RM_UI_Strings::get("TITLE_PAYMENTS_MANAGER")); ?></div>
+        <div class="rmtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get("TITLE_PAYMENTS_MANAGER")); ?></div>
         <div class="icons">
             <a href="?page=rm_options_manage"><img alt="" src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . 'images/global-settings.png'); ?>"></a>
 
         </div>
         <div class="nav">
             <ul>
-                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+                <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
 
                 <li class="rm-form-toggle"><?php
                     if (count($data->forms) !== 0) {
-                        echo wp_kses_post(RM_UI_Strings::get('LABEL_TOGGLE_FORM'));
+                        echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TOGGLE_FORM'));
                         ?>
                         <select id="rm_form_dropdown" name="form_id" onchange = "rm_load_page(this, 'payments_manage')">
                             <?php
@@ -53,25 +53,25 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
     if (count($data->forms) === 0) {?>
         <div class="rmnotice-container">
             <div class="rmnotice">
-                <?php echo wp_kses_post(RM_UI_Strings::get('MSG_NO_FORM_SUB_MAN')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_FORM_SUB_MAN')); ?>
             </div>
         </div><?php
     } elseif ($data->payments || $data->filter->filters['rm_interval'] != 'all' || $data->filter->searched) {
         ?>
         <div class="rmagic-table-wrap">
             <div class="sidebar">
-                <div class="pay-sb-filter-title"><?php echo wp_kses_post(RM_UI_Strings::get("PAYMENT_FILTER_TITLE")); ?></div>
+                <div class="pay-sb-filter-title"><?php echo wp_kses_post((string)RM_UI_Strings::get("PAYMENT_FILTER_TITLE")); ?></div>
                 <div class="sb-filter">
-                    <?php echo wp_kses_post(RM_UI_Strings::get("PAYMENT_FILTER_LABEL_TIME")); ?>
-                    <div class="filter-row"><input type="radio" onclick='rm_load_page_multiple_vars(this, "payments_manage", "interval",<?php echo wp_kses_post(json_encode(array('form_id' => $data->filter->form_id))); ?>)' name="filter_between" value="all"   <?php if ($data->filter->filters['rm_interval'] == "all") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_ALL")); ?> </div>
-                    <div class="filter-row"><input type="radio" onclick='rm_load_page_multiple_vars(this, "payments_manage", "interval",<?php echo wp_kses_post(json_encode(array('form_id' => $data->filter->form_id))); ?>)' name="filter_between" value="today" <?php if ($data->filter->filters['rm_interval'] == "today") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_TODAY")); ?> </div>
-                    <div class="filter-row"><input type="radio" onclick='rm_load_page_multiple_vars(this, "payments_manage", "interval",<?php echo wp_kses_post(json_encode(array('form_id' => $data->filter->form_id))); ?>)' name="filter_between" value="week"  <?php if ($data->filter->filters['rm_interval'] == "week") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_THIS_WEEK")); ?></div>
-                    <div class="filter-row"><input type="radio" onclick='rm_load_page_multiple_vars(this, "payments_manage", "interval",<?php echo wp_kses_post(json_encode(array('form_id' => $data->filter->form_id))); ?>)' name="filter_between" value="month" <?php if ($data->filter->filters['rm_interval'] == "month") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_THIS_MONTH")); ?></div>
-                    <div class="filter-row"><input type="radio" onclick='rm_load_page_multiple_vars(this, "payments_manage", "interval",<?php echo wp_kses_post(json_encode(array('form_id' => $data->filter->form_id))); ?>)' name="filter_between" value="year"  <?php if ($data->filter->filters['rm_interval'] == "year") echo "checked"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_THIS_YEAR")); ?></div>
+                    <?php echo wp_kses_post((string)RM_UI_Strings::get("PAYMENT_FILTER_LABEL_TIME")); ?>
+                    <div class="filter-row"><input type="radio" onclick='rm_load_page_multiple_vars(this, "payments_manage", "interval",<?php echo wp_kses_post((string)json_encode(array('form_id' => $data->filter->form_id))); ?>)' name="filter_between" value="all"   <?php if ($data->filter->filters['rm_interval'] == "all") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_ALL")); ?> </div>
+                    <div class="filter-row"><input type="radio" onclick='rm_load_page_multiple_vars(this, "payments_manage", "interval",<?php echo wp_kses_post((string)json_encode(array('form_id' => $data->filter->form_id))); ?>)' name="filter_between" value="today" <?php if ($data->filter->filters['rm_interval'] == "today") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_TODAY")); ?> </div>
+                    <div class="filter-row"><input type="radio" onclick='rm_load_page_multiple_vars(this, "payments_manage", "interval",<?php echo wp_kses_post((string)json_encode(array('form_id' => $data->filter->form_id))); ?>)' name="filter_between" value="week"  <?php if ($data->filter->filters['rm_interval'] == "week") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_THIS_WEEK")); ?></div>
+                    <div class="filter-row"><input type="radio" onclick='rm_load_page_multiple_vars(this, "payments_manage", "interval",<?php echo wp_kses_post((string)json_encode(array('form_id' => $data->filter->form_id))); ?>)' name="filter_between" value="month" <?php if ($data->filter->filters['rm_interval'] == "month") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_THIS_MONTH")); ?></div>
+                    <div class="filter-row"><input type="radio" onclick='rm_load_page_multiple_vars(this, "payments_manage", "interval",<?php echo wp_kses_post((string)json_encode(array('form_id' => $data->filter->form_id))); ?>)' name="filter_between" value="year"  <?php if ($data->filter->filters['rm_interval'] == "year") echo "checked"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_THIS_YEAR")); ?></div>
 
                 </div>
                 <div class="sb-filter">
-                    <?php echo wp_kses_post(RM_UI_Strings::get("LABEL_MATCH_FIELD")); ?>
+                    <?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_MATCH_FIELD")); ?>
                     <form action="" method="post">
                         <div class="filter-row">
                             <select name="rm_field_to_search">
@@ -117,10 +117,10 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                         }
                        
                             ?>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("PAYMENT_TH_ORDER_AMOUNT")); ?></th>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("PAYMENT_TH_ORDER_STATUS")); ?></th>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("PAYMENT_TH_ORDER_DATE")); ?></th>
-                            <th><?php echo wp_kses_post(RM_UI_Strings::get("ACTION")); ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("PAYMENT_TH_ORDER_AMOUNT")); ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("PAYMENT_TH_ORDER_STATUS")); ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("PAYMENT_TH_ORDER_DATE")); ?></th>
+                            <th><?php echo wp_kses_post((string)RM_UI_Strings::get("ACTION")); ?></th>
                         </tr>
 
                             <?php
@@ -160,7 +160,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                                         echo $value = implode(', ', $value);
                                                     }
                                                     elseif (function_exists('mb_strimwidth')){
-                                                        echo wp_kses_post(mb_strimwidth($value, 0, 70, "..."));
+                                                        echo wp_kses_post((string)mb_strimwidth((string)$value, 0, 70, "..."));
                                                     } else{
                                                         echo esc_html($value);
                                                     }
@@ -194,7 +194,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                                         ?>
                                     </td>
                                     <td><?php echo esc_html(RM_Utilities::localize_time($payment->posted_date,'j M Y')); ?></td>
-                                    <td><a href="?page=rm_payments_view&rm_submission_id=<?php echo esc_attr($payment->submission_id); ?>"><?php echo wp_kses_post(RM_UI_Strings::get("VIEW")); ?></a></td>
+                                    <td><a href="?page=rm_payments_view&rm_submission_id=<?php echo esc_attr($payment->submission_id); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get("VIEW")); ?></a></td>
                                 </tr><?php
                                 endforeach;
                                 ?>
@@ -202,13 +202,13 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                             }elseif ($data->filter->searched) {
                                 ?>
                                 <div class="rmnotice" style="max-width: 80%;">
-                            <?php echo wp_kses_post(RM_UI_Strings::get('MSG_NO_SUBMISSION_MATCHED')); ?>
+                            <?php esc_html_e('No payments matched your search', 'custom-registration-form-builder-with-submission-manager'); ?>
                             </div>
                         <?php
                         } else {
                             ?>
                         <div class="rmnotice" style="max-width: 80%;">
-                            <?php echo wp_kses_post(RM_UI_Strings::get('MSG_NO_SUBMISSION_SUB_MAN_INTERVAL')); ?>
+                            <?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_SUBMISSION_SUB_MAN_INTERVAL')); ?>
                             </div>
                         
                     <?php }
@@ -219,12 +219,12 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                     <?php include RM_ADMIN_DIR . 'views/template_rm_payments_legends.php'; ?>
         </div>
                             <?php
-                            echo wp_kses_post($data->filter->render_pagination());
+                            echo wp_kses_post((string)$data->filter->render_pagination());
                         } else {
                             ?>
                             <div class="rmnotice-container">
                                 <div class="rmnotice">
-                                    <?php echo wp_kses_post(RM_UI_Strings::get('MSG_NO_SUBMISSION_SUB_MAN')); ?>
+                                    <?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_SUBMISSION_SUB_MAN')); ?>
                                 </div>
                             </div>
                     <?php
@@ -233,7 +233,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 
         <?php
         $rm_promo_banner_title = __('Unlock export submissions and more by upgrading','custom-registration-form-builder-with-submission-manager');
-        include RM_ADMIN_DIR . 'views/template_rm_promo_banner_bottom.php';
+        //include RM_ADMIN_DIR . 'views/template_rm_promo_banner_bottom.php';
         ?>
 </div>
 <pre class='rm-pre-wrapper-for-script-tags'><script>

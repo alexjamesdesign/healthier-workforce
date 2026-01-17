@@ -25,7 +25,7 @@ class Element_Rating extends Element
       );
       } */
 
-    public function __construct($label, $name, array $properties = null)
+    public function __construct($label, $name, $properties = null)
     {
         parent::__construct($label, $name, $properties);
         $this->_attributes['id'] = $name;
@@ -53,7 +53,6 @@ class Element_Rating extends Element
             $req_attr = "required";
         else
             $req_attr = "";
-//        /var_dump($this->_attributes);
         $id = "rm_hidden_rate_".$this->_attributes['id'];
         $max_stars = isset($this->_attributes['max_stars']) ? $this->_attributes['max_stars'] : 5;
         $star_width = isset($this->_attributes['star_width']) ? $this->_attributes['star_width'] : 36;

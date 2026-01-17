@@ -26,7 +26,7 @@ wp_enqueue_script('rm-formflow');
                         <div class="rm-publish-text"><?php _e('Create a new Shortcode Block and paste this code snippet inside the block\'s shortcode field.','custom-registration-form-builder-with-submission-manager'); ?></div>
                     </div>
                     <div class="rm-section-shortcode">
-                     <span id="rmformshortcode" data-publish_code="[RM_Form id='%fid%']"><?php echo "[RM_Form id='".esc_html($form_id_to_publish)."']"; ?></span>            
+                     <span id="rmformshortcode" data-publish_code="[RM_Forms id='%fid%']"><?php echo "[RM_Forms id='".esc_html($form_id_to_publish)."']"; ?></span>            
                      <div class="rm-click-to-copy-button" onclick="rm_copy_content(document.getElementById('rmformshortcode'), this)"><?php _e('Copy','custom-registration-form-builder-with-submission-manager'); ?></div>
                     </div>
                 </div> 
@@ -48,7 +48,7 @@ wp_enqueue_script('rm-formflow');
             <div class="rm-section-publish-note"> <?php _e('Publish using embed code','custom-registration-form-builder-with-submission-manager'); ?> </div>
                   
         
-                    <span id="rmformembedcode" class="rm-premium-feature"><?php echo wp_kses_post(RM_UI_Strings::get("MSG_BUY_PRO_INLINE")); ?></span>
+                    <span id="rmformembedcode" class="rm-premium-feature"><?php echo wp_kses_post((string)RM_UI_Strings::get("MSG_BUY_PRO_INLINE")); ?></span>
                
         
 
@@ -63,7 +63,7 @@ wp_enqueue_script('rm-formflow');
                 <div class="rm-publish-directory-col rm-difl">  
                     <div class="rm-section-shortcode"> 
                         <span id="rmformuserdircode" data-publish_code="[RM_Users form_id='%fid%']"><?php echo "[RM_Users form_id='{$form_id_to_publish}']"; ?></span>
-                        <div class="rm-premium-feature"><?php echo wp_kses_post(RM_UI_Strings::get("MSG_BUY_PRO_INLINE")); ?></div>                       
+                        <div class="rm-premium-feature"><?php echo wp_kses_post((string)RM_UI_Strings::get("MSG_BUY_PRO_INLINE")); ?></div>                       
                     </div>                    
                 </div>
             </div>
@@ -78,7 +78,7 @@ wp_enqueue_script('rm-formflow');
                         <span id="rmsubmissionscode"><?php echo "[RM_Front_Submissions]"; ?></span>
                         <div class="rm-click-to-copy-button" onclick="rm_copy_content(document.getElementById('rmsubmissionscode'), this)"><?php _e('Copy','custom-registration-form-builder-with-submission-manager'); ?></div>
                     </div>
-                     <div class="rm-section-profile-tabs">  <?php printf(__('You can customize user area content from Global Settings. You can <a href="%s" target="_blank">rename and reorder tabs</a>, and <a href="%s" target="_blank">add your own custom content</a>.', 'custom-registration-form-builder-with-submission-manager'),admin_url("?page=rm_options_tabs"),'?page=rm_options_manage_ctabs'); ?>  </div>                     
+                     <div class="rm-section-profile-tabs">  <?php printf(__('You can customize user area content from Global Settings. You can <a href="%s" target="_blank">rename and reorder tabs</a>, and <a href="%s" target="_blank">add your own custom content</a>.', 'custom-registration-form-builder-with-submission-manager'),admin_url("admin.php?page=rm_options_tabs"),'?page=rm_options_manage_ctabs'); ?>  </div>                     
                 </div>
                 <div class="rm-publish-directory-col rm-difl"><img src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . "images/rm-submissions.gif"); ?>"></div>
             </div>
@@ -137,7 +137,7 @@ wp_enqueue_script('rm-formflow');
         
         <div class="rm-grid-section dbfl rm_publish_section" id="rm_publish_otp">
             <div class="rm-directory-container dbfl">
-                <?php _e("When you use forms which do not create WordPress user accounts, like a contact or an enquiry form, users still have option to login on your site's frontend and check their submissions. RegistrationMagic handles it using an ingenious OTP (One Time Password) system. When logging in, RegistrationMagic checks if the email address entered was used in a form submission in past. If it was, and there's no user account for the user, it will create and send a provisional password to user's email address. This password can only be used once and allows normal access to RegistrationMagic's user account area.", 'custom-registration-form-builder-with-submission-manager'); ?><br/><br/>
+                <?php _e("When you use forms which do not create WordPress user accounts, like a contact or an enquiry form, users still have option to login on your site's frontend and check their submissions. RegistrationMagic handles it using an ingenious OTP (One-Time Password) system. When logging in, RegistrationMagic checks if the email address entered was used in a form submission in past. If it was, and there's no user account for the user, it will create and send a provisional password to user's email address. This password can only be used once and allows normal access to RegistrationMagic's user account area.", 'custom-registration-form-builder-with-submission-manager'); ?><br/><br/>
                 <?php printf(__('OTP works seamlessly through Login Widget in <a href="%s" target="_blank">Appearance --> Widgets</a> and Login link in Magic PopUp Menu, which can be turned on by going to <a href="%s">Global Settings --> Magic Popup Button</a>', 'custom-registration-form-builder-with-submission-manager'),admin_url("widgets.php"),'?page=rm_options_fab'); ?>         
 
             </div>

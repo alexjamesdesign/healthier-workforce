@@ -9,7 +9,7 @@ class Element_jQueryUIDateTime extends Element_Textbox {
     
     public $jQueryOptions="";
     
-    public function __construct($label, $name, array $properties = null) {
+    public function __construct($label, $name, $properties = null) {
         parent::__construct($label, $name, $properties);
 
         if(!isset($properties['date_format']) || !$properties['date_format'])
@@ -34,7 +34,7 @@ class Element_jQueryUIDateTime extends Element_Textbox {
     public function jQueryDocumentReady() {
         parent::jQueryDocumentReady();
         $id = $this->_attributes["id"];//var_dump($id);
-        $dateformat = explode(" ", $this->_attributes["data-dateformat"]);
+        $dateformat = explode(" ", (string)$this->_attributes["data-dateformat"]);
         wp_enqueue_style('rm_jquery_ui_timepicker_addon_css');
         wp_enqueue_script('rm_jquery_ui_timepicker_addon_js');
         echo <<<JSDP

@@ -31,7 +31,10 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                $form->render();
             ?>
         <pre class='rm-pre-wrapper-for-script-tags'><script>
-        
+        function redirect_to_all_forms() {
+            window.location.replace("<?php echo esc_url(admin_url("admin.php").'?page=rm_form_manage'); ?>");
+        }
+
          jQuery( document ).ready(function() {
          jQuery( "#rm_import_progress" ).append("<b><?php _e('Starting Import','custom-registration-form-builder-with-submission-manager');  ?></b>" );
         var ajaxnonce = '<?php echo wp_create_nonce('rm_import_first'); ?>';   
@@ -43,6 +46,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                    if(response==0)
                     {
                        jQuery( "#rm_import_progress" ).append("<?php _e('(Imported)<br><br>All forms successfully Imported.','custom-registration-form-builder-with-submission-manager');  ?>");
+                       setTimeout("redirect_to_all_forms()", 2000);
                     } else if(response === "INVALID_FILE") {
                         jQuery( "#rm_import_progress" ).append("<br/><br/><?php _e('Error: Invalid file format.','custom-registration-form-builder-with-submission-manager');  ?>");
                     }

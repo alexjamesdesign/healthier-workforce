@@ -6,7 +6,7 @@ class Element_Captcha extends Element {
     public $publicKey = "";
     public $version=2;
 
-    public function __construct($label = "", array $properties = null) {
+    public function __construct($label = "", $properties = null) {
         $this->load_keys();
         parent::__construct($label, "recaptcha_response_field", $properties);
         $this->validation[] = new Validation_Captcha($this->privateKey,'',$this->version);
@@ -35,7 +35,7 @@ class Element_Captcha extends Element {
 
     public function getJSFiles() {
         $locale= get_locale();
-        $lang= explode('_', $locale);
+        $lang= explode('_', (string)$locale);
         $js= array(
             'script_rm_captcha' => RM_BASE_URL . 'public/js/script_rm_captcha.js',
             'google_captcha_api' => "https://www.google.com/recaptcha/api.js?onload=rmInitCaptcha&render=explicit&hl=$lang[0]",

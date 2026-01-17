@@ -30,7 +30,7 @@ class RM_MailChimp
     {
         $this->api_key = $api_key;
 
-        $datacentre  = explode('-', $this->api_key);
+        $datacentre  = explode('-', (string)$this->api_key);
        if(isset($datacentre[1]))
         $this->api_endpoint  = str_replace('<dc>', $datacentre[1], $this->api_endpoint);
 

@@ -26,18 +26,16 @@ if ($data->is_user) {
                     }
                 }
             }
-            ?>
-             <div class="rm-submission-field-row rm-submission-status-row">
-                    <div class="rm-submission-label rm-custom_status-wrap">
-                     <?php
-                     foreach($cust_display as $color => $label) { ?>
-               
-                        <div class="rm-custom-status" style="background-color: #<?php echo esc_attr($color); ?>"><?php echo esc_html($label); ?><span style="border-color: #<?php echo esc_attr($color); ?>"></span></div>
-               
-                <?php } ?>
-                        
-                 </div>
+            if(isset($cust_display) && !empty($cust_display)) { ?>
+            <div class="rm-submission-field-row rm-submission-status-row">
+                <div class="rm-submission-label rm-custom_status-wrap">
+                    <?php
+                    foreach($cust_display as $color => $label) { ?>
+                    <div class="rm-custom-status" style="background-color: #<?php echo esc_attr($color); ?>"><?php echo esc_html($label); ?><span style="border-color: #<?php echo esc_attr($color); ?>"></span></div>
+                    <?php } ?>
                 </div>
+            </div>
+            <?php } ?>
                 <div class="rm-user-details-card rm-wide-card">
                     <div class="rm-user-image-container">
                         <div class="rm-user-row dbfl">
@@ -49,10 +47,10 @@ if ($data->is_user) {
                                 <img alt="" src="<?php echo esc_attr($profile_image_url); ?>" class="rm-user" height="512" width="512">
                                 <div class="rm-user-name-submission">
                                     <div class="rm-user-name dbfl">
-                                        <span data-rm_apply_acc_color='true'><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_WELCOME')); ?>, </span> <?php echo esc_html($data->user->display_name); ?>
+                                        <span data-rm_apply_acc_color='true'><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_WELCOME')); ?>, </span> <?php echo esc_html($data->user->display_name); ?>
                                     </div>
                                     <div class="rm-user-name-subtitle dbfl">
-                                        <span data-rm_apply_acc_color='true'><?php echo esc_html($data->total_submission_count); ?> </span> <?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REGISTRATIONS')); ?>.
+                                        <span <!--data-rm_apply_acc_color='true'--> <strong><?php echo esc_html($data->total_submission_count); ?></strong> </span> <?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_REGISTRATIONS')); ?>.
                                     </div>
                                 </div>
                             </div>
@@ -65,7 +63,7 @@ if ($data->is_user) {
                         if ($data->user->first_name) {
                             ?>
                             <div class="rm-field-row dbfl">
-                                <div class="rm-user-field-label"><?php echo wp_kses_post(RM_UI_Strings::get('FIELD_TYPE_FNAME')); ?>:</div>
+                                <div class="rm-user-field-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('FIELD_TYPE_FNAME')); ?>:</div>
                                 <div class="rm-user-field-value"><?php echo esc_html($data->user->first_name); ?></div>
                             </div>
                             <?php
@@ -74,7 +72,7 @@ if ($data->is_user) {
                             ?>
 
                             <div class="rm-field-row dbfl">
-                                <div class="rm-user-field-label"><?php echo wp_kses_post(RM_UI_Strings::get('FIELD_TYPE_LNAME')); ?>:</div>
+                                <div class="rm-user-field-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('FIELD_TYPE_LNAME')); ?>:</div>
                                 <div class="rm-user-field-value"><?php echo esc_html($data->user->last_name); ?></div>
                             </div>
                             <?php
@@ -83,7 +81,7 @@ if ($data->is_user) {
                             ?>
 
                             <div class="rm-field-row dbfl">
-                                <div class="rm-user-field-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_BIO')); ?>:</div>
+                                <div class="rm-user-field-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_BIO')); ?>:</div>
                                 <div class="rm-user-field-value"><?php echo esc_html($data->user->description); ?></div>
                             </div>
                             <?php
@@ -92,7 +90,7 @@ if ($data->is_user) {
                             ?>
 
                             <div class="rm-field-row dbfl">
-                                <div class="rm-user-field-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_EMAIL')); ?>:</div>
+                                <div class="rm-user-field-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_EMAIL')); ?>:</div>
                                 <div class="rm-user-field-value"><?php echo esc_html($data->user->user_email); ?></div>
                             </div>
                             <?php
@@ -101,7 +99,7 @@ if ($data->is_user) {
                             ?>
 
                             <div class="rm-field-row dbfl">
-                                <div class="rm-user-field-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SECEMAIL')); ?>:</div>
+                                <div class="rm-user-field-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SECEMAIL')); ?>:</div>
                                 <div class="rm-user-field-value"><?php echo esc_html($data->user->sec_email); ?></div>
                             </div>
                             <?php
@@ -110,7 +108,7 @@ if ($data->is_user) {
                             ?>
 
                             <div class="rm-field-row dbfl">
-                                <div class="rm-user-field-label"><?php echo wp_kses_post(RM_UI_Strings::get('FIELD_TYPE_NICKNAME')); ?>:</div>
+                                <div class="rm-user-field-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('FIELD_TYPE_NICKNAME')); ?>:</div>
                                 <div class="rm-user-field-value"><?php echo esc_html($data->user->nickname); ?></div>
                             </div>
                             <?php
@@ -119,7 +117,7 @@ if ($data->is_user) {
                             ?>
 
                             <div class="rm-field-row dbfl">
-                                <div class="rm-user-field-label"><?php echo wp_kses_post(RM_UI_Strings::get('FIELD_TYPE_WEBSITE')); ?>:</div>
+                                <div class="rm-user-field-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('FIELD_TYPE_WEBSITE')); ?>:</div>
                                 <div class="rm-user-field-value"><?php echo esc_url($data->user->user_url); ?></div>
                             </div>
                             <?php
@@ -142,7 +140,10 @@ if ($data->is_user) {
                                     <div class="rm-user-field-value">
                                         <?php
                                         if (is_array($meta) || is_object($meta)) {
-                                            if (isset($meta['rm_field_type']) && $meta['rm_field_type'] == 'File') {
+                                            $additional_fields = apply_filters('rm_additional_fields', array());
+                                            if(in_array($sub->type, $additional_fields)){
+                                                echo wp_kses_post(do_action('rm_additional_fields_data',$sub->type, $sub->value));
+                                            }elseif (isset($meta['rm_field_type']) && $meta['rm_field_type'] == 'File') {
                                                 unset($meta['rm_field_type']);
 
                                                 foreach ($meta as $sub) {
@@ -153,7 +154,7 @@ if ($data->is_user) {
                                                     <div class="rm-user-attachment">
                                                         <?php echo wp_get_attachment_link($sub, 'thumbnail', false, true, false); ?>
                                                         <div class="rm-user-attachment-field"><?php echo esc_html(basename($att_path)); ?></div>
-                                                        <div class="rm-user-attachment-field"><a href="<?php echo esc_attr($att_url); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
+                                                        <div class="rm-user-attachment-field"><a href="<?php echo esc_attr($att_url); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
                                                     </div>
 
                                                     <?php
@@ -167,27 +168,30 @@ if ($data->is_user) {
                                                     $sub .= '<b>'.__('Zip Code','custom-registration-form-builder-with-submission-manager').'</b> : ' . $meta['zip'] . '<br/>';
                                                     $sub .= '<b>'.__('Country','custom-registration-form-builder-with-submission-manager').'</b> : ' . $meta['country'];
                                                 }
-                                                echo wp_kses_post($sub);
+                                                echo wp_kses_post((string)$sub);
                                             } elseif ($sub->type == 'Time') {
                                                 echo esc_html($meta['time']) . ", Timezone: " . esc_html($meta['timezone']);
                                             } elseif ($sub->type == 'Checkbox') {
-                                                echo wp_kses_post(implode(', ', RM_Utilities::get_lable_for_option($field_id, $meta)));
+                                                echo wp_kses_post((string)implode(', ', RM_Utilities::get_lable_for_option($field_id, $meta)));
+                                            } elseif ($sub->type == 'URL') {
+                                                $url = esc_url($meta['url']);
+                                                echo wp_kses_post("<a href='$url'>$url</a>");
                                             } else {
                                                 foreach($meta as $key => $value) {
-                                                    if(trim($value) == '')
+                                                    if(trim((string)$value) == '')
                                                         unset($meta[$key]);
                                                 }
                                                 $sub = implode(', ', $meta);
-                                                echo wp_kses_post($sub);
+                                                echo wp_kses_post((string)$sub);
                                             }
                                         } else {
                                             $additional_fields = apply_filters('rm_additional_fields', array());
                                             if(in_array($sub->type, $additional_fields)){
-                                                echo do_action('rm_additional_fields_data',$sub->type, $sub->value);
+                                                echo wp_kses_post(do_action('rm_additional_fields_data',$sub->type, $sub->value));
                                             }
                                             elseif ($sub->type == 'Rating') {
                                                 if(defined('REGMAGIC_ADDON')) {
-                                                    echo wp_kses_post(RM_Utilities::enqueue_external_scripts('script_rm_rating', RM_ADDON_BASE_URL . 'public/js/rating3/jquery.rateit.js'));
+                                                    echo wp_kses_post((string)RM_Utilities::enqueue_external_scripts('script_rm_rating', RM_ADDON_BASE_URL . 'public/js/rating3/jquery.rateit.js'));
                                                     $r_sub = array('value' => $sub->value,
                                                        'readonly' => 1,
                                                        'max_stars' => 5,
@@ -204,12 +208,23 @@ if ($data->is_user) {
                                                     $rf = new Element_Rating("", "", $r_sub);
                                                     $rf->render();
                                                 } else {
-                                                    echo '<div class="rateit" id="rateit5" data-rateit-min="0" data-rateit-max="5" data-rateit-value="' . wp_kses_post($meta) . '" data-rateit-ispreset="true" data-rateit-readonly="true"></div>';
+                                                    echo '<div class="rateit" id="rateit5" data-rateit-min="0" data-rateit-max="5" data-rateit-value="' . wp_kses_post((string)$meta) . '" data-rateit-ispreset="true" data-rateit-readonly="true"></div>';
                                                 }
                                             } elseif ($sub->type == 'Radio' || $sub->type == 'Select') {
-                                                echo wp_kses_post(RM_Utilities::get_lable_for_option($field_id, $meta));
+                                                echo wp_kses_post((string)RM_Utilities::get_lable_for_option($field_id, $meta));
+                                            } elseif($sub->type == 'DigitalSign'){
+                                                if(!empty($meta)){
+                                                    $sign_url  = RM_BASE_URL . 'plus/signature/signature-access.php?file='.$meta;
+                                                
+                                                    ?>
+                                                    <div class="rm-user-attachment">
+                                                        <img src="<?php echo esc_url($sign_url);?>" style="max-width:100px;">
+                                                        <div class="rm-user-attachment-field"><a href="<?php echo esc_url($sign_url); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
+                                                    </div>
+                                                <?php
+                                                }
                                             } else
-                                                echo wp_kses_post($meta);
+                                                echo wp_kses_post((string)$meta);
                                         }
                                         ?>
                                     </div>
@@ -228,9 +243,9 @@ if ($data->is_user) {
                     <div id="rm_edit_sub_link">
                         <form method="post" name="rm_form" action="" id="rmeditsubmissions">
                             <input type="hidden" name="rm_edit_user_details" value="true">
-                            <input type="hidden" name="form_ids" value='<?php echo wp_kses_post(json_encode($editable_forms)); ?>'>
+                            <input type="hidden" name="form_ids" value='<?php echo wp_kses_post((string)json_encode($editable_forms)); ?>'>
                         </form>
-                        <a href="javascript:void(0)" onclick="document.getElementById('rmeditsubmissions').submit();"><?php echo wp_kses_post(RM_UI_Strings::get('MSG_EDIT_YOUR_SUBMISSIONS')); ?></a>
+                        <a href="javascript:void(0)" onclick="document.getElementById('rmeditsubmissions').submit();"><?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_EDIT_YOUR_SUBMISSIONS')); ?></a>
                     </div>
                 <?php } ?>
             </div>

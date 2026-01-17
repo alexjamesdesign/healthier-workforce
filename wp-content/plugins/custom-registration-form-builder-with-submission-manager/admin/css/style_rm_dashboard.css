@@ -5,23 +5,23 @@
 
 }
 
-.rm-more-btn {   
+.rm-more-btn {
     position: absolute;
     bottom: 8px;
     right: 18px;
 }
 
-.rm-more-btn a {      
+.rm-more-btn a {
     display: flex;
     text-decoration: none;
     box-shadow: none;
 }
-.rm-more-btn a span {  
-    font-size: 20px;                     
+.rm-more-btn a span {
+    font-size: 20px;
     transition: all 0.45s cubic-bezier(0.65, 0, 0.076, 1);
 }
 
-.rm-more-btn:hover span {  
+.rm-more-btn:hover span {
     transform: translate(5px, 0);
     animation: rm-link-caret 0.8s normal ease-out forwards 1;
 }
@@ -107,7 +107,7 @@
     align-items: flex-start;
     align-content: center;
     min-height: 58px;
-} 
+}
 
 .rm-dashboard-header .rm-bullet-link a {
     display: flex;
@@ -143,7 +143,9 @@
 }
 
 
-.rm-dashboard-main-container .rm-dashboard-header .rm-box-col-3:last-child {border-right: 0px;}
+.rm-dashboard-main-container .rm-dashboard-header .rm-box-col-3:last-child {
+    border-right: 0px;
+}
 
 
 /* End Dashboard head block  */
@@ -154,7 +156,7 @@
 .rm-dash-counter-chart-container{
     /*-- max-width: 400px;-- */
     margin: 0px auto 45px auto;
-    max-width: 66%;
+    max-width: 85%;
 }
 
 .rm-dash-chart-demo-notice {
@@ -163,7 +165,7 @@
 }
 
 .rm-dash-popular-chart-container{
-    max-width: 66%;
+    max-width: 85%;
     margin: auto;
     transform: translate(0, -48px);
 
@@ -259,7 +261,7 @@
 }
 
 
-.rm-submissions-box .rm-form-submissions-date { 
+.rm-submissions-box .rm-form-submissions-date {
     color: #89A2B6;
 }
 
@@ -278,7 +280,7 @@
 }
 
 .rm-submissions-box:hover .rm-more-submissions {
-   visibility: visible;
+    visibility: visible;
 }
 
 .rm_dash_submissions .rm-form-no-submissions {
@@ -389,7 +391,7 @@
 }
 
 .rm-latest-forms .rm-latest-forms-row .rm-latest-forms-name {
-     width: 300px;
+    width: 300px;
 }
 
 .rm-latest-forms-row .rm-latest-forms-name {
@@ -401,8 +403,10 @@
     font-size: 12px;
 }
 
-.rm-latest-forms-row div {margin: 0px 12px;}
-.rm-latest-forms-row div.rm-latest-forms-icon span.material-icons {  
+.rm-latest-forms-row div {
+    margin: 0px 12px;
+}
+.rm-latest-forms-row div.rm-latest-forms-icon span.material-icons {
     line-height: 34px;
 }
 
@@ -435,9 +439,15 @@
 }
 
 @keyframes rm-link-caret {
-    0% {transform: translate(0, 0)}
-    50% {transform: translate(3px, 0)}
-    100% {transform: translate(0, 0)}
+    0% {
+        transform: translate(0, 0)
+    }
+    50% {
+        transform: translate(3px, 0)
+    }
+    100% {
+        transform: translate(0, 0)
+    }
 }
 
 
@@ -452,15 +462,15 @@
 
 
 
-.rm-important-shortcodes-wrap .rm-latest-forms-row  .rm-latest-forms-name,
-.rm-important-shortcodes-wrap .rm-latest-forms-row  .rm-latest-forms-shortcode {
+.rm-important-shortcodes-wrap .rm-latest-forms-row .rm-latest-forms-name,
+.rm-important-shortcodes-wrap .rm-latest-forms-row .rm-latest-forms-shortcode {
     display: inline-block;
     width: 40%;
     white-space: nowrap;
     overflow: hidden;
 }
 
-.rm-important-shortcodes-wrap .rm-latest-forms-row  .rm-latest-forms-shortcode {
+.rm-important-shortcodes-wrap .rm-latest-forms-row .rm-latest-forms-shortcode {
     overflow: visible;
     display: inline-flex;
 }
@@ -493,9 +503,12 @@
     text-decoration: none;
 }
 
-.rm-dashboard-setting-wrap ul li .rm-dash-setting-icon {}
-.rm-dashboard-setting-wrap ul li .rm-dash-setting-icon img {width: 44px;}
-.rm-dashboard-setting-wrap ul li .rm-dash-setting-label {    
+.rm-dashboard-setting-wrap ul li .rm-dash-setting-icon {
+}
+.rm-dashboard-setting-wrap ul li .rm-dash-setting-icon img {
+    width: 44px;
+}
+.rm-dashboard-setting-wrap ul li .rm-dash-setting-label {
     color: #3A4955;
     font-size: 11px;
 }
@@ -577,7 +590,7 @@
 
 /* --User Registrations---*/
 
-.rm-dash-users-chart .rm-dash-users-chart-wrap {  
+.rm-dash-users-chart .rm-dash-users-chart-wrap {
     max-width: 90%;
     margin: 7px auto;
 }
@@ -587,13 +600,13 @@
 
 /* --User Login---*/
 
-.rm-dashboard-users-loggedin .rm-dash-loggin-chart-wrap {  
+.rm-dashboard-users-loggedin .rm-dash-loggin-chart-wrap {
     max-width: 90%;
     margin: 7px auto;
 }
 
 .rm-dashboard-users-loggedin .rm-more-btn{
-    margin-top: 20px; 
+    margin-top: 20px;
     position: relative;
 }
 
@@ -701,7 +714,7 @@ table.rm-latest-login-table .rm-login-method.rm-login-normal {
 }
 
 
-.rm-login-no-record{   
+.rm-login-no-record{
     background-image: url(../../images/login-demo-graphic.svg);
     width: 100%;
     height: 100%;
@@ -742,7 +755,7 @@ body.toplevel_page_rm_dashboard_widget_dashboard {
 
 /* -- Menu ---*/
 
-.rm-dashboard-menu-btn{   
+.rm-dashboard-menu-btn{
     -webkit-appearance: button;
     cursor: pointer;
 }
@@ -778,7 +791,8 @@ body.toplevel_page_rm_dashboard_widget_dashboard {
     text-decoration: none;
 }
 
-rm-dashboard-attach-icons.rm-dash-icon-jpg {}
+rm-dashboard-attach-icons.rm-dash-icon-jpg {
+}
 
 .rm-dashboard-attach-icons span svg {
     width: 26px;
@@ -796,13 +810,15 @@ rm-dashboard-attach-icons.rm-dash-icon-jpg {}
 
 .rm-dash-attachment .rm-latest-forms-dash-link a span {
     transform: none !important;
-     padding-left: 5px;
+    padding-left: 5px;
 }
 
 .rm-dash-payment-report .rm-latest-forms-row .rm-latest-forms-name {
     width:40%;
 }
-.rm-dash-payment-report .rm-latest-forms-row .rm-payment-currency {white-space: nowrap;}
+.rm-dash-payment-report .rm-latest-forms-row .rm-payment-currency {
+    white-space: nowrap;
+}
 
 table.rm-dash-payment-report-table {
     width:100%;
@@ -817,7 +833,8 @@ table.rm-dash-payment-report-table tr.rm-dash-payment-report-row:hover{
     cursor: pointer;
 }
 
-table.rm-dash-payment-report-table tr {}
+table.rm-dash-payment-report-table tr {
+}
 table.rm-dash-payment-report-table tr td {
     border: 0px;
     margin: 0px;
@@ -843,6 +860,18 @@ table.rm-dash-payment-report-table tr td {
     table.rm-dash-payment-report-table {
         table-layout: fixed
     }
+
+    .rm-important-shortcodes-wrap .rm-latest-forms-row .rm-latest-forms-shortcode{
+        word-break: break-word;
+        white-space: inherit;
+        width: 43%;
+        font-size: 10px;
+
+    }
+
+    .rm-dashboard-main-container .rm_dash_submissions .rm-submissions-box:nth-last-child(2) {
+        padding-bottom: 50px;
+    }
 }
 
 
@@ -851,9 +880,18 @@ table.rm-dash-payment-report-table tr td {
 }
 
 @keyframes rm_img_roll {
-    0% {transform: translate(37.68px, 0) rotate(90deg); opacity: 0;}
-    75% {transform: translate(-4.19px, 0) rotate(-10deg); opacity: 1;}
-    100% {transform: translate(0, 0) rotate(0deg); opacity: 1;}
+    0% {
+        transform: translate(37.68px, 0) rotate(90deg);
+        opacity: 0;
+    }
+    75% {
+        transform: translate(-4.19px, 0) rotate(-10deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+    }
 }
 
 .rm-dash-no-data-found {

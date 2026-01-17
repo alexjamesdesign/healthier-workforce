@@ -2,10 +2,9 @@
 if (!defined('WPINC')) {
     die('Closed');
 }
-$file = $_SERVER["SCRIPT_NAME"];
-$file_break = Explode('/', $file);
-$pfile = $file_break[count($file_break) - 1];
-if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_rm_form_manager.php'); else {
+if($data->old_view == false || $data->old_view == 0) {
+    include_once(RM_ADMIN_DIR . 'views/template_rm_form_manager_old.php');
+} else {
 /**
  * @internal Template File [Form Manager]
  *
@@ -15,16 +14,15 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 
 global $rm_env_requirements;
 global $regmagic_errors;
- 
 
-  
-wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.css' );
+$url_params = $data->url_params;
+if($data->descending == true) {
+    $url_params['rm_descending'] = 1;
+} else {
+    $url_params['rm_descending'] = 0;
+}
+//wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.css' );
 
-if (($rm_env_requirements & RM_REQ_EXT_CURL) && $data->newsletter_sub_link){ ?>
- <div class="rm-newsletter-banner" id="rm_newsletter_sub"><?php echo wp_kses_post($data->newsletter_sub_link);?><img src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . 'images/close-rm.png'); ?>" onclick="jQuery('#rm_newsletter_sub').hide()"></div>
- <?php } ?>
- 
- <?php
  //Check errors
  RM_Utilities::fatal_errors();
  if(is_array($regmagic_errors)){
@@ -32,7 +30,7 @@ if (($rm_env_requirements & RM_REQ_EXT_CURL) && $data->newsletter_sub_link){ ?>
     {
        //Display only non - fatal errors
        if($err->should_cont)
-           echo '<div class="shortcode_notification ext_na_error_notice"><p class="rm-notice-para">'.esc_html($err->msg).'</p></div>';
+           echo '<div class="shortcode_notification ext_na_error_notice"><p class="rm-notice-para">'.wp_kses_post($err->msg).'</p></div>';
     }
  }
  
@@ -44,123 +42,270 @@ if (($rm_env_requirements & RM_REQ_EXT_CURL) && $data->newsletter_sub_link){ ?>
      </div>
     -->
 
-<div class="rmagic rm-all-forms">
+<div class="wrap">    
+ <div class="rmagic rmagic-wide rmmagic-all-forms rm-custom-list-table">  
 
-    <!-- Joyride Magic begins -->
-    <ol id="rm-form-man-joytips" style="display:none">
-        <li data-id="rm-tour-title" data-options="tipLocation:top;nubPosition:hide;tipAdjustmentX:200;tipAdjustmentY:230">
-            <h2>
-                <?php _e('Welcome to RegistrationMagic', 'custom-registration-form-builder-with-submission-manager'); ?>
-            </h2>
-            <p><?php _e("RegistrationMagic is a powerful plugin that allows you to build custom registration system on your WordPress site. This is the main landing page - Forms Manager. Click <b>Next</b> to start a quick tour of this page. To stop at anytime, click the close icon on top right.", 'custom-registration-form-builder-with-submission-manager'); ?></p>
-        </li>
-        <li data-id="rmbar" data-options="tipLocation:bottom"><?php _e('You will see this flat white box on top of different sections inside RegistrationMagic. We call it operations bar. It contains...', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-tour-title" data-options="tipLocation:bottom"><?php _e('The heading of the section you are presently in...', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-ob-icons" data-options="nubPosition:bottom-right;tipAdjustmentX:-330"><?php _e('Quick access icons relevant to the section...', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-ob-sort" data-options="nubPosition:bottom-right;tipAdjustmentX:-320"><?php _e('A filter and sort drop down menu. In this section, it allows you to sort your forms.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-ob-nav"><?php _e("And a navigation menu with most important functions laid horizontally. Let's look at the Form Manager functions one by one.", 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-ob-new"><?php _e('This allows you to create new forms.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-form-template-tab"><?php _e('Start with a readymade form template.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-ob-duplicate"><?php _e("This allows you to duplicate one or multiple forms. Form's configuration and fields are also duplicated. Note: This does not duplicates conditional logic applied to the form.", 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-ob-delete"><?php _e('This allows you to delete one or multiple forms. All associated form data is deleted.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-ob-export"><?php _e('This allows you to export all your forms and associated data in a single XML file. Handy if you are reinstalling your site, moving forms to another site or simply backing up your hard work. Note: This does not exports conditional logic applied to the form.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-ob-import"><?php _e('Import button allows you to import the XML file saved on your computer.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-card-area"><h3> <?php _e('Forms As Cards', 'custom-registration-form-builder-with-submission-manager'); ?></h3>
-            <p><?php _e('RegistrationMagic displays all forms as rectangular cards. This is a novel new approach. You will later see that a form card is much more than a symbolic representation of a form. It can show you form related data and stats at a glance.', 'custom-registration-form-builder-with-submission-manager'); ?></p>
-        </li>
-        <li data-id="rm-card-area"><?php _e("All form cards are displayed as grid, starting from here. You may not need to create more than one registrations form, but it's totally up to you. RegistrationMagic gives a playground to experiment and play to find the best combination for your site. First card slot is reserved for <b>Login Form</b>", 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-class="rm-card-tour"><?php _e('This is a form card. We automatically created it for you to give you a head start.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-class="rm-title-tour"><?php _e('This shows title of the form. When you create a new form, you can define its title. You can always change title of this form later, by going into its <b>General Settings</b>', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-class="rm-checkbox-tour" data-options="tipAdjustmentX:-28;tipAdjustmentY:-5"><?php _e("The checkbox on left side of the title allows you to select multiple forms and perform batch operations. For example, deleting multiple forms. Of course there's nothing stopping you from deleting or duplicating a single form.", 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-class="rm_formcard_menu_icon" data-options="tipAdjustmentX:-25;tipAdjustmentY:-2"><?php _e('Clicking this will open a popup menu allowing you direct access to different sections of this form.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-class="unread-box" data-options="tipAdjustmentX:-22;tipAdjustmentY:-5"><?php _e('On top right side of each card is a red number badge. This is the count of total times this form has been filled and submitted on your site by visitors.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-class="rm-last-submission"><?php _e("This area displays 3 latest submissions for this form. On new forms it will be empty in the start. Each submission will also show user's Gravatar and time stamp.", 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-class="rm-shortcode-tour" data-options="tipAdjustmentX:50"><?php _e("Now this is important. RegistrationMagic works through shortcodes. That means, to display a form on the site, you must paste its shortcode inside a page, post or a widget (where you want this form to appear). Form shortcodes are always in this format - ", 'custom-registration-form-builder-with-submission-manager'); ?><b>[RM_Form id='x']</b></li>
-        <li data-class="rm_def_star_tour" data-options="tipAdjustmentX:-24;tipAdjustmentY:-5"><?php _e('This little star allows you to mark a form as your default registration form.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-class="rm-form-settings"><?php _e('Each form has its own dashboard or operations area, that is accessible by clicking the <b>Settings</b> button on the respective form card.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-class="rm-form-fields" data-options="tipAdjustmentX:-12"><?php _e('Any form once created is empty. Form fields need to be added manually. This is where <b>Custom Fields Manager</b> comes in. Clicking it will take you to a separate section, where you can add all sorts of fields and pages to your form.', 'custom-registration-form-builder-with-submission-manager'); ?></li>
-        <li data-id="rm-tour-title" data-options="tipLocation:top;nubPosition:hide;tipAdjustmentX:200;tipAdjustmentY:230" data-button="Done"><?php printf(__('This ends our tour of Forms Manager. Feel free to explore other sections of RegistrationMagic. We would recommend visiting the form Dashboard first. If anything does not works as expected, please write to us <a href="%s"><u>here</u></a> and we will help you sort it out asap.', 'custom-registration-form-builder-with-submission-manager'),'https://registrationmagic.com/help-support'); ?></li>
-
-    </ol>
-  <!-- Joyride Magic ends -->
-
-    <!--  Operations bar Starts  -->
-    <form name="rm_form_manager" id="rm_form_manager_operartionbar" class="rm_static_forms" method="post" action="">
-        
-        <input type="hidden" name="rm_slug" value="" id="rm_slug_input_field">
-        <div class="operationsbar" id="rmbar">
-            <div class="rmtitle" id="rm-tour-title"><?php echo wp_kses_post(RM_UI_Strings::get('TITLE_FORM_MANAGER'));?></div>
-            <div class="icons" id="rm-ob-icons">
-                <a href="?page=rm_options_manage"><img alt="" src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . 'images/general-settings.png'); ?>"></a>
-            </div>
-            <div class="nav" id="rm-ob-nav">
-                <ul>
-                    <li id="rm-ob-new"><a href="#rm_add_new_form_popup" onclick="CallModalBox(this)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_ADD_NEW'));?></a></li>
-                <!--<li id="rm-ob-new"><a href="<?php echo admin_url("admin.php?page=rm_form_setup");?>"><?php echo wp_kses_post(RM_UI_Strings::get('ADMIN_MENU_SETUP'));?></a></li>-->
-                    
-                    <li id="rm-ob-duplicate" class="rm_deactivated" onclick="jQuery.rm_do_action('rm_form_manager_operartionbar','rm_form_duplicate')"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DUPLICATE')); ?></a></li>
-                    <li id="rm-ob-delete" class="rm_deactivated" onclick="jQuery.rm_do_action_with_alert('<?php echo wp_kses_post(RM_UI_Strings::get('ALERT_DELETE_FORM')); ?>','rm_form_manager_operartionbar','rm_form_remove')"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REMOVE')); ?></a></li>
-                    <?php $localized_str_exportall = RM_UI_Strings::get('LABEL_EXPORT')." <span class='rm-export-count'>(".RM_UI_Strings::get('LABEL_ALL').")</span>"; $localized_str_exportselected = RM_UI_Strings::get('LABEL_EXPORT'); ?>
-                    <li id="rm-ob-export" data-rmlocalstrall="<?php echo wp_kses_post($localized_str_exportall); ?>" data-rmlocalstrselected="<?php echo esc_attr($localized_str_exportselected); ?>" onclick="jQuery.rm_do_action('rm_form_manager_operartionbar','rm_form_export')"><a href="javascript:void(0)"><?php echo wp_kses_post($localized_str_exportall); ?></a></li>
-                    <li id="rm-ob-import"><a href="admin.php?page=rm_form_import"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_IMPORT')); ?></a></li>
-                    <li><a href="javascript:void(0)" onclick="rm_start_joyride()"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_TOUR')); ?></a></li>
-                    <li id="rm-ob-demo" class="rm-starter-guide"><a target="_blank" style="display: flex;align-items: center;" href="https://registrationmagic.com/create-wordpress-registration-page-starter-guide/"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_STARTER_GUIDE')); ?><span class="rm-starter-guide-icon material-icons">help_center</span></a></li> 
-                    <!-- <li id="rm-ob-demo"><a target="_blank" href="http://demo.registrationmagic.com/"><?php //echo RM_UI_Strings::get('LABEL_DEMO'); ?></a></li> -->
-                    <li class="rm-form-toggle" id="rm-ob-sort"><?php _e('Sort Forms', 'custom-registration-form-builder-with-submission-manager'); ?><select onchange="rm_sort_forms(this,'<?php echo esc_js($data->curr_page);?>')">
-                            <option value=null><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SELECT')); ?></option>
-                            <option value="form_name"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_NAME')); ?></option>
-                            <option value="form_id"><?php echo wp_kses_post(RM_UI_Strings::get('FIELD_TYPE_DATE')); ?></option>
-                            <option value="form_submissions"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SUBMISSIONS')); ?></option>
-                        </select></li>
-                </ul>
+        <div class="alignright rm-mb-2 rm-position-relative" >
+            <div class="rm-display-items-selector rm-di-flex rm-box-center">
+                <span class="rm-white-space"><?php esc_html_e('Results per page', 'custom-registration-form-builder-with-submission-manager'); ?> &rarr;</span>
+                <select class="rm-pager-toggle" onchange="set_forms_entry_depth(this);">
+                    <option value="10" <?php echo $data->items_per_page == 10 ? 'selected' : ''; ?>><?php esc_html_e('Page 1-10', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                    <option value="20" <?php echo $data->items_per_page == 20 ? 'selected' : ''; ?>><?php esc_html_e('Page 1-20', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                    <option value="30" <?php echo $data->items_per_page == 30 ? 'selected' : ''; ?>><?php esc_html_e('Page 1-30', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                    <option value="40" <?php echo $data->items_per_page == 40 ? 'selected' : ''; ?>><?php esc_html_e('Page 1-40', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                    <option value="50" <?php echo $data->items_per_page == 50 ? 'selected' : ''; ?>><?php esc_html_e('Page 1-50', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                </select>
             </div>
         </div>
-        <input type="hidden" name="rm_selected" value="">
-        <?php wp_nonce_field('rm_form_manager_template'); ?>
-        <input type="hidden" name="req_source" value="form_manager">
-    </form>
+<hr class="wp-header-end">
+ 
 
-    <!--  *****Operations bar Ends****  -->
+<h2 class="screen-reader-text"><?php esc_html_e('Filter pages list', 'custom-registration-form-builder-with-submission-manager'); ?></h2>
 
-    <!--  ****Content area Starts****  -->
+ 
+ <!---Top Filter--->
+ <div class="rm-top-head-section">
+ <h1 class="wp-heading-inline"><?php esc_html_e('All Forms', 'custom-registration-form-builder-with-submission-manager'); ?></h1>
+<a href="#rm_add_new_form_popup" onclick="CallModalBox(this)" class="page-title-action"><?php esc_html_e('Add New Form', 'custom-registration-form-builder-with-submission-manager');?></a>
+</div>
+<ul class="subsubsub">
+    <li class="all"><a class="all<?php if(empty($data->form_filter)) echo ' current'; ?>" href="<?php echo esc_url(admin_url("admin.php?page=rm_form_manage&rm_form_search=".(string)$data->search_term)); ?>" aria-current="page"><?php esc_html_e('All', 'custom-registration-form-builder-with-submission-manager'); ?> <span class="count">(<?php echo esc_html($data->total_forms); ?>)</span></a> |</li>
+    <li class="active"><a class="<?php if($data->form_filter == 'registration') echo 'current'; ?>" href="<?php echo esc_url(admin_url("admin.php?page=rm_form_manage&rm_form_filter=registration&rm_form_search=".(string)$data->search_term)); ?>"><?php esc_html_e('Creates User Account', 'custom-registration-form-builder-with-submission-manager'); ?> <span class="count">(<?php echo esc_html($data->reg_forms); ?>)</span></a>
+    <?php if(defined('REGMAGIC_ADDON')) { ?>
+        |</li><li class="pending"><a class="<?php if($data->form_filter == 'multi_page') echo 'current'; ?>" href="<?php echo esc_url(admin_url("admin.php?page=rm_form_manage&rm_form_filter=multi_page&rm_form_search=".(string)$data->search_term)); ?>"><?php esc_html_e('Multi-Page', 'custom-registration-form-builder-with-submission-manager'); ?> <span class="count">(<?php echo esc_html($data->multi_page_forms); ?>)</span></a></li>
+    <?php } ?>
+</ul>
 
-    <div class="rmagic-cards" id="rm-card-area">
+<!---Top Filter Ends--->
+ 
+<!----Top Filters--->
+ <!--
+        <div class="alignright rm-mb-2 rm-position-relative" >
+            <div class="rm-display-items-selector rm-di-flex rm-box-center rm-position-absolute">
+                <span class="rm-white-space"><?php esc_html_e('Results per page', 'custom-registration-form-builder-with-submission-manager'); ?> &rarr;</span>
+                <select class="rm-pager-toggle" onchange="set_forms_entry_depth(this);">
+                    <option value="10" <?php echo $data->items_per_page == 10 ? 'selected' : ''; ?>><?php esc_html_e('Page 1-10', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                    <option value="20" <?php echo $data->items_per_page == 20 ? 'selected' : ''; ?>><?php esc_html_e('Page 1-20', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                    <option value="30" <?php echo $data->items_per_page == 30 ? 'selected' : ''; ?>><?php esc_html_e('Page 1-30', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                    <option value="40" <?php echo $data->items_per_page == 40 ? 'selected' : ''; ?>><?php esc_html_e('Page 1-40', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                    <option value="50" <?php echo $data->items_per_page == 50 ? 'selected' : ''; ?>><?php esc_html_e('Page 1-50', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                </select>
+            </div>
+        </div>
+
+-->
+<!--Search Box-->
+
+<form action="<?php echo esc_url(admin_url("admin.php")); ?>" method="get">
+    <p class="search-box">
+    <input type="hidden" name="page" value="rm_form_manage">
+	<label class="screen-reader-text" for="post-search-input"><?php esc_html_e('Search Forms:', 'custom-registration-form-builder-with-submission-manager'); ?></label>
+	<input type="search" id="post-search-input" name="rm_form_search" value="<?php echo esc_attr((string)$data->search_term); ?>">
+    <input type="submit" id="search-submit" class="button rm-search-btn" value="Search Forms">
+    </p>
+</form>
+
+
+
+<!---Search Box Ends-->
+
+
+
+<div class="tablenav top">
+    <div class="alignleft actions bulkactions">
+        <label for="bulk-action-selector-top" class="screen-reader-text"><?php esc_html_e('Select bulk action', 'custom-registration-form-builder-with-submission-manager'); ?></label>
+        <select id="bulk-action-selector-top">
+            <option value="-1"><?php esc_html_e('Bulk actions', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+            <option value="export"><?php esc_html_e('Export', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+            <option value="delete"><?php esc_html_e('Delete', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+        </select>
+        <input type="button" id="rm-form-bulk-action-top" onclick="rm_apply_bulk_action(this)" class="button action" value="<?php esc_html_e('Apply', 'custom-registration-form-builder-with-submission-manager'); ?>">
+    </div>
+    <div class="alignleft actions">
+     <a href="admin.php?page=rm_form_import"  class="button action"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_IMPORT')); ?></a>
+    </div>
+    <div class="alignleft actions rm-starter-guide-btn">
+     <a  href="https://registrationmagic.com/create-wordpress-registration-page-starter-guide" target="_blank"  class=" button action"><?php esc_html_e('Starter Guide', 'custom-registration-form-builder-with-submission-manager'); ?></a>
+    </div>
+    <div class="alignright rm-rm-view-toggle-wrap rm-mb-2 rm-mr-2 rm-di-flex rm-align-items-center">
+         <div class="rm-view-toggle btn-group " role="group">
+  <button type="button" class="rm-view-btn rm-list-card rm-view-btn-left" onclick="rm_forms_roll_back()" title="Card View">
+    <!-- Material Icon: grid_view -->
+    <!--
+    <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20">
+      <path d="M160-520v-280h280v280H160Zm0 320v-280h280v280H160Zm360-320v-280h280v280H520Zm0 320v-280h280v280H520Z"/>
+    </svg>
+    -->
+    <?php esc_html_e('Card View', 'custom-registration-form-builder-with-submission-manager'); ?>
+    <div class="rm-view-toggle-tooltip" style="display: none"> <?php _e('Card view', 'custom-registration-form-builder-with-submission-manager'); ?></div>
+  </button>
+  <button type="button" class="rm-view-btn rm-list-list rm-view-btn-right rm-view-btn-active" onclick="rm_forms_roll_back()" title="List View">
+    <!-- Material Icon: list -->
+    <!--
+    <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20">
+      <path d="M160-200v-80h640v80H160Zm0-240v-80h640v80H160Zm0-240v-80h640v80H160Z"/>
+    </svg>
+     -->
+     <?php esc_html_e('List View', 'custom-registration-form-builder-with-submission-manager'); ?>
+    <div class="rm-view-toggle-tooltip" style="display: none"> <?php _e('List view', 'custom-registration-form-builder-with-submission-manager'); ?></div>
+  </button>
+</div>
+    <form action="<?php echo esc_url(admin_url("admin.php")); ?>" method="get" id="rm_pagination_input_form">
+    <input type="hidden" name="page" value="rm_form_manage">
+    <input type="hidden" name="rm_form_filter" value="<?php echo esc_attr($data->url_params["rm_form_filter"]); ?>">
+    <input type="hidden" name="rm_sortby" value="<?php echo esc_attr($data->url_params["rm_sortby"]); ?>">
+    <input type="hidden" name="rm_descending" value="<?php echo esc_attr($data->url_params["rm_descending"]); ?>">
+    <input type="hidden" name="rm_form_search" value="<?php echo esc_attr($data->url_params["rm_form_search"]); ?>">
+    <?php if($data->total_pages) { ?>
+    <div class="tablenav-pages"><span class="displaying-num"><?php echo wp_kses_post((string)sprintf(esc_html__('%s items', 'custom-registration-form-builder-with-submission-manager'), $data->filtered_count)); ?></span>
+        <span class="pagination-links">
+            <?php if($data->curr_page == 1) { ?>
+            <span class="tablenav-pages-navspan button disabled" aria-hidden="true">«</span>
+            <span class="tablenav-pages-navspan button disabled" aria-hidden="true">‹</span>
+            <?php } else { $url_params['rm_reqpage'] = 1; ?>
+            <a class="first-page button" href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>"><span class="screen-reader-text"><?php esc_html_e('First page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span class="" aria-hidden="true">«</span></a>
+            <?php $url_params['rm_reqpage'] = $data->curr_page - 1; ?>
+            <a class="prev-page button" href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>"><span class="screen-reader-text"><?php esc_html_e('Previous page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span class="" aria-hidden="true">‹</span></a>
+            <?php } ?>
+            <span class="paging-input">
+                <label for="current-page-selector" class="screen-reader-text"><?php esc_html_e('Current Page', 'custom-registration-form-builder-with-submission-manager'); ?></label>
+                <input class="current-page" id="rm_reqpage_top" name="rm_reqpage" type="text" value="<?php echo esc_attr($data->curr_page); ?>" size="1" aria-describedby="table-paging">
+                <span class="tablenav-paging-text"> of <span class="total-pages"><?php echo esc_html($data->total_pages); ?></span></span>
+            </span>
+            <?php if($data->curr_page >= $data->total_pages) { ?>
+            <span class="screen-reader-text"><?php esc_html_e('Next page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span class="tablenav-pages-navspan button disabled" aria-hidden="true">›</span>
+            <span class="screen-reader-text"><?php esc_html_e('Last page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span class="tablenav-pages-navspan button disabled" aria-hidden="true">»</span></span>
+            <?php } else { ?>
+            <?php $url_params['rm_reqpage'] = $data->curr_page + 1; ?>
+            <a class="next-page button" href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>"><span class="screen-reader-text"><?php esc_html_e('Next page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span aria-hidden="true">›</span></a>
+            <?php $url_params['rm_reqpage'] = $data->total_pages; ?>
+            <a class="last-page button" href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>"><span class="screen-reader-text"><?php esc_html_e('Last page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span aria-hidden="true">»</span></a></span>
+            <?php } ?>
+    </div>
+    <?php } ?>
+    </div>
+</div>
+
+    <table class="rm-all-forms-table wp-list-table widefat striped table-view-list rm-position-relative" id="rm-card-area">
+            <thead>
+                <tr>
+                    <td class="manage-column column-cb check-column">
+                        <input class="rm_checkbox_group" id="cb-select-all-1" type="checkbox">
+                    </td>
+                    <?php if($data->sort_by == 'form_name') {
+                        if($data->descending == true) {
+                            $url_params['rm_descending'] = 0;
+                            ?>
+                            <th scope="col" id="rm-form-name" class="manage-column column-name column-primary sorted desc" aria-sort="descending" abbr="Form Name">
+                        <?php } else {
+                            $url_params['rm_descending'] = 1;
+                            ?>
+                            <th scope="col" id="rm-form-name" class="manage-column column-name column-primary sorted asc" aria-sort="ascending" abbr="Form Name">
+                        <?php }
+                    } else {
+                        $url_params['rm_descending'] = 1;
+                        ?>
+                    <th scope="col" id="rm-form-name" class="manage-column column-name column-primary sortable desc" aria-sort="ascending" abbr="Form Name">
+                        <?php } $url_params['rm_sortby'] = 'form_name'; $url_params['rm_reqpage'] = 1; ?>
+                        <a href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>" class="#"><span> <?php esc_html_e('Form Name', 'custom-registration-form-builder-with-submission-manager'); ?></span>
+                            <span class="sorting-indicators">
+                                <span class="sorting-indicator asc" aria-hidden="true"></span>
+                                <span class="sorting-indicator desc" aria-hidden="true"></span>
+                            </span>
+                        </a>
+                    </th>
+                    <th scope="col" id="rm-form-shortcode" class="manage-column column-shortcode"><?php esc_html_e('Shortcode', 'custom-registration-form-builder-with-submission-manager'); ?></th>
+                    <?php if($data->sort_by == 'form_submissions') {
+                        if($data->descending == true) {
+                            $url_params['rm_descending'] = 0;
+                            ?>
+                            <th scope="col" id="rm-form-submission" class="manage-column column-name column-primary sorted desc rm-text-center" aria-sort="descending" abbr="Submissions">
+                        <?php } else {
+                            $url_params['rm_descending'] = 1;
+                            ?>
+                            <th scope="col" id="rm-form-submission" class="manage-column column-name column-primary sorted asc rm-text-center" aria-sort="ascending" abbr="Submissions">
+                        <?php }
+                    } else {
+                        $url_params['rm_descending'] = 1;
+                        ?>
+                    <th scope="col" id="rm-form-submission" class="manage-column column-name column-primary sortable desc rm-text-center" aria-sort="ascending" abbr="Submissions">
+                    <?php } $url_params['rm_sortby'] = 'form_submissions'; $url_params['rm_reqpage'] = 1; ?>
+                        <a href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>" class="rm-text-center rm-di-flex"><span> <?php esc_html_e('Submissions', 'custom-registration-form-builder-with-submission-manager'); ?></span>
+                            <span class="sorting-indicators">
+                                <span class="sorting-indicator asc" aria-hidden="true"></span>
+                                <span class="sorting-indicator desc" aria-hidden="true"></span>
+                            </span>
+                        </a>
+                    </th>
+                    <th scope="col" id="rm-form-limit" class="manage-column column-limit rm-text-center"><?php esc_html_e('Limit', 'custom-registration-form-builder-with-submission-manager'); ?></th>
+                    <th scope="col" id="rm-form-attachments" class="manage-column column-attachments rm-text-center"><?php esc_html_e('Attachments', 'custom-registration-form-builder-with-submission-rm-text-centermanager'); ?></th>
+                    <th scope="col" id="rm-form-recent" class="manage-column column-recent"><?php esc_html_e('Recent', 'custom-registration-form-builder-with-submission-manager'); ?></th>
+                    <?php if($data->sort_by == 'created_on') {
+                        if($data->descending == true) {
+                            $url_params['rm_descending'] = 0;
+                            ?>
+                            <th scope="col" id="rm-form-created-date" class="manage-column column-name column-primary sorted desc" aria-sort="descending" abbr="Created on">
+                        <?php } else {
+                            $url_params['rm_descending'] = 1;
+                            ?>
+                            <th scope="col" id="rm-form-created-date" class="manage-column column-name column-primary sorted asc" aria-sort="ascending" abbr="Created on">
+                        <?php }
+                    } else {
+                        $url_params['rm_descending'] = 1;
+                        ?>
+                    <th scope="col" id="rm-form-created-date" class="manage-column column-name column-primary sortable desc" aria-sort="ascending" abbr="Created on">
+                        <?php } $url_params['rm_sortby'] = 'created_on'; $url_params['rm_reqpage'] = 1; ?>
+                        <a href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>" class="#"><span> <?php esc_html_e('Created on', 'custom-registration-form-builder-with-submission-manager'); ?></span>
+                            <span class="sorting-indicators">
+                                <span class="sorting-indicator asc" aria-hidden="true"></span>
+                                <span class="sorting-indicator desc" aria-hidden="true"></span>
+                            </span>
+                        </a>
+                    </th>
+                    <th scope="col" id="rm-form-badge-icons" class="manage-column column-recent"><?php esc_html_e('     ', 'custom-registration-form-builder-with-submission-manager'); ?></th>
+                </tr>
+            </thead>
         
-        <!-- Quick Form card
-        <div class="rmcard" id="rm-new-form">
-            <?php /*
-            $form = new RM_PFBC_Form("rm_form_quick_add");
-            $form->configure(array(
-                "prevent" => array("bootstrap", "jQuery"),
-                "action" => ""
-            ));
-            $form->addElement(new Element_HTML('<div class="rm-new-form">'));
-            $form->addElement(new Element_Hidden("rm_slug",'rm_form_quick_add'));
-            $form->addElement(new Element_Textbox('', "form_name", array("id" => "rm_form_name", "required" => 1)));
-            $form->addElement(new Element_Button(RM_UI_Strings::get('LABEL_CREATE_FORM'), "submit", array("id" => "rm_submit_btn", "onClick" => "jQuery.prevent_quick_add_form(event)", "class" => "rm_btn", "name" => "submit")));
-            $form->addElement(new Element_HTML('</div>'));
-            $form->render(); */
-            ?> 
-            </div> -->
-   
-                <div id="login_form" class="rmcard">
-                <div class="cardtitle">
-                    <input class="rm_checkbox" type="checkbox" disabled="disabled"><?php _e('Login Form', 'custom-registration-form-builder-with-submission-manager'); ?></div>                       
-                <div class="rm-form-shortcode"><b>[RM_Login]</b></div>
-                
-                <div class="rm-form-links">
-                    <div class="rm-form-row rm-formcard-dashboard">
-                        <a class="rm-form-settings" href="admin.php?page=rm_login_sett_manage">
-                            <?php _e('Dashboard', 'custom-registration-form-builder-with-submission-manager'); ?></a>
-                    </div>   
-                    <div class="rm-form-row rm-formcard-setup"><a class="rm-form-fields" href="admin.php?page=rm_login_field_manage"><?php _e('Fields', 'custom-registration-form-builder-with-submission-manager'); ?></a></div> 
-
-                </div>
-              </div>
-            
+        <tbody>
+            <?php if(empty($data->search_term) && empty($data->form_filter) && $data->curr_page == 1) { ?>
+            <tr>
+                <th scope="row" class="check-column"><input  type="checkbox" class="rm_checkbox_group rm-login-checkbox" disabled></th>
+                <td class="has-row-actions column-primary" data-colname="Form Name">
+                        <div class="rm-di-flex rm-align-items-center" >
+                            <span class="rm-fs-7 rm-mr-1 rm-lh-0"><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 20 20" height="20px" viewBox="0 0 20 20" width="20px" fill="#5f6368"><g><rect fill="none" height="20" width="20"/></g><g><g><path d="M15,10c-1.1,0-2-0.9-2-2V4h1V3H6v1h1v4c0,1.1-0.9,2-2,2v1h4.5v5.5L10,17l0.5-0.5V11H15V10z"/></g></g></svg></span>
+                            <strong>
+                                <a href="admin.php?page=rm_login_field_manage" class="row-title">
+                                  <?php esc_html_e('Login Form', 'custom-registration-form-builder-with-submission-manager'); ?>
+                                </a>
+                            </strong>
+                            </div>
+                    <div class="row-actions">
+                        <span class="rm-fields-link"><a href="admin.php?page=rm_login_field_manage" aria-label="<?php esc_html_e('Fields', 'custom-registration-form-builder-with-submission-manager'); ?>"><?php esc_html_e('Fields', 'custom-registration-form-builder-with-submission-manager'); ?></a> | </span>
+                        <span class="rm-login-dashboard"><a href="admin.php?page=rm_login_sett_manage" aria-label="<?php esc_html_e('Dashboard', 'custom-registration-form-builder-with-submission-manager'); ?>"> <?php esc_html_e('Dashboard', 'custom-registration-form-builder-with-submission-manager'); ?></a>  </span>
+                       <!-- <span class="view"> <?php add_thickbox(); ?><a id="rm_form_preview_action" class="thickbox rm_form_preview_btn rm_fd_link" href="<?php echo esc_url(add_query_arg(array('form_prev' => '1','form_type' => 'login', 'TB_iframe' => 'true', 'width' => '900', 'height' => '600'), get_permalink(get_site_option('rm_option_front_sub_page_id')))); ?>" aria-label="<?php esc_html_e('Preview', 'custom-registration-form-builder-with-submission-manager'); ?>"> <?php esc_html_e('Preview', 'custom-registration-form-builder-with-submission-manager'); ?></a></span>-->
+                    </div>
+                    <button type="button" class="toggle-row"><span class="screen-reader-text"><?php esc_html_e('Show more details', 'custom-registration-form-builder-with-submission-manager'); ?></span></button>
+                        
+                    </td>
+                <td data-colname="<?php esc_html_e('Login Shortcode', 'custom-registration-form-builder-with-submission-manager'); ?>">[RM_Login]</td>
+                <td class="rm-text-center">—</td>
+                <td class="rm-text-center">—</td>
+                <td class="rm-text-center">—</td>
+                <td>—</td>
+                <td>—</td>
+                <td>
+                    <div class="rm-form-badges-wrap rm-border-accent-color rm-border-opacity-50 rm-border-primary rm-border rm-rounded-1 rm-di-flex rm-bg-white">
+                        <span class="rm-form-badge rm-lh-normal rm-ps-1 rm-p-1 rm-border-accent-color rm-border-opacity-50 rm-border-right rm-border-primary rm-di-flex rm-align-items-center rm-position-relative rm-tooltips"><a href="<?php echo esc_url(admin_url('admin.php?page=rm_login_analytics')); ?>" class="rm-lh-0 rm-form-badge-link"><span class="rm-form-badge-icon rm-form-badge-login-analytics"><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="20px" viewBox="0 0 24 24" width="20px" fill="#2271b1"><rect fill="none" height="24" width="24"/><g><path d="M7.5,21H2V9h5.5V21z M14.75,3h-5.5v18h5.5V3z M22,11h-5.5v10H22V11z"/></g></svg></span></a><span class="rm-tooltip-wrap" > <span class="rm-tooltip-arrow"></span><?php esc_html_e('Login Analytics', 'custom-registration-form-builder-with-submission-manager'); ?></span></span>
+                        <span class="rm-form-badge rm-lh-normal rm-ps-1 rm-p-1 rm-border-accent-color rm-border-opacity-50 rm-border-right rm-border-primary rm-di-flex rm-align-items-center rm-position-relative rm-tooltips"><a href="<?php echo esc_url(admin_url('admin.php?page=rm_login_val_sec')); ?>" class="rm-lh-0 rm-form-badge-link"><span class="rm-form-badge-icon rm-form-badge-pass-validation"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="#2271b1"><path d="M0 0h24v24H0z" fill="none"/><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></span></a><span class="rm-tooltip-wrap" > <span class="rm-tooltip-arrow"></span><?php esc_html_e('Validation & Security', 'custom-registration-form-builder-with-submission-manager'); ?></span></span>
+                        <span class="rm-form-badge rm-lh-normal rm-ps-1 rm-p-1 rm-border-accent-color rm-border-opacity-50 rm-border-right rm-border-primary rm-di-flex rm-align-items-center rm-position-relative rm-tooltips"><a href="<?php echo esc_url(admin_url('admin.php?page=rm_login_recovery')); ?>" class="rm-lh-0 rm-form-badge-link"><span class="rm-form-badge-icon rm-form-badge-pass-recovery rm-fs-6"><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 20 20" height="20px" viewBox="0 0 20 20" width="20px" fill="#2271b1"><g><rect fill="none" height="20" width="20"/></g><g><path d="M17.5,8.5h-6.75C10.11,6.48,8.24,5,6,5c-2.76,0-5,2.24-5,5s2.24,5,5,5c2.24,0,4.11-1.48,4.75-3.5h0.75L13,13l1.5-1.5L16,13 l3-3L17.5,8.5z M6,12.5c-1.38,0-2.5-1.12-2.5-2.5S4.62,7.5,6,7.5S8.5,8.62,8.5,10S7.38,12.5,6,12.5z"/></g></svg></span></a><span class="rm-tooltip-wrap" > <span class="rm-tooltip-arrow"></span><?php esc_html_e('Password Recovery', 'custom-registration-form-builder-with-submission-manager'); ?></span></span>
+                        <span class="rm-form-badge rm-lh-normal rm-ps-1 rm-p-1 rm-border-accent-color rm-border-opacity-50 rm-border-right-0 rm-border-primary rm-di-flex rm-align-items-center rm-position-relative rm-tooltips"><a href="<?php echo esc_url(admin_url('admin.php?page=rm_login_sett_redirections')); ?>" class="rm-lh-0 rm-form-badge-link"><span class="rm-form-badge-icon rm-form-badge-redirection rm-fs-6"><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 20 20" height="20px" viewBox="0 0 20 20" width="20px" fill="#2271b1"><rect fill="none" height="20" width="20"/><path d="M9.25,14C9.25,10.41,6,7.5,2,7.5V6c3.56,0,6.64,1.96,8,4.76c0.72-1.49,1.96-2.87,3.68-4.08L11.5,4.5H17V10l-2.24-2.24 c-1.78,1.21-4.01,3.28-4.01,6.24h1.5v1.5h-4.5V14H9.25z"/></svg></span></a><span class="rm-tooltip-wrap" > <span class="rm-tooltip-arrow"></span><?php esc_html_e('Redirections', 'custom-registration-form-builder-with-submission-manager'); ?></span></span>
+                    </div> 
+                </td>
+            </tr>
+            <?php } ?>
         <?php
         $last_form_id= 0;
-        if (is_array($data->data) || is_object($data->data))
+        if ((is_array($data->data) || is_object($data->data)) && !empty($data->data)) {
             foreach ($data->data as $index=>$entry)
             {
                 if(!empty($entry->expiry_details) && $entry->expiry_details->state == 'not_expired' && $entry->expiry_details->criteria != 'date')
@@ -187,135 +332,301 @@ if (($rm_env_requirements & RM_REQ_EXT_CURL) && $data->newsletter_sub_link){ ?>
                 if($data->new_added_form == $entry->form_id || (isset($_GET['last_form_id']) && $_GET['last_form_id']<$entry->form_id))
                     $ex_form_card_class .= " rm_new_added_form";
                 ?>
-
-       <div id="<?php echo esc_attr($entry->form_id); ?>" class="rmcard rm-card-tour  <?php echo esc_attr($ex_form_card_class); ?>">    
-                <?php if($entry->count > 0): ?>
-                <div class='unread-box'>
-                    <a href="?page=rm_submission_manage&rm_form_id=<?php echo esc_attr($entry->form_id); ?>&rm_interval=<?php echo esc_attr($data->submission_type); ?>"><?php echo esc_html($entry->count); ?></a>
-                </div>
-                <?php endif; ?>
-                    <div class="cardtitle rm-title-tour">
-                        <input class="rm_checkbox rm-checkbox-tour" type="checkbox" onclick="rm_on_form_selection_change()" name="rm_selected_forms[]" value="<?php echo esc_attr($entry->form_id); ?>"><span class="rm_form_name rm_formcard_menu_icon" style="float: none; transform: none; margin: 0px;" data-menu-panel="#fcm_<?php echo esc_attr($entry->form_id); ?>"><?php echo esc_html($entry->form_name); ?></span>
+                <tr id="<?php echo esc_attr($entry->form_id); ?>" class="rmcard rm-card-tour  <?php echo esc_attr($ex_form_card_class); ?>">
+                <th scope="row" class="check-column"><input class="rm_checkbox_group rm_form_select_check" type="checkbox" name="rm_selected_forms[]" value="<?php echo esc_attr($entry->form_id); ?>"/></th>
+                <td class="title column-title has-row-actions column-primary rm-form-name-col" data-colname="Form Name">
+                    <strong>
+                        <a href="admin.php?page=rm_field_manage&rm_form_id=<?php echo esc_attr($entry->form_id); ?>" class="row-title rm-row-truncate">
+                    <?php echo esc_html($entry->form_name); ?>
+                    </a>
+                        <span>
+                        <?php
+                        if(!empty($entry->expiry_details) && $entry->expiry_details->state == 'expired')
+                            echo ' — ' . esc_html__('Limit Reached', 'custom-registration-form-builder-with-submission-manager');
+                        ?>
+                        </span>
+                    </strong>
+                    <div class="row-actions">
+                        <span class="edit"><a href="admin.php?page=rm_field_manage&rm_form_id=<?php echo esc_attr($entry->form_id); ?>"><?php esc_html_e('Fields', 'custom-registration-form-builder-with-submission-manager'); ?></a> | </span>
+                        <span class="view"><a href="admin.php?page=rm_form_sett_manage&rm_form_id=<?php echo esc_attr($entry->form_id); ?>" aria-label="Dashboard"> <?php esc_html_e('Dashboard', 'custom-registration-form-builder-with-submission-manager'); ?></a> | </span>
+                        <span class="delete"><a class="submitdelete" onclick="delete_form(<?php echo esc_attr($entry->form_id); ?>)" href="javascript:void(0)"><?php esc_html_e('Delete', 'custom-registration-form-builder-with-submission-manager'); ?></a> | </span>
+                        <span class="view"><a id="rm_form_preview_action" class="rm_form_preview_btn rm_fd_link" href="javascript:void(0)" aria-label="<?php esc_html_e('Preview', 'custom-registration-form-builder-with-submission-manager'); ?>" data-content="<?php echo esc_attr($entry->form_id); ?>"> <?php esc_html_e('Preview', 'custom-registration-form-builder-with-submission-manager'); ?></a> | </span>
+                        <!--<span class="view"><a id="rm_form_preview_action" class="thickbox rm_form_preview_btn rm_fd_link" href="<?php echo esc_url(add_query_arg(array('form_prev' => '1','form_id' => $entry->form_id, 'TB_iframe' => 'true', 'width' => '900', 'height' => '600'), get_permalink(get_site_option('rm_option_front_sub_page_id')))); ?>" aria-label="<?php esc_html_e('Preview', 'custom-registration-form-builder-with-submission-manager'); ?>"> <?php esc_html_e('Preview', 'custom-registration-form-builder-with-submission-manager'); ?></a> | </span> -->
+                        <span class="dublicate"><a class="submitduplicate" onclick="duplicate_form(<?php echo esc_attr($entry->form_id); ?>)" href="javascript:void(0)"><?php esc_html_e('Duplicate', 'custom-registration-form-builder-with-submission-manager'); ?></a> | </span>
+                        <span class="resetpassword"><a class="resetpassword" onclick="export_form(<?php echo esc_attr($entry->form_id); ?>)" href="javascript:void(0)"><?php esc_html_e('Export', 'custom-registration-form-builder-with-submission-manager'); ?></a></span>
                     </div>
-                    <span class="rm_formcard_menu_icon" data-menu-panel="#fcm_<?php echo esc_attr($entry->form_id); ?>"><i class="material-icons">&#xE5D3;</i></span>
-                    <div class="rm-last-submission">
-                          <b><?php if($subcount_display)
-                              printf(RM_UI_Strings::get('RM_SUB_LEFT_CAPTION'),$subcount_display);
-                              ?></b></div>
-                            
+                    <button type="button" class="toggle-row"><span class="screen-reader-text"><?php esc_html_e('Show more details', 'custom-registration-form-builder-with-submission-manager'); ?></span></button>
+                </td>
+                <td  data-colname="<?php esc_html_e('Shortcode', 'custom-registration-form-builder-with-submission-manager'); ?>"><div class="rm-shortcode-tour" id="rm-shortcode-<?php echo esc_attr($entry->form_id); ?>">[RM_Forms id='<?php echo esc_html($entry->form_id); ?>']</div></td>
+                
+                <td class="rm-text-center" data-colname="<?php esc_html_e('Submissions', 'custom-registration-form-builder-with-submission-manager'); ?>">      
+                <?php if($entry->count > 0) { ?>
+                    <div class='rm-unread-box rm-text-center'>
+                        <a href="?page=rm_submission_manage&rm_form_id=<?php echo esc_attr($entry->form_id); ?>&rm_interval=<?php echo esc_attr($data->submission_type); ?>"><?php echo esc_html($entry->count); ?></a>
+                    </div>
+                <?php } else { echo "—"; } ?>
+                </td>
+                <td class="rm-form-expiry-info rm-text-small rm-text-center" data-colname="<?php esc_html_e('Limit', 'custom-registration-form-builder-with-submission-manager'); ?>">
                     <?php
-                    if ($entry->count > 0)
-                    {
-                        foreach ($entry->submissions as $submission)
-                        {
-                            ?>
-                            <div class="rm-last-submission">
-
-                                <?php
-                                echo wp_kses_post($submission->gravatar . ' ' . RM_Utilities::localize_time($submission->submitted_on));
-                                ?>
-                            </div>
-                            <?php
+                    if(!empty($entry->expiry_details) && $entry->expiry_details->state == 'expired') {
+                        if(($entry->expiry_details->criteria == 'subs' || $entry->expiry_details->criteria == 'both') && absint($entry->expiry_details->sub_limit) > 0) {
+                            //$remaining_subs = absint($entry->expiry_details->sub_limit) - absint($entry->count);
+                            $bar_width = (absint($entry->count)/absint($entry->expiry_details->sub_limit))*100;
+                            echo "<div class='rm-form-expiry-info'><div class='rm-text-center'><span class='rm-total-limits-remaining'>".esc_html(absint($entry->expiry_details->sub_limit)-absint($entry->expiry_details->remaining_subs))."</span>/</span class='rm-total-limits'>".absint($entry->expiry_details->sub_limit)."</span></div><div class='rm-limit-counter'><span style='width:".esc_attr($bar_width)."%' class='limit-counter-progress rm-form-limit-expired'></span></div>";
+                        }
+                        if(($entry->expiry_details->criteria == 'date' || $entry->expiry_details->criteria == 'both') && $entry->expiry_details->remaining_days == 0) {
+                            echo "<div class='rm-form-expiry-info'><div class='rm-form-limit-days-remains rm-text-center rm-fw-bold rm-text-small rm-my-1'>".sprintf(esc_html__('Expired on %s', 'custom-registration-form-builder-with-submission-manager'),gmdate('d M Y', strtotime($entry->expiry_details->date_limit)))."</div></div>";
+                        }
+                    } else if(!empty($entry->expiry_details) && $entry->expiry_details->state == 'not_expired') {
+                        if($entry->expiry_details->criteria == 'date') {
+                            if($entry->expiry_details->remaining_days < 26) {
+                                echo "<div class='rm-form-expiry-info'><div class='rm-form-limit-days-remains rm-text-center rm-fw-bold rm-text-small rm-my-1'><span></span> ".wp_kses_post((string)sprintf(RM_UI_Strings::get('LABEL_FORM_EXPIRES_IN'),$entry->expiry_details->remaining_days))."</div></div></div>";
+                            } else {
+                                $exp_date = gmdate('d M Y', strtotime($entry->expiry_details->date_limit));
+                                echo "<div class='rm-form-expiry-info'><div class='rm-form-limit-days-remains rm-text-center rm-fw-bold rm-text-small rm-my-1'>".wp_kses_post((string)RM_UI_Strings::get('LABEL_FORM_EXPIRES_ON')." ".$exp_date)."</div></div>";
+                            }
+                        } else if($entry->expiry_details->criteria == 'subs') {
+                            //$remaining_subs = absint($entry->expiry_details->sub_limit) - absint($entry->count);
+                            if(absint($entry->expiry_details->sub_limit) > 0) {
+                                $bar_width = ((absint($entry->expiry_details->sub_limit)-absint($entry->expiry_details->remaining_subs))/absint($entry->expiry_details->sub_limit))*100;
+                            } else {
+                                $bar_width = 100;
+                            }
+                            echo "<div class='rm-form-expiry-info'><div class='rm-text-center'><span class='rm-total-limits-remaining'>".esc_html(absint($entry->expiry_details->sub_limit)-absint($entry->expiry_details->remaining_subs))."</span>/</span class='rm-total-limits'>".absint($entry->expiry_details->sub_limit)."</span></div><div class='rm-limit-counter'><span style='width:".esc_attr($bar_width)."%' class='limit-counter-progress rm-form-limit-in-progress'></span></div>";
+                        } else if($entry->expiry_details->criteria == 'both') {
+                            //$remaining_subs = absint($entry->expiry_details->sub_limit) - absint($entry->count);
+                            if(absint($entry->expiry_details->sub_limit) > 0) {
+                                $bar_width = ((absint($entry->expiry_details->sub_limit)-absint($entry->expiry_details->remaining_subs))/absint($entry->expiry_details->sub_limit))*100;
+                            } else {
+                                $bar_width = 100;
+                            }
+                            echo "<div class='rm-form-expiry-info'><div class='rm-text-center'><span class='rm-total-limits-remaining'>".esc_html(absint($entry->expiry_details->sub_limit)-absint($entry->expiry_details->remaining_subs))."</span>/</span class='rm-total-limits'>".absint($entry->expiry_details->sub_limit)."</span></div><div class='rm-limit-counter'><span style='width:".esc_attr($bar_width)."%' class='limit-counter-progress rm-form-limit-in-progress'></span></div> <div class='rm-form-limit-days-remains rm-text-center rm-fw-bold rm-text-small rm-my-1'>".wp_kses_post((string)sprintf(RM_UI_Strings::get('LABEL_FORM_EXPIRES_IN'),$entry->expiry_details->remaining_days))."</div></div>";
+                        } else if($entry->expiry_details->criteria == 'status' && defined('REGMAGIC_ADDON')) {
+                            echo "<div class='rm-form-expiry-info'><div class='rm-form-limit-days-remains rm-text-center rm-fw-bold rm-text-small rm-my-1'>".esc_html($entry->expiry_details->status)."</div></div>";
+                        }
+                    } else { echo "—"; }
+                    ?>
+                </td>
+                <td class="rm-text-center" data-colname="<?php esc_html_e('Attachments', 'custom-registration-form-builder-with-submission-manager'); ?>"><a href="?page=rm_attachment_manage&rm_form_id=<?php echo esc_attr($entry->form_id); ?>"><?php echo empty($entry->form_attachments) ? '0' : esc_html(count($entry->form_attachments)); ?></a></td>
+                <td class="rm-last-submission-avatar" data-colname="<?php esc_html_e('Recent', 'custom-registration-form-builder-with-submission-manager'); ?>">
+                   <?php
+                   if ($entry->count > 0) {
+                    foreach ($entry->submissions as $submission) {
+                        echo "<div class='rm-tooltips rm-di-flex'>". wp_kses_post((string)$submission->gravatar).'<span class="rm-tooltip-wrap"><span class="rm-tooltip-arrow"></span>'.esc_html(RM_Utilities::localize_time($submission->submitted_on)).'</span></div>';
+                        //echo '<div class="rm-box-card-item"><span>sss</span></div>';
                         }
                     } else
-                        echo '<div class="rm-last-submission"></div>';
+                        echo '—';
                     ?>
-                    <?php
-                    if(!empty($entry->expiry_details) && $entry->expiry_details->state == 'expired')
-                        echo "<div class='rm-form-expiry-info'>".wp_kses_post(RM_UI_Strings::get('LABEL_FORM_EXPIRED'))."</div>";
-                    else if(!empty($entry->expiry_details) && $entry->expiry_details->state == 'not_expired' && $entry->expiry_details->criteria != 'subs')
-                    {
-                        if($entry->expiry_details->remaining_days < 26)
-                           echo "<div class='rm-form-expiry-info'>".wp_kses_post(sprintf(RM_UI_Strings::get('LABEL_FORM_EXPIRES_IN'),$entry->expiry_details->remaining_days))."</div>";
-                        else
-                        {
-                           $exp_date = gmdate('d M Y', strtotime($entry->expiry_details->date_limit));
-                           echo "<div class='rm-form-expiry-info'>".wp_kses_post(RM_UI_Strings::get('LABEL_FORM_EXPIRES_ON'))." {$exp_date}</div>";
-                        }
-                    }
-                     
-                    ?><div class="rm-form-shortcode">
-                        <?php if($data->def_form_id == $entry->form_id && $entry->form_type == 1) { ?>
-                    <i class="material-icons rm_def_form_star rm_def_star_tour" onclick="make_me_a_star(this)" id="rm-star_<?php echo esc_attr($entry->form_id); ?>">&#xe838</i>
-                        <?php } 
-                        else { 
-                                if($entry->form_type == 1){ ?>
-                            <i class="material-icons rm_not_def_form_star rm_def_star_tour" onclick="make_me_a_star(this)" id="rm-star_<?php echo esc_attr($entry->form_id); ?>">&#xe838</i>
-                            
-                              <?php  }
-                              else { ?>
-                            <i class="material-icons rm_not_def_form_star rm_def_star_tour" id="rm-star_<?php echo esc_attr($entry->form_id); ?>">&#xe838</i>
-                            <span class="rm-star-tip"><?php echo wp_kses_post(RM_UI_Strings::get('NOTE_DEFAULT_FORM')); ?></span>
-                                <?php }
-                         } ?>
-                    <b class="rm-shortcode-tour">[RM_Form id='<?php echo esc_html($entry->form_id); ?>']</b></div>
-                    <div class="rm-form-links">
-                                <div class="rm-form-row rm-formcard-dashboard"><a class="rm-form-settings" href="admin.php?page=rm_form_sett_manage&rm_form_id=<?php echo esc_attr($entry->form_id); ?>"><?php _e('Dashboard', 'custom-registration-form-builder-with-submission-manager') ?></a>
-                                </div>  
-                                <div class="rm-form-row rm-formcard-setup"><a class="rm-form-fields" href="admin.php?page=rm_field_manage&rm_form_id=<?php echo esc_attr($entry->form_id); ?>"><?php _e('Fields', 'custom-registration-form-builder-with-submission-manager') ?></a></div> 
-                     </div>
-                    <?php include RM_ADMIN_DIR."views/template_rm_formcard_menu.php";?>                </div>
+                </td>
+                <td data-colname="<?php esc_html_e('Created on', 'custom-registration-form-builder-with-submission-manager'); ?>"><?php echo wp_kses((string)RM_Utilities::localize_time_short($entry->created_on, null, false, false, true),RM_Utilities::expanded_allowed_tags()); ?></td>
+                    <td >
+                    <div class="rm-form-badges-wrap rm-border-accent-color rm-border-opacity-50 rm-border-primary rm-border rm-rounded-1 rm-di-flex rm-bg-white">
+                        <span class="rm-form-badge rm-lh-normal rm-ps-1 rm-p-1 rm-border-accent-color rm-border-opacity-50 rm-border-right rm-border-primary rm-di-flex rm-align-items-center rm-position-relative rm-tooltips" aria-label="Form Analytics"><a href="?page=rm_analytics_show_form&rm_form_id=<?php echo esc_attr($entry->form_id); ?>" class="rm-lh-0 rm-form-badge-link"><span class="rm-form-badge-icon rm-form-badge-login-analytics"><svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="20px" viewBox="0 0 24 24" width="20px" fill="#2271b1"><rect fill="none" height="24" width="24"/><g><path d="M7.5,21H2V9h5.5V21z M14.75,3h-5.5v18h5.5V3z M22,11h-5.5v10H22V11z"/></g></svg></span></a><span class="rm-tooltip-wrap" > <span class="rm-tooltip-arrow"></span><?php esc_html_e('Form Analytics', 'custom-registration-form-builder-with-submission-manager'); ?></span></span>
+                        <span class="rm-form-badge rm-lh-normal rm-ps-1 rm-p-1 rm-border-accent-color rm-border-opacity-50 rm-border-right rm-border-primary rm-di-flex rm-align-items-center m-position-relative rm-tooltips" aria-label="From Custom Status"><a href="?page=rm_form_manage_cstatus&rm_form_id=<?php echo esc_attr($entry->form_id); ?>" class="rm-lh-0 rm-form-badge-link"><span class="rm-form-badge-icon rm-form-badge-label"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="#2271b1"><path d="M0 0h24v24H0z" fill="none"/><path d="M17.63 5.84C17.27 5.33 16.67 5 16 5L5 5.01C3.9 5.01 3 5.9 3 7v10c0 1.1.9 1.99 2 1.99L16 19c.67 0 1.27-.33 1.63-.84L22 12l-4.37-6.16z"/></svg></span></a><span class="rm-tooltip-wrap" > <span class="rm-tooltip-arrow"></span><?php esc_html_e('Custom Status', 'custom-registration-form-builder-with-submission-manager'); ?></span></span>
+                        <span class="rm-form-badge rm-lh-normal rm-ps-1 rm-p-1 rm-border-accent-color rm-border-opacity-50 rm-border-right rm-border-primary rm-di-flex rm-align-items-center m-position-relative rm-tooltips" aria-label="Automation"><a href="?page=rm_ex_chronos_manage_tasks&rm_form_id=<?php echo esc_attr($entry->form_id); ?>" class="rm-lh-0 rm-form-badge-link"><span class="rm-form-badge-icon rm-form-badge-automation rm-fs-6"><svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24" width="20px" fill="#2271b1"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/></svg></span></a><span class="rm-tooltip-wrap" > <span class="rm-tooltip-arrow"></span><?php esc_html_e('Automation', 'custom-registration-form-builder-with-submission-manager'); ?></span></span>
+                        <!--<span class="rm-form-badge rm-lh-normal rm-ps-1 rm-p-1 rm-border-accent-color rm-border-right rm-border-primary rm-di-flex rm-align-items-center m-position-relative rm-tooltips" aria-label="Close"><a onclick="duplicate_form(<?php echo esc_attr($entry->form_id); ?>)" href="javascript:void(0)" class="rm-lh-0 rm-form-badge-link"><span class="material-icons rm-fs-6" >content_copy</span></a><span class="rm-tooltip-wrap" > <span class="rm-tooltip-arrow"></span><?php esc_html_e('Duplicate', 'custom-registration-form-builder-with-submission-manager'); ?></span></span>-->
+                        <?php if(defined('REGMAGIC_ADDON')) { ?>
+                        <span class="rm-form-badge rm-lh-normal rm-ps-1 rm-p-1 rm-inline-block rm-tooltips" aria-label="Close"><a onclick="rm_open_dial(<?php echo esc_attr($entry->form_id); ?>)" href="javascript:void(0)" class="rm-lh-0 rm-form-badge-link"><span class="material-icons rm-fs-6" >html</span></a><span class="rm-tooltip-wrap" > <span class="rm-tooltip-arrow"></span><?php esc_html_e('Form embed code', 'custom-registration-form-builder-with-submission-manager'); ?></span></span>
+                        <?php } ?>
+                    </div> 
+                    </td>
+            </tr>
+
+   
                 <?php
-            } else
-            echo "<h4>" . wp_kses_post(RM_UI_Strings::get('LABEL_NO_FORMS')) . "</h4>";
+            }
+         } else {
+            echo "<tr><td colspan='9'>" . esc_html__('No forms found', 'custom-registration-form-builder-with-submission-manager') . "</h4></td></tr>";
+         }
         ?>
+            
+            
+        </tbody>
+        <tfoot>
+      <tr>
+                    <td class="manage-column column-cb check-column">
+                        <input class="rm_checkbox_group" id="cb-select-all-1" type="checkbox">
+                    </td>
+                    <?php if($data->sort_by == 'form_name') {
+                        if($data->descending == true) {
+                            $url_params['rm_descending'] = 0;
+                            ?>
+                            <th scope="col" id="rm-form-name" class="manage-column column-name column-primary sorted desc" aria-sort="descending" abbr="Form Name">
+                        <?php } else {
+                            $url_params['rm_descending'] = 1;
+                            ?>
+                            <th scope="col" id="rm-form-name" class="manage-column column-name column-primary sorted asc" aria-sort="ascending" abbr="Form Name">
+                        <?php }
+                    } else {
+                        $url_params['rm_descending'] = 1;
+                        ?>
+                    <th scope="col" id="rm-form-name" class="manage-column column-name column-primary sortable desc" aria-sort="ascending" abbr="Form Name">
+                        <?php } $url_params['rm_sortby'] = 'form_name'; $url_params['rm_reqpage'] = 1; ?>
+                        <a href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>" class="#"><span> <?php esc_html_e('Form Name', 'custom-registration-form-builder-with-submission-manager'); ?></span>
+                            <span class="sorting-indicators">
+                                <span class="sorting-indicator asc" aria-hidden="true"></span>
+                                <span class="sorting-indicator desc" aria-hidden="true"></span>
+                            </span>
+                        </a>
+                    </th>
+                    <th scope="col" id="rm-form-shortcode" class="manage-column column-shortcode"><?php esc_html_e('Shortcode', 'custom-registration-form-builder-with-submission-manager'); ?></th>
+                    <?php if($data->sort_by == 'form_submissions') {
+                        if($data->descending == true) {
+                            $url_params['rm_descending'] = 0;
+                            ?>
+                            <th scope="col" id="rm-form-submission" class="manage-column column-name column-primary sorted desc rm-text-center" aria-sort="descending" abbr="Submissions">
+                        <?php } else {
+                            $url_params['rm_descending'] = 1;
+                            ?>
+                            <th scope="col" id="rm-form-submission" class="manage-column column-name column-primary sorted asc rm-text-center" aria-sort="ascending" abbr="Submissions">
+                        <?php }
+                    } else {
+                        $url_params['rm_descending'] = 1;
+                        ?>
+                    <th scope="col" id="rm-form-submission" class="manage-column column-name column-primary sortable desc rm-text-center" aria-sort="ascending" abbr="Submissions">
+                    <?php } $url_params['rm_sortby'] = 'form_submissions'; $url_params['rm_reqpage'] = 1; ?>
+                        <a href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>" class="rm-text-center rm-di-flex"><span> <?php esc_html_e('Submissions', 'custom-registration-form-builder-with-submission-manager'); ?></span>
+                            <span class="sorting-indicators">
+                                <span class="sorting-indicator asc" aria-hidden="true"></span>
+                                <span class="sorting-indicator desc" aria-hidden="true"></span>
+                            </span>
+                        </a>
+                    </th>
+                    <th scope="col" id="rm-form-limit" class="manage-column column-limit rm-text-center"><?php esc_html_e('Limit', 'custom-registration-form-builder-with-submission-manager'); ?></th>
+                    <th scope="col" id="rm-form-attachments" class="manage-column column-attachments rm-text-center"><?php esc_html_e('Attachments', 'custom-registration-form-builder-with-submission-rm-text-centermanager'); ?></th>
+                    <th scope="col" id="rm-form-recent" class="manage-column column-recent"><?php esc_html_e('Recent', 'custom-registration-form-builder-with-submission-manager'); ?></th>
+                    <?php if($data->sort_by == 'created_on') {
+                        if($data->descending == true) {
+                            $url_params['rm_descending'] = 0;
+                            ?>
+                            <th scope="col" id="rm-form-created-date" class="manage-column column-name column-primary sorted desc" aria-sort="descending" abbr="Created on">
+                        <?php } else {
+                            $url_params['rm_descending'] = 1;
+                            ?>
+                            <th scope="col" id="rm-form-created-date" class="manage-column column-name column-primary sorted asc" aria-sort="ascending" abbr="Created on">
+                        <?php }
+                    } else {
+                        $url_params['rm_descending'] = 1;
+                        ?>
+                    <th scope="col" id="rm-form-created-date" class="manage-column column-name column-primary sortable desc" aria-sort="ascending" abbr="Created on">
+                        <?php } $url_params['rm_sortby'] = 'created_on'; $url_params['rm_reqpage'] = 1; ?>
+                        <a href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>" class="#"><span> <?php esc_html_e('Created on', 'custom-registration-form-builder-with-submission-manager'); ?></span>
+                            <span class="sorting-indicators">
+                                <span class="sorting-indicator asc" aria-hidden="true"></span>
+                                <span class="sorting-indicator desc" aria-hidden="true"></span>
+                            </span>
+                        </a>
+                    </th>
+                    <th scope="col" id="rm-form-badge-icons" class="manage-column column-recent"><?php esc_html_e('     ', 'custom-registration-form-builder-with-submission-manager'); ?></th>
+                </tr>
+
+          
+        </tfoot>
+        
+    </table>
+
+    <div class="tablenav bottom">
+    <div class="alignleft actions bulkactions">
+        <label for="bulk-action-selector-bottom" class="screen-reader-text"><?php esc_html_e('Select bulk action', 'custom-registration-form-builder-with-submission-manager'); ?></label>
+        <select id="bulk-action-selector-bottom">
+            <option value="-1"><?php esc_html_e('Bulk actions', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+            <option value="export"><?php esc_html_e('Export', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+            <option value="delete"><?php esc_html_e('Delete', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+        </select>
+        <input type="button" id="rm-form-bulk-action-bottom" onclick="rm_apply_bulk_action(this)" class="button action" value="Apply">
+        <?php if(defined('REGMAGIC_ADDON')) {
+            if(version_compare(RM_ADDON_PLUGIN_VERSION, '5.3.0.0') >= 0) { ?>
+           <!-- <div class="rm-rollback-link rm-mt-2 rm-text-underline"><a href="javascript:void(0)" onclick="rm_forms_roll_back()" class="rm-text-decoration-underline"><?php esc_html_e('Switch to Cards View', 'custom-registration-form-builder-with-submission-manager'); ?> </a></div>-->
+            <?php }
+        } else { ?>
+            <!--<div class="rm-rollback-link rm-mt-2 rm-text-underline"><a href="javascript:void(0)" onclick="rm_forms_roll_back()" class="rm-text-decoration-underline"><?php esc_html_e('Switch to Cards View', 'custom-registration-form-builder-with-submission-manager'); ?></a></div-->
+        <?php } ?>
     </div>
-    <?php if ($data->total_pages > 1): ?>
-        <ul class="rmpagination">
-            <?php if ($data->curr_page > 1): ?>
-                <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->curr_page - 1);
-        if ($data->sort_by) echo'&rm_sortby=' . esc_attr($data->sort_by);if (!$data->descending) echo'&rm_descending=' . esc_attr($data->descending); ?>">«</a></li>
-                <?php
-            endif;
-            for ($i = 1; $i <= $data->total_pages; $i++):
-                if ($i != $data->curr_page):
-                    ?>
-                    <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($i);
-            if ($data->sort_by) echo'&rm_sortby=' . esc_attr($data->sort_by);if (!$data->descending) echo'&rm_descending=' . esc_attr($data->descending); ?>"><?php echo esc_html($i); ?></a></li>
-                <?php else:
-                    ?>
-                    <li><a class="active" href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_html($i);
-            if ($data->sort_by) echo'&rm_sortby=' . esc_attr($data->sort_by);if (!$data->descending) echo'&rm_descending=' . esc_attr($data->descending); ?>"><?php echo esc_html($i); ?></a></li> <?php
-                endif;
-            endfor;
-            ?>
-            <?php if ($data->curr_page < $data->total_pages): ?>
-                <li><a href="?page=<?php echo esc_attr($data->rm_slug) ?>&rm_reqpage=<?php echo esc_attr($data->curr_page + 1);
-        if ($data->sort_by) echo'&rm_sortby=' . esc_attr($data->sort_by);if (!$data->descending) echo'&rm_descending=' . esc_attr($data->descending); ?>">»</a></li>
-            <?php endif;
-        ?>
-        </ul>
-    <?php
-    endif;
-    
-  
-    
-    /** BEGIN: Banner at Footer **/
-if($data->should_show_fb_footer) {
-?>
-    <div id="fb_sub_footer" class="rm-footer-banner">
-        <div class="rm-fb-like-us">
-            <a onclick="save_fb_subscribe_action()">
-                <img src="<?php echo plugin_dir_url(dirname(dirname(__FILE__))) . 'images/fb-thumb-up.png'; ?>"> Like us on Facebook for upgrade notifications, important tips and feature updates.
-            </a>
-        </div>
-    </div>
-<?php
-} 
-
-
-/** FOOTER ENDS **/
- 
-
-    
-  ?> 
-    
         
 
+    <?php
+    if($data->total_pages) {
+        $url_params['rm_descending'] = $data->descending ? 1 : 0;
+        $url_params['rm_sortby'] = empty($data->sort_by) ? null : $data->sort_by;
+        ?>
+    <div class="tablenav-pages"><span class="displaying-num"><?php echo wp_kses_post((string)sprintf(esc_html__('%s items', 'custom-registration-form-builder-with-submission-manager'), $data->filtered_count)); ?></span>
+        <span class="pagination-links">
+            <?php if($data->curr_page == 1) { ?>
+            <span class="tablenav-pages-navspan button disabled" aria-hidden="true">«</span>
+            <span class="tablenav-pages-navspan button disabled" aria-hidden="true">‹</span>
+            <?php } else { ?>
+            <?php $url_params['rm_reqpage'] = 1; ?>
+            <a class="first-page button" href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>"><span class="screen-reader-text"><?php esc_html_e('First page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span class="" aria-hidden="true">«</span></a>
+            <?php $url_params['rm_reqpage'] = $data->curr_page - 1; ?>
+            <a class="prev-page button" href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>"><span class="screen-reader-text"><?php esc_html_e('Previous page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span class="" aria-hidden="true">‹</span></a>
+            <?php } ?>
+            <span class="paging-input">
+                <label for="current-page-selector" class="screen-reader-text"><?php esc_html_e('Current Page', 'custom-registration-form-builder-with-submission-manager'); ?></label>
+                <input class="current-page" type="text" id="rm_reqpage_bottom" name="rm_reqpage" value="<?php echo esc_attr($data->curr_page); ?>" size="1" aria-describedby="table-paging">
+                <span class="tablenav-paging-text"> of <span class="total-pages"><?php echo esc_html($data->total_pages); ?></span></span>
+            </span>
+            <?php if($data->curr_page >= $data->total_pages) { ?>
+            <span class="screen-reader-text"><?php esc_html_e('Next page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span class="tablenav-pages-navspan button disabled" aria-hidden="true">›</span>
+            <span class="screen-reader-text"><?php esc_html_e('Last page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span class="tablenav-pages-navspan button disabled" aria-hidden="true">»</span></span>
+            <?php } else { ?>
+            <?php $url_params['rm_reqpage'] = $data->curr_page + 1; ?>
+            <a class="next-page button" href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>"><span class="screen-reader-text"><?php esc_html_e('Next page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span aria-hidden="true">›</span></a>
+            <?php $url_params['rm_reqpage'] = $data->total_pages; ?>
+            <a class="last-page button" href="<?php echo esc_url(add_query_arg($url_params, admin_url("admin.php"))); ?>"><span class="screen-reader-text"><?php esc_html_e('Last page', 'custom-registration-form-builder-with-submission-manager'); ?></span><span aria-hidden="true">»</span></a></span>
+            <?php } ?>
+    </div>
+    <?php } ?>
+    </form>
+    </div>
 
-    
+<!-- 
+
+<div class="rm-footer-promotion">
+    <?php $support_url = defined('REGMAGIC_ADDON') ? 'https://registrationmagic.com/help-support/' : 'https://wordpress.org/plugins/custom-registration-form-builder-with-submission-manager/'; ?>
+    <div class="rm-text-center"> <a href="<?php echo esc_url($support_url); ?>" target="_blank" class="rm-text-decoration-none"> <?php esc_html_e('Create Support Ticket', 'custom-registration-form-builder-with-submission-manager'); ?> <span class="dashicons dashicons-external rm-fs-6"></span></a></div>
+</div>
+
+ -->
+
+
+
     <?php $new_form_pop_up_style = (isset($_GET['create_new_form'])) ? 'style="display:block"' : 'style="display:none"';?>
     <!-- Add New Form popup -->
+    
+    <!-- Removed 4th July 2024
+    
+    <div id="rm_add_new_form_popup" class="rm-modal-view" <?php echo wp_kses_post((string)$new_form_pop_up_style);?>>
+        <div class="rm-modal-overlay rm-form-popup-overlay-fade-in"></div>
+
+        <div class="rm_add_new_form_wrap rm-create-new-from rm-form-popup-out">
+            
+            <div class="rm-box-row rm-box-center rm-box-secondary-bg">
+                    <div class="rm-box-col-12 rm-box-white-bg rm-form-box">                       
+                        <div class="rm-modal-titlebar rm-new-form-popup-header">
+                                <div class="rm-modal-title">
+                                    <?php esc_html_e('Add New Form', 'custom-registration-form-builder-with-submission-manager'); ?>
+                                </div>
+                            <div class="rm-modal-subtitle">
+                                <a href="<?php echo esc_url(admin_url("admin.php?page=rm_form_setup")); ?>" title=" <?php esc_html_e('Form Template', 'custom-registration-form-builder-with-submission-manager'); ?>" class="rm-text-small">
+                                <?php esc_html_e('Or choose from a template.', 'custom-registration-form-builder-with-submission-manager'); ?>
+                               </a>
+                            </div>
+                            
+                                <span class="rm-modal-close material-icons">close</span>
+                            </div>
+                        <div class="rm-modal-container">
+                            <?php require RM_ADMIN_DIR . 'views/template_rm_new_form_exerpt.php'; ?>
+                        </div>
+                    </div> 
+            </div>
+
+        </div>
+    </div>
+    
+    -->
+    
+    
     <div id="rm_add_new_form_popup" class="rm-modal-view" <?php echo wp_kses_post($new_form_pop_up_style);?>>
         <div class="rm-modal-overlay rm-form-popup-overlay-fade-in"></div>
 
@@ -325,9 +636,9 @@ if($data->should_show_fb_footer) {
                     <div class="rm-box-col-6 rm-box-white-bg rm-form-box">                       
                         <div class="rm-modal-titlebar rm-new-form-popup-header">
                                 <div class="rm-modal-title">
-                                    <?php _e('Quick Create Form', 'custom-registration-form-builder-with-submission-manager'); ?>
+                                    <?php esc_html_e('Quick Create Form', 'custom-registration-form-builder-with-submission-manager'); ?>
                                 </div>
-                            <div class="rm-modal-subtitle"><?php _e('Creates a new form with all the essential settings.', 'custom-registration-form-builder-with-submission-manager'); ?></div>
+                            <div class="rm-modal-subtitle"><?php esc_html_e('Creates a new form with all the essential settings.', 'custom-registration-form-builder-with-submission-manager'); ?></div>
                             
                             </div>
                         <div class="rm-modal-container">
@@ -336,27 +647,30 @@ if($data->should_show_fb_footer) {
                     </div>
                     <div class="rm-box-col-6 rm-form-box">
                             <span  class="rm-modal-close material-icons">close</span>
-                        <div class="rm-template-modal-heading"><?php _e('Looking for form templates?', 'custom-registration-form-builder-with-submission-manager'); ?></div>
-                        <div class="rm-template-modal-subheading"><?php _e('Build using our form wizard to create awesome looking ready-to-use forms within minutes!', 'custom-registration-form-builder-with-submission-manager'); ?></div>
-                        <div class="rm-template-modal-button"><a href="<?php echo admin_url("admin.php?page=rm_form_setup");?>"><?php _e('Start Now!', 'custom-registration-form-builder-with-submission-manager'); ?></a></div>
+                        <div class="rm-template-modal-heading"><?php esc_html_e('Looking for form templates?', 'custom-registration-form-builder-with-submission-manager'); ?></div>
+                        <div class="rm-template-modal-subheading"><?php esc_html_e('Build using our form wizard to create awesome looking ready-to-use forms within minutes!', 'custom-registration-form-builder-with-submission-manager'); ?></div>
+                        <div class="rm-template-modal-button"><a href="<?php echo admin_url("admin.php?page=rm_form_setup");?>"><?php esc_html_e('Start Now!', 'custom-registration-form-builder-with-submission-manager'); ?></a></div>
                     </div>
                 
             </div>
 
         </div>
     </div>
+    
+    
+    
     <!-- End: Add New Form popup -->
     
     <!-- Form Template popup -->
     
-    <div id="rm_add_new_form_popup_template" class="rm-modal-view" <?php echo wp_kses_post($new_form_pop_up_style);?>>
+    <div id="rm_add_new_form_popup_template" class="rm-modal-view" <?php echo wp_kses_post((string)$new_form_pop_up_style);?>>
         <div class="rm-modal-overlay rm-form-popup-overlay-fade-in"></div>
 
         <div class="rm_add_new_form_wrap rm-create-new-from rm-form-popup-out">
             <div class="rm-modal-titlebar rm-form-template-popup-header">
                 <div class="rm-modal-title">
-                    <img src="<?php echo RM_BASE_URL;?>images/rm-logo-icon.svg"><?php _e('Select Your Registration Form Template','custom-registration-form-builder-with-submission-manager'); ?>
-                    <span class="rm-form-template-subtitle" style="display:none;"> <?php _e('All templates can be modified after selection. You can add, remove or edit form fields, customize emails and fine tune settings.','custom-registration-form-builder-with-submission-manager'); ?></span>
+                    <img src="<?php echo esc_url(RM_BASE_URL);?>images/rm-logo-icon.svg"><?php esc_html_e('Select Your Registration Form Template','custom-registration-form-builder-with-submission-manager'); ?>
+                    <span class="rm-form-template-subtitle" style="display:none;"> <?php esc_html_e('All templates can be modified after selection. You can add, remove or edit form fields, customize emails and fine tune settings.','custom-registration-form-builder-with-submission-manager'); ?></span>
                 </div>
                 <span  class="rm-modal-close">&times;</span>
             </div>
@@ -377,12 +691,12 @@ if($data->should_show_fb_footer) {
 
             <div class="rm-modal-titlebar rm-new-form-popup-header">
                 <div class="rm-modal-title">
-                    Publish
+                <?php esc_html_e('Publish','custom-registration-form-builder-with-submission-manager'); ?>
                 </div>
                 <span class="rm-modal-close">&times;</span>
             </div>
             <div class="rm-modal-container">
-                <?php $form_id_to_publish = $entry->form_id; ?>
+                <?php $form_id_to_publish = isset($entry->form_id) ? $entry->form_id : 1; ?>
                 <?php include_once RM_ADMIN_DIR . 'views/template_rm_formflow_publish.php'; ?>
             </div>
         </div>
@@ -390,74 +704,211 @@ if($data->should_show_fb_footer) {
     </div>
     
         <!-- End Form Publish Pop-up -->
+        
+        <!-- Single Modal -->
+            <div id="rm-form-preview-modal" class="rm-modal-view modal" style="display:none;">
+                 <div class="rm-modal-overlay rm-field-popup-overlay-fade-in"></div>
+                <div class="rm_field_row_setting_wrap rm-select-row-setting rm-field-popup-out">
+                    <div class="rm-modal-titlebar rm-new-form-popup-header">
+                        <div class="rm-modal-title">
+                            <?php esc_html_e('Form Preview', 'custom-registration-form-builder-with-submission-manager'); ?>
+                        </div>
+                        <span class="rm-modal-close rm-text-center">×</span>
+                    </div>
+                    <div id="rm-iframe-loader" class="rm-loader"></div>
+                    <div id="rm-modal-content-placeholder">
+                        <iframe src="" name="iframe_a" id="rm-form-preview-frame">
+                            <p><?php esc_html_e('Your browser does not support iframes.', 'custom-registration-form-builder-with-submission-manager'); ?></p>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
     
-        <div id="rm_embed_code_dialog" style="display:none"><textarea readonly="readonly" id="rm_embed_code" onclick="jQuery(this).focus().select()"></textarea><img class="rm-close" src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . 'images/close-rm.png'); ?>" onclick="jQuery('#rm_embed_code_dialog').fadeOut()"></div>
+        <div id="rm_embed_code_dialog" style="display:none"><textarea readonly="readonly" id="rm_embed_code" onclick="jQuery(this).focus().select()"></textarea><div id="rm_embed_warning"><?php echo RM_UI_Strings::get('EMBED_CODE_INFO') ?></div><img class="rm-close" src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . 'images/close-rm.png'); ?>" onclick="jQuery('#rm_embed_code_dialog').fadeOut()"></div>
         
 </div>
- 
-     
-   <div class="rm-side-banner">
-        <div class="rm-sidebanner-image">
-            <img src="<?php echo plugin_dir_url(dirname(dirname(__FILE__))) . 'images/rm-support-banner.png'; ?>">
-        </div>
-        <div class="rm-sidebanner-mg-logo">
-            <img src="<?php echo plugin_dir_url(dirname(dirname(__FILE__))) . 'images/mg-logo.png'; ?>">
-        </div>
-        <div class="sidebanner-content-wrapper">
-            <div class="sidebanner-text-content">
-                <div class="sidebanner-text">Something not working?</div>
-                <div class="sidebanner-help-text">We want to help!</div>
-
-                <p>If you face any issues with our plugin, or have questions, we're here to help!</p>			
-            </div>
-            <div class="rm-sidebanner-buttons">
-                <div class="rm-sidebanner-button">
-                    <a target="_blank" href="https://wordpress.org/plugins/custom-registration-form-builder-with-submission-manager/">Create Support Ticket</a>			
-                </div>
-
-                <div class="rm-sidebanner-button" style="display:none">
-                    <a target="_blank" href="https://metagauss.com/helpdesk">Check your Ticket Status</a>
-                </div>			
-            </div>
-
-
-        </div> <!-- sidebanner-content-wrapper -->
-    </div> 
+</div>
+<form name="rm_form_manager" id="rm_form_manager_operartionbar" class="rm_static_forms" method="post" action="">
+    <input type="hidden" name="rm_slug" value="" id="rm_slug_input_field">
+    <input type="hidden" name="rm_selected" value="">
+    <?php wp_nonce_field('rm_form_manager_template'); ?>
+    <input type="hidden" name="req_source" value="form_manager">
+</form>
     
+    <div class="rm-footer-promotion rm-w-100 rm-box-w-100 rm-d-flex rm-justify-content-center" style="display: none !important ;">
+        <div class="rm-text-center"> <a href="https://registrationmagic.com/translate-wordpress-plugins/" target="_blank" class="rm-text-decoration-none rm-di-flex"> <?php echo esc_html($data->translation_promo); ?> <span class="dashicons dashicons-translation rm-ml-2"></span></a></div>
+    </div>
     
-  <pre class="rm-pre-wrapper-for-script-tags"><script type="text/javascript">
+<pre class="rm-pre-wrapper-for-script-tags">
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+           //Configure joyride
+           //If autostart is false, call again "jQuery("#rm-form-man-joytips").joyride()" to start the tour.
+            <?php if (false && $data->autostart_tour): ?>
+            /*jQuery("#rm-form-man-joytips").joyride({tipLocation: 'top',
+                autoStart: true,
+                postRideCallback: rm_joyride_tour_taken});*/
+            <?php else: ?>
+                jQuery("#rm-form-man-joytips").joyride({tipLocation: 'top',
+                    autoStart: false,
+                    postRideCallback: rm_joyride_tour_taken});
+            <?php endif; ?>
+
+            var pagination_input_top = document.getElementById("rm_reqpage_top");
+            var pagination_input_bottom = document.getElementById("rm_reqpage_bottom");
+            pagination_input_top.addEventListener("keydown", function(event) {
+                if(event.key === "Enter") {
+                    event.preventDefault();
+                    pagination_input_bottom.value = this.value;
+                    document.getElementById("rm_pagination_input_form").submit();
+                }
+            });
+            pagination_input_bottom.addEventListener("keydown", function(event) {
+                if(event.key === "Enter") {
+                    event.preventDefault();
+                    pagination_input_top.value = this.value;
+                    document.getElementById("rm_pagination_input_form").submit();
+                }
+            });
+        });
+
+        function set_forms_entry_depth(element) {
+            var selectedVal = jQuery(element).find('option').filter(':selected').val();
+            var postData = {'action' : 'rm_set_forms_entry_depth', 'rm_sec_nonce': '<?php echo wp_create_nonce('rm_ajax_secure'); ?>', 'value' : selectedVal};
+            jQuery.post('<?php echo esc_url(admin_url('admin-ajax.php')); ?>', postData, function(response) {
+                if(response.success) {
+                    location.reload();
+                }
+            });
+        }
+
+        function rm_forms_roll_back() {
+            var postData = {'action' : 'rm_forms_view_roll_back', 'rm_sec_nonce': '<?php echo wp_create_nonce('rm_ajax_secure'); ?>', 'value': <?php echo absint($data->old_view); ?>};
+            jQuery.post('<?php echo esc_url(admin_url('admin-ajax.php')); ?>', postData, function(response) {
+                if(response.success) {
+                    window.location.href = "<?php echo esc_url(admin_url("admin.php?page=rm_form_manage")); ?>";
+                }
+            });
+        }
+             
+        function rm_setup_thickbox_dimensions(_prev_href) {
+            /* Seemingly hackish way to configure WP Thickbox's dimension according to user display size without using CSS, but hey, it works.*/
+            var $prev_link = jQuery("#rm_form_preview_action");
+            var prev_href = _prev_href || $prev_link.attr("href");
+            var index = prev_href.indexOf("&width=900&height=600"),
+                prev_href_base = prev_href.substr(0,index),
+                cx = window.innerWidth*95/100,
+                cy = window.innerHeight*95/100;
+
+            var new_href = prev_href_base+"&width="+cx+"&height="+cy;
+            jQuery(".rm_form_preview_btn").each(function(){
+                jQuery(this).attr("href", new_href);
+            });
+        }
+
+        function rm_init_submit_field() {
+            jQuery(".rm_field_btn").on("keydown", function(e){
+                if(e.keyCode === 13 || e.keyCode === 27) {
+                    jQuery(this).blur();
+                    window.getSelection().removeAllRanges();
+                } 
+            })
+
+            var last_label;
+
+            jQuery(".rm_field_btn").on("focus", function(e){
+                    var temp = jQuery(this).text().trim();
+                    if(temp.length)
+                        last_label = temp;
+            })
+
+            jQuery(".rm_field_btn").on("blur", function(e){
+                    var temp = jQuery(this).text().trim();
+                    if(temp.length <= 0)
+                        jQuery(this).text(last_label);
+                    else
+                        rm_update_submit_field();
+            });
+
+            jQuery("input[name='rm_field_submit_field_align']").change(function(e){
+                    var $btn_container = jQuery(".rm-field-submit-field-btn-container");
+                    $btn_container.removeClass("rm-field-btn-align-left rm-field-btn-align-center rm-field-btn-align-right");
+                    $btn_container.addClass("rm-field-btn-align-"+jQuery(this).val());
+                    rm_update_submit_field();
+            })
+        }
    
-    jQuery(document).ready(function(){
-       //Configure joyride
-       //If autostart is false, call again "jQuery("#rm-form-man-joytips").joyride()" to start the tour.
-       <?php if(false && $data->autostart_tour): ?>
-       /*jQuery("#rm-form-man-joytips").joyride({tipLocation: 'top',
-                                               autoStart: true,
-                                               postRideCallback: rm_joyride_tour_taken});*/
-        <?php else: ?>
-            jQuery("#rm-form-man-joytips").joyride({tipLocation: 'top',
-                                               autoStart: false,
-                                               postRideCallback: rm_joyride_tour_taken});
-        <?php endif; ?>
-    });
-   
+        function delete_form(form_id) {
+            confirmation = confirm('<?php echo wp_kses_post((string)RM_UI_Strings::get('ALERT_DELETE_FORM')); ?>');
+            if(confirmation) {
+                jQuery(".rm_form_select_check").addClass("rm-delete-item");
+                jQuery('input.rm_checkbox_group[value='+form_id+']').prop("checked", true);
+                jQuery.rm_do_action('rm_form_manager_operartionbar', 'rm_form_remove');
+            }
+        }
+
+        function duplicate_form(form_id) {
+            jQuery(".rm_form_select_check").addClass("rm-delete-item");
+            jQuery('input.rm_checkbox_group[value='+form_id+']').prop("checked", true);
+            jQuery.rm_do_action('rm_form_manager_operartionbar', 'rm_form_duplicate');
+        }
+
+        function export_form(form_id) {
+            jQuery(".rm_form_select_check").addClass("rm-delete-item");
+            jQuery('input.rm_checkbox_group[value='+form_id+']').prop("checked", true);
+            jQuery.rm_do_action('rm_form_manager_operartionbar', 'rm_form_export');
+            jQuery('input.rm_checkbox_group[value='+form_id+']').prop("checked", false);
+            jQuery(".rm_form_select_check").removeClass("rm-delete-item");
+        }
+
+        function copy_shortcode(form_id) {
+            var shortcode = jQuery("div#rm-shortcode-"+form_id).text();
+
+            navigator.clipboard.writeText(shortcode);
+
+            alert("Copied the shortcode: " + shortcode);
+        }
+
+        function rm_apply_bulk_action(obj) {
+            if(obj.id == 'rm-bulk-action-top')
+                var option = jQuery("select#bulk-action-selector-top").val();
+            else
+                var option = jQuery("select#bulk-action-selector-bottom").val();
+            var form_ids = [];
+
+            jQuery("input.rm_form_select_check:checked").each(function (e) {
+                form_ids.push(jQuery(this).val());
+            });
+
+            if(form_ids.length <= 0) {
+                alert('Please select one or more forms before applying bulk action');
+                return false;
+            }
+
+            if(option == 'export') {
+                jQuery.rm_do_action('rm_form_manager_operartionbar', 'rm_form_export');
+            } else if (option == 'delete') {
+                jQuery.rm_do_action_with_alert('<?php echo wp_kses_post((string)RM_UI_Strings::get('ALERT_DELETE_FORM')); ?>', 'rm_form_manager_operartionbar', 'rm_form_remove');
+            }
+        }
+
    function rm_start_joyride(){
        jQuery("#rm-form-man-joytips").joyride();
     }
     
-    function rm_joyride_tour_taken(){
-        var data = {
-			'action': 'joyride_tour_update',
-            'rm_sec_nonce': '<?php echo wp_create_nonce('rm_ajax_secure'); ?>',
-			'tour_id': 'form_manager_tour',
-                        'state': 'taken'
-		};
+        function rm_joyride_tour_taken(){
+            var data = {
+                'action': 'joyride_tour_update',
+                'rm_sec_nonce': '<?php echo wp_create_nonce('rm_ajax_secure'); ?>',
+                'tour_id': 'form_manager_tour',
+                'state': 'taken'
+    		};
 
-        jQuery.post(ajaxurl, data, function(response) {});
-    }
+            jQuery.post(ajaxurl, data, function(response) {});
+        }
     
     function rm_open_dial(form_id){
-        jQuery('textarea#rm_embed_code').html('<?php echo wp_kses_post(RM_UI_Strings::get('MSG_BUY_PRO_GOLD_EMBED')); ?>');
+        jQuery('textarea#rm_embed_code').html('<?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_BUY_PRO_GOLD_EMBED')); ?>');
         jQuery('#rm_embed_code_dialog').fadeIn(100);
     }
     jQuery(document).mouseup(function (e) {
@@ -572,17 +1023,25 @@ jQuery("#rm_rateit_banner").bind('rated', function (event, value) {
             jQuery('.rmagic .rm_add_new_form_wrap.rm-create-new-from').removeClass('rm-form-popup-out');
             jQuery('.rmagic .rm_add_new_form_wrap.rm-create-new-from').addClass('rm-form-popup-in');
             
-            jQuery('.rm-modal-overlay').removeClass('rm-form-popup-overlay-fade-out');
-            jQuery('.rm-modal-overlay').addClass('rm-form-popup-overlay-fade-in');
+            jQuery('#rm_add_new_form_popup .rm-modal-overlay').removeClass('rm-form-popup-overlay-fade-out');
+            jQuery('#rm_add_new_form_popup .rm-modal-overlay').addClass('rm-form-popup-overlay-fade-in');
           }
+          
+          jQuery('.rmagic #rm_add_new_form_popup.rm-modal-view').removeClass('rm-form-popup-hide').addClass('rm-form-popup-show'); 
+
       }
     
+    
       jQuery(document).ready(function () {
+          
           jQuery('.rm-modal-close, .rm-modal-overlay').click(function () {
               setTimeout(function(){
                   //jQuery(this).parents('.rm-modal-view').hide();
                   jQuery('.rm-modal-view').hide();
+                
               }, 400);
+              
+            jQuery('.rmagic #rm_add_new_form_popup.rm-modal-view').removeClass('rm-form-popup-show').addClass('rm-form-popup-hide'); 
               
           });
           
@@ -591,8 +1050,8 @@ jQuery("#rm_rateit_banner").bind('rated', function (event, value) {
             jQuery('.rmagic .rm_add_new_form_wrap.rm-create-new-from').removeClass('rm-form-popup-in');
             jQuery('.rmagic .rm_add_new_form_wrap.rm-create-new-from').addClass('rm-form-popup-out');
             
-            jQuery('.rm-modal-overlay').removeClass('rm-form-popup-overlay-fade-in');
-            jQuery('.rm-modal-overlay').addClass('rm-form-popup-overlay-fade-out');
+            jQuery('#rm_add_new_form_popup .rm-modal-overlay').removeClass('rm-form-popup-overlay-fade-in');
+            jQuery('#rm_add_new_form_popup .rm-modal-overlay').addClass('rm-form-popup-overlay-fade-out');
           });
           
       });
@@ -609,9 +1068,9 @@ jQuery("#rm_rateit_banner").bind('rated', function (event, value) {
             if (response == 0)
             {
                _getEl("progressBar").value = Math.round(100);
-                _getEl("status").innerHTML = '<?php _e('Import Successfully Completed', 'custom-registration-form-builder-with-submission-manager'); ?>';
+                _getEl("status").innerHTML = '<?php esc_html_e('Import Successfully Completed', 'custom-registration-form-builder-with-submission-manager'); ?>';
                 setTimeout(function(){
-                     new_url= "<?php echo admin_url('admin.php?'); ?>" + update_current_url_with_param("last_form_id","<?php echo esc_html($last_form_id); ?>");
+                     new_url= "<?php echo esc_url(admin_url('admin.php?')); ?>" + update_current_url_with_param("last_form_id","<?php echo esc_html($last_form_id); ?>");
                      window.location= new_url;
                 },3000)
             } else {
@@ -634,15 +1093,15 @@ jQuery("#rm_rateit_banner").bind('rated', function (event, value) {
             if (response == 0)
             {
                 _getEl("progressBar").value = Math.round(100);
-                _getEl("status").innerHTML = '<?php _e('Import Successfully Completed', 'custom-registration-form-builder-with-submission-manager') ?>';
+                _getEl("status").innerHTML = '<?php esc_html_e('Import Successfully Completed', 'custom-registration-form-builder-with-submission-manager') ?>';
                 setTimeout(function(){
-                     new_url= "<?php echo admin_url('admin.php?'); ?>" + update_current_url_with_param("last_form_id","<?php echo esc_html($last_form_id); ?>");
+                     new_url= "<?php echo esc_url(admin_url('admin.php?')); ?>" + update_current_url_with_param("last_form_id","<?php echo esc_html($last_form_id); ?>");
                      window.location= new_url;
                 },3000)
               
             } else if (response === "INVALID_FILE") {
                 jQuery("#rm_import_errors").html('');
-                jQuery("#rm_import_errors").append("<div class='rm_import_error'><?php _e('Invalid RegistrationMagic template file. Please upload valid template file with XML extension.', 'custom-registration-form-builder-with-submission-manager') ?></div>");
+                jQuery("#rm_import_errors").append("<div class='rm_import_error'><?php esc_html_e('Invalid RegistrationMagic template file. Please upload valid template file with XML extension.', 'custom-registration-form-builder-with-submission-manager') ?></div>");
                 jQuery("#progressBar,#status").hide();
             } else {
                 var pre = parseInt(response) - 1;
@@ -660,7 +1119,7 @@ jQuery("#rm_rateit_banner").bind('rated', function (event, value) {
     function check_file_extension(obj){
         var file = obj.files[0];
         if(file && file.type!="text/xml"){
-            jQuery("#rm_import_errors").html("<div class='rm_import_error'><?php _e('Invalid RegistrationMagic template file. Please upload valid template file with XML extension.', 'custom-registration-form-builder-with-submission-manager'); ?>");
+            jQuery("#rm_import_errors").html("<div class='rm_import_error'><?php esc_html_e('Invalid RegistrationMagic template file. Please upload valid template file with XML extension.', 'custom-registration-form-builder-with-submission-manager'); ?>");
             obj.value='';
         }
     }
@@ -668,7 +1127,7 @@ jQuery("#rm_rateit_banner").bind('rated', function (event, value) {
     function uploadFile() {
       var file = _getEl("xml_file").files[0];
       if(!file){
-           jQuery("#rm_import_errors").html("<div class='rm_import_error'><?php _e('Please select  a file.', 'custom-registration-form-builder-with-submission-manager'); ?></div>");
+           jQuery("#rm_import_errors").html("<div class='rm_import_error'><?php esc_html_e('Please select  a file.', 'custom-registration-form-builder-with-submission-manager'); ?></div>");
            return;
       }
       jQuery("#rm_import_errors").html('');
@@ -682,7 +1141,7 @@ jQuery("#rm_rateit_banner").bind('rated', function (event, value) {
       rm_file_ajax.addEventListener("load", completeHandler, false);
       rm_file_ajax.addEventListener("error", errorHandler, false);
       rm_file_ajax.addEventListener("abort", abortHandler, false);
-      rm_file_ajax.open("POST", "<?php echo admin_url('admin-ajax.php'); ?>");
+      rm_file_ajax.open("POST", "<?php echo esc_url(admin_url('admin-ajax.php')); ?>");
       jQuery("#progressBar,#status").show();
       rm_file_ajax.send(formdata);
     }
@@ -690,22 +1149,22 @@ jQuery("#rm_rateit_banner").bind('rated', function (event, value) {
     function progressHandler(event) {
       var percent = (event.loaded / event.total) * 50;
       _getEl("progressBar").value = Math.round(percent);
-      _getEl("status").innerHTML = "<?php _e('File upload is in progress...', 'custom-registration-form-builder-with-submission-manager') ?>";
+      _getEl("status").innerHTML = "<?php esc_html_e('File upload is in progress...', 'custom-registration-form-builder-with-submission-manager') ?>";
     }
 
     function completeHandler(event) {
        var percent = 50;
       _getEl("progressBar").value = Math.round(percent);
-      _getEl("status").innerHTML = "<?php _e('Form Import is in progress....', 'custom-registration-form-builder-with-submission-manager') ?>";
+      _getEl("status").innerHTML = "<?php esc_html_e('Form Import is in progress....', 'custom-registration-form-builder-with-submission-manager') ?>";
       start_import();
     }
 
     function errorHandler(event) {
-      _getEl("status").innerHTML = "<?php _e('Upload Failed', 'custom-registration-form-builder-with-submission-manager') ?>";
+      _getEl("status").innerHTML = "<?php esc_html_e('Upload Failed', 'custom-registration-form-builder-with-submission-manager') ?>";
     }
 
     function abortHandler(event) {
-      _getEl("status").innerHTML = "<?php _e('Upload Aborted', 'custom-registration-form-builder-with-submission-manager') ?>";
+      _getEl("status").innerHTML = "<?php esc_html_e('Upload Aborted', 'custom-registration-form-builder-with-submission-manager') ?>";
     }     
     
     function cancel_file_upload(){
@@ -732,6 +1191,114 @@ jQuery("#rm_rateit_banner").bind('rated', function (event, value) {
         });
     });
     <?php } ?>
+
+
+
+    function rm_open_dial(form_id) {
+          jQuery('textarea#rm_embed_code').html('<iframe class="regmagic_embed" width="500" height="500" src="<?php echo esc_url(admin_url('admin-ajax.php?action=registrationmagic_embedform&form_id=')); ?>' + form_id + '"></iframe>');
+          jQuery('#rm_embed_code_dialog').fadeIn(100);
+      }
+      jQuery(document).mouseup(function (e) {
+          var container = jQuery("#rm_embed_code_dialog,.rm_form_card_settings_dialog");
+          if (!container.is(e.target) // if the target of the click isn't the container... 
+                  && container.has(e.target).length === 0) // ... nor a descendant of the container 
+          {
+              container.hide();
+          }
+      });
    
   </script></pre>
+    
+    
+    
+<script>
+    
+    
+
+    
+jQuery(document).ready(function() {
+    jQuery('a.rm_form_preview_btn').on('click', function(event) {
+        event.preventDefault();
+        var content = jQuery(this).data('content');
+        var iframe = document.getElementById('rm-form-preview-frame');
+        
+        jQuery('#rm-form-preview-modal').css('display', 'block');
+        
+         jQuery('#rm-form-preview-modal .rm-modal-overlay').removeClass('rm-field-popup-overlay-fade-out');
+          jQuery(' #rm-form-preview-modal .rm-modal-overlay').addClass('rm-field-popup-overlay-fade-in');
+        
+        jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').removeClass('rm-field-popup-out');
+        jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').addClass('rm-field-popup-in');
+        jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').removeClass('rm-preview-loaded');
+        jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').addClass('rm-preview-loading');
+        //jQuery('.rmagic .rm-modal-view').addClass('rm-form-popup-show').removeClass('rm-form-popup-hide');
+        
+        iframe.addEventListener('load', function() {
+            jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').removeClass('rm-preview-loading');
+            jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').addClass('rm-preview-loaded');
+            /*
+            iframe.contentWindow.document.querySelector('input[name=rm_sb_btn]').addEventListener('click', function() {
+                if(this.classList.contains("rm-submit-btn-show")) {
+                    // Add jQuery code here to close the modal
+                }
+            });
+            */
+        });
+        
+        iframe.src = "admin.php?page=rm_form_preview&rm_form_id="+content;
+    });
+
+  // Close the modal when clicking on the close button
+  jQuery('.rm-modal-close').on('click', function() {
+    jQuery('#rm-form-preview-modal').css('display', 'none');
+  });
+
+  // Close the modal when clicking outside of it
+  jQuery(window).on('click', function(event) {
+    if (event.target.classList.contains('modal')) {
+      jQuery('#rm-form-preview-modal').css('display', 'none');
+    }
+  });
+});
+</script>
+    
+    <style>
+    #rm-form-preview-modal iframe#rm-form-preview-frame{
+        width: 100%;
+        min-height: 600px;
+        height: 100%;
+    }
+    
+    .rmagic .rm_field_row_setting_wrap.rm-select-row-setting{
+      min-height: auto;
+    }
+    
+    #rm-iframe-loader {
+        display: none;
+        margin-top: 18%;
+        margin-bottom: 200px
+    }
+    
+    #rm-form-preview-modal .rm-preview-loading #rm-form-preview-frame{
+        display: none;
+    }
+    
+    #rm-form-preview-modal .rm-preview-loaded #rm-form-preview-frame{
+        display: block;
+    }
+    
+    .rm-preview-loading #rm-iframe-loader{
+        display: block !important;
+    }
+    
+    #rm-form-preview-modal .rm_field_row_setting_wrap{
+        max-width: 800px;
+        left: calc(50% - 400px);
+    }
+    
+    #rm-form-preview-modal .rm-modal-titlebar{
+        border-bottom: 1px solid #efefef;
+    }
+
+    </style>
 <?php } ?>

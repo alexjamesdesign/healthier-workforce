@@ -10,14 +10,14 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 
     <!-----Operations bar Starts----->
     <div class="operationsbar">
-        <div class="rmtitle"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_USER_ROLES")); ?></div>
+        <div class="rmtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_USER_ROLES")); ?></div>
         <div class="icons">
             <a href="?page=rm_options_user"><img alt="" src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . 'images/rm-user-accounts.png'); ?>"></a>
         </div>
         <div class="nav">
             <ul>
-                <!--li><a href="?page=rm_paypal_field_add&rm_field_type"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_ADD_NEW'));?></a></li-->
-                <li id="rm-delete-user-role" class="rm_deactivated"  onclick="jQuery.rm_do_action('rm_user_role_mananger_form','rm_user_role_delete')"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REMOVE')); ?></a></li>
+                <!--li><a href="?page=rm_paypal_field_add&rm_field_type"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_ADD_NEW'));?></a></li-->
+                <li id="rm-delete-user-role" class="rm_deactivated"  onclick="jQuery.rm_do_action('rm_user_role_mananger_form','rm_user_role_delete')"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_REMOVE')); ?></a></li>
             </ul>
         </div>
 
@@ -67,9 +67,11 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                             <span><?php echo esc_html($role_name); ?></span>
 
                         </div>
+                        <!-- Disable delete for default roles
                         <div class="rm-slab-buttons">
-                            <a href="javascript:void(0)" class="rmdisabled"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a>
+                            <a href="javascript:void(0)" class="rmdisabled"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a>
                         </div>
+                        -->
                     </div>
                 </li>
 
@@ -103,7 +105,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
                         </div>
                        
                         <div class="rm-slab-buttons" onclick="delete_role(this,'checkbox_<?php echo esc_attr($role); ?>')">
-                            <a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a>
+                            <a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a>
                         </div>
                          <a href="javascript:void(0)" class="rm-slab-buttons rm-role-edit" onclick="rm_role_edit(this, '<?php echo $role;?>','<?php echo $role_name; ?>')">Edit</a>
                     </div>
@@ -116,7 +118,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 </form>
     </ul>
     <?php     
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
     
 </div>

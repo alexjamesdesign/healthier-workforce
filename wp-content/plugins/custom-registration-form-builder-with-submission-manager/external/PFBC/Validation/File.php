@@ -33,7 +33,7 @@ class Validation_File extends Validation {
     public function isValid($value) {
         $valid= true;
         $field_id = '';
-        $name_explode = explode("_", $this->name);
+        $name_explode = explode("_", (string)$this->name);
         if(is_array($name_explode) && isset($name_explode[1]))
         {
             $field_id = $name_explode[1];
@@ -46,13 +46,13 @@ class Validation_File extends Validation {
         
 
         //Sanitize value before use, remove white space, trim extra pipes.
-        $fv = explode("|",trim(preg_replace('/\s+/', '', strtolower($field->get_field_value())),'|'));
+        $fv = explode("|",trim(preg_replace('/\s+/', '', strtolower((string)$field->get_field_value())),'|'));
         $allowed_types = array();
         
         $multiple = $gopts->get_value_of('allow_multiple_file_uploads');
 
         if(!$fv || (count($fv)===1 && $fv[0]==""))
-            $allowed_types = explode("|",  strtolower ($gopts->get_value_of('allowed_file_types')));
+            $allowed_types = explode("|",  strtolower((string)$gopts->get_value_of('allowed_file_types')));
         else
         {            
             foreach ($fv as $key => $value) 
@@ -87,7 +87,7 @@ class Validation_File extends Validation {
                         return false;
                     else 
                     {
-                        $arrx = explode('.',$filename);
+                        $arrx = explode('.',(string)$filename);
                         $ext = $arrx[count($arrx)-1];
 
                         if($ext == "")
@@ -141,7 +141,7 @@ class Validation_File extends Validation {
                     return false;
                 else
                 {
-                    $arrx = explode('.',$filename);
+                    $arrx = explode('.',(string)$filename);
                     $ext = $arrx[count($arrx)-1];
 
                     if($ext == "")
@@ -180,7 +180,7 @@ class Validation_File extends Validation {
 
     public function isTypeAllowed($type){
         $valid= false;
-        $allowed_types= explode('|',get_option('rm_option_allowed_file_types'));
+        $allowed_types= explode('|',(string)get_option('rm_option_allowed_file_types'));
         foreach($allowed_types as $ex){
             if(!empty($ex)){
                 if(stristr($type,$ex))

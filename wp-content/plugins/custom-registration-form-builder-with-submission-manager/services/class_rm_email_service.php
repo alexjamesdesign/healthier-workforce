@@ -27,15 +27,19 @@ class RM_Email_Service
         $email_content .= "<div class='rm-email-content-wrap' style='display: table-row-group'>";
         if (is_array($params->sub_data)) {
             foreach ($params->sub_data as $field_id => $val) {
-                if(is_null($val->value) || (is_string($val->value) && trim($val->value) == '')) {
+                if(is_null($val->value) || (is_string($val->value) && trim((string)$val->value) == '')) {
                     continue;
                 }
                 $email_content .= '<div class="rm-email-content-row-new" style="display: table-row;"><span class="key" style="display: table-cell;border: 1px solid #e9e9e9;padding: 8px;line-height: 1.42857143;vertical-align: top;"><strong>' . $val->label . ': </strong></span><br>';
 
                 if (is_array($val->value)) {
                     $values = '';
-                    // Check attachment type field
-                    if (isset($val->value['rm_field_type']) && $val->value['rm_field_type'] == 'File') {
+                    $additional_fields = apply_filters('rm_additional_fields', array());
+                    if(in_array($val->type, $additional_fields)){
+                        $special_fields = apply_filters('rm_additional_fields_data_email',$val->value, $val->type);
+                        $email_content .= '<span class="key-val" style="display: table-cell;border: 1px solid #e9e9e9;padding: 8px;line-height: 1.42857143;vertical-align: top;">' .$special_fields. '</span><br/>';
+                        
+                    }elseif (isset($val->value['rm_field_type']) && $val->value['rm_field_type'] == 'File') {
                         unset($val->value['rm_field_type']);
 
                         /*
@@ -55,7 +59,9 @@ class RM_Email_Service
                         $email_content .= '<span class="key-val" style="display: table-cell;border: 1px solid #e9e9e9;padding: 8px;line-height: 1.42857143;vertical-align: top;">' . implode(', ', $val->value) . '</span><br/>';
                     } elseif ($val->type == 'Checkbox') {   
                          $email_content .= '<span class="key-val" style="display: table-cell;border: 1px solid #e9e9e9;padding: 8px;line-height: 1.42857143;vertical-align: top;">' . implode(', ',RM_Utilities::get_lable_for_option($field_id, $val->value)) . '</span><br/>';
-                    }else {
+                    } elseif ($val->type == 'URL') {
+                        $email_content .= '<span class="key-val" style="display: table-cell;border: 1px solid #e9e9e9;padding: 8px;line-height: 1.42857143;vertical-align: top;"><a href="' . $val->value['url'] . '">' . $val->value['url'] . '</a></span><br/>';
+                    } else {
                         $email_content .= '<span class="key-val" style="display: table-cell;border: 1px solid #e9e9e9;padding: 8px;line-height: 1.42857143;vertical-align: top;">' . implode(', ', $val->value) . '</span><br/>';
                     }
                 } else {
@@ -120,7 +126,7 @@ class RM_Email_Service
         $header = '';
 
         if ($gopt->get_value_of('admin_notification') == "yes") {
-            $to = explode(',',$gopt->get_value_of('admin_email'));
+            $to = explode(',',(string)$gopt->get_value_of('admin_email'));
         }
     
         $subject= $form->form_options->form_admin_ns_notification_sub;
@@ -130,7 +136,7 @@ class RM_Email_Service
         $rm_email->useAdminFrom= false;
         
         $from_email= $gopt->get_value_of('an_senders_email');
-        $from_email= trim($from_email);
+        $from_email= trim((string)$from_email);
         if($from_email=="{{useremail}}"){
             $primary_fields= RM_DBManager::get_primary_fields_id($params->form_id,'email');
             if(count($primary_fields)){
@@ -150,7 +156,7 @@ class RM_Email_Service
             $first_name='';
             $last_name='';
             $user_email;
-            if(!empty($sub_data)){
+            if(!empty($sub_data) && (is_array($sub_data) || is_object($sub_data))){
                 foreach($sub_data as $fdata){
                      if($fdata->type=='Fname'){
                         $first_name=  $fdata->value;
@@ -160,7 +166,7 @@ class RM_Email_Service
                 }
             }
             $dname= $first_name.' '.$last_name;
-            if(trim($dname)==''){
+            if(trim((string)$dname)==''){
                 $primary_fields= RM_DBManager::get_primary_fields_id($params->form_id,'email');
                 $dname= isset($params->sub_data[$primary_fields[0]]) ? $params->sub_data[$primary_fields[0]]->value : '';
             }
@@ -310,7 +316,7 @@ class RM_Email_Service
         $rm_email->from($gopt->get_value_of('senders_email_formatted'));
         
         $to = array();
-        $to = explode(',',$gopt->get_value_of('admin_email'));
+        $to = explode(',',(string)$gopt->get_value_of('admin_email'));
 
         foreach($to as $recepient)
         {
@@ -363,19 +369,23 @@ class RM_Email_Service
             $email_content .= "</div>";
         }
 
-        if (isset($params->sub_data) && is_array($params->sub_data) && str_contains($params->email_content, '{{SUBMISSION_DATA}}')) {
+        if (isset($params->sub_data) && is_array($params->sub_data) && str_contains((string)$params->email_content, '{{SUBMISSION_DATA}}')) {
             $sub_data = '';
             $user_email = '';
             foreach ($params->sub_data as $field_id => $val) {
-                if(is_null($val->value) || (is_string($val->value) && trim($val->value) == '')) {
+                if(is_null($val->value) || (is_string($val->value) && trim((string)$val->value) == '')) {
                     continue;
                 }
                 $sub_data .= '<div class="rm-email-content-row-new"><span class="key"><strong>' . $val->label . ': </strong></span><br>';
 
                 if (is_array($val->value)) {
                     $values = '';
-                    // Check attachment type field
-                    if (isset($val->value['rm_field_type']) && $val->value['rm_field_type'] == 'File') {
+                    $additional_fields = apply_filters('rm_additional_fields', array());
+                    if(in_array($val->type, $additional_fields)){
+                        $special_fields = apply_filters('rm_additional_fields_data_email',$val->value, $val->type);
+                        $sub_data .= '<span class="key-val">' .$special_fields. '</span><br/>';
+                        
+                    }elseif (isset($val->value['rm_field_type']) && $val->value['rm_field_type'] == 'File') {
                         unset($val->value['rm_field_type']);
 
                         /*
@@ -395,7 +405,9 @@ class RM_Email_Service
                         $sub_data .= '<span class="key-val">' . implode(', ', $val->value) . '</span><br/>';
                     } elseif ($val->type == 'Checkbox') {
                          $sub_data .= '<span class="key-val">' . implode(', ',RM_Utilities::get_lable_for_option($field_id, $val->value)) . '</span><br/>';
-                    }else {
+                    } elseif ($val->type == 'URL') {
+                        $sub_data .= '<span class="key-val"><a href="' . $val->value['url'] . '">' . $val->value['url'] . '</a></span><br/>';
+                    } else {
                         $sub_data .= '<span class="key-val">' . implode(', ', $val->value) . '</span><br/>';
                     }
                 } else {
@@ -422,7 +434,7 @@ class RM_Email_Service
         }
         
         foreach ($params->req as $key => $val) {
-            $key_parts = explode('_', $key);
+            $key_parts = explode('_', (string)$key);
             if (!is_array($val)){                    
                 if ($key_parts[0] == 'File' || $key_parts[0] == 'Image') {
 
@@ -442,15 +454,15 @@ class RM_Email_Service
 
                     }
 
-                    $email_content = str_replace('{{' . $key . '}}', $values, $email_content);
+                    $email_content = str_replace('{{' . $key . '}}', $values, (string)$email_content);
                 }
                 elseif ($key_parts[0] == 'Radio' || $key_parts[0] == 'Select') {   
                    $values = '';
                    $values =  RM_Utilities::get_lable_for_option($key_parts[1], $val);
-                   $email_content = str_replace('{{' . $key . '}}', $values, $email_content);
+                   $email_content = str_replace('{{' . $key . '}}', $values, (string)$email_content);
                 }
                 else {
-                    $email_content = str_replace('{{' . $key . '}}', $val, $email_content);
+                    $email_content = str_replace('{{' . $key . '}}', (string)$val, (string)$email_content);
                 }
             }
             else {
@@ -477,7 +489,7 @@ class RM_Email_Service
             foreach ($params->req as $key => $val) {
                 //$val would be like '{field_type}_{field_id}'
 
-                $key_parts = explode('_', $key);
+                $key_parts = explode('_', (string)$key);
                 $k_c = count($key_parts);
                 if ($k_c >= 2 && is_numeric($key_parts[$k_c - 1])) {
                     if (is_array($val))
@@ -492,7 +504,7 @@ class RM_Email_Service
 
             foreach ($out[1] as $caught) {
                 //echo "<br>".$caught;$parameters
-                $x = explode("_", $caught);
+                $x = explode("_", (string)$caught);
                 $id = $x[count($x) - 1];
                 if (is_numeric($id)) {
                     if (isset($id_vals[(int) $id]))
@@ -585,7 +597,10 @@ class RM_Email_Service
         $rm_email->message($params->message);
         $rm_email->subject($params->subject);
         $rm_email->to($params->to);
-        $rm_email->from($gopt->get_value_of('senders_email_formatted'));
+        if(isset($params->from))
+            $rm_email->from("{$params->from} <{$params->from}>");
+        else
+            $rm_email->from($gopt->get_value_of('senders_email_formatted'));
         
         if($rm_email->send())
             $params->sent_successfully = true;     
@@ -630,7 +645,7 @@ class RM_Email_Service
         }
         
         $form->load_from_db($form_id);
-        if(isset($form->form_options->$type) && trim($form->form_options->$type)!="")
+        if(isset($form->form_options->$type) && trim((string)$form->form_options->$type)!="")
             return wpautop($form->form_options->$type);
         else
             return wpautop(self::get_default_messages($type));
@@ -689,7 +704,7 @@ class RM_Email_Service
         $message= wpautop(str_replace(array('{{username}}','{{sitename}}','{{Login_IP}}','{{login_time}}'),array($user->user_login,get_bloginfo('title'),$_SERVER["REMOTE_ADDR"], RM_Utilities::get_current_time(current_time('timestamp'))),$template_options['failed_login_err']));
         $rm_email= new RM_Email();
         $rm_email->message($message);
-        $rm_email->subject(__("Failed login Attempt",'custom-registration-form-builder-with-submission-manager'));
+        $rm_email->subject($template_options['failed_login_err_sub']);
         $rm_email->to($user->user_email);
         $gopt = new RM_Options();
         $rm_email->from($gopt->get_value_of('admin_email'));
@@ -702,7 +717,7 @@ class RM_Email_Service
         $message= wpautop(str_replace(array('{{username}}','{{sitename}}','{{Login_IP}}','{{login_time}}'),array($user->user_login,get_bloginfo('title'),$_SERVER["REMOTE_ADDR"], RM_Utilities::get_current_time(current_time('timestamp'))),$template_options['failed_login_err_admin']));
         $rm_email= new RM_Email();
         $rm_email->message($message);
-        $rm_email->subject(__("Failed login Attempt",'custom-registration-form-builder-with-submission-manager'));
+        $rm_email->subject($template_options['failed_login_err_admin_sub']);
         $gopt = new RM_Options();
         $rm_email->to($gopt->get_value_of('admin_email'));
         $rm_email->send();
@@ -714,7 +729,7 @@ class RM_Email_Service
         $message= wpautop(str_replace(array('{{login_IP}}','{{ban_period}}','{{ban_trigger}}'),array($_SERVER["REMOTE_ADDR"],$args['ban_period'],$args['ban_trigger']),$template_options['ban_message_admin']));
         $rm_email= new RM_Email();
         $rm_email->message($message);
-        $rm_email->subject(__("IP Blocked",'custom-registration-form-builder-with-submission-manager'));
+        $rm_email->subject($template_options['ban_message_admin_sub']);
         $gopt = new RM_Options();
         $rm_email->to($gopt->get_value_of('admin_email'));
         $rm_email->send();
@@ -746,7 +761,7 @@ class RM_Email_Service
         //echo $message;
         $rm_email= new RM_Email();
         $rm_email->message($message);
-        $rm_email->subject(__("Reset Password",'custom-registration-form-builder-with-submission-manager'));
+        $rm_email->subject($template_options['pass_reset_sub']);
         $gopt = new RM_Options();
         $rm_email->to($user->user_email);
         $rm_email->send();

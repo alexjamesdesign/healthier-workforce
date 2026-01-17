@@ -28,6 +28,7 @@ function rmAutocomplete(curr_id) {
         /* Get the place details from the autocomplete object.*/
         var place = self.autocomplete.getPlace();
 
+        
         for (var component in self.componentForm) {
             document.getElementById(curr_id + '_' + component).value = '';
             document.getElementById(curr_id + '_' + component).disabled = false;
@@ -118,37 +119,37 @@ function rm_validate_zipcode(name){
 }
 
 
-function rm_load_states(country,target_element_id,code,default_value){
-    var target_element= jQuery("#" + target_element_id);
-    var data = {
-                    'action': 'rm_load_states',
-                    'rm_sec_nonce': rm_admin_vars.nonce,
-                    'country': country
+// function rm_load_states(country,target_element_id,code,default_value){
+//     var target_element= jQuery("#" + target_element_id);
+//     var data = {
+//                     'action': 'rm_load_states',
+//                     'rm_sec_nonce': rm_admin_vars.nonce,
+//                     'country': country
                     
-               };
-    if(country=="")
-    {
-        target_element.find("option:gt(0)").remove();
-        //target_element.find("option").slice(0).remove();
-        return;
-    }
-    jQuery.post(rm_ajax_url,
-                data,
-                function(resp){
-                    resp = JSON.parse(resp);
-                    if(typeof resp === 'object') {
-                        target_element.find("option:gt(0)").remove();
-                        //target_element.find("option").slice(0).remove();
-                        jQuery.each(resp, function(i, item) {
+//                };
+//     if(country=="")
+//     {
+//         target_element.find("option:gt(0)").remove();
+//         //target_element.find("option").slice(0).remove();
+//         return;
+//     }
+//     jQuery.post(rm_ajax_url,
+//                 data,
+//                 function(resp){
+//                     resp = JSON.parse(resp);
+//                     if(typeof resp === 'object') {
+//                         target_element.find("option:gt(0)").remove();
+//                         //target_element.find("option").slice(0).remove();
+//                         jQuery.each(resp, function(i, item) {
                            
-                            if(code!=1)
-                             target_element.append(jQuery('<option>').text(resp[i]).attr('value', resp[i]));
-                            else
-                             target_element.append(jQuery('<option>').text(i).attr('value', i));   
-                        });
-                        if(default_value)
-                            target_element.val(default_value);
-                    }                    
-                });
+//                             if(code!=1)
+//                              target_element.append(jQuery('<option>').text(resp[i]).attr('value', resp[i]));
+//                             else
+//                              target_element.append(jQuery('<option>').text(i).attr('value', i));   
+//                         });
+//                         if(default_value)
+//                             target_element.val(default_value);
+//                     }                    
+//                 });
                 
-}
+// }

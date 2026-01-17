@@ -12,15 +12,13 @@ class RM_MailChimp_Service {
     public $mailchimp;
 
     public function __construct() {
+        require_once RM_EXTERNAL_DIR . 'mailchimp/class_rm_mailchimp.php';
         $this->mailChimp_id = get_option('rm_option_mailchimp_key');
-         try
-       {
-   $this->mailchimp = new RM_MailChimp($this->mailChimp_id);
-       }
-        catch(Exception $e)
-             {
-                 $this->mailchimp=null;
-             } 
+        try {
+            $this->mailchimp = new RM_MailChimp($this->mailChimp_id);
+        } catch(Exception $e) {
+            $this->mailchimp = null;
+        } 
     }
 
     /*
@@ -108,9 +106,9 @@ class RM_MailChimp_Service {
         $mailchimp_relations = new stdClass();
         if (isset($details['merge_fields'])) {
             foreach ($details['merge_fields'] as $det) {
-                $mc_tag = trim($det['tag']);
+                $mc_tag = trim((string)$det['tag']);
                 $mc_list_id_tag = $options['mailchimp_list'] . '_' . $mc_tag;
-                $mc_list_id_tag = trim($mc_list_id_tag);
+                $mc_list_id_tag = trim((string)$mc_list_id_tag);
     
                 if(isset($options[$mc_list_id_tag]))
                     $mailchimp_relations->$mc_list_id_tag = $options[$mc_list_id_tag];

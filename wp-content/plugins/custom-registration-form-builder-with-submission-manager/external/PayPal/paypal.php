@@ -104,6 +104,7 @@ class rm_paypal_class {
 	}
         public function popup_modal_paypal_post($order_details, $pricing_details, $submission_id, $payment_id, $currency, $user_id, $btn_color='gold') {
 		$paypal_url = ($this->sandbox) ? SSL_SAND_URL : SSL_P_URL;
+		$gopts = new RM_Options;
 		ob_start();
 		echo "<html>\n";
 		echo "<head><title>".__('Processing Payment...','custom-registration-form-builder-with-submission-manager')."</title></head>\n";
@@ -131,7 +132,7 @@ class rm_paypal_class {
                 echo "</tbody>\n";
                 echo "<tfoot>\n";
                     if($pricing_details->tax > 0){
-                        echo "<tr><td></td><td colspan='2'>".__('Tax','custom-registration-form-builder-with-submission-manager')."</td>";
+                        echo "<tr><td></td><td colspan='2'>".esc_html($gopts->get_value_of('tax_rename'))."</td>";
                         echo "<td>".RM_Utilities::get_formatted_price($pricing_details->tax)."</td>\n";
                         echo "</tr>\n";
                     }
@@ -177,7 +178,7 @@ class rm_paypal_class {
 		}
         */
 		
-		if (isset($this->paypal_mail) && strtolower ( $_POST['receiver_email'] ) != strtolower(trim( $this->paypal_mail ))) {
+		if (isset($this->paypal_mail) && strtolower ( $_POST['receiver_email'] ) != strtolower(trim( (string)$this->paypal_mail ))) {
 			$this->ipn_status = "Receiver Email Not Match";
 			$this->log_ipn_results ( false );
 			return false;
@@ -198,7 +199,7 @@ class rm_paypal_class {
 		$post_string = '';    
 		foreach ($_POST as $field=>$value) { 
 			$this->ipn_data["$field"] = sanitize_text_field($value);
-			$post_string .= $field.'='.urlencode(stripslashes($value)).'&'; 
+			$post_string .= $field.'='.urlencode(stripslashes((string)$value)).'&'; 
 		}
 		$post_string.="cmd=_notify-validate"; // append ipn command
 		
@@ -300,7 +301,7 @@ class rm_paypal_class {
 		$find [] = "\n";
 		$replace [] = '<br/>';
 		$html_content = str_replace ( $find, $replace, $this->ipn_status );
-		echo wp_kses_post($html_content);
+		echo wp_kses_post((string)$html_content);
 	}
 	
 	public function dump_fields() {
@@ -315,7 +316,7 @@ class rm_paypal_class {
                <td bgcolor=\"black\"><b><font color=\"white\">".__('Value','custom-registration-form-builder-with-submission-manager')."</font></b></td>
             </tr>"; 
 		ksort($this->fields);
-		foreach ($this->fields as $key => $value) {echo "<tr><td>".esc_html($key)."</td><td>".wp_kses_post(urldecode($value))."&nbsp;</td></tr>";}
+		foreach ($this->fields as $key => $value) {echo "<tr><td>".esc_html($key)."</td><td>".wp_kses_post((string)urldecode($value))."&nbsp;</td></tr>";}
 		echo "</table><br>"; 
 	}
 	public function debug($msg) {

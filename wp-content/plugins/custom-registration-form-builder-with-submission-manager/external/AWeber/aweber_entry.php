@@ -56,7 +56,7 @@ class AWeberEntry extends AWeberResponse {
         if (empty($this->type)) {
             $typeLink = $this->data['resource_type_link'];
             if (empty($typeLink)) return null;
-            list($url, $type) = explode('#', $typeLink);
+            list($url, $type) = explode('#', (string)$typeLink);
             $this->type = $type;
         }
         return $this->type;
@@ -223,7 +223,7 @@ class AWeberEntry extends AWeberResponse {
      * Returns NULL if no parent entry
      */
     public function getParentEntry(){
-        $url_parts = explode('/', $this->url);
+        $url_parts = explode('/', (string)$this->url);
         $size = count($url_parts);
 
         #Remove entry id and slash from end of url

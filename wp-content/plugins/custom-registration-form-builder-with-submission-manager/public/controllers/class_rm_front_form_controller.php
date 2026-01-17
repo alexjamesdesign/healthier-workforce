@@ -61,17 +61,21 @@ class RM_Front_Form_Controller
         $fopts = $fe_form->get_form_options();
         $total_price = $fe_form->get_pricing_detail($request->req);
         
-        if($fe_form->is_expired() && $fopts->post_expiry_action == 'switch_to_another_form')
-        {
-            $form_id = $fopts->post_expiry_form_id;
-            if ($form_id)
-            {
-                $fe_form = $this->form_factory->create_form($form_id);
-                $form_name = 'form_' . $form_id;
-                $params['form_id'] = $form_id;
-            } else
-            {
-                return;
+        if($fe_form->is_expired()) {
+            if($fopts->post_expiry_action == 'switch_to_another_form') {
+                $form_id = $fopts->post_expiry_form_id;
+                if ($form_id) {
+                    $fe_form = $this->form_factory->create_form($form_id);
+                    $form_name = 'form_' . $form_id;
+                    $params['form_id'] = $form_id;
+                } else {
+                    return;
+                }
+            } else {
+                if($fopts->form_message_after_expiry)
+                    return $fopts->form_message_after_expiry;
+                else
+                    return '<div class="rm-no-default-from-notification">'.RM_UI_Strings::get('MSG_FORM_EXPIRY').'</div>';
             }
         }
         
@@ -84,7 +88,7 @@ class RM_Front_Form_Controller
             $x = new stdClass;
             $x->form_options = $fe_form->get_form_options();
             $x->form_name = $fe_form->get_form_name();
-            $after_sub_msg = $service->after_submission_proc($x);            
+            $after_sub_msg = $service->after_submission_proc($x);
             return $paypal_callback_msg.'<br><br>'.$after_sub_msg;
         }
         
@@ -244,7 +248,7 @@ class RM_Front_Form_Controller
             else{
                 $fields = new RM_Fields;
                 $fields->load_from_db($field_id);
-                if(empty($fields->field_options->field_user_profile)){
+                if(isset($fields->field_options->field_user_profile) && empty($fields->field_options->field_user_profile)){
                     if(!empty($fields->field_show_on_user_page)){
                         $fields->field_options->field_user_profile = 'define_new_user_meta';
                     }

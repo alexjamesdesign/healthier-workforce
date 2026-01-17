@@ -29,7 +29,7 @@ class RM_Front_Controller {
             $blocked_ips=array();
             $blocked_ips=$gopt->get_value_of('banned_ip');
 
-            $ip_as_arr = explode('.', $_SERVER['REMOTE_ADDR']);
+            $ip_as_arr = explode('.', (string)$_SERVER['REMOTE_ADDR']);
             if(count($ip_as_arr)!=4){
                 $sanitized_user_ip = $_SERVER['REMOTE_ADDR'];
             }else{
@@ -57,7 +57,7 @@ class RM_Front_Controller {
                 $decoded_response= json_decode($response);
 
                 if(empty($decoded_response)){
-                    echo wp_kses_post($response); 
+                    echo wp_kses_post((string)$response); 
                     exit;
                 }
                 $log= array('ip'=> $_SERVER['REMOTE_ADDR'],'time'=> current_time('timestamp'),'status'=>1,'type'=>'normal','result'=>'success');
@@ -83,11 +83,11 @@ class RM_Front_Controller {
 
 
                 $login_service->insert_login_log($log);
-                echo wp_kses_post($response);
+                echo wp_kses_post((string)$response);
                 exit;
             }
 
-            echo wp_kses_post($service->set_otp($email, $key));
+            echo wp_kses_post((string)$service->set_otp($email, $key));
         }
         exit;
     }
@@ -126,14 +126,15 @@ class RM_Front_Controller {
 
                     $settings = new RM_Options;
 
-                    if ($service->get_editable_fields($submission->get_form_id()))
+                    if($service->get_editable_fields($submission->get_form_id())) {
                         $data->is_editable = true;
-                    else
+                    } else {
                         $data->is_editable = false;
+                    }
 
                     $data->is_authorized = true;
                     $data->submission = $submission;
-
+                    $data->tax_label = $settings->get_value_of('tax_rename');
                     $data->payment = $service->get('PAYPAL_LOGS', array('submission_id' => $service->get_oldest_submission_from_group($submission->get_submission_id())), array('%d'), 'row', 0, 99999);
 
                     if ($data->payment != null) {
@@ -172,7 +173,9 @@ class RM_Front_Controller {
                     $data->form_type_status = $form->get_form_type();
                     $data->form_name = $form->get_form_name();
                     $data->form_is_unique_token = $form->get_form_is_unique_token();
-
+                    if(isset($form->form_options->save_submission_enabled) && !empty($form->form_options->save_submission_enabled) && isset($submission->is_pending) && $submission->is_pending == 1 && defined('RM_SAVE_SUBMISSION_BASENAME')) {
+                        $data->is_editable = true;
+                    }
                     /*
                      * User details if form is registration type
                      */
@@ -215,7 +218,7 @@ class RM_Front_Controller {
                 $offset_sub = ($req_page_sub - 1) * $entries_per_page_sub;
 
                 if (isset($request->req['rm_edit_user_details'])) {
-                    $form_ids = json_decode(stripslashes($request->req['form_ids']));
+                    $form_ids = json_decode(stripslashes((string)$request->req['form_ids']));
                     $submissions = $service->get_latest_submission_for_user($user_email, $form_ids);
                     $data->total_submission_count = $total_entries_sub = count($submissions);
                     $distinct = true;
@@ -243,6 +246,7 @@ class RM_Front_Controller {
                     }
                     $total_entries_pay = 0;
                     $settings = new RM_Options;
+                    $data->tax_label = $settings->get_value_of('tax_rename');
                     $data->date_format = get_option('date_format');
                     $data->payments = $service->get_payments_by_submission_id($submission_ids, 999999, 0, null, true);
                     if ($data->payments)

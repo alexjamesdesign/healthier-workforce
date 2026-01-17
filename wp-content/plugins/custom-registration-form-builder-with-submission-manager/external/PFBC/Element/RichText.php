@@ -22,7 +22,7 @@ class Element_RichText extends Element
     public function render()
     {
         $this->renderTag("prepend");
-        echo wp_kses_post($this->_attributes["value"]);
+        echo wp_kses_post((string)$this->_attributes["value"]);
         $this->renderTag("append");
     }
     
@@ -33,20 +33,26 @@ class Element_RichText extends Element
             $style_str = "";
             if(isset($this->_attributes["style"]))
             {
-                $al = explode(';',$this->_attributes["style"]);                    
+                $al = explode(';',(string)$this->_attributes["style"]);                    
                 foreach($al as $a)
                 {
-                    if(strpos(trim($a),"color:")=== 0)
+                    if(strpos(trim((string)$a),"color:")=== 0)
                     {
                         $style_str ='style="'.$a.'";'; 
                         break;
                     }
                 }
             }
-            echo '<div '.wp_kses_post($style_str).' class="rm_form_field_type_richtext',$this->_attributes["class"]? ' '.esc_attr($this->_attributes["class"]):null,'">';
+            echo '<div ' . wp_kses_post((string)$style_str) . ' class="rm_form_field_type_richtext' . ($this->_attributes["class"] ? ' ' . esc_attr($this->_attributes["class"]) : '') . '">';
         }
         if($type === "append")
             echo '</div>';
+    }
+
+    public function add_condition(){
+        if(!is_null($this->_attributes["options"]) && isset($this->_attributes["options"]["data-cond-option"])) {
+            echo '<input type="hidden" class="'.$this->_attributes["options"]["class"].'" data-cond-option="'.$this->_attributes["options"]["data-cond-option"].'" data-cond-value="'.$this->_attributes["options"]["data-cond-value"].'" data-cond-operator="'.$this->_attributes["options"]["data-cond-operator"].'" data-cond-action="'.$this->_attributes["options"]["data-cond-action"].'">';
+        }
     }
 
 }

@@ -21,7 +21,7 @@ class Element_jQueryUIBirthDate extends Element_jQueryUIDate {
         
         $jquery .= "});";
         
-        echo wp_kses_post($jquery);
+        echo wp_kses_post((string)$jquery);
     }
     
 }

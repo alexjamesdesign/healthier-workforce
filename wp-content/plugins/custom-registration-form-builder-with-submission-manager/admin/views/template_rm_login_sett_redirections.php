@@ -22,11 +22,10 @@ $params= $data->params;?>
             "action" => ""
         ));
   
-        
+        $form->addElement(new Element_Checkbox("<b>" . __('Always redirect admin users to dashboard', 'custom-registration-form-builder-with-submission-manager') . "</b>", "admin_redirection_link", array(1 => ""), array("class" => "rm-static-field rm_input_type", "value" => isset($params['admin_redirection_link']) ? $params['admin_redirection_link'] : 0, "longdesc" => RM_UI_Strings::get('HELP_OPTIONS_GEN_REDIRECT_ADMIN_TO_DASH') )));
         $form->addElement(new Element_Radio(__('Type of redirection', 'custom-registration-form-builder-with-submission-manager'), "redirection_type", array('common'=>__('Common', 'custom-registration-form-builder-with-submission-manager'),'role_based'=>__('Role Based', 'custom-registration-form-builder-with-submission-manager')), array("value" => $params['redirection_type'], "longDesc"=>__('Define if you wish to have same redirections for all user roles or every role will have seperate redirections.', 'custom-registration-form-builder-with-submission-manager'))));
             $form->addElement(new Element_HTML('<div id="rm_common_redirection" class="childfieldsrow">'));
                 $form->addElement(new Element_Select("<b>" .__('After Login Redirect User to', 'custom-registration-form-builder-with-submission-manager') . "</b>", "redirection_link",RM_Utilities::wp_pages_dropdown(), array("value" => $params['redirection_link'], "class" => "rm_static_field rm_required", "longDesc" => RM_UI_Strings::get('HELP_OPTIONS_POST_SUB_REDIR'))));
-                $form->addElement(new Element_Checkbox("<b>" . __('Always redirect admin users to dashboard', 'custom-registration-form-builder-with-submission-manager') . "</b>", "admin_redirection_link", array(1 => ""), array("class" => "rm-static-field rm_input_type", "value" => isset($params['admin_redirection_link']) ? $params['admin_redirection_link'] : 0, "longdesc" => RM_UI_Strings::get('HELP_OPTIONS_GEN_REDIRECT_ADMIN_TO_DASH') )));
                 $form->addElement(new Element_Select("<b>" . __('After Logout Redirect User to', 'custom-registration-form-builder-with-submission-manager') . "</b>", "logout_redirection",RM_Utilities::wp_pages_dropdown(), array("value" => $params['logout_redirection'], "class" => "rm_static_field rm_required", "longDesc" => RM_UI_Strings::get('HELP_OPTIONS_POST_LOGOUT_REDIR'))));
             $form->addElement(new Element_HTML('</div>'));
             
@@ -77,10 +76,16 @@ $params= $data->params;?>
         });
         jQuery("input[name=redirection_type]").trigger('change');
         jQuery(".rm-role-based").change();
-        
+        jQuery("input#add-login-redirection-element-0-0").change(function(e) {
+            if(jQuery(this).is(":checked")) {
+                jQuery("input[value=administrator]").prop("checked", false);
+                jQuery("input[value=administrator]").trigger('change');
+                jQuery("input[value=administrator]").parents("div.rmrow").hide();
+            } else {
+                jQuery("input[value=administrator]").parents("div.rmrow").show();
+            }
+        });
+        jQuery("input#add-login-redirection-element-0-0").trigger('change');
     });
-    
-    
-    
 </script>    
 <?php } ?>

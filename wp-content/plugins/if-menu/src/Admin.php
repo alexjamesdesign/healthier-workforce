@@ -18,18 +18,6 @@ class Admin {
 			update_option('if-menu-peak', isset($_POST['if-menu-peek']) && $_POST['if-menu-peek'] == 1 ? 1 : 0);
 			update_option('if-menu-admin', isset($_POST['if-menu-admin']) && $_POST['if-menu-admin'] == 1 ? 1 : 0);
 		}
-
-		if (isset($_REQUEST['if-menu-set-license-key']) && $_REQUEST['if-menu-set-license-key']) {
-			update_option('if-menu-license-key', $_REQUEST['if-menu-set-license-key']);
-			wp_redirect(admin_url('themes.php?page=if-menu&if-menu-recheck-plan'));
-			exit;
-		}
-
-		if (isset($_REQUEST['if-menu-delete-license-key']) && $_REQUEST['if-menu-delete-license-key'] == 'y') {
-			delete_option('if-menu-license-key');
-			wp_redirect(admin_url('themes.php?page=if-menu&if-menu-recheck-plan'));
-			exit;
-		}
 	}
 
 	public function assets() {
@@ -111,7 +99,7 @@ class Admin {
 									<li><a href="https://woocommerce.com/products/woocommerce-subscriptions" target="_blank">WooCommerce Subscriptions</a> - <?php _e('Customer has active subscription', 'if-menu') ?></li>
 									<li><a href="https://woocommerce.com/products/woocommerce-memberships" target="_blank">WooCommerce Memberships</a> - <?php _e('Customer has active membership plan', 'if-menu') ?></li>
 									<li><a href="https://wordpress.org/plugins/groups" target="_blank">Groups</a> - <?php _e('Users are in a Group', 'if-menu') ?></li>
-									<li><a href="https://member.wishlistproducts.com" target="_blank">WishList Member</a> - <?php _e('Users above a Membership Level', 'if-menu') ?></li>
+									<li><a href="https://wishlistmember.com/" target="_blank">WishList Member</a> - <?php _e('Users above a Membership Level', 'if-menu') ?></li>
 									<li><a href="https://astoundify.com/products/wp-job-manager-listing-payments/" target="_blank">Listing Payments</a> - <?php _e('Customer has active Job Manager Listing subscription', 'if-menu') ?></li>
 									<li><a href="https://restrictcontentpro.com/" target="_blank">Restrict Content Pro</a> - <?php _e('User has Subscription Level', 'if-menu') ?></li>
 								</ul>

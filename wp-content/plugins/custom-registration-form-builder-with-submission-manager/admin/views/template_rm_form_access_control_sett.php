@@ -148,7 +148,7 @@ $roles = array('administrator', 'editor', 'author');
     
     <?php 
     $rm_promo_banner_title = __("Unlock powerful access control and more by upgrading",'custom-registration-form-builder-with-submission-manager');
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
 
 </div>

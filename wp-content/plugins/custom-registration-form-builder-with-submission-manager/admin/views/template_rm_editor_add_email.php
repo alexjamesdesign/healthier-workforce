@@ -11,7 +11,7 @@ else
  	$select_input_id = 'rm_editor_add_email';
 ?>
 <select id="<?php echo esc_attr($select_input_id);?>">
-    <option value="0"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_ADD_EMAIL")); ?></option>
+    <option value="0"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_ADD_EMAIL")); ?></option>
     <?php
     foreach($data->emails as $email)
     {
@@ -22,7 +22,7 @@ else
         } else if($type=='userpassword'){
             $opt_value= 'UserPassword';
         }
-        echo '<option value="'.esc_attr($opt_value).'">'.wp_kses_post($email->field_label).'</option>';
+        echo '<option value="'.esc_attr($opt_value).'">'.wp_kses_post((string)$email->field_label).'</option>';
     }
 ?>
 </select>

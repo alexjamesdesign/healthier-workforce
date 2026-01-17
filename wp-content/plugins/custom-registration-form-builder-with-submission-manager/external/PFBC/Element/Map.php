@@ -28,7 +28,7 @@ class Element_Map extends Element
       );
       } */
 
-    public function __construct($label, $name, $api_key, array $properties = null)
+    public function __construct($label, $name, $api_key, $properties = null)
     {
         parent::__construct($label, $name, $properties);
         $this->_attributes['id'] = $name;
@@ -60,7 +60,7 @@ class Element_Map extends Element
     {
         ?>  
         <div class="rmmap_container">
-            <input <?php echo wp_kses_post($this->getAttributes()); ?>>
+            <input <?php echo wp_kses_post((string)$this->getAttributes()); ?>>
             <div style="height:350px" class="map" id="map<?php echo esc_attr($this->_attributes['id']); ?>"></div></div>
         <?php
     }

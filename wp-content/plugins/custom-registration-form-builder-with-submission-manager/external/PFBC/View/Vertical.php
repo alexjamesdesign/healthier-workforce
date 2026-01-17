@@ -1,7 +1,7 @@
 <?php
 class View_Vertical extends View {
 	public function render() {
-		echo '<form', wp_kses_post($this->_form->getAttributes()), '>';
+		echo '<form', wp_kses_post((string)$this->_form->getAttributes()), '>';
 		$this->_form->getErrorView()->render();
 
 		$elements = $this->_form->getElements();
@@ -32,11 +32,11 @@ class View_Vertical extends View {
 
 	public function renderLabel(Element $element) {
         $label = $element->getLabel();
-		echo '<label for="', wp_kses_post($element->getAttribute("id")), '">';
+		echo '<label for="', wp_kses_post((string)$element->getAttribute("id")), '">';
         if(!empty($label)) {
 			if($element->isRequired())
 				echo '<span class="required">* </span>';
-			echo wp_kses_post($label);	
+			echo wp_kses_post((string)$label);	
         }
 		echo '</label>'; 
     }

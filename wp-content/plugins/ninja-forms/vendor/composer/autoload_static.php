@@ -4,10 +4,10 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit99d66771dbe8623cd11fa59eb36c97bd
+class ComposerStaticInit9cdb3c69caefbada74a3c5adff52fddc
 {
     public static $prefixLengthsPsr4 = array (
-        'N' => 
+        'N' =>
         array (
             'NinjaForms\\NinjaForms\\' => 22,
             'NinjaForms\\Includes\\' => 20,
@@ -16,15 +16,15 @@ class ComposerStaticInit99d66771dbe8623cd11fa59eb36c97bd
     );
 
     public static $prefixDirsPsr4 = array (
-        'NinjaForms\\NinjaForms\\' => 
+        'NinjaForms\\NinjaForms\\' =>
         array (
             0 => __DIR__ . '/../..' . '/',
         ),
-        'NinjaForms\\Includes\\' => 
+        'NinjaForms\\Includes\\' =>
         array (
             0 => __DIR__ . '/../..' . '/includes',
         ),
-        'NinjaForms\\Blocks\\' => 
+        'NinjaForms\\Blocks\\' =>
         array (
             0 => __DIR__ . '/../..' . '/blocks/views/includes',
         ),
@@ -37,9 +37,9 @@ class ComposerStaticInit99d66771dbe8623cd11fa59eb36c97bd
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit99d66771dbe8623cd11fa59eb36c97bd::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit99d66771dbe8623cd11fa59eb36c97bd::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit99d66771dbe8623cd11fa59eb36c97bd::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9cdb3c69caefbada74a3c5adff52fddc::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9cdb3c69caefbada74a3c5adff52fddc::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit9cdb3c69caefbada74a3c5adff52fddc::$classMap;
 
         }, null, ClassLoader::class);
     }

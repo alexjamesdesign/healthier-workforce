@@ -25,7 +25,7 @@ class Element_HTMLL extends Element
     public function render()
     {
         $this->renderTag("prepend");
-        echo wp_kses_post($this->_attributes["value"]);
+        echo wp_kses_post((string)$this->_attributes["value"]);
         $this->renderTag("append");
     }
     
@@ -42,7 +42,7 @@ class Element_HTMLL extends Element
         $href = isset($this->_attributes['href'])?$this->_attributes['href']:null;
         
         if($type === "prepend")
-            echo '<div class="' .esc_attr($class). '"><a ' .wp_kses_post($this->getAttributes()). '">';
+            echo '<div class="' .esc_attr($class). '"><a ' .wp_kses_post((string)$this->getAttributes()). '">';
         if($type === "append")
             echo '</a></div>';
     }

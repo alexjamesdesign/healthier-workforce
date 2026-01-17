@@ -59,7 +59,7 @@ else{
                                                 <div class="rm-report-filter-attr">
                                                     <label><?php _e('Status', 'custom-registration-form-builder-with-submission-manager'); ?></label>
                                                     <select class="" name="rm_login_status">
-                                                        <?php echo wp_kses($status, RM_Utilities::expanded_allowed_tags()); ?>
+                                                        <?php echo wp_kses((string)$status, RM_Utilities::expanded_allowed_tags()); ?>
                                                     </select>
                                                 </div>  
                                             </div> 
@@ -71,7 +71,7 @@ else{
                                     <div class="rm-box-col-3">
                                         <div class="rm-box-btn-wrap rm-box-text-right">
                                            <button type="submit" id="rm_submit_btn" class="rm-btn-primary rm-btn"><?php _e('Search', 'custom-registration-form-builder-with-submission-manager'); ?></button>
-                                           <button type="button" id="rm_reset_btn" class="rm-btn-secondary rm-btn" onclick="window.location.href='<?php echo admin_url('?page=rm_reports_login'); ?>'"><?php _e('Reset', 'custom-registration-form-builder-with-submission-manager'); ?></button>
+                                           <button type="button" id="rm_reset_btn" class="rm-btn-secondary rm-btn" onclick="window.location.href='<?php echo admin_url('admin.php?page=rm_reports_login'); ?>'"><?php _e('Reset', 'custom-registration-form-builder-with-submission-manager'); ?></button>
                                         </div>
                                     </div>
                                 </div>

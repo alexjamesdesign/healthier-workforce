@@ -70,7 +70,7 @@ class RM_XML_Loader
                      * Get all the allowed actions for the controller. Then concatenate the allowed method to match with
                      * the current request slug
                      */
-                    $all_actions= explode(',',$request['allowed_actions']);
+                    $all_actions= explode(',',(string)$request['allowed_actions']);
 
                     $allowed_actions= array();
 

@@ -29,16 +29,17 @@ class RM_Activator
      * @since    3.0.0
      */
     public static function activate($network_wide)
-    { 
+    {
         RM_Table_Tech::create_tables($network_wide);
-        self::setup_submission_page($network_wide);
-        self::setup_recovery_page($network_wide);
-        self::setup_login_page($network_wide);
+        //self::setup_submission_page($network_wide);
+        //self::setup_recovery_page($network_wide);
+        //self::setup_login_page($network_wide);
         self::first_install_proc();
         self::migrate($network_wide);
         self::setup_login_options($network_wide);
         update_site_option('rm_option_last_activation_time', time());
-        update_site_option('rm_redirect_after_activation', 1);
+        update_option('rm_redirect_after_activation', 1);
+        update_option('rm_create_posts_pages', true);
         
         if (method_exists('RM_Chronos_Service', 'insert_cron_on_activate_plugin')){
             $cron_service = new RM_Chronos_Service;
@@ -46,7 +47,7 @@ class RM_Activator
         }
     }
     
-    public static function setup_recovery_page($network_wide){
+    public static function setup_recovery_page($network_wide = true){
         global $wpdb;
         if (is_multisite() && $network_wide)
         {
@@ -83,7 +84,7 @@ class RM_Activator
         
     }
     //Create deafult login page while taking care of multisite installtion 
-    public static function setup_login_page($network_wide){
+    public static function setup_login_page($network_wide = true){
         global $wpdb;
 
         if (is_multisite() && $network_wide)
@@ -105,7 +106,7 @@ class RM_Activator
     }
     
     //Create default submission page while taking care of multisite installation.
-    public static function setup_submission_page($network_wide)
+    public static function setup_submission_page($network_wide = true)
     {
         global $wpdb;
 
@@ -785,14 +786,15 @@ class RM_Activator
         $existing_crf_db_version = get_option('crf_db_version', false);
         
         //Check if it is fresh RM installation
-        if(!$existing_rm_db_version && !$existing_rm_plugin_version)
+        //if(!$existing_rm_db_version && !$existing_rm_plugin_version)
+        if(!$existing_rm_db_version)
         {
             //Insert sample data only if CRF is not there as well, otherwise migration might cause issues.
             if(!$existing_crf_db_version)
             {
                 $datafile = defined('REGMAGIC_ADDON') ? RM_ADDON_EXTERNAL_DIR."sample_data.xml" : RM_EXTERNAL_DIR."sample_data.xml";
                 $id = RM_Services::import_form_first($datafile);
-                $id = RM_Services::import_form_first($datafile, intval($id));
+                //$id = RM_Services::import_form_first($datafile, intval($id));
 
                 //Now get the ids of these forms and save them so we can check in future if given form is sample form or not.
                 //Usecase: Form manager template requires exclusive ids for sample form cards.
@@ -800,6 +802,22 @@ class RM_Activator
                 $inserted_sample_data = new stdClass;
                 $inserted_sample_data->forms = array();
                 $form_table = RM_Table_Tech::get_table_name_for('FORMS');
+                
+                // Updating dates on default forms
+                $current_time = wp_date('Y-m-d H:i:s');
+                for($i=1; $i<=2; $i++) {
+                    $wpdb->update(
+                        $form_table,
+                        array(
+                            'created_on' => $current_time,
+                            'modified_on' => $current_time
+                        ),
+                        array(
+                            'form_id' => $i
+                        )
+                    );
+                }
+
                 $sfids = $wpdb->get_results("SELECT `form_id`, `form_type` FROM $form_table ORDER BY `form_id` DESC LIMIT 2");
 
                 if($sfids && is_array($sfids))
@@ -811,9 +829,9 @@ class RM_Activator
                         $service->add_default_cstatuses($sfid->form_id);
                         $service->add_default_crons($sfid->form_id);
                     }
-                    $service->add_sample_subs();
+                    //$service->add_sample_subs();
                 }
-
+                
                 update_site_option('rm_option_inserted_sample_data', $inserted_sample_data);
             }
 
@@ -834,6 +852,7 @@ class RM_Activator
             update_site_option('rm_option_install_date', time());
             update_site_option('rm_option_install_type', 'basic');
             update_site_option('rm_option_theme', 'default');
+            update_site_option('rm_forms_view_roll_back', 0);
         }
         else
         {

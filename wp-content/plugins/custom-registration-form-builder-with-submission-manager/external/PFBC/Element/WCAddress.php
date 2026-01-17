@@ -17,7 +17,7 @@ class Element_WCAddress extends Element {
     public $properties = array();
     public $field_type;
 
-    public function __construct($label, $name, $field_type, array $properties = null) {
+    public function __construct($label, $name, $field_type, $properties = null) {
         parent::__construct($label, $name, $properties);
         $this->field_type = $field_type;
     }
@@ -48,7 +48,7 @@ class Element_WCAddress extends Element {
         
         $store_loc = get_site_option('woocommerce_default_country');
         if(!empty($store_loc)) {
-            $store_loc = explode(":", $store_loc);
+            $store_loc = explode(":", (string)$store_loc);
         } else {
             $store_loc = array("US","CA");
         }
@@ -232,7 +232,7 @@ class Element_WCAddress extends Element {
                         if(!empty($user->ID)){
                             $values['state']= get_user_meta($user->ID, 'billing_state', true);
                         } else {
-                            $values['state']= $store_loc[1];
+                            $values['state'] = isset($store_loc[1]) ? $store_loc[1] : "";
                         }
                      ?>
                     <div class="rm-wc-field">
@@ -247,34 +247,34 @@ class Element_WCAddress extends Element {
              
                     </div>
                     
-                    <div data-style="<?php echo esc_attr($this->_attributes['textfield_style']); ?>" id="<?php echo esc_attr($field_name) . '_state_attrs'; ?>" data-name="<?php echo esc_attr($field_name) . '[state]'; ?>" data-placeholder="<?php echo empty($this->_attributes['field_wcb_label_as_placeholder']) ? '' : esc_attr($this->_attributes['field_wcb_state_label']); ?>" data-required="<?php echo empty($this->_attributes['field_wcb_state_req']) ? '' : 'required'; ?>" data-value="<?php echo empty($values['state']) ? '' : esc_attr($values['state']); ?>" data-class="<?php echo empty($this->_attributes['field_css_class']) ? '' : esc_attr($this->_attributes['field_css_class']); ?>"></div>
+                    <div data-style="<?php echo esc_attr($this->_attributes['textfield_style']); ?>" id="<?php echo esc_attr($field_name) . '_state_attrs'; ?>" data-name="<?php echo esc_attr($field_name) . '[state]'; ?>" data-placeholder="<?php echo empty($this->_attributes['field_wcb_label_as_placeholder']) ? '' : esc_attr($this->_attributes['field_wcb_state_label']); ?>" data-required="<?php echo empty($this->_attributes['field_wcb_state_req']) ? '' : 'required'; ?>" data-value="<?php //echo empty($values['state']) ? '' : esc_attr($values['state']); ?>" data-class="<?php echo empty($this->_attributes['field_css_class']) ? '' : esc_attr($this->_attributes['field_css_class']); ?>"></div>
                     <script>
                     jQuery(document).ready(function () {
-                        jQuery("[name='<?php echo wp_kses_post($field_name) . '[country]'; ?>']").change(function () {
+                        jQuery("[name='<?php echo wp_kses_post((string)$field_name) . '[country]'; ?>']").change(function () {
                             if(jQuery(this).val()!=''){
-                                jQuery("#<?php echo wp_kses_post($field_name); ?>_state").html('Please wait...');
+                                jQuery("#<?php echo wp_kses_post((string)$field_name); ?>_state").html('Please wait...');
                                 
                                 var data = {
                                     "action": "rm_get_state",
                                     "rm_sec_nonce": '<?php echo wp_create_nonce('rm_ajax_secure'); ?>',
                                     "rm_slug": "rm_get_state",
                                     "country": jQuery(this).val(),
-                                    "def_state": '<?php echo wp_kses_post($values['state']); ?>',
+                                    "def_state": '<?php echo wp_kses_post((string)$values['state']); ?>',
                                     "attr": "data-rm-state-val",
-                                    "form_id": "<?php echo wp_kses_post($this->_attributes['form_id']) ?>",
-                                    'state_field_id': '<?php echo wp_kses_post($field_name).'_state' ?>',
+                                    "form_id": "<?php echo wp_kses_post((string)$this->_attributes['form_id']) ?>",
+                                    'state_field_id': '<?php echo wp_kses_post((string)$field_name).'_state' ?>',
                                     'type': 'billing' 
                                 };
                                 rm_get_state(this, rm_ajax_url, data, '<?php echo esc_attr($field_options); ?>');
                             }
                         });
-                        jQuery("[name='<?php echo wp_kses_post($field_name) . '[country]'; ?>']").trigger('change');
+                        jQuery("[name='<?php echo wp_kses_post((string)$field_name) . '[country]'; ?>']").trigger('change');
                     });
                     </script>
                     <?php if(!empty($this->_attributes['help_text'])):?>
                     <div class="rmnote">
                         <div class="rmprenote"></div>
-                        <div class="rmnotecontent"><?php echo wp_kses_post($this->_attributes['help_text']) ?></div>
+                        <div class="rmnotecontent"><?php echo wp_kses_post((string)$this->_attributes['help_text']) ?></div>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -351,7 +351,7 @@ class Element_WCAddress extends Element {
                                 <?php endif; ?>
 
                         </div>
-                        <select style="<?php echo wp_kses_post($this->_attributes['textfield_style']); ?>" <?php echo empty($this->_attributes['field_wcb_country_req']) ? '' : 'required'; ?> name="<?php echo esc_attr($field_name) . '[country]'; ?>" class="<?php echo empty($this->_attributes['field_css_class']) ? '' : esc_attr($this->_attributes['field_css_class']); ?><?php echo !empty($field_options) ? ' data-conditional' : ''; ?>" <?php echo esc_attr($field_options); ?>>
+                        <select style="<?php echo wp_kses_post((string)$this->_attributes['textfield_style']); ?>" <?php echo empty($this->_attributes['field_wcb_country_req']) ? '' : 'required'; ?> name="<?php echo esc_attr($field_name) . '[country]'; ?>" class="<?php echo empty($this->_attributes['field_css_class']) ? '' : esc_attr($this->_attributes['field_css_class']); ?><?php echo !empty($field_options) ? ' data-conditional' : ''; ?>" <?php echo esc_attr($field_options); ?>>
                             <?php foreach (RM_Utilities::get_countries() as $key => $val): ?>
                                 <option <?php echo $country_code == $key ? 'selected' : ''; ?> value="<?php echo esc_attr($key); ?>"><?php echo esc_html($val); ?></option>
                             <?php endforeach; ?>
@@ -361,7 +361,7 @@ class Element_WCAddress extends Element {
                     <?php if(!empty($this->_attributes['help_text'])):?>
                     <div class="rmnote">
                         <div class="rmprenote"></div>
-                        <div class="rmnotecontent"><?php echo wp_kses_post($this->_attributes['help_text']) ?></div>
+                        <div class="rmnotecontent"><?php echo wp_kses_post((string)$this->_attributes['help_text']) ?></div>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -384,14 +384,14 @@ class Element_WCAddress extends Element {
                               <?php endif; ?>
 
                         </div>
-                        <input style="<?php echo wp_kses_post($this->_attributes['textfield_style']); ?>" value="<?php echo empty($values['zip']) ? '' : esc_attr($values['zip']); ?>" type="text" name="<?php echo esc_attr($field_name) . '[zip]'; ?>" placeholder="<?php echo empty($this->_attributes['field_wcb_label_as_placeholder']) ? '' : esc_attr($this->_attributes['field_wcb_zip_label']); ?>" class="<?php echo empty($this->_attributes['field_css_class']) ? '' : esc_attr($this->_attributes['field_css_class']); ?><?php echo !empty($field_options) ? ' data-conditional' : ''; ?>" <?php echo empty($this->_attributes['field_wcb_zip_req']) ? '' : 'required'; ?> <?php echo esc_attr($field_options); ?>>
+                        <input style="<?php echo wp_kses_post((string)$this->_attributes['textfield_style']); ?>" value="<?php echo empty($values['zip']) ? '' : esc_attr($values['zip']); ?>" type="text" name="<?php echo esc_attr($field_name) . '[zip]'; ?>" placeholder="<?php echo empty($this->_attributes['field_wcb_label_as_placeholder']) ? '' : esc_attr($this->_attributes['field_wcb_zip_label']); ?>" class="<?php echo empty($this->_attributes['field_css_class']) ? '' : esc_attr($this->_attributes['field_css_class']); ?><?php echo !empty($field_options) ? ' data-conditional' : ''; ?>" <?php echo empty($this->_attributes['field_wcb_zip_req']) ? '' : 'required'; ?> <?php echo esc_attr($field_options); ?>>
   
                     
                     </div>
                     <?php if(!empty($this->_attributes['help_text'])):?>
                     <div class="rmnote">
                         <div class="rmprenote"></div>
-                        <div class="rmnotecontent"><?php echo wp_kses_post($this->_attributes['help_text']) ?></div>
+                        <div class="rmnotecontent"><?php echo wp_kses_post((string)$this->_attributes['help_text']) ?></div>
                     </div>
                     <?php endif; ?>
                 </div>
@@ -416,7 +416,7 @@ class Element_WCAddress extends Element {
                             <?php endif; ?>
                        
                     </div>
-                        <input style="<?php echo wp_kses_post($this->_attributes['textfield_style']); ?>" value="<?php echo empty($values['phone']) ? '' : esc_attr($values['phone']); ?>" type="text" pattern="<?php //echo $pattern; ?>" name="<?php echo esc_attr($field_name) . '[phone]'; ?>" placeholder="<?php echo empty($this->_attributes['field_wcb_label_as_placeholder']) ? '' : esc_attr($this->_attributes['field_wcb_phone_label']); ?>" class="<?php echo empty($this->_attributes['field_css_class']) ? '' : esc_attr($this->_attributes['field_css_class']); ?><?php echo !empty($field_options) ? ' data-conditional' : ''; ?>" <?php echo empty($this->_attributes['field_wcb_phone_req']) ? '' : 'required'; ?> <?php echo esc_attr($field_options); ?>>
+                        <input style="<?php echo wp_kses_post((string)$this->_attributes['textfield_style']); ?>" value="<?php echo empty($values['phone']) ? '' : esc_attr($values['phone']); ?>" type="text" pattern="<?php //echo $pattern; ?>" name="<?php echo esc_attr($field_name) . '[phone]'; ?>" placeholder="<?php echo empty($this->_attributes['field_wcb_label_as_placeholder']) ? '' : esc_attr($this->_attributes['field_wcb_phone_label']); ?>" class="<?php echo empty($this->_attributes['field_css_class']) ? '' : esc_attr($this->_attributes['field_css_class']); ?><?php echo !empty($field_options) ? ' data-conditional' : ''; ?>" <?php echo empty($this->_attributes['field_wcb_phone_req']) ? '' : 'required'; ?> <?php echo esc_attr($field_options); ?>>
                     
                
                     </div>
@@ -454,14 +454,14 @@ class Element_WCAddress extends Element {
                             ?>
                             <script>
                                 jQuery(document).ready(function () {
-                                    jQuery("[name='<?php echo wp_kses_post($field_name) . '[email]'; ?>']").change(function () {
+                                    jQuery("[name='<?php echo wp_kses_post((string)$field_name) . '[email]'; ?>']").change(function () {
                                         var data = {
                                             "action": "rm_user_exists",
                                             'rm_sec_nonce': '<?php echo wp_create_nonce('rm_ajax_secure'); ?>',
                                             "rm_slug": "rm_user_exists",
                                             "email": jQuery(this).val(),
                                             "attr": "data-rm-valid-email",
-                                            "form_id": "<?php echo wp_kses_post($this->_attributes['form_id']) ?>"
+                                            "form_id": "<?php echo wp_kses_post((string)$this->_attributes['form_id']) ?>"
                                         };
                                         jQuery('.rm_wc_hidden_email').val(jQuery(this).val());
                                         rm_user_exists(this, rm_ajax_url, data);
@@ -471,7 +471,7 @@ class Element_WCAddress extends Element {
                             <?php   } else { ?>
                             <script>
                                 jQuery(document).ready(function () {
-                                    jQuery("[name='<?php echo wp_kses_post($field_name) . '[email]'; ?>']").change(function () {
+                                    jQuery("[name='<?php echo wp_kses_post((string)$field_name) . '[email]'; ?>']").change(function () {
                                         jQuery('.rm_wc_hidden_email').val(jQuery(this).val());
                                     });
                                 });
@@ -480,7 +480,7 @@ class Element_WCAddress extends Element {
                             } else if (is_user_logged_in() && $form->get_form_type() != 1) { ?>
                             <script>
                                 jQuery(document).ready(function () {
-                                    jQuery("[name='<?php echo wp_kses_post($field_name).'[email]'; ?>']").change(function () {
+                                    jQuery("[name='<?php echo wp_kses_post((string)$field_name).'[email]'; ?>']").change(function () {
                                         jQuery('.rm_wc_hidden_email').val(jQuery(this).val());
                                     });
                                 });
@@ -757,27 +757,27 @@ class Element_WCAddress extends Element {
    
                     </div>
                     
-                    <div data-style="<?php echo esc_attr($this->_attributes['textfield_style']); ?>" id="<?php echo esc_attr($field_name) . '_state_attrs'; ?>" data-name="<?php echo esc_attr($field_name) . '[state]'; ?>" data-placeholder="<?php echo empty($this->_attributes['field_wcs_label_as_placeholder']) ? '' : esc_attr($this->_attributes['field_wcs_state_label']); ?>" data-required="<?php echo empty($this->_attributes['field_wcs_state_req']) ? '' : 'required'; ?>" data-value="<?php echo empty($values['state']) ? '' : esc_attr($values['state']); ?>" data-class="<?php echo empty($this->_attributes['field_css_class']) ? '' : esc_attr($this->_attributes['field_css_class']); ?>" ></div>
+                    <div data-style="<?php echo esc_attr($this->_attributes['textfield_style']); ?>" id="<?php echo esc_attr($field_name) . '_state_attrs'; ?>" data-name="<?php echo esc_attr($field_name) . '[state]'; ?>" data-placeholder="<?php echo empty($this->_attributes['field_wcs_label_as_placeholder']) ? '' : esc_attr($this->_attributes['field_wcs_state_label']); ?>" data-required="<?php echo empty($this->_attributes['field_wcs_state_req']) ? '' : 'required'; ?>" data-value="<?php //echo empty($values['state']) ? '' : esc_attr($values['state']); ?>" data-class="<?php echo empty($this->_attributes['field_css_class']) ? '' : esc_attr($this->_attributes['field_css_class']); ?>" ></div>
                     <script>
                     jQuery(document).ready(function () {
-                        jQuery("[name='<?php echo wp_kses_post($field_name) . '[country]'; ?>']").change(function () {
+                        jQuery("[name='<?php echo wp_kses_post((string)$field_name) . '[country]'; ?>']").change(function () {
                             if(jQuery(this).val()!=''){
-                                jQuery("#<?php echo wp_kses_post($field_name); ?>_state").html('Please wait...');
+                                jQuery("#<?php echo wp_kses_post((string)$field_name); ?>_state").html('Please wait...');
                                 var data = {
                                     "action": "rm_get_state",
                                     "rm_sec_nonce": '<?php echo wp_create_nonce('rm_ajax_secure'); ?>',
                                     "rm_slug": "rm_get_state",
                                     "country": jQuery(this).val(),
-                                    "def_state": '<?php echo wp_kses_post($values['state']); ?>',
+                                    "def_state": '<?php echo wp_kses_post((string)$values['state']); ?>',
                                     "attr": "data-rm-state-val",
-                                    "form_id": "<?php echo wp_kses_post($this->_attributes['form_id']) ?>",
-                                    'state_field_id': '<?php echo wp_kses_post($field_name).'_state' ?>',
+                                    "form_id": "<?php echo wp_kses_post((string)$this->_attributes['form_id']) ?>",
+                                    'state_field_id': '<?php echo wp_kses_post((string)$field_name).'_state' ?>',
                                     'type': 'shipping'
                                 };
                                 rm_get_state(this, rm_ajax_url, data, '<?php echo esc_attr($field_options); ?>');
                             }
                         });
-                        jQuery("[name='<?php echo wp_kses_post($field_name) . '[country]'; ?>']").trigger('change');
+                        jQuery("[name='<?php echo wp_kses_post((string)$field_name) . '[country]'; ?>']").trigger('change');
                     });
                     </script>
                     <?php if(!empty($this->_attributes['help_text'])):?>

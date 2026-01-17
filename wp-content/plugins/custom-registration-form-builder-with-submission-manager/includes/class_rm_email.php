@@ -55,7 +55,7 @@ class RM_Email
     *
     * @var	array
     */
-    public $attachments		= array();
+    public $attachments	= array();
     
     public $to= array();
     public $from;
@@ -117,7 +117,7 @@ class RM_Email
             $this->body		= '';
             $this->headers		= array();
             $this->header_str	= '';
-            $this->_attachments = array();
+            $this->attachments = array();
     }
     
     public function set_from_name($from_name){
@@ -175,7 +175,7 @@ class RM_Email
     */
    public function set_body($body)
    {
-           $this->body= trim($body);
+           $this->body= trim((string)$body);
    }
    
    /**
@@ -188,7 +188,7 @@ class RM_Email
        $this->header_str = '';
        foreach ($this->headers as $key => $val)
        {
-            $val = trim($val);
+            $val = trim((string)$val);
             if ($val !== '')
             {
                $this->header_str .= $key.': '.$val.$this->newline;
@@ -201,7 +201,7 @@ class RM_Email
        if($this->content_type=="html")
                $this->header_str .= 'Content-Type: text/html; charset='.$this->charset.$this->newline;
            
-       $this->header_str = rtrim($this->header_str);
+       $this->header_str = rtrim((string)$this->header_str);
    }
    
    /**
@@ -224,22 +224,26 @@ class RM_Email
     * @param	bool	$auto_clear = TRUE
     * @return	bool
     */
-   public function send($auto_clear = TRUE)
-   {
+    public function send($auto_clear = TRUE) {
         $this->build_headers();
-        if (empty($this->to))
+        
+        if(empty($this->to))
             return false;
+        
         add_action('phpmailer_init', array($this,'config_phpmailer'));
+        
         if(empty($this->attachments))
-            return wp_mail($this->to, $this->subject, $this->body);
+            $return = wp_mail($this->to, $this->subject, $this->body, $this->header_str);
         else
-           return wp_mail($this->to, $this->subject, $this->body, $this->header_str, $this->attachments);
-
+            $return = wp_mail($this->to, $this->subject, $this->body, $this->header_str, $this->attachments);
+        
+        remove_action('phpmailer_init', array($this,'config_phpmailer'));
+        
+        return $return;
    }
    
-   public function config_phpmailer($phpmailer) 	
-   {	
-       $options = new RM_Options;
+    public function config_phpmailer($phpmailer) {
+        $options = new RM_Options;
         if ($options->get_value_of('enable_smtp') == 'yes') {
             $phpmailer->isSMTP();
             $phpmailer->SMTPDebug = 0;
@@ -249,18 +253,12 @@ class RM_Email
             $phpmailer->Username = $options->get_value_of('smtp_user_name');
             $phpmailer->Password = $options->get_value_of('smtp_password');
             $phpmailer->SMTPSecure = ($options->get_value_of('smtp_encryption_type') == 'enc_tls') ? 'tls' : (($options->get_value_of('smtp_encryption_type') == 'enc_ssl') ? 'ssl' : '' );
-            if(defined('REGMAGIC_ADDON')){
-                $phpmailer->From = $options->get_value_of('smtp_senders_email');
-            } else {
-                $phpmailer->From = $options->get_value_of('smtp_user_name');
-            }
+            $phpmailer->From = $options->get_value_of('smtp_senders_email');
             if(!empty($this->from_name))	
                 $phpmailer->FromName = $this->from_name;
             else
                 $phpmailer->FromName = $options->get_value_of('senders_display_name');
-        }
-        else
-        {
+        } else {
             if($this->useAdminFrom){	
                 $phpmailer->From = $options->get_value_of('senders_email');	
                 $phpmailer->FromName = $options->get_value_of('senders_display_name');	
@@ -271,10 +269,9 @@ class RM_Email
                      $phpmailer->FromName = $this->from_name;	
             }
         }
-        
-        
-        
-        
+
+        $phpmailer->addReplyTo($phpmailer->From, $phpmailer->FromName);
+
         //if(empty($phpmailer->AltBody))
             //$phpmailer->AltBody = RM_Utilities::html_to_text_email($phpmailer->Body);
 
@@ -289,7 +286,7 @@ class RM_Email
     */
    public function to($to)
    {
-       $to = trim($to);
+       $to = trim((string)$to);
        //$this->set_header('To', $to);
        $this->to= $to; 
    }
@@ -301,8 +298,8 @@ class RM_Email
     */
    public function message($body)
    {
-        $body = trim($body);
-        $this->body = rtrim(str_replace("\r", '', $body));
+        $body = trim((string)$body);
+        $this->body = rtrim(str_replace("\r", '', (string)$body));
    }
    
    /**
@@ -312,7 +309,7 @@ class RM_Email
     */
    public function subject($subject)
    {
-        $subject = trim($subject);
+        $subject = trim((string)$subject);
         $this->subject= $subject;
         //$this->set_header('Subject', $subject);
    }

@@ -84,7 +84,7 @@ class RM_Xurl
         {
             $req_str .= urlencode($field) . "=" . urlencode($value) . "&";
         }
-        rtrim($req_str, '&');
+        rtrim((string)$req_str, '&');
 
         $this->set_req_type('POST');
         $this->set_opt(CURLOPT_POSTFIELDS, $req_str);
@@ -99,7 +99,7 @@ class RM_Xurl
         {
             $req_str .= urlencode($field) . "=" . urlencode($value) . "&";
         }
-        rtrim($req_str, '&');
+        rtrim((string)$req_str, '&');
 
         $url_for_get = $this->get_default_url() . $req_str;
 

@@ -204,6 +204,7 @@ class PostmanUtils {
 	 * @return string
 	 */
 	static function roundBytes( $size ) {
+		$size = intval( $size );
 		$unit = array(
 				'B',
 				'KiB',
@@ -212,7 +213,13 @@ class PostmanUtils {
 				'TiB',
 				'PiB',
 		);
-		return @round( $size / pow( 1024, ($i = floor( log( $size, 1024 ) )) ), 2 ) . ' ' . $unit [ $i ];
+		
+		$log = log( $size, 1024 );
+		$unit_key = floor( $log );
+		$pow = pow( 1024, $unit_key );
+		$pow = floor( $pow );
+
+		return @round( $size / $pow, 2 ) . ' ' . $unit[$unit_key];
 	}
 
 	/**
@@ -258,7 +265,7 @@ class PostmanUtils {
 
 	static function deleteLockFile( $tempDirectory = null ) {
 		$path = PostmanUtils::calculateTemporaryLockPath( $tempDirectory );
-		$success = @unlink( $path );
+		$success = file_exists($path) ? @unlink($path) : true;
 		if ( PostmanUtils::$logger->isTrace() ) {
 			PostmanUtils::$logger->trace( sprintf( 'Deleting file %s : %s', $path, $success ) );
 		}

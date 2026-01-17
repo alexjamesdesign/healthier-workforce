@@ -21,7 +21,7 @@ class Element_Repeatable extends Element
     public $prepend;
     public $append;
 
-    public function __construct($label, $name, array $properties = null) {
+    public function __construct($label, $name, $properties = null) {
 		
                 $configuration = array(
 			"label" => $label,
@@ -45,7 +45,7 @@ class Element_Repeatable extends Element
         if (!empty($this->append))
             $addons[] = "input-append";
         if (!empty($addons))
-            echo '<div class="', wp_kses_post(implode(" ", $addons)), '">';
+            echo '<div class="', wp_kses_post((string)implode(" ", $addons)), '">';
 
         if(substr($this->_attributes["name"], -2) != "[]")
 			$this->_attributes["name"] .= "[]";
@@ -68,16 +68,16 @@ class Element_Repeatable extends Element
     
     public function customRender($i) {
         if(isset($this->_attributes['field_is_multiline']) && (int)$this->_attributes['field_is_multiline']==1 ):
-            echo "<textarea", wp_kses_post($this->getAttributes("value")), ">";
+            echo "<textarea", wp_kses_post((string)$this->getAttributes("value")), ">";
             if(!empty($this->_attributes["value"])){
                 if(is_array($this->_attributes["value"]))
-                    echo wp_kses_post($this->_attributes["value"][$i]);
+                    echo wp_kses_post((string)$this->_attributes["value"][$i]);
                 else
-                   echo wp_kses_post($this->getAttribute("value"));
+                   echo wp_kses_post((string)$this->getAttribute("value"));
             }
             echo "</textarea>";
         else:
-            echo '<input', wp_kses_post($this->getAttributes()), '/>';
+            echo '<input', wp_kses_post((string)$this->getAttributes()), '/>';
         endif;
 		
 	}
@@ -93,7 +93,7 @@ class Element_Repeatable extends Element
             if ($span)
                 echo '<span class="add-on">';
 
-            echo wp_kses_post($this->$type);
+            echo wp_kses_post((string)$this->$type);
 
             if ($span)
                 echo '</span>';
@@ -107,7 +107,7 @@ class Element_Repeatable extends Element
         if ($type === "prepend")
             echo '<div class="appendable_options">';
         if ($type === "append")
-            echo '<div class="rm_actions" id="rm_add_repeatable_field" onClick="rm_append_field(\'div\',\'rm_field_type_repeatable_container_'.esc_attr($this->_attributes["id"]).'\')"><a>' . RM_UI_Strings::get("LABEL_ADD") . '</a></div><div class="rm_actions" onClick="rm_delete_appended_field(this,\'rm_field_type_repeatable_container_'.esc_attr($this->_attributes["id"]).'\')"><a href="javascript:void(0)">' . wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")) . '</a></div></div>';
+            echo '<div class="rm_actions" id="rm_add_repeatable_field" onClick="rm_append_field(\'div\',\'rm_field_type_repeatable_container_'.esc_attr($this->_attributes["id"]).'\')"><a>' . RM_UI_Strings::get("LABEL_ADD") . '</a></div><div class="rm_actions" onClick="rm_delete_appended_field(this,\'rm_field_type_repeatable_container_'.esc_attr($this->_attributes["id"]).'\')"><a href="javascript:void(0)">' . wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")) . '</a></div></div>';
         if ($type === "close")
             echo '</div>';
     }

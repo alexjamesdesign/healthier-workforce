@@ -305,8 +305,8 @@ class NF_Display_Render
                 $settings['old_classname'] = $field_class->get_old_classname();
                 $settings['wrap_template'] = $field_class->get_wrap_template();
 
-                $settings['label']=Sanitizer::preventScriptTriggerInHtmlOutput($settings['label']);
-
+                $settings['label']=\wp_kses_post(Sanitizer::preventScriptTriggerInHtmlOutput($settings['label']));
+                
                 $fields[] = apply_filters( 'ninja_forms_localize_field_settings_' . $field_type, $settings, $form );
 
                 if( 'recaptcha' == $field[ 'settings' ][ 'type' ] ){
@@ -366,7 +366,10 @@ class NF_Display_Render
 
         $form_id = "$form_id";
 
-        self::transformInlineVars($fields, $form_id,  $form->get_settings());
+        ?>
+        <!-- That data is being printed as a workaround to page builders reordering the order of the scripts loaded-->
+        <script>var formDisplay=1;var nfForms=nfForms||[];var form=[];form.id='<?php echo $form_id; ?>';form.settings=<?php echo wp_json_encode( $form->get_settings() ); ?>;form.fields=<?php echo wp_json_encode( $fields ); ?>;nfForms.push(form);</script>
+        <?php
 
         self::enqueue_scripts( $form_id );
     }

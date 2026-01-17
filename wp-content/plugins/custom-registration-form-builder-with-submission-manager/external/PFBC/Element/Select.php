@@ -3,7 +3,7 @@ class Element_Select extends OptionElement {
 	public $_attributes = array();
 	public $frontend = false;
 
-	public function __construct($label, $name, array $options, array $properties = null, array $advance_opts = null, $frontend = false) {
+	public function __construct($label, $name, array $options, $properties = null, $advance_opts = null, $frontend = false) {
 		$this->frontend = $frontend;
 		parent::__construct($label, $name, $options, $properties, $advance_opts);
 	}
@@ -19,7 +19,7 @@ class Element_Select extends OptionElement {
 		if(!empty($this->_attributes["multiple"]) && substr($this->_attributes["name"], -2) != "[]")
 			$this->_attributes["name"] .= "[]";
 
-		echo '<select', wp_kses_post($this->getAttributes(array("value", "selected"))), '>';
+		echo '<select', wp_kses_post((string)$this->getAttributes(array("value", "selected"))), '>';
 		$selected = false;
 
 		/*
@@ -41,11 +41,11 @@ class Element_Select extends OptionElement {
 			if(!$selected && in_array($value, $this->_attributes["value"])) {
 				echo 'selected="selected"';
 			}	
-			echo '>', wp_kses_post($text), '</option>';
+			echo '>', wp_kses_post((string)$text), '</option>';
         }
 		echo '</select>';
 		if($this->frontend)
-			echo '<script>jQuery(document).ready(function() {jQuery("select[name='.wp_kses_post($this->_attributes['name']).']").select2();});</script>'; 
+			echo '<script>jQuery(document).ready(function() {jQuery("select[name='.wp_kses_post((string)$this->_attributes['name']).']").select2();});</script>'; 
 	}
 
 	public function getCSSFiles()

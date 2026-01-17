@@ -24,8 +24,11 @@ class RM_Services {
     public function __construct($model = null) {
         $this->model = $model;
 
-        if ($this->get_setting('enable_mailchimp') == 'yes')
+        //if($this->get_setting('enable_mailchimp') == 'yes') {
+        if(get_option('rm_option_enable_mailchimp', 'no') == 'yes') {
+            require_once RM_EXTERNAL_DIR . 'mailchimp/class_rm_mailchimp.php';
             $this->mailchimpService = new RM_MailChimp_Service();
+        }
     }
 
     public function get_fields_highest_order($form_id, $form_page_no) {
@@ -46,7 +49,7 @@ class RM_Services {
         //Adding custom statuses
         $statuses = array(
             'Rejected' => 'FF0000',
-            'Pending' => 'FFFF00',
+            'Pending' => 'C9C903',
             'Approved' => '008000',
         );
 
@@ -89,6 +92,7 @@ class RM_Services {
 
     public function add_default_crons($form_id) {
         //Creating automation tasks
+        require_once RM_BASE_DIR."plus/chronos/chronos.php";
         $chronos_service = new RM_Chronos_Service();
         $task_params = array();
         $task_params[] = array(
@@ -333,7 +337,7 @@ class RM_Services {
             if (isset($_POST['form_id'])) {
                 $form_id = sanitize_text_field($_POST['form_id']);
             }        
-            echo wp_kses_post(self::import_form_first(null, $form_id));
+            echo wp_kses_post((string)self::import_form_first(null, $form_id));
         }
         wp_die();
     }
@@ -599,7 +603,7 @@ class RM_Services {
                 if (empty($attr_value)) {
                     $data[$row_attr_name] = '';
                 } elseif($row_attr_name == 'field_ids') {
-                    $old_field_ids = @unserialize(trim($attr_value));
+                    $old_field_ids = @unserialize(trim((string)$attr_value));
                     $new_field_ids = array();
                     foreach($old_field_ids as $old_field_id) {
                         if(!empty($old_field_id)) {
@@ -625,21 +629,20 @@ class RM_Services {
     }
 
     public function import_submissions($form_id_new, $submissions) {
-
         $all_data = array();
         $data_format = array();
         $data_identifier = 'SUBMISSIONS';
 
         $data_format = $this->get_format_specifer($data_identifier);
 
-
         foreach ($submissions as $submission_attr_name => $attr_value) {
 
             if ($submission_attr_name != 'submission_id') {
                 if ($attr_value == "") {
                     $all_data[$submission_attr_name] = null;
-                } else
-                    $all_data[$submission_attr_name] = $attr_value;
+                } else {
+                    $all_data[$submission_attr_name] = is_object($attr_value) ? strval($attr_value) : $attr_value;
+                }
             } else
                 $submission_id_old = (int) $attr_value;
             if ($submission_attr_name == 'form_id') {
@@ -663,7 +666,6 @@ class RM_Services {
                 
             }
         }
-
         $submission_id_new = RM_DBManager::insert_row($data_identifier, $all_data, $data_format);
         $this->submission_id_array[$submission_id_old] = $submission_id_new;
         return $submission_id_new;
@@ -1151,6 +1153,13 @@ class RM_Services {
         else
             return false;
     }
+
+    public function get_all_form_fields_for_task($form_id) {
+        if ((int)$form_id)
+            return RM_DBManager::get_fields_by_form_id_for_task($form_id);
+        else
+            return false;
+    }
     
     public function get_all_form_fields_by_rows($form_id) {
         if ((int) $form_id)
@@ -1189,7 +1198,7 @@ class RM_Services {
         $this->create_default_email_field($form_id);
     }
 
-    public function create_default_password_field($form_id, $has_rows = true) {
+    public function create_default_password_field($form_id, $has_rows = true, $row_id = 0, $pos_in_row = 0) {
         $field = new RM_Fields;
         $field->set(array('form_id' => $form_id,
             'field_type' => 'UserPassword',
@@ -1205,25 +1214,35 @@ class RM_Services {
             'is_field_primary' => 1,
             'field_order'=>-1,
             'en_confirm_pwd'=>array(1),
-            'pass_mismatch_err'=>'Your passwords do not match. Please check again.',
+            'pass_mismatch_err'=>esc_html__('Your passwords do not match. Please check again.','custom-registration-form-builder-with-submission-manager'),
             'en_pass_strength'=>array(1),
             'pwd_strength_type'=>array(1),
             'pwd_short_msg'=>'Too Short',
             'pwd_weak_msg'=>'Weak',
             'pwd_medium_msg'=>'Medium',
             'pwd_strong_msg'=>'Strong',
-            'help_text'=>'Password must be at least 7 characters long.'));
+            'help_text'=>esc_html__('Password must be at least 7 characters long.','custom-registration-form-builder-with-submission-manager')
+        ));
 
         $field_id = $field->insert_into_db();
 
         if(!empty($field_id) && $has_rows) {
-            $this->create_default_field_row($form_id, $field_id);
+            if($row_id == 0) {
+                $this->create_default_field_row($form_id, $field_id);
+            } else {
+                $row = new RM_Rows;
+                $row->load_from_db($row_id);
+                $fields = $row->get_field_ids();
+                $fields[$pos_in_row] = $field_id;
+                $row->set_field_ids($fields);
+                $row->update_into_db();
+            }
         }
 
         return $field_id;
     }
 
-   public function create_default_username_field($form_id, $has_rows = true) {
+   public function create_default_username_field($form_id, $has_rows = true, $row_id = 0, $pos_in_row = 0) {
 
         $field = new RM_Fields;
         $field->set(array('form_id' => $form_id,
@@ -1241,14 +1260,23 @@ class RM_Services {
             'field_max_length' => 70,
             'field_min_length' => 0,
             'is_field_primary' => 1,
-            'user_exists_error'=>'This username has already been taken. Please try something different.',
+            'user_exists_error'=>'This username has already been taken. Please try again with a different username.',
             'username_characters'=>array('alphabets','numbers','underscores','periods'),
             'invalid_username_format'=>'Invalid username format. Only {{allowed_characters}} allowed'));
 
         $field_id = $field->insert_into_db();
 
         if(!empty($field_id) && $has_rows) {
-            $this->create_default_field_row($form_id, $field_id);
+            if($row_id == 0) {
+                $this->create_default_field_row($form_id, $field_id);
+            } else {
+                $row = new RM_Rows;
+                $row->load_from_db($row_id);
+                $fields = $row->get_field_ids();
+                $fields[$pos_in_row] = $field_id;
+                $row->set_field_ids($fields);
+                $row->update_into_db();
+            }
         }
 
         return $field_id;
@@ -1413,6 +1441,23 @@ class RM_Services {
                 $remaining->date_limit = $form_options->form_expiry_date;
             }
             return $remaining;
+        } elseif ($criterian == "status") {
+            $remaining->state = 'not_expired';
+            $remaining->criteria = 'status';
+            $status_labels = array();
+            $limit_by_cs = maybe_unserialize($form_options->form_limit_by_cs);
+            if(!empty($limit_by_cs) && is_array($limit_by_cs)) {
+                foreach($limit_by_cs as $limit) {
+                    $form_status_arr = explode(":",(string)$limit);
+                    $status_form = new RM_Forms();
+                    if(isset($form_status_arr[0]) && isset($form_status_arr[1]['label']) && isset($status_form->form_options->custom_status[$form_status_arr[1]]['label'])) {
+                        $status_form->load_from_db($form_status_arr[0]);
+                        array_push($status_labels, $status_form->form_options->custom_status[$form_status_arr[1]]['label']);
+                    }
+                }
+            }
+            $remaining->status = implode(", ",$status_labels);
+            return $remaining;
         }
     }
 
@@ -1424,14 +1469,60 @@ class RM_Services {
         if (is_array($form_id)) {
             foreach ($form_id as $formId) {
                 $fields = RM_DBManager::get_fields_by_form_id($formId);
+                $field_map = array();
                 foreach ($fields as $field) {
-                    $this->duplicate_field($field->field_id, $ids[$formId]);
+                    $new_field_id = $this->duplicate_field($field->field_id, $ids[$formId]);
+                    $field_map[$field->field_id] = $new_field_id;
+                }
+
+                // Updating conditions
+                foreach($field_map as $old => $new) {
+                    $field_model = new RM_Fields;
+                    $field_model->load_from_db($new);
+
+                    if(isset($field_model->field_options->conditions['rules']) && !empty($field_model->field_options->conditions['rules'])) {
+                        foreach($field_model->field_options->conditions['rules'] as $rule_k => $rule_v) {
+                            $rule_key_arr = explode("_", $rule_k);
+                            if(isset($field_map[absint($rule_key_arr[1])])) {
+                                $rule_key_arr[1] = $field_map[absint($rule_key_arr[1])];
+                                $rule_v['controlling_field'] = (string)$rule_key_arr[1];
+                                
+                                $field_model->field_options->conditions['rules'][implode("_",$rule_key_arr)] = $rule_v;
+                                unset($field_model->field_options->conditions['rules'][$rule_k]);
+                            }
+                        }
+
+                        $field_model->update_into_db();
+                    }
                 }
             }
         } elseif ((int) $form_id) {
             $fields = RM_DBManager::get_fields_by_form_id($form_id);
+            $field_map = array();
             foreach ($fields as $field) {
-                $this->duplicate_field($field->field_id, $ids[$form_id]);
+                $new_field_id = $this->duplicate_field($field->field_id, $ids[$form_id]);
+                $field_map[$field->field_id] = $new_field_id;
+            }
+
+            // Updating conditions
+            foreach($field_map as $old => $new) {
+                $field_model = new RM_Fields;
+                $field_model->load_from_db($new);
+
+                if(isset($field_model->field_options->conditions['rules']) && !empty($field_model->field_options->conditions['rules'])) {
+                    foreach($field_model->field_options->conditions['rules'] as $rule_k => $rule_v) {
+                        $rule_key_arr = explode("_", $rule_k);
+                        if(isset($field_map[absint($rule_key_arr[1])])) {
+                            $rule_key_arr[1] = $field_map[absint($rule_key_arr[1])];
+                            $rule_v['controlling_field'] = (string)$rule_key_arr[1];
+                            
+                            $field_model->field_options->conditions['rules'][implode("_",$rule_key_arr)] = $rule_v;
+                            unset($field_model->field_options->conditions['rules'][$rule_k]);
+                        }
+                    }
+
+                    $field_model->update_into_db();
+                }
             }
         } else
             throw new InvalidArgumentException("Invalid Form ID '$form_id'.");
@@ -1441,17 +1532,42 @@ class RM_Services {
         if (is_array($form_id)) {
             foreach ($form_id as $formId) {
                 $rows = RM_DBManager::get_rows_by_form_id($formId);
+                $field_map = array();
                 if(!empty($rows)) {
                     foreach ($rows as $row) {
                         $field_id_array = array();
                         $row->field_ids = maybe_unserialize($row->field_ids);
                         foreach ($row->field_ids as $field_id) {
-                            if(empty($field_id))
+                            if(empty($field_id)) {
                                 array_push($field_id_array,'');
-                            else
-                                array_push($field_id_array, $this->duplicate_field($field_id, $ids[$formId]));
+                            } else {
+                                $new_field_id = $this->duplicate_field($field_id, $ids[$formId]); 
+                                array_push($field_id_array, $new_field_id);
+                                $field_map[$field_id] = $new_field_id;
+                            }
                         }
                         $this->duplicate_row($row->row_id, $ids[$formId], $field_id_array);
+                    }
+                    
+                    // Updating conditions
+                    foreach($field_map as $old => $new) {
+                        $field_model = new RM_Fields;
+                        $field_model->load_from_db($new);
+
+                        if(isset($field_model->field_options->conditions['rules']) && !empty($field_model->field_options->conditions['rules'])) {
+                            foreach($field_model->field_options->conditions['rules'] as $rule_k => $rule_v) {
+                                $rule_key_arr = explode("_", $rule_k);
+                                if(isset($field_map[absint($rule_key_arr[1])])) {
+                                    $rule_key_arr[1] = $field_map[absint($rule_key_arr[1])];
+                                    $rule_v['controlling_field'] = (string)$rule_key_arr[1];
+                                    
+                                    $field_model->field_options->conditions['rules'][implode("_",$rule_key_arr)] = $rule_v;
+                                    unset($field_model->field_options->conditions['rules'][$rule_k]);
+                                }
+                            }
+
+                            $field_model->update_into_db();
+                        }
                     }
                 } else {
                     $this->duplicate_form_fields($formId, $ids);
@@ -1459,17 +1575,42 @@ class RM_Services {
             }
         } elseif ((int) $form_id) {
             $rows = RM_DBManager::get_rows_by_form_id($form_id);
+            $field_map = array();
             if(!empty($rows)) {
                 foreach ($rows as $row) {
                     $field_id_array = array();
                     $row->field_ids = maybe_unserialize($row->field_ids);
                     foreach ($row->field_ids as $field_id) {
-                        if(empty($field_id))
+                        if(empty($field_id)) {
                             array_push($field_id_array,'');
-                        else
-                            array_push($field_id_array, $this->duplicate_field($field_id, $ids[$form_id]));
+                        } else {
+                            $new_field_id = $this->duplicate_field($field_id, $ids[$formId]); 
+                            array_push($field_id_array, $new_field_id);
+                            $field_map[$field_id] = $new_field_id;
+                        }
                     }
                     $this->duplicate_row($row->row_id, $ids[$form_id], $field_id_array);
+                }
+                
+                // Updating conditions
+                foreach($field_map as $old => $new) {
+                    $field_model = new RM_Fields;
+                    $field_model->load_from_db($new);
+
+                    if(isset($field_model->field_options->conditions['rules']) && !empty($field_model->field_options->conditions['rules'])) {
+                        foreach($field_model->field_options->conditions['rules'] as $rule_k => $rule_v) {
+                            $rule_key_arr = explode("_", $rule_k);
+                            if(isset($field_map[absint($rule_key_arr[1])])) {
+                                $rule_key_arr[1] = $field_map[absint($rule_key_arr[1])];
+                                $rule_v['controlling_field'] = (string)$rule_key_arr[1];
+                                
+                                $field_model->field_options->conditions['rules'][implode("_",$rule_key_arr)] = $rule_v;
+                                unset($field_model->field_options->conditions['rules'][$rule_k]);
+                            }
+                        }
+
+                        $field_model->update_into_db();
+                    }
                 }
             } else {
                 $this->duplicate_form_fields($form_id, $ids);
@@ -1485,7 +1626,7 @@ class RM_Services {
         if($skip_primaries && $model->is_field_primary == 1)
             return '';
         $model->set_form_id($form_id);
-        $model->remove_conditions(); 
+        //$model->remove_conditions(); 
         return $model->insert_into_db();
     }
     
@@ -1621,7 +1762,7 @@ class RM_Services {
             throw new InvalidArgumentException("Invalid Submission ID '$sub_id'.");
     }
 
-    public function get_submissions_to_export(RM_Submission_Filter $filter=null, $sub_ids = array(), $form_id = null) {
+    public function get_submissions_to_export($filter, $sub_ids = array(), $form_id = null) {
         $export_data = array();
         $is_payment = false;
         $option = new RM_Options;
@@ -1669,7 +1810,8 @@ class RM_Services {
                 return false;
             if(!empty($sub_ids))
                 $submission_ids = array_intersect($submission_ids, $sub_ids);
-            $submissions = RM_DBManager::get_results_for_array('SUBMISSION_FIELDS', 'field_id', $field_ids);
+            //$submissions = RM_DBManager::get_results_for_array('SUBMISSION_FIELDS', 'field_id', $field_ids);
+            $submissions = RM_DBManager::get_sub_fields_for_array('SUBMISSION_FIELDS', 'field_id', $field_ids, 'submission_id', $submission_ids);
         } else {
             $submission_ids = RM_DBManager::get_submissions($filter,$form_id,'*','submission_id', true, 'col',false);//RM_DBManager::get_results_for_last_col($search->interval, $form_id, $search->id, $search->value);
             if (!$submission_ids)
@@ -1736,22 +1878,22 @@ class RM_Services {
             else
                 $value = RM_Utilities::get_lable_for_option($submission->field_id, $value);
             
-            $value = html_entity_decode($value);
+            $value = html_entity_decode((string)$value);
             
             if (array_key_exists($submission->submission_id, $export_data))
-                $export_data[$submission->submission_id][$submission->field_id] = stripslashes($value);
+                $export_data[$submission->submission_id][$submission->field_id] = stripslashes((string)$value);
             
             $field_data = new RM_Fields();            
             $field_data->load_from_db($submission->field_id);
             $WCBilling_str = '';
             $WCShipping_str = '';
             if($field_data->field_type=='WCBilling'){
-                $WCBilling_str .= stripslashes($value).', ';
+                $WCBilling_str .= stripslashes((string)$value).', ';
                 $export_data[$submission->submission_id][$submission->field_id] = $WCBilling_str;
             }
             
             if($field_data->field_type=='WCShipping'){
-                $WCShipping_str .= stripslashes($value).', ';
+                $WCShipping_str .= stripslashes((string)$value).', ';
                 $export_data[$submission->submission_id][$submission->field_id] = $WCShipping_str;
             }
         }  
@@ -1873,7 +2015,7 @@ class RM_Services {
                 $new_row->bmargin = absint($request->req['bmargin']);
                 $new_row->width = absint($request->req['width']);
                 $new_row->heading = sanitize_text_field($request->req['heading']);
-                $new_row->subheading = sanitize_text_field($request->req['subheading']);
+                $new_row->subheading = wp_kses_post($request->req['subheading']);
                 $new_row->row_order = absint(RM_DBManager::get_row_count_by_form_id($request->req['form-id'],$request->req['page-no']));
                 while(count($new_row->field_ids) < $new_row->valid_columns[$new_row->columns]) {
                     array_push($new_row->field_ids, '');
@@ -1891,7 +2033,7 @@ class RM_Services {
                 $new_row->bmargin = absint($request->req['bmargin']);
                 $new_row->width = absint($request->req['width']);
                 $new_row->heading = sanitize_text_field($request->req['heading']);
-                $new_row->subheading = sanitize_text_field($request->req['subheading']);
+                $new_row->subheading = wp_kses_post($request->req['subheading']);
                 if(count($new_row->field_ids) < $new_row->valid_columns[$new_row->columns]) {
                     while(count($new_row->field_ids) < $new_row->valid_columns[$new_row->columns]) {
                         array_push($new_row->field_ids, '');

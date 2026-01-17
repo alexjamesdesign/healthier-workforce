@@ -6,6 +6,6 @@ class Element_HTML extends Element {
 	}
 
 	public function render() { 
-		echo wp_kses($this->_attributes["value"], RM_Utilities::expanded_allowed_tags());
+		echo wp_kses((string)$this->_attributes["value"], RM_Utilities::expanded_allowed_tags());
 	}
 }

@@ -13,15 +13,15 @@ $form->configure(array(
 
 if(isset($data->design['placeholder_css'])){		
     $p_css = $data->design['placeholder_css'];
-    echo "<style>".wp_kses_post($p_css)."</style>";
+    echo "<style>".wp_kses_post((string)$p_css)."</style>";
     //$form->addElement(new Element_HTML($p_css));		
 }
 if(isset($data->design['style_label'])){	
-    echo "<style>#".wp_kses_post($data->password_form_slug)." .rmrow .rmfield label { ".wp_kses_post($data->design['style_label'])." }</style>";
+    echo "<style>#".wp_kses_post((string)$data->password_form_slug)." .rmrow .rmfield label { ".wp_kses_post((string)$data->design['style_label'])." }</style>";
     //$form->addElement(new Element_HTML($p_css));		
 }
 
-if($data->buttons['align']=='left' || $data->buttons['align']=='right'){
+if(isset($data->buttons['align']) && ($data->buttons['align']=='left' || $data->buttons['align']=='right')){
     if(empty($data->design['style_btnfield'])){
         $data->design['style_btnfield']='float:'.$data->buttons['align'];
     }
@@ -39,14 +39,15 @@ if($data->form_type=='rm_recovery_form'){
     if(isset($data->valid_email) && $data->valid_email==1){
         $form->addElement(new Element_HTML('<div class="rm_error_msg-wrap"><div class="rm_pr_success_msg"><span class="rm_green_tik">&#10003;</span>'.$data->options['rec_link_sent_msg'].'</div></div>'));
     }else{
+        if(isset($data->valid_email) && $data->valid_email==0){
+            $form->addElement(new Element_HTML('<div class="rm-response-message rm-alert rm-alert-error rm-alret-box-wrap"><span class="close">&times;</span>'.$data->options['rec_email_not_found_msg'].'</div>'));
+        }
         $form->addElement(new Element_Email($data->options['rec_email_label'], "user_email", array("required" => "1","class"=>'', "placeholder" => '','style'=>isset($data->design['style_textfield'])?$data->design['style_textfield']:null)));
+        if (get_option('rm_option_enable_captcha') == "yes")
+            $form->addElement(new Element_Captcha());
 
         $btn_label= !empty($data->options['rec_btn_label'])?$data->options['rec_btn_label']:__('Reset Password', 'custom-registration-form-builder-with-submission-manager');
         $form->addElement(new Element_Button($btn_label, "submit", array("id" => "rm_submit_btn", "class" => "rm_btn", "name" => "submit",'style'=>isset($data->design['style_btnfield'])?$data->design['style_btnfield']:null)));
-        
-        if(isset($data->valid_email) && $data->valid_email==0){
-            $form->addElement(new Element_HTML('<div class="rm_error_msg-wrap"><div class="rm_pr_error_msg"><span class="rm_red_cross">&times;</span>'.$data->options['rec_email_not_found_msg'].'</div></div>'));
-        }
     }
 }else if($data->form_type=='rm_token_form'){
     if(isset($data->invalid_copy_token) && $data->invalid_copy_token==1){

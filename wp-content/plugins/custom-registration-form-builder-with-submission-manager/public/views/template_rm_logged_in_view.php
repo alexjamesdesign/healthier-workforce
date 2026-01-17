@@ -25,7 +25,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'views/template
         <?php
         if(empty($view_options['display_user_avatar']) && empty($view_options['display_user_name']) && empty($view_options['display_greetings']) && empty($view_options['display_custom_msg']) && empty($view_options['display_account_link'])): ?>
         <?php if(!empty($view_options['display_logout_link'])): ?>
-        <div class="rm_display_only_logout"><a href="<?php echo wp_logout_url(get_permalink()); ?>"><?php echo empty($view_options['logout_text']) ? RM_UI_Strings::get('LABEL_LOG_OFF') : wp_kses_post($view_options['logout_text']); ?></a></div>
+        <div class="rm_display_only_logout"><a href="<?php echo wp_logout_url(get_permalink()); ?>"><?php echo empty($view_options['logout_text']) ? RM_UI_Strings::get('LABEL_LOG_OFF') : wp_kses_post((string)$view_options['logout_text']); ?></a></div>
         <?php endif; ?> 
         <?php else: ?>
         <?php if(!empty($view_options['display_user_avatar'])): ?>
@@ -39,7 +39,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'views/template
             <div class="rm-logged-welcome">
                 <!-- User greeting message -->
                 <?php if(!empty($view_options['display_greetings'])): ?>
-                <span class="rm-greetings-text"><?php echo empty($view_options['greetings_text']) ? __('Welcome','custom-registration-form-builder-with-submission-manager') : wp_kses_post($view_options['greetings_text']); ?></span>
+                <span class="rm-greetings-text"><?php echo empty($view_options['greetings_text']) ? __('Welcome','custom-registration-form-builder-with-submission-manager') : wp_kses_post((string)$view_options['greetings_text']); ?></span>
                 <?php endif; ?>
 
                 <!-- Show user name -->
@@ -64,7 +64,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'views/template
        
             <!-- Login custom message -->
             <?php if(!empty($view_options['display_custom_msg']) && !empty($view_options['custom_msg'])): ?>
-            <div class="rm_display_custom_msg"><?php echo wp_kses_post($view_options['custom_msg']); ?></div>
+            <div class="rm_display_custom_msg"><?php echo wp_kses_post((string)$view_options['custom_msg']); ?></div>
             <?php endif; ?>   
         
         </div> 
@@ -74,12 +74,12 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'views/template
         <div class="rm-logged-in-account-links" style="border-color: #<?php echo esc_html($view_options['separator_bar_color']); ?>">
             <!-- My Account -->
             <?php if(!empty($view_options['display_account_link'])): ?>
-                    <div class="rm_display_account"><a href="<?php echo get_permalink($my_account); ?>"><?php echo empty($view_options['account_link_text']) ? __('My Account', 'custom-registration-form-builder-with-submission-manager')  : wp_kses_post($view_options['account_link_text']); ?></a></div>
+                    <div class="rm_display_account"><a href="<?php echo get_permalink($my_account); ?>"><?php echo empty($view_options['account_link_text']) ? __('My Account', 'custom-registration-form-builder-with-submission-manager')  : wp_kses_post((string)$view_options['account_link_text']); ?></a></div>
             <?php endif; ?>
 
             <!-- Logout -->  
             <?php if(!empty($view_options['display_logout_link'])): ?>
-            <div class="rm_display_logout"><a href="<?php echo wp_logout_url(get_permalink()); ?>"><?php echo empty($view_options['logout_text']) ? RM_UI_Strings::get('LABEL_LOG_OFF') : wp_kses_post($view_options['logout_text']); ?></a></div>
+            <div class="rm_display_logout"><a href="<?php echo wp_logout_url(get_permalink()); ?>"><?php echo empty($view_options['logout_text']) ? RM_UI_Strings::get('LABEL_LOG_OFF') : wp_kses_post((string)$view_options['logout_text']); ?></a></div>
             <?php endif; ?>    
         </div>
         <?php endif; ?>

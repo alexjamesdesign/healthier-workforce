@@ -171,6 +171,7 @@ class RM_Frontend_Field_Base
             $addon_field_base = new RM_Frontend_Field_Base_Addon();
             $addon_field_base->add_custom_validations($this);
         }
+        
         if($this->is_primary() && $this->field_type=='Email')
         { 
            $this->pfbc_field->addValidation(new Validation_Email(RM_UI_Strings::get('FORM_ERR_INVALID_EMAIL'))); 
@@ -180,6 +181,14 @@ class RM_Frontend_Field_Base
            if($form->get_form_type()==RM_REG_FORM){
                $this->pfbc_field->addValidation(new Validation_UserEmail(RM_UI_Strings::get('LABEL_USER_EMAIL_EXISTS'),new RM_User_Email_Validator($this->field_model->field_id,$this->field_model->get_form_id())));
            }
+        }
+        
+        if($this->field_type=='Textbox' && isset($this->field_model->field_options->field_min_length) && !empty($this->field_model->field_options->field_min_length)) {
+            $this->pfbc_field->addValidation(new Validation_MinLength(absint($this->field_model->field_options->field_min_length)));
+        }
+
+        if($this->field_type=='Textbox' && isset($this->field_model->field_options->field_max_length) && !empty($this->field_model->field_options->field_max_length)) {
+            $this->pfbc_field->addValidation(new Validation_MaxLength(absint($this->field_model->field_options->field_max_length)));
         }
     }
     
@@ -322,7 +331,7 @@ class RM_Frontend_Field_Base
             $bg_b = intval(substr($this->x_options->icon->bg_color, 4, 2), 16);
             $bg_a = isset($this->x_options->icon->bg_alpha) ? $this->x_options->icon->bg_alpha : 1;
 
-            $icon_style = "style=\"padding:5px;color:#{$this->x_options->icon->fg_color};background-color:#{$this->x_options->icon->bg_color};border-radius:{$radius};\"";
+            $icon_style = "style=\"padding:3px;font-size:18px;color:#{$this->x_options->icon->fg_color};background-color:#{$this->x_options->icon->bg_color};border-radius:{$radius};\"";
             return '<span><i class="material-icons rm_front_field_icon" ' . $icon_style . ' id="id_show_selected_icon" data-opacity="'.$bg_a.'">' . $this->x_options->icon->codepoint . ';</i></span>' . $this->field_label;
         } else
             return $this->field_label;

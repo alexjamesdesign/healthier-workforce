@@ -47,6 +47,7 @@ if ( ! class_exists( 'PostmanSendGridMailEngine' ) ) {
             $sendgrid = new PostmanSendGrid( $this->apiKey );
 			$content = array();
 			$recipients = array();
+			$headers = array();
 
             // add the From Header
 			$sender = $message->getFromAddress();
@@ -66,18 +67,17 @@ if ( ! class_exists( 'PostmanSendGridMailEngine' ) ) {
 
             // add the to recipients
 			foreach ( ( array ) $message->getToRecipients() as $recipient ) {
-				
-			    if ( ! in_array( $recipient->getEmail(), $duplicates ) ) {
-
-			        $content['personalizations'][0]['to'][] = array(
-						'email'	=>	$recipient->getEmail(),
-						'name'	=>	$recipient->getName()
-					);
-					
-					$duplicates[] = $recipient->getEmail();
-
-                }
-
+				if ( ! in_array( $recipient->getEmail(), $duplicates ) ) {
+					$name = $recipient->getName();
+					if ( ! is_string( $name ) || $name === null ) {
+						$name = '';
+					}
+					$content['personalizations'][0]['to'][] = array(
+							'email' => $recipient->getEmail(),
+							'name'  => $name
+						);
+						$duplicates[] = $recipient->getEmail();
+					}
 			}
 
 			// add the subject
@@ -137,9 +137,10 @@ if ( ! class_exists( 'PostmanSendGridMailEngine' ) ) {
 			}
 
 			// add the headers - see http://framework.zend.com/manual/1.12/en/zend.mail.additional-headers.html
+
 			foreach ( ( array ) $message->getHeaders() as $header ) {
 				$this->logger->debug( sprintf( 'Adding user header %s=%s', $header ['name'], $header ['content'] ) );
-                //$email->addHeader( $header ['name'], $header ['content'] );
+                $headers[$header ['name']] = $header['content'];
 			}
 
 			// if the caller set a Content-Type header, use it
@@ -184,6 +185,9 @@ if ( ! class_exists( 'PostmanSendGridMailEngine' ) ) {
                 }
 				
 			}
+			if( !empty( $headers ) ){
+				$content['headers'] = $headers;
+			}
 
             // add the messageId
 			$messageId = '<' . $message->getMessageId() . '>';
@@ -201,6 +205,7 @@ if ( ! class_exists( 'PostmanSendGridMailEngine' ) ) {
 				$content['attachments'] = $this->addAttachmentsToMail( $message );	
 				
 			}
+			
 
 			try {
 				
@@ -244,16 +249,18 @@ if ( ! class_exists( 'PostmanSendGridMailEngine' ) ) {
 			foreach ( $attArray as $file ) {
 				if ( ! empty( $file ) ) {
 					$this->logger->debug( 'Adding attachment: ' . $file );
-
 					$file_name = basename( $file );
-					$file_parts = explode( '.', $file_name );
 					$file_type = wp_check_filetype( $file );
+					$type = $file_type['type'];
+					if ( !is_string( $type) || empty( $type ) ) {
+						$type = 'application/octet-stream';
+					}
 					$attachments[] = array(
 						'content' => base64_encode( file_get_contents( $file ) ),
-						'type' => $file_type['type'],
+						'type' => $type,
 						'filename' => $file_name,
 						'disposition' => 'attachment',
-						'name' => $file_parts[0],
+						// 'name' removed for SendGrid API compatibility
 					);
 				}
 			}

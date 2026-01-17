@@ -40,7 +40,7 @@ class Element_Timer extends Element implements Widget
     }
     
     public function jQueryDocumentReady() {
-      echo "jQuery('#".wp_kses_post($this->_attributes["id"])."').FlipClock({clockFace: 'MinuteCounter'});";
+      echo "jQuery('#".wp_kses_post((string)$this->_attributes["id"])."').FlipClock({clockFace: 'MinuteCounter'});";
     }
     
     public function render()

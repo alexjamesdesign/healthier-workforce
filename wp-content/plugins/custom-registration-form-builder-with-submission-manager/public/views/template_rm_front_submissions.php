@@ -26,9 +26,9 @@ $user_id = isset($data->user) ? $data->user->ID : null;
             container: '#rm_front_sub_tabs',
             animation: 'fade',
             accentColor: g_rm_acc_color,
-            activeTabIndex: <?php echo wp_kses_post($data->active_tab_index); ?>
+            activeTabIndex: <?php echo wp_kses_post((string)$data->active_tab_index); ?>
         });
-        redirecttosametab(<?php echo wp_kses_post($data->active_tab_index); ?>);
+        redirecttosametab(<?php echo wp_kses_post((string)$data->active_tab_index); ?>);
     });
 
     function get_tab_and_redirect(reqpagestr) {
@@ -50,7 +50,7 @@ $user_id = isset($data->user) ? $data->user->ID : null;
 if (!$data->payments && !$data->submissions && $data->is_user !== true) {
     ?>
 
-    <div class="rmnotice-container"><div class="rmnotice"><?php echo wp_kses_post(RM_UI_Strings::get('MSG_NO_DATA_FOR_EMAIL')); ?></div></div>
+    <div class="rmnotice-container"><div class="rmnotice"><?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_DATA_FOR_EMAIL')); ?></div></div>
     <?php
 }
 ?>
@@ -64,7 +64,7 @@ if (!$data->payments && !$data->submissions && $data->is_user !== true) {
 
             <?php
             $setting = new RM_Setting_Service();
-            echo wp_kses($setting->generate_profile_tab_links(), RM_Utilities::expanded_allowed_tags());
+            echo wp_kses((string)$setting->generate_profile_tab_links(), RM_Utilities::expanded_allowed_tags());
 
             if(isset($data->user,$data->user->ID) && defined('REGMAGIC_ADDON'))
                 echo apply_filters('rm_before_front_tabtitle_listing', '',$user_id);
@@ -85,10 +85,10 @@ if (!$data->payments && !$data->submissions && $data->is_user !== true) {
     // Let the extensions add any menu before action buttons.
     if(isset($data->user,$data->user->ID) && defined('REGMAGIC_ADDON'))
         echo apply_filters('rm_before_front_tabcontent_listing', '',$user_id);
-    echo wp_kses($setting->rm_profile_tabs_content($data, $user_id), RM_Utilities::expanded_allowed_tags());
+    echo wp_kses((string)$setting->rm_profile_tabs_content($data, $user_id), RM_Utilities::expanded_allowed_tags());
     
     if(isset($data->user,$data->user->ID))
-        echo wp_kses(apply_filters('rm_after_front_tabcontent_listing', '',$user_id),RM_Utilities::expanded_allowed_tags());
+        echo wp_kses((string)apply_filters('rm_after_front_tabcontent_listing', '',$user_id),RM_Utilities::expanded_allowed_tags());
     ?>
 </div>
 <?php //} ?>

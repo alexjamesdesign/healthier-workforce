@@ -117,15 +117,17 @@ class RM_Job_Manager {
                     $processed_msg = $job->mail_packet['message'];
 
                     foreach ($job->form_fields as $field_placeholder) {
-                        $abab = explode("_", $field_placeholder);
+                        $abab = explode("_", (string)$field_placeholder);
                         $field_id = $abab[1];
 
                         if (isset($sub_values[$field_id])) {
                             if (is_array($sub_values[$field_id]->value))
                             {
-                                if($sub_values[$field_id]->type == 'Checkbox')
+                                if($sub_values[$field_id]->type == 'Checkbox') {
                                     $sub_values[$field_id]->value = implode(",", RM_Utilities::get_lable_for_option ($field_id, $sub_values[$field_id]->value));
-                                else
+                                } elseif ($sub_values[$field_id]->type == 'URL') {
+                                    $sub_values[$field_id]->value = $sub_values[$field_id]->value['url'];
+                                } else
                                     $sub_values[$field_id]->value = implode(",", $sub_values[$field_id]->value);
                             }
                             else
@@ -165,7 +167,7 @@ class RM_Job_Manager {
                     //Send job completion email to admin(s)
                     $admin_mail = new stdClass;
                     $admin_mail->type = RM_EMAIL_GENERIC;
-                    $admin_mail->to = explode(',',$gopts->get_value_of('admin_email'));
+                    $admin_mail->to = explode(',',(string)$gopts->get_value_of('admin_email'));
                     $admin_mail->header = $header;
                     $admin_mail->message = wpautop(__(sprintf("The bulk email queue for RegistrationMagic Form #%s is complete. A total of %s emails have been sent successfully.", $job->form_id, $job->total), 'custom-registration-form-builder-with-submission-manager'));
                     $admin_mail->subject = __('Bulk Email Queue Complete', 'custom-registration-form-builder-with-submission-manager');
@@ -222,7 +224,7 @@ class RM_Job_Manager {
         $fields = array();
 
         foreach ($email_fields as $field) {
-            if ($field->field_type != 'Price' && $field->field_type != 'HTMLH' && $field->field_type != 'File' && $field->field_type != 'HTMLP' && $field->field_type != 'Terms') {
+            if ($field->field_type != 'Price' && $field->field_type != 'Subscription' && $field->field_type != 'HTMLH' && $field->field_type != 'File' && $field->field_type != 'HTMLP' && $field->field_type != 'Terms') {
                 $fields[] = $field;
             }
         }

@@ -12,13 +12,13 @@ wp_enqueue_media();
 $submit_btn_label = $data->model->get_form_options()->form_submit_btn_label ? : __('Submit', 'custom-registration-form-builder-with-submission-manager');
         echo '<style>';
         if($data->model->form_options->btn_hover_color)
-            echo '.rm_btn_selector .rm_btn_focus:hover{ background-color:'.wp_kses_post($data->model->form_options->btn_hover_color).' !important; }';
+            echo '.rm_btn_selector .rm_btn_focus:hover{ background-color:'.wp_kses_post((string)$data->model->form_options->btn_hover_color).' !important; }';
         if($data->model->form_options->field_bg_focus_color || $data->model->form_options->text_focus_color){
             echo '.rmagic .rmrow .rm_field_focus_bg:focus{';
             if($data->model->form_options->field_bg_focus_color)
-                echo 'background-color:'.wp_kses_post($data->model->form_options->field_bg_focus_color).' !important; } ';
+                echo 'background-color:'.wp_kses_post((string)$data->model->form_options->field_bg_focus_color).' !important; } ';
             if($data->model->form_options->text_focus_color)
-                echo '.rmagic .rmrow .rm_field_focus_text:focus { color:'.wp_kses_post($data->model->form_options->text_focus_color).' !important; }';
+                echo '.rmagic .rmrow .rm_field_focus_text:focus { color:'.wp_kses_post((string)$data->model->form_options->text_focus_color).' !important; }';
             
         }
         echo '</style>';
@@ -27,11 +27,11 @@ $submit_btn_label = $data->model->get_form_options()->form_submit_btn_label ? : 
 
 <div class="rmagic" ng-controller="formStyleCtrl"  ng-app="formStyleApp">
     <div class="operationsbar rm-form-design-view-head">
-        <div class="rmtitle"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FORM_PRESENTATION')); ?></div>
+        <div class="rmtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FORM_PRESENTATION')); ?></div>
         <div class="nav">
-            <ul><li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+            <ul><li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
               
-                <li><a href="javascript:void(0)" ng-click='resetAll()' id="rm-field-selection-popup"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_RESET')); ?></a></li>
+                <li><a href="javascript:void(0)" ng-click='resetAll()' id="rm-field-selection-popup"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_RESET')); ?></a></li>
             </ul>
         </div>
     </div>
@@ -42,15 +42,15 @@ $submit_btn_label = $data->model->get_form_options()->form_submit_btn_label ? : 
     </div>
     <!--Dialogue Box Starts-->
     <fieldset class="rm_form_presentation_fs">
-        <legend style="display:none" id="rm_section_name" style="<?php echo wp_kses_post($data->model->form_options->style_section); ?>"><?php _e('Section Name','custom-registration-form-builder-with-submission-manager'); ?></legend>
+        <legend style="display:none" id="rm_section_name" style="<?php echo wp_kses_post((string)$data->model->form_options->style_section); ?>"><?php _e('Section Name','custom-registration-form-builder-with-submission-manager'); ?></legend>
         <div class="rm_form_container">
-            <div class="rm_style_container" id="rm_style_container" style='<?php echo wp_kses_post($data->model->get_form_options()->style_form); ?>'>
+            <div class="rm_style_container" id="rm_style_container" style='<?php echo wp_kses_post((string)$data->model->get_form_options()->style_form); ?>'>
                 <div class="rm_element_selector"> <input class="rm_selector" type="button"  id="rm_form_selector" value="<?php _e('Form Selector', 'custom-registration-form-builder-with-submission-manager') ?>" ng-click="selectForm()"/></div>
 
                 <div class="rmrow rm_edit_form_ui">
                     <div class="rmfield" id="rm_field_label"><?php _e('Field Label', 'custom-registration-form-builder-with-submission-manager') ?></div>
                     <div class="rminput">
-                        <input class="rm_field_focus_bg rm_field_focus_text" type="text" style='<?php echo wp_kses_post($data->model->get_form_options()->style_textfield); ?>' placeholder="<?php _e('Field','custom-registration-form-builder-with-submission-manager'); ?>" id="rm_textfield" />
+                        <input class="rm_field_focus_bg rm_field_focus_text" type="text" style='<?php echo wp_kses_post((string)$data->model->get_form_options()->style_textfield); ?>' placeholder="<?php _e('Field','custom-registration-form-builder-with-submission-manager'); ?>" id="rm_textfield" />
                     </div>
                     <div class="rm_element_selector">
                         <input  type="button" class="rm_selector"  id="rm_text_field_selector" value="<?php _e('Text Field Selector','custom-registration-form-builder-with-submission-manager'); ?>" ng-click="selectTextField()"/>
@@ -63,26 +63,26 @@ $submit_btn_label = $data->model->get_form_options()->form_submit_btn_label ? : 
                 <div class="rmrow rm_edit_form_ui">
                     <div class="rmfield" id="rm_field_label"><?php _e('Field Label', 'custom-registration-form-builder-with-submission-manager') ?></div>
                     <div class="rminput">
-                        <input class="rm_field_focus_bg rm_field_focus_text" style='<?php echo wp_kses_post($data->model->get_form_options()->style_textfield); ?>' type="text" placeholder="<?php _e('Field','custom-registration-form-builder-with-submission-manager'); ?>" id="rm_textfield" />
+                        <input class="rm_field_focus_bg rm_field_focus_text" style='<?php echo wp_kses_post((string)$data->model->get_form_options()->style_textfield); ?>' type="text" placeholder="<?php _e('Field','custom-registration-form-builder-with-submission-manager'); ?>" id="rm_textfield" />
                     </div>
                 </div>
                 <div class="rmrow rm_edit_form_ui">
                     <div class="rmfield" id="rm_field_label"><?php _e('Field Label', 'custom-registration-form-builder-with-submission-manager') ?></div>
                     <div class="rminput">
-                        <input class="rm_field_focus_bg rm_field_focus_text" style='<?php echo wp_kses_post($data->model->get_form_options()->style_textfield); ?>' type="text" placeholder="<?php _e('Field','custom-registration-form-builder-with-submission-manager'); ?>" id="rm_textfield" />
+                        <input class="rm_field_focus_bg rm_field_focus_text" style='<?php echo wp_kses_post((string)$data->model->get_form_options()->style_textfield); ?>' type="text" placeholder="<?php _e('Field','custom-registration-form-builder-with-submission-manager'); ?>" id="rm_textfield" />
                     </div>
                 </div>
                 <div class="rmrow rm_edit_form_ui">
                     <div class="rmfield" id="rm_field_label"><?php _e('Field Label', 'custom-registration-form-builder-with-submission-manager') ?></div>
                     <div class="rminput">
-                        <input class="rm_field_focus_bg rm_field_focus_text" style='<?php echo wp_kses_post($data->model->get_form_options()->style_textfield); ?>' type="text" placeholder="<?php _e('Field','custom-registration-form-builder-with-submission-manager'); ?>" id="rm_textfield" />
+                        <input class="rm_field_focus_bg rm_field_focus_text" style='<?php echo wp_kses_post((string)$data->model->get_form_options()->style_textfield); ?>' type="text" placeholder="<?php _e('Field','custom-registration-form-builder-with-submission-manager'); ?>" id="rm_textfield" />
                     </div>
                 </div>
                 <div class="rm_style_action"  ng-show="selectedElement == 'rm_style_container'" >
                     <style-action-box selected-element="rm_style_container" el-form="true"></style-action-box>
                 </div>
                 <div class="rm_btn_selector">
-                    <input class="rm_btn_focus" type="button" style='<?php echo wp_kses_post($data->model->get_form_options()->style_btnfield); ?>' value="<?php echo esc_attr($submit_btn_label); ?>" id="rm_btnfield"/>
+                    <input class="rm_btn_focus" type="button" style='<?php echo wp_kses_post((string)$data->model->get_form_options()->style_btnfield); ?>' value="<?php echo esc_attr($submit_btn_label); ?>" id="rm_btnfield"/>
                     <input type="button" class="rm_selector"   id="rm_button_field_selector" value="" ng-click="selectButtonField()"/>
                     <div class="rm_style_action" ng-show="selectedElement == 'rm_btnfield'" >
                         <style-action-box selected-element="rm_btnfield" el-btn="true"></style-action-box>
@@ -93,7 +93,7 @@ $submit_btn_label = $data->model->get_form_options()->form_submit_btn_label ? : 
         </div>
     </fieldset>
     
-        <div class="rmnotice rm-invite-field-row" style="text-transform:none"><?php echo wp_kses_post(RM_UI_Strings::get('DISCLAIMER_FORM_VIEW_SETTING'));?></div>
+        <div class="rmnotice rm-invite-field-row" style="text-transform:none"><?php echo wp_kses_post((string)RM_UI_Strings::get('DISCLAIMER_FORM_VIEW_SETTING'));?></div>
 
     <div class="buttonarea popup-button-group" style="">
         <div class="cancel">
@@ -176,7 +176,7 @@ $submit_btn_label = $data->model->get_form_options()->form_submit_btn_label ? : 
                 <div class="rm_pop_up_row">
                     <label><?php _e('Border Style', 'custom-registration-form-builder-with-submission-manager') ?> </label>
                     <select id="rm_border_style" ng-model="styles.border_style" ng-change="executeAction()" >
-                        <option selected value=""><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SELECT'));?></option>
+                        <option selected value=""><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SELECT'));?></option>
                         <option><?php _e('solid', 'custom-registration-form-builder-with-submission-manager'); ?></option>
                         <option><?php _e('dashed', 'custom-registration-form-builder-with-submission-manager'); ?></option>
                         <option><?php _e('dotted', 'custom-registration-form-builder-with-submission-manager'); ?></option>
@@ -200,7 +200,7 @@ $submit_btn_label = $data->model->get_form_options()->form_submit_btn_label ? : 
             <div class="rm_pop_up_row">
                 <label><?php _e('Image Repeat', 'custom-registration-form-builder-with-submission-manager') ?> </label>
                 <select id="rm_image_repeat" ng-model="styles.image_repeat" ng-change="executeAction()" >
-                    <option selected value=""><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SELECT'));?></option>
+                    <option selected value=""><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SELECT'));?></option>
                     <option><?php _e('repeat', 'custom-registration-form-builder-with-submission-manager'); ?></option>
                     <option><?php _e('inherit', 'custom-registration-form-builder-with-submission-manager'); ?></option>
                     <option><?php _e('initial', 'custom-registration-form-builder-with-submission-manager'); ?></option>
@@ -237,7 +237,7 @@ $submit_btn_label = $data->model->get_form_options()->form_submit_btn_label ? : 
             
         </div>
         
-        <div id="rm_custom_style"><style><?php echo wp_kses_post($data->model->form_options->placeholder_css); ?></style></div>
+        <div id="rm_custom_style"><style><?php echo wp_kses_post((string)$data->model->form_options->placeholder_css); ?></style></div>
     </div>
 </div>
 <script>

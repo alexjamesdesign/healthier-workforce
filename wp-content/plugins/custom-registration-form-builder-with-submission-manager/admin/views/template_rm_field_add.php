@@ -100,6 +100,10 @@ if($data->selected_field=="Privacy"){
     $form->addElement(new Element_Textbox("<b>" . RM_UI_Strings::get('LABEL_LABEL') . "</b>", "field_label", array("id" => "rm_field_label", "class" => "rm_static_field rm_required", "required" => "1", "value" => $data->model->field_label, "longDesc"=>RM_UI_Strings::get('HELP_ADD_FIELD_LABEL'))));
 }
 
+if($data->selected_field=="Select"){
+    $form->addElement(new Element_Textbox("<b>" . __('Default Select Label', 'custom-registration-form-builder-with-submission-manager') . "</b>", "field_select_label", array("id" => "rm_field_select_label", "class" => "rm_static_field", "value" => empty($data->model->field_options->field_select_label) ? RM_UI_Strings::get('SELECT_FIELD_FIRST_OPTION') : $data->model->field_options->field_select_label, "longDesc"=>__("This will appear as the default selection text on the dropdown field.", 'custom-registration-form-builder-with-submission-manager'))));
+}
+
 //$form->addElement(new Element_HTML('</div>'));
 
 if($_GET['rm_field_type']=="Address")
@@ -124,8 +128,9 @@ $form->addElement(new Element_Textarea("<b>" . RM_UI_Strings::get('LABEL_SHORTCO
 
 $form->addElement(new Element_Textarea("<b>" . RM_UI_Strings::get('LABEL_HEADING_TEXT') . "</b>", "field_value", array("id" => "rm_field_value_heading", "class" => "rm_static_field rm_field_value", "value" => is_array($data->model->get_field_value()) ? null : $data->model->get_field_value(), "longDesc"=>RM_UI_Strings::get('HELP_ADD_FIELD_HEADING_TEXT'))));
 $form->addElement(new Element_Textarea("<b>" . RM_UI_Strings::get('LABEL_OPTIONS') . "</b>(" . RM_UI_Strings::get('LABEL_DROPDOWN_OPTIONS_DSC') . ")", "field_value", array("id" => "rm_field_value_options_textarea", "class" => "rm_static_field rm_field_value", "value" => is_array($data->model->get_field_value()) ? null : $data->model->get_field_value(), "longDesc"=>RM_UI_Strings::get('HELP_ADD_FIELD_OPTIONS_COMMASEP'))));
+$form->addElement(new Element_Textboxsortable("<b>" . RM_UI_Strings::get('LABEL_OPTIONS') . "</b>", "field_value[]", array("id" => "rm_field_value_options_sortable", "class" => "rm_static_field rm_field_value rm_prevent_empty", "value" => is_array($data->model->get_field_value()) ? $data->model->get_field_value() : explode(',' , (string)$data->model->get_field_value()), "longDesc"=>RM_UI_Strings::get('HELP_ADD_FIELD_OPTIONS_SORTABLE'))));
+$form->addElement(new Element_HTML('<div class="rmrow" id="rm_jqnotice_row"><div class="rmfield" for="rm_field_value_options_textarea"><label></label></div><div class="rminput" id="rm_jqnotice_text"></div></div>'));
 $form->addElement(new Element_Checkbox("<b>" . RM_UI_Strings::get('LABEL_ENABLE_SEARCH') . "</b>", "field_enable_search", array(1 => ""), array("id" => "rm_field_enable_search", 'disabled' => 1, "class" => "", "value" => isset($data->model->field_options->field_enable_search) ? $data->model->field_options->field_enable_search : 0, "longDesc"=>RM_UI_Strings::get('HELP_ADD_FIELD_ENABLE_SEARCH'))));
-$form->addElement(new Element_Textboxsortable("<b>" . RM_UI_Strings::get('LABEL_OPTIONS') . "</b>", "field_value[]", array("id" => "rm_field_value_options_sortable", "class" => "rm_static_field rm_field_value", "value" => is_array($data->model->get_field_value()) ? $data->model->get_field_value() : explode(',' , $data->model->get_field_value()), "longDesc"=>RM_UI_Strings::get('HELP_ADD_FIELD_OPTIONS_SORTABLE'))));
 
 
 //$form->addElement(new Element_HTML(""));
@@ -138,14 +143,26 @@ if(isset($data->model->field_options->rm_textbox) && !empty($data->model->field_
 } else {
     $other_field_value = RM_UI_Strings::get('MSG_THEIR_ANS');
 }
-$form->addElement(new Element_HTML('<div class="rmrow"><div class="rmfield" for="rm_other_option_text"><label>  </label></div><div class="rminput"><input type="text" name="rm_textbox" id="rm_other_option_text" class="rm_static_field" readonly="disabled" value="'.$other_field_value.'"><div id="rmaddotheroptiontextdiv2"><div onclick="jQuery.rm_delete_textbox_other(this)"><a>'.RM_UI_Strings::get('LABEL_DELETE').'</a></div></div></div></div>'));
+$form->addElement(new Element_HTML('<div class="rmrow"><div class="rmfield" for="rm_other_option_text"><label>  </label></div><div class="rminput"><input type="text" name="rm_textbox" id="rm_other_option_text" class="rm_static_field" readonly="disabled" value="'.$other_field_value.'"><div id="rmaddotheroptiontextdiv2" onclick="jQuery.rm_delete_textbox_other(this)">'.RM_UI_Strings::get('LABEL_DELETE').'</div></div></div>'));
 $form->addElement(new Element_HTML('</div>'));
+
+$form->addElement(new Element_HTML("<div class='' id='rm_basic_field_layout'>"));
+
+    $display_layout_options= isset($data->model->field_options->field_layout) ? $data->model->field_options->field_layout : 'vertical';
+
+    $form->addElement(new Element_Radio(__('Layout','custom-registration-form-builder-with-submission-manager').":", "field_layout",array('vertical'=>__('Vertical'), 'horizontal'=> __('Horizontal')), array("id" => "", "value" => $display_layout_options, "longDesc"=>__('Choose how the options will appear inside the form on the frontend. Vertical layout will present the options as columns, while horizontal layout will display them side-by-side in a row.','custom-registration-form-builder-with-submission-manager'))));
+    $display_layout_options_display = $display_layout_options != 'vertical' ? 'display:none' : '';
+
+    $form->addElement(new Element_HTML("<div class='childfieldsrow' id='rm_field_layout' style=".$display_layout_options_display.">"));
+        $form->addElement(new Element_Number("<b>" .__('Column Size','custom-registration-form-builder-with-submission-manager'). "</b>", "field_layout_size", array('id'=>"rm_field_layout_size","class" => "rm_field_layout_size", "value" => isset($data->model->field_options->field_layout_size) ? $data->model->field_options->field_layout_size : '1', "min"=>1, "max"=> 10,"longDesc"=>__('Choose how many options will appear in a single column. This allows you to create a grid of options, for example 5 x 2. Leave empty for a single column.','custom-registration-form-builder-with-submission-manager'))));
+    $form->addElement(new Element_HTML('</div>'));
+$form->addElement(new Element_HTML('</div>'));
+
 //$form->addElement(new Element_HTML("<div onclick=''>".RM_UI_Strings::get('LABEL_DELETE')."</div></div>"));
 if(!$data->model->field_options->field_is_other_option)
     $form->addElement(new Element_Hidden("field_is_other_option", "", array("id" => "rm_field_is_other_option")));
 else
     $form->addElement(new Element_Hidden("field_is_other_option", "1", array("id" => "rm_field_is_other_option")));
-$form->addElement(new Element_HTML('<div class="rmrow" id="rm_jqnotice_row"><div class="rmfield" for="rm_field_value_options_textarea"><label></label></div><div class="rminput" id="rm_jqnotice_text"></div></div>'));
 
 if(strtolower($data->selected_field)=="mobile"){
     include 'html/mobile_field.php';
@@ -207,7 +224,7 @@ $form->addElement(new Element_HTML('<div id="rm_advance_field_settings_container
     $rm_date_format = !$data->model->field_options->date_format ? "mm/dd/yy" : $data->model->field_options->date_format;
     $rm_date_format_label = RM_UI_Strings::get('LABEL_DATE_FORMAT');
     //Preprocess this special help text
-    $rm_date_format_helptext = sprintf(RM_UI_Strings::get('HELP_ADD_FIELD_DATEFORMAT'),"href='javascript:void(0)' onclick='jQuery(\"#id_rm_dateformat_help\").slideToggle()'");
+    $rm_date_format_helptext = sprintf(RM_UI_Strings::get('HELP_ADD_FIELD_DATEFORMAT'),"onclick='jQuery(\"#id_rm_dateformat_help\").slideToggle()'");
 
 $rm_date_format_fieldhtml = '<div class="rmrow" id="rm_field_dateformat_container"><div class="rmfield" for="rm_field_dateformat"><label><b>'.$rm_date_format_label .'</b></label></div><div class="rminput"><input type="text" name="date_format" id="rm_field_dateformat" class="rm_static_field rm_text_type_field rm_input_type" value="'.$rm_date_format.'" onkeyup="rm_test_date_format()" onchange="rm_test_date_format()" data-rmvaliddateformat="true">'.
                             '<div id="id_rm_dateformat_test"></div><div id="id_rm_dateformat_help" style="display: none; padding: 20px 0px;">'.
@@ -252,9 +269,9 @@ $form->addElement(new Element_Checkbox("<b>" . RM_UI_Strings::get('LABEL_IS_UNIQ
 $form->addElement(new Element_HTML('</div>'));
 
 $meta_options = array(
-    'do_not_add' => __('Do not add','custom-registration-form-builder-with-submission-manager'),
-    'existing_user_meta' => __('Associate with Existing User Meta Keys','custom-registration-form-builder-with-submission-manager'),
-    'define_new_user_meta' => __('Define New User Meta Key','custom-registration-form-builder-with-submission-manager')
+    'do_not_add' => esc_html__('Do not add','custom-registration-form-builder-with-submission-manager'),
+    'existing_user_meta' => esc_html__('Associate with existing user meta key','custom-registration-form-builder-with-submission-manager'),
+    'define_new_user_meta' => esc_html__('Define new user meta key','custom-registration-form-builder-with-submission-manager')
 );
 if(empty($data->model->field_options->field_user_profile)){
     if(!empty($data->model->field_options->field_meta_add)){
@@ -267,7 +284,7 @@ if(empty($data->model->field_options->field_user_profile)){
 $non_meta_fields= array('Price','ImageV','Shortcode','MapV','SubCountV','Form_Chart','FormData','Feed','Username','UserPassword','Privacy','WCBilling','WCShipping','WCBillingPhone','Fname','Lname','BInfo','Nickname','SecEmail','Website');
 if(!in_array($data->selected_field, $non_meta_fields)){
     $form->addElement(new Element_HTML("<div id='rm_user_meta_options'>"));
-        $form->addElement(new Element_Radio(__('Add Field to WordPress User Profile','custom-registration-form-builder-with-submission-manager').":", "field_user_profile",$meta_options, array("id" => "field_user_profile", "value" =>$data->model->field_options->field_user_profile, "longDesc"=>__('Saves the field value in a profile field in WordPress User Profile using User Meta. You can create new custom fields in the profile by selecting Define New User Meta Key. Please note that this feature only works with user registration forms.','custom-registration-form-builder-with-submission-manager'))));
+        $form->addElement(new Element_Radio(__('Add Field to WordPress User Profile','custom-registration-form-builder-with-submission-manager').":", "field_user_profile",$meta_options, array("id" => "field_user_profile", "value" =>$data->model->field_options->field_user_profile, "longDesc"=>__('Saves the field value in a profile field in WordPress User Profile using User Meta. You can create new custom fields in the profile by selecting "Define new user meta key". Please note that this feature only works with user registration forms.','custom-registration-form-builder-with-submission-manager'))));
         $display_user_meta_options= $data->model->field_options->field_user_profile=='existing_user_meta' || $data->model->field_options->field_user_profile=='define_new_user_meta' ? '' : 'style="display:none"';
         $form->addElement(new Element_HTML("<div class='childfieldsrow' id='rm_user_meta_key_options' $display_user_meta_options>"));
             $form->addElement(new Element_Select("<b>" .__('Select User Meta Key','custom-registration-form-builder-with-submission-manager'). "</b>", "existing_user_meta_key",$data->metas, array('id'=>"existing_user_meta","value" =>$data->model->field_options->existing_user_meta_key, "class" => "rm_user_meta_option", "longDesc"=>__('Select a User Meta Key from wp_usermeta table in which you wish to save user response to this field. This is very useful for using form data with other plugins. But please be very careful that the field type matches expected meta key value. If you are not sure, consider creating a new user meta key.','custom-registration-form-builder-with-submission-manager'))));
@@ -294,14 +311,17 @@ $form->addElement(new Element_HTML('<div class="rmrow rm_sub_heading">' . RM_UI_
 
 
  
- $form->addElement(new Element_Checkbox("<b>" . RM_UI_Strings::get('LABEL_IS_REQUIRED_RANGE') . "</b>", "field_is_required_range", array(1 => ""), array("id" => "rm_field_is_required_range", "class" => "rm_field_is_required_range","value" => $data->model->field_options->field_is_required_range, "longDesc" => RM_UI_Strings::get('HELP_ADD_FIELD_BDATE_RANGE'))));
-
-         $form->addElement(new Element_jQueryUIDate("<b>" . RM_UI_Strings::get('LABEL_IS_REQUIRED_MAX_RANGE') . "</b>", 'field_is_required_max_range', array('class' => 'rm_dateelement',"id" => "rm_is_required_max_range", "value" => $data->model->field_options->field_is_required_max_range, "longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_AUTO_EXP_TIME_LIMIT'))));
+$form->addElement(new Element_Checkbox("<b>" . RM_UI_Strings::get('LABEL_IS_REQUIRED_RANGE') . "</b>", "field_is_required_range", array(1 => ""), array("id" => "rm_field_is_required_range", "class" => "rm_field_is_required_range","value" => $data->model->field_options->field_is_required_range, "onclick" => "hide_show(this)", "longDesc" => RM_UI_Strings::get('HELP_ADD_FIELD_BDATE_RANGE'))));
+if($data->model->field_options->field_is_required_range==1)
+    $form->addElement(new Element_HTML('<div class="childfieldsrow" id="rm_field_is_required_range_childfieldsrow">'));
+else
+    $form->addElement(new Element_HTML('<div class="childfieldsrow" id="rm_field_is_required_range_childfieldsrow" style="display:none">'));
 $form->addElement(new Element_jQueryUIDate("<b>" . RM_UI_Strings::get('LABEL_IS_REQUIRED_MIN_RANGE') . "</b>", "field_is_required_min_range", array("id" => "rm_is_required_min_range", "class" => "rm_static_field rm_required", "value" => $data->model->field_options->field_is_required_min_range, "longDesc" => RM_UI_Strings::get('HELP_ADD_FIELD_SHOW_ON_USERPAGE'))));
-$form->addElement(new Element_HTML('<div class="rmrow" id="rm_range_error_row"><div class="rmfield" for="rm_field_value_options_textarea"><label></label></div><div class="rminput" id="rm_range_error_text"></div></div>'));
+$form->addElement(new Element_jQueryUIDate("<b>" . RM_UI_Strings::get('LABEL_IS_REQUIRED_MAX_RANGE') . "</b>", 'field_is_required_max_range', array('class' => 'rm_dateelement',"id" => "rm_is_required_max_range", "value" => $data->model->field_options->field_is_required_max_range, "longDesc" => RM_UI_Strings::get('HELP_ADD_FORM_AUTO_EXP_TIME_LIMIT'))));
+$form->addElement(new Element_HTML('<div class="" id="rm_range_error_row"><div class="rmfield" for="rm_field_value_options_textarea"><label></label></div><div class="rminput" id="rm_range_error_text"></div></div>'));
 
- 
- $form->addElement(new Element_HTML('</div>'));
+$form->addElement(new Element_HTML('</div>'));
+$form->addElement(new Element_HTML('</div>'));
 // $form->addElement(new Element_HTML('<div id="scroll" style="display:none">'));
 // $form->addElement(new Element_Checkbox("<b>" . RM_UI_Strings::get('LABEL_IS_REQUIRED_SCROLL') . "</b>", "field_is_required_scroll", array(1 => ""), array("id" => "rm_field_is_required_scroll", "class" => "rm_static_field rm_required", "value" => $data->model->field_options->field_is_required_scroll, "longDesc" => RM_UI_Strings::get('HELP_ADD_FIELD_REQUIRED_SCROLL'))));
 //$form->addElement(new Element_HTML('</div>'));
@@ -319,7 +339,7 @@ $save_buttton_label = RM_UI_Strings::get('LABEL_FIELD_SAVE');
 if (isset($data->model->field_id))
     $save_buttton_label = RM_UI_Strings::get('LABEL_SAVE');
 
-$form->addElement(new Element_Button($save_buttton_label, "submit", array("id" => "rm_submit_btn",  "onClick" => "jQuery.prevent_field_add(event, '".RM_UI_Strings::get('MSG_REQUIRED_FIELD') ."')", "class" => "rm_btn", "name" => "submit")));
+$form->addElement(new Element_Button($save_buttton_label, "submit", array("id" => "rm_submit_btn",  "onClick" => "jQuery.prevent_field_add(event, '".RM_UI_Strings::get('MSG_REQUIRED_FIELD') ."')", "class" => "button button-primary", "name" => "submit")));
 
 
 
@@ -330,41 +350,97 @@ $form->render();
 </div>
 <?php 
     $rm_promo_banner_title = __('Unlock all custom field types by upgrading', 'custom-registration-form-builder-with-submission-manager');
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
-    </div>
+    
 
 <?php
 $ico_arr = rm_get_icons_array();
 ?>
-<div class='rm_field_icon_res_container' id='id_rm_field_icon_reservoir' style='display:none'>    
-<div class='rm_field_icon_reservoir'>
+
+<div id='id_rm_field_icon_reservoir' class='rm_field_icon_res_container rm-modal-view'  style='display:none'> 
+    <div class="rm-modal-overlay" onclick="close_icon_reservoir()"></div>
+<div class='rm_field_icon_reservoir rm-modal-wrap'>
+    <div class="rm-modal-body">
+   <div class="rm-modal-titlebar">
+                <div class="rm-modal-title"> <?php esc_html_e('Choose Field Label Icon', 'custom-registration-form-builder-with-submission-manager') ?></div>
+                <span  class="rm-modal-close" onclick="close_icon_reservoir()">&times;</span>
+            </div>
+        <div class="rm-box-wrap">
+        <div class="rm-box-row">
+            <div class="rm-box-col-12">
+                <div class="rm-p-4">
+                    <input type="text" id="iconSearch" class="rm-box-w-100" oninput="filterIcons()" placeholder=" <?php esc_html_e( 'Search icons...', 'custom-registration-form-builder-with-submission-manager' ); ?>">
+                <div id="errorMessage" class="rm-pt-2" style="display: none; color: red;"> <?php esc_html_e( 'No icons found.', 'custom-registration-form-builder-with-submission-manager' ); ?></div>
+                </div>
+            </div>
+        </div>  
+
+      <div class="rm-box-row">
+            <div class="rm-box-col-12">
+    <div class="rm-modal-container rm-field-icon-wrap rm-px-4 rm-mb-4 rm-d-flex rm-flex-wrap rm-align-items-center">
 <?php
 foreach( $ico_arr as $icon_name => $icon_codepoint):
     //var_dump($icon_codepoint);var_dump($f_icon->codepoint);
     if('&#x'.$icon_codepoint == $f_icon->codepoint) {
     ?>
-    <i class="material-icons rm-icons-get-ready rm_active_icon" onclick="rm_select_icon(this)" id="rm-icon_<?php echo esc_attr($icon_codepoint); ?>"><?php echo '&#x'.esc_html($icon_codepoint); ?></i>
+    <i class="material-icons rm-icons-get-ready rm_active_icon" onclick="rm_select_icon(this)" data-icon-name="<?php echo esc_attr($icon_name); ?>" id="rm-icon_<?php echo esc_attr($icon_codepoint); ?>"><?php echo '&#x'.esc_html($icon_codepoint); ?></i>
     <?php }
     else {
         ?>
-    <i class="material-icons rm-icons-get-ready" onclick="rm_select_icon(this)" id="rm-icon_<?php echo esc_attr($icon_codepoint); ?>"><?php echo '&#x'.esc_html($icon_codepoint); ?></i>
+    <i class="material-icons rm-icons-get-ready" onclick="rm_select_icon(this)" data-icon-name="<?php echo esc_attr($icon_name); ?>" id="rm-icon_<?php echo esc_attr($icon_codepoint); ?>"><?php echo '&#x'.esc_html($icon_codepoint); ?></i>
     <?php }
     
 endforeach;
 ?>
+    </div>
+        </div>
+      </div>
+        </div>
 </div>
+    </div>
+</div>
+
 </div>
 
 <pre class='rm-pre-wrapper-for-script-tags'><script>
 function show_icon_reservoir(){
     jQuery('#id_rm_field_icon_reservoir').show();
-    jQuery(".rm_field_icon_reservoir").dialog();
-    jQuery (".ui-dialog.ui-widget").addClass("rmdialog");
+    //jQuery(".rm_field_icon_reservoir").dialog();
+    //jQuery (".ui-dialog.ui-widget").addClass("rmdialog");
 }
 
 function close_icon_reservoir(){
     jQuery('#id_rm_field_icon_reservoir').hide();
+}
+
+function filterIcons() {
+    var input, filter, icons, icon, i, iconName, foundIcons;
+    input = document.getElementById('iconSearch');
+    filter = input.value.toUpperCase();
+    icons = document.getElementsByClassName('material-icons rm-icons-get-ready');
+    foundIcons = 0;
+
+    for (i = 0; i < icons.length; i++) {
+        icon = icons[i];
+        iconName = icon.getAttribute('data-icon-name').toUpperCase();
+
+        // Show/hide icons based on search input
+        if (iconName.indexOf(filter) > -1) {
+            icon.style.display = '';
+            foundIcons++;
+        } else {
+            icon.style.display = 'none';
+        }
+    }
+
+    // Display error message if no icons found
+    var errorMessage = document.getElementById('errorMessage');
+    if (foundIcons === 0) {
+        errorMessage.style.display = 'block';
+    } else {
+        errorMessage.style.display = 'none';
+    }
 }
 
 function rm_remove_icon(){    
@@ -402,6 +478,7 @@ function rm_select_icon(e){
         jQuery('#rm-icon_'+ico_cp).addClass('rm_active_icon');
         jQuery('#id_show_selected_icon').html('&#x'+ico_cp);
         jQuery('#id_input_selected_icon').val('&#x'+ico_cp);
+        jQuery('#id_rm_field_icon_reservoir').hide();
     }
 }
 
@@ -443,36 +520,22 @@ function change_icon_shape(e){
         jQuery('#id_show_selected_icon').css("border-radius", "4px");
 }
 
-function rm_get_help_text(ftype){
-    
-    switch(ftype)
-    {
-        <?php foreach($field_types_array as $type => $disp_name) { if(!$type) continue;?>         
-        case '<?php echo esc_html($type); ?>':return '<?php echo wp_kses_post(RM_UI_Strings::get("FIELD_HELP_TEXT_".$type)); ?>';        
-        <?php } ?>
-        default: return '<?php echo wp_kses_post(RM_UI_Strings::get("HELP_ADD_FIELD_SELECT_TYPE")); ?>';
-    }
-}
-
-
-</script></pre>
-
-<pre class='rm-pre-wrapper-for-script-tags'><script>
  jQuery(document).ready(function () {
       jQuery(":input[name='icon_fg_color']").addClass("{onFineChange:'finechange_icon_fg_color()'}");
       jQuery(":input[name='icon_bg_color']").addClass("{onFineChange:'finechange_icon_bg_color()'}");
       
         jQuery("#rm_submit_btn").click(
             function (e) {
-                if(jQuery(".rm_field_is_required_range").attr('checked'))
+                if(jQuery(".rm_field_is_required_range").is(":checked"))
                 {
               
                var max_date=new Date(jQuery("#rm_is_required_max_range").val());
                var min_date=new Date(jQuery("#rm_is_required_min_range").val());
                if(max_date<=min_date)
                {
-                   jQuery('#rm_range_error_text').html('Invalid Range');
-                   jQuery('#rm_range_error_row').show();
+                jQuery('<div><?php esc_html_e('Maximum Date cannot be earlier than Minimum Date','custom-registration-form-builder-with-submission-manager'); ?></div>').insertAfter("#rm_is_required_max_range");
+                   //jQuery('#rm_range_error_text').html('<?php esc_html_e('Invalid Date Range','custom-registration-form-builder-with-submission-manager'); ?>');
+                   //jQuery('#rm_range_error_row').show();
                    e.preventDefault();
                }
                }
@@ -528,6 +591,17 @@ function rm_get_help_text(ftype){
                 jQuery("input#rm_field_max_length").removeAttr("min");
             }
         });
+        jQuery("[name=field_layout]").click(function(){
+            if(jQuery(this).is(':checked')){
+                var selected_val= jQuery(this).val();
+                if(selected_val == 'vertical'){
+                    jQuery("#rm_field_layout").show();
+                }
+                else{
+                    jQuery("#rm_field_layout").hide();
+                }
+            }
+        });
     });
     
     function rm_add_meta(){
@@ -550,6 +624,7 @@ function rm_get_help_text(ftype){
    }
    
    function rm_toggle_adv_settings() {
+       jQuery("input#rm_field_is_editable-0").prop("disabled", true);
        var $adv_sett = jQuery("#rm_advance_field_settings_container");
        var $adv_sett_header = jQuery("#rm_advance_field_settings_header");
        if($adv_sett_header.hasClass("rm_adv_sett_expanded")) {
@@ -572,5 +647,14 @@ function rm_get_help_text(ftype){
            $adv_sett_header.removeClass("rm_icon_sett_collapsed").addClass("rm_icon_sett_expanded");
        }
    }
+
+    function rm_get_help_text(ftype){
+        switch(ftype) {
+            <?php foreach($field_types_array as $type => $disp_name) { if(!$type) continue;?>         
+            case "<?php echo esc_html($type); ?>":return "<?php echo wp_kses_post((string)addslashes(RM_UI_Strings::get("FIELD_HELP_TEXT_".$type))); ?>";        
+            <?php } ?>
+            default: return "<?php echo wp_kses_post((string)addslashes(RM_UI_Strings::get("HELP_ADD_FIELD_SELECT_TYPE"))); ?>";
+        }
+    }
     </script></pre>
 <?php } ?>

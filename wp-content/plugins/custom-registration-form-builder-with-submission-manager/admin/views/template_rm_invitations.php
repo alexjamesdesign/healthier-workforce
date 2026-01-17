@@ -11,25 +11,25 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 <!-----Operationsbar Starts-->
     
     <div class="operationsbar">
-        <div class="rmtitle"><?php echo wp_kses_post(RM_UI_Strings::get('TITLE_INVITES')); ?></div>
+        <div class="rmtitle"><?php echo wp_kses_post((string)RM_UI_Strings::get('TITLE_INVITES')); ?></div>
         <div class="icons">
         <a href="<?php echo get_admin_url()."admin.php?page=rm_options_autoresponder";?>"><img src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . "images/rm-email-notifications.png"); ?>">
         </a></div>
         <div class="nav">
         <ul>
             <!-- <li><a href="arrow.png">New</a></li> -->
-            <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+            <li onclick="window.history.back()"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
               <li><a href="?page=rm_invitations_manage&rm_queues=true"><?php _e('Active Queues','custom-registration-form-builder-with-submission-manager'); ?></a></li>
               <li><a href="?page=rm_sent_emails_manage"><?php _e('Outbox','custom-registration-form-builder-with-submission-manager'); ?></a></li>
               <li><a href="https://registrationmagic.com/send-emails-registered-users-wordpress-single-click/" target="_blank"><?php _e('Documentation','custom-registration-form-builder-with-submission-manager'); ?></a></li>
-            <li class="rm-form-toggle"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SELECT_RESIPIENTS')); ?>
+            <li class="rm-form-toggle"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SELECT_RESIPIENTS')); ?>
             	<select id="rm_form_dropdown" name="rm_form_id" onchange="rm_load_page(this, 'invitations_manage')">
 <?php
 					foreach ($data->forms as $form_id => $form)
 					   if($data->current_form_id == $form_id)
-					       echo "<option value=".esc_attr($form_id)." selected>".wp_kses_post($form)."</option>";
+					       echo "<option value=".esc_attr($form_id)." selected>".wp_kses_post((string)$form)."</option>";
 					   else
-					       echo "<option value=".esc_attr($form_id).">".wp_kses_post($form)."</option>";
+					       echo "<option value=".esc_attr($form_id).">".wp_kses_post((string)$form)."</option>";
 ?>
 	            </select>
 
@@ -44,7 +44,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 <!-----  Show Notice if WP-Cron is disabled    ----->
     <?php
     if(defined('DISABLE_WP_CRON') && DISABLE_WP_CRON)
-        echo "<div class='rmnotice'>".wp_kses_post(RM_UI_Strings::get('CRON_DISABLED_WARNING_INVITATION'))."</div>";
+        echo "<div class='rmnotice'>".wp_kses_post((string)RM_UI_Strings::get('CRON_DISABLED_WARNING_INVITATION'))."</div>";
     ?>
 
 
@@ -58,12 +58,13 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         <div class="rm-invite-field-row">
         <div class="rm-invite-icon"><img src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . "images/rm-hourglass.png"); ?>"></div>
         <div class="rm-invite-label"><?php echo esc_html($data->forms[$queue->form_id]);?></div>
-        <div class="rm-invite-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_QUEUE_IN_PROGRESS'));?></div>
-        <div class="rm-invite-label"><span class="rm-red"><?php echo esc_html($queue->offset)."/".esc_html($queue->total)." ".wp_kses_post(RM_UI_Strings::get('LABEL_SENT'));?></span></div>
-        <div class="rm-invite-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_STARTED_ON'))." ".esc_html($queue->started_on);?></div>    
-        <div class="rm-invite-label rm-invite-cancel" data-fid="<?php echo esc_attr($queue->form_id);?>" onclick="stop_queue(this)"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_CANCEL'));?></a></div>
+        <div class="rm-invite-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_QUEUE_IN_PROGRESS'));?></div>
+        <!-- <div class="rm-invite-label"><span class="rm-red"><?php echo esc_html($queue->offset)."/".esc_html($queue->total)." ".wp_kses_post((string)RM_UI_Strings::get('LABEL_SENT'));?></span></div> -->
+        <div class="rm-invite-label"><span class="rm-red"><?php echo sprintf(esc_html__("Sending %s emails", 'custom-registration-form-builder-with-submission-manager'), esc_html($queue->total)); ?></span></div>
+        <div class="rm-invite-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_STARTED_ON'))." ".esc_html($queue->started_on);?></div>    
+        <div class="rm-invite-label rm-invite-cancel" data-fid="<?php echo esc_attr($queue->form_id);?>" onclick="stop_queue(this)"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_CANCEL'));?></a></div>
         </div>
-            <!-- <div class="rm-invite-field-row"><?php echo wp_kses_post(RM_UI_Strings::get('MSG_QUEUE_RUNNING'));?></div> -->
+            <!-- <div class="rm-invite-field-row"><?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_QUEUE_RUNNING'));?></div> -->
         
         </div>
 <?php
@@ -72,7 +73,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 ?>
 		<div class="rm-invites rm-bulk-email">
         <div class="rm-invite-field-row">        
-            <div class="rmnotice rm-invite-field-row"><?php echo wp_kses_post(RM_UI_Strings::get('ERROR_INVITE_NO_QUEUE'));?></div>        
+            <div class="rmnotice rm-invite-field-row"><?php echo wp_kses_post((string)RM_UI_Strings::get('ERROR_INVITE_NO_QUEUE'));?></div>        
         </div>
 <?php
 		endif;
@@ -81,7 +82,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 ?>	
 	<div class="rm-invites">
         <div class="rm-invite-field-row">        
-            <div class="rmnotice rm-invite-field-row"><?php echo wp_kses_post(RM_UI_Strings::get('ERROR_INVITE_NO_MAIL'));?></div>        
+            <div class="rmnotice rm-invite-field-row"><?php echo wp_kses_post((string)RM_UI_Strings::get('ERROR_INVITE_NO_MAIL'));?></div>        
         </div>
 <?php
 	elseif($data->job->is_job_running):
@@ -90,12 +91,13 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
         <div class="rm-invite-field-row">
         <div class="rm-invite-icon"><img src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . "images/rm-hourglass.png"); ?>"></div>
         <div class="rm-invite-label"><?php echo esc_html($data->forms[$data->current_form_id]);?></div>
-        <div class="rm-invite-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_QUEUE_IN_PROGRESS'));?></div>
-        <div class="rm-invite-label"><span class="rm-red"><?php echo esc_html($data->job->offset)."/".esc_html($data->job->total)." ".wp_kses_post(RM_UI_Strings::get('LABEL_SENT'));?></span></div>
-        <div class="rm-invite-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_STARTED_ON'))." ".esc_html($data->job->started_on);?></div>    
-        <div class="rm-invite-label rm-invite-cancel" data-fid="<?php echo esc_attr($data->current_form_id);?>" onclick="stop_queue(this)"><a href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_CANCEL'));?></a></div>
+        <div class="rm-invite-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_QUEUE_IN_PROGRESS'));?></div>
+        <!-- <div class="rm-invite-label"><span class="rm-red"><?php echo esc_html($data->job->offset)."/".esc_html($data->job->total)." ".wp_kses_post((string)RM_UI_Strings::get('LABEL_SENT'));?></span></div> -->
+        <div class="rm-invite-label"><span class="rm-red"><?php echo sprintf(esc_html__("Sending %s emails", 'custom-registration-form-builder-with-submission-manager'), esc_html($data->job->total)); ?></span></div>
+        <div class="rm-invite-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_STARTED_ON'))." ".esc_html($data->job->started_on);?></div>    
+        <div class="rm-invite-label rm-invite-cancel" data-fid="<?php echo esc_attr($data->current_form_id);?>" onclick="stop_queue(this)"><a href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_CANCEL'));?></a></div>
         </div>
-            <div class="rm-invite-field-row"><?php echo wp_kses_post(RM_UI_Strings::get('MSG_QUEUE_RUNNING'));?></div>
+            <div class="rm-invite-field-row"><?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_QUEUE_RUNNING'));?></div>
         
         </div>
 <?php
@@ -119,7 +121,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 ?>
 		
                     
-            <div class="rmnotice rm-invite-field-row"><?php echo wp_kses_post(sprintf(RM_UI_Strings::get('INFO_USERS_SELECTED_FOR_MAIL'), $data->total_resp));?> <b> <?php echo esc_html($data->forms[$data->current_form_id]);?></b></div>     
+            <div class="rmnotice rm-invite-field-row"><?php echo wp_kses_post((string)sprintf(RM_UI_Strings::get('INFO_USERS_SELECTED_FOR_MAIL'), $data->total_resp));?> <b> <?php echo esc_html($data->forms[$data->current_form_id]);?></b></div>     
             
             <div class="rm-invites rm-bulk-email-wrap">
 <?php
@@ -149,7 +151,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_
 	endif;
 ?> 
    <?php 
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
     </div>
                                         

@@ -37,9 +37,28 @@ class RM_View_Admin
         do_action('rm_pre_admin_template_render', $this->view_identifier);
         //sanitizing output data for views
         //$data = RM_Utilities::sanitize_output_data($data);
-        include_once 'template_rm_header.php';
+        if(
+            !str_contains($this->view_file,'template_rm_editor_add_email') &&
+            !str_contains($this->view_file,'template_rm_editor_add_form') &&
+            !str_contains($this->view_file,'template_rm_dashboard_widget') &&
+            !str_contains($this->view_file,'template_rm_formflow_main') &&
+            !str_contains($this->view_file,'template_rm_form_preview') &&
+            !str_contains($this->view_file,'template_rm_user_edit_widget')
+        ) {
+            include_once 'template_rm_header.php';
+        }
         include_once $this->view_file;
-        include_once 'template_rm_footer.php';
+        if(
+            !str_contains($this->view_file,'template_rm_editor_add_email') &&
+            !str_contains($this->view_file,'template_rm_editor_add_form') &&
+            !str_contains($this->view_file,'template_rm_dashboard_widget') &&
+            !str_contains($this->view_file,'template_rm_formflow_main') &&
+            !str_contains($this->view_file,'template_rm_form_preview') &&
+            !str_contains($this->view_file,'template_rm_user_edit_widget')
+        ) {
+            include_once 'template_rm_promo_banner_bottom.php';
+            include_once 'template_rm_footer.php';
+        }
         //include plugin_dir_path(__FILE__).'template_rm_add_form.php';
     }
     

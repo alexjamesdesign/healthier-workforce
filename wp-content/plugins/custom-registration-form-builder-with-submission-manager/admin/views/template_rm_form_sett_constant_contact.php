@@ -14,14 +14,14 @@ global $rm_env_requirements;
 ?>
 
 <?php if (!($rm_env_requirements & RM_REQ_EXT_CURL)){ ?>
- <div class="shortcode_notification ext_na_error_notice"><p class="rm-notice-para"><?php echo wp_kses_post(RM_UI_Strings::get('RM_ERROR_EXTENSION_CURL_CC'));?></p></div>
+ <div class="shortcode_notification ext_na_error_notice"><p class="rm-notice-para"><?php echo wp_kses_post((string)RM_UI_Strings::get('RM_ERROR_EXTENSION_CURL_CC'));?></p></div>
  <?php }
  $installed_php_version = phpversion();
 //var_dump(version_compare('5.4', $installed_php_version, '<') && RM_REQ_EXT_CURL);
  if (!version_compare('5.4', $installed_php_version, '<'))
       {
  ?>
- <div class="shortcode_notification ext_na_error_notice"><p class="rm-notice-para"><?php echo wp_kses_post(RM_UI_Strings::get('RM_ERROR_PHP_4.5'));?></p></div>
+ <div class="shortcode_notification ext_na_error_notice"><p class="rm-notice-para"><?php echo wp_kses_post((string)RM_UI_Strings::get('RM_ERROR_PHP_4.5'));?></p></div>
  <?php 
       }
 
@@ -77,7 +77,7 @@ global $rm_env_requirements;
         ?>
     </div>
     <?php 
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
 </div>
 

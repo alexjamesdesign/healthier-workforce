@@ -11,7 +11,7 @@ wp_enqueue_script('script_rm_moment');
 wp_enqueue_script('script_rm_daterangepicker');
 wp_enqueue_style('style_rm_daterangepicker');
 
-$tag_array = explode(',', $data->filter->filters['filter_tags']);
+$tag_array = explode(',', (string)$data->filter->filters['filter_tags']);
 if(!empty($data->filter->filters['rm_fromdate'])) {
     $start_date = date("m/d/Y", strtotime($data->filter->filters['rm_fromdate']));
 } else {
@@ -24,13 +24,13 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
 }
 ?>
 <div class="wrap">
-    <div class="rmagic rmagic-wide">
+    <div class="rmagic rmagic-inbox-manager rmagic-wide">
         <h1 class="wp-heading-inline rm-mb-0">
-            Inbox<?php if(defined('REGMAGIC_ADDON') && isset($_GET['rm_form_id'])) { ?><a id="rm_submission_report" class="rm_submission_report add-new-h2" onclick="jQuery.rm_do_action('rm_submission_manager_form', 'rm_submission_export')" href="javascript:void(0)">Export All</a><?php } ?>
+            Inbox<?php if(defined('REGMAGIC_ADDON') && !empty($data->form_id)) { ?><a id="rm_submission_report" class="rm_submission_report add-new-h2" onclick="jQuery.rm_do_action('rm_submission_manager_form', 'rm_submission_export')" href="javascript:void(0)">Export All</a><?php } ?>
         </h1>
         <!-------Content area Starts----->
         
-        <div class="rm-mb-2"><a target="_blank" href="https://registrationmagic.com/productivity-driven-user-registration-submissions-inbox/">Documentation</a></div>
+        <div class="rm-wp-page-info rm-mb-2 rm-position-absolute"><a target="_blank" href="https://registrationmagic.com/productivity-driven-user-registration-submissions-inbox/">Documentation</a></div>
 
         <div class="rmnotice-row">
             <div class="rmnotice">
@@ -42,7 +42,7 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
         if(count($data->forms) === 0) { ?>
         <div class="rmnotice-container">
             <div class="rmnotice">
-                <?php echo wp_kses_post(RM_UI_Strings::get('MSG_NO_FORM_SUB_MAN')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_FORM_SUB_MAN')); ?>
             </div>
             </div>
             <?php } elseif ($data->submissions || $data->filter->filters['rm_interval'] != 'all' || $data->filter->searched) { ?>
@@ -78,15 +78,15 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                             <input type="hidden" name="rm_form_id" value="<?php echo esc_attr($data->filter->form_id); ?>" id="rm_form_id_input_field" />
                                 <div class="tablenav top rm-tablenav-top">
                                     <div class="alignleft actions bulkactions">
-                                        <label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+                                        <label for="bulk-action-selector-top" class="screen-reader-text"><?php esc_html_e('Select bulk action', 'custom-registration-form-builder-with-submission-manager'); ?></label>
                                         <select id="bulk-action-selector-top">
-                                            <option value="-1">Bulk actions</option>
-                                            <option value="delete">Delete</option>
+                                            <option value="-1"><?php esc_html_e('Bulk actions', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                                            <option value="delete"><?php esc_html_e('Delete', 'custom-registration-form-builder-with-submission-manager'); ?></option>
                                             <?php if(defined('REGMAGIC_ADDON')) { ?>
-                                            <option value="mark-read">Mark Read</option>
-                                            <option value="mark-unread">Mark Unread</option>
-                                            <?php if(isset($_GET['rm_form_id'])) { ?>
-                                            <option value="export">Export</option>
+                                            <option value="mark-read"><?php esc_html_e('Mark Read', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                                            <option value="mark-unread"><?php esc_html_e('Mark Unread', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                                            <?php if(!empty($data->form_id)) { ?>
+                                            <option value="export"><?php esc_html_e('Export', 'custom-registration-form-builder-with-submission-manager'); ?></option>
                                             <?php } } ?>
                                         </select>
                                         <input type="submit" id="rm-bulk-action-top" class="button action" value="Apply" onclick="rm_apply_bulk_action(this);">
@@ -95,32 +95,32 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                     <div class="alignleft actions">
                                         <select id="rm_submissions-all-date">
                                             <option value="all"><?php _e('All Dates', 'custom-registration-form-builder-with-submission-manager'); ?></option>
-                                            <option value="today" <?php if($data->filter->filters['rm_interval'] == "today") echo "selected"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_TODAY")); ?></option>
-                                            <option value="week" <?php if($data->filter->filters['rm_interval'] == "week") echo "selected"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_THIS_WEEK")); ?></option>
-                                            <option value="month" <?php if ($data->filter->filters['rm_interval'] == "month") echo "selected"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_THIS_MONTH")); ?></option>
-                                            <option value="year" <?php if ($data->filter->filters['rm_interval'] == "year") echo "selected"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_THIS_YEAR")); ?></option>
-                                            <option value="custom" <?php if ($data->filter->filters['rm_interval'] == "custom") echo "selected"; ?>><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_PERIOD")); ?></option>
+                                            <option value="today" <?php if($data->filter->filters['rm_interval'] == "today") echo "selected"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_TODAY")); ?></option>
+                                            <option value="week" <?php if($data->filter->filters['rm_interval'] == "week") echo "selected"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_THIS_WEEK")); ?></option>
+                                            <option value="month" <?php if ($data->filter->filters['rm_interval'] == "month") echo "selected"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_THIS_MONTH")); ?></option>
+                                            <option value="year" <?php if ($data->filter->filters['rm_interval'] == "year") echo "selected"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_THIS_YEAR")); ?></option>
+                                            <option value="custom" <?php if ($data->filter->filters['rm_interval'] == "custom") echo "selected"; ?>><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_PERIOD")); ?></option>
                                         </select>
                                         <input type="submit" id="doaction" class="button action" value="Filter" onclick="rm_apply_date_filter();">
                                     </div>
                                     -->
-                                    <div class="alignleft actions">
+                                    <div class="alignleft actions rm-mb-2">
                                           <input type="text" id="rm_submission_date_range" placeholder="<?php if(!empty($start_date) && !empty($end_date)) { echo esc_attr("{$start_date}-{$end_date}"); } else { _e('All Dates','custom-registration-form-builder-with-submission-manager'); } ?>" value="<?php if(!empty($start_date) && !empty($end_date)) { echo esc_attr("{$start_date}-{$end_date}"); } ?>"/>
                                           <input type="submit" id="doaction" class="button action" value="Filter" onclick="rm_apply_date_filter();">
                                           
                                     </div>
                                     
                                     
-                                    <div class="alignleft actions">
+                                    <div class="alignleft actions rm-mb-2">
                                         <select id="rm_submissions-all-forms">
                                             <option value="all">All Forms</option>
                                             <?php foreach($data->forms as $form_id => $form_name) { ?>
                                             <option value="<?php echo esc_attr($form_id); ?>"<?php echo ($data->filter->get_form() == $form_id) ? esc_attr(" selected") : ""; ?>><?php echo esc_html($form_name); ?></option>
                                             <?php } ?>
                                         </select>
-                                        <input type="submit" id="doaction" class="button action" value="Filter" onclick="rm_apply_form_filter();">
+                                        <button type="submit" id="rm-apply-form-filter" class="button action" onclick="rm_apply_form_filter();"><i class='fa fa-spinner fa-spin ' style="display: none"></i> <?php _e('Filter', 'custom-registration-form-builder-with-submission-manager'); ?></button>
                                     </div>
-                                    <div class="alignleft actions rm-position-relative">
+                                    <div class="alignleft actions rm-position-relative rm-mb-2">
                                         <?php //if(defined('REGMAGIC_ADDON') || $data->filter->get_form()) { ?>
                                         <input type="button" id="rm-advanced-filters" class="button action" value="Advanced Filters">
                                         <?php //} ?>
@@ -175,19 +175,32 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                 <table class="rm_inbox_table wp-list-table widefat striped table-view-list rm-position-relative">
                                     <thead>
                                         <tr>
-                                            <td scope="col"  scope="col" class="manage-column check-column">
+                                            <td scope="col" scope="col" class="manage-column check-column">
                                                 <label class="screen-reader-text" for="cb-select-all-1">Select All</label>
                                                 <input class="rm_checkbox_group" onclick="rm_submission_selection_toggle(this)" type="checkbox" name="rm_select_all"></td>
-                                            <th scope="col"  scope="col" class="manage-column column-primary">Submission</th>
-                                            <th scope="col"  scope="col" class="manage-column"><span class="title">Form</span> <span class="sorting-indicator"></span></th>
-                                            <th scope="col"  scope="col" class="manage-column sorted <?php echo esc_attr(strtolower($data->filter->filters['sort_order'])); ?>"><a href="javascript:void(0)" onclick="rm_toggle_sort_order();"><span class="title">Received On</span> <span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
-                                         
-                                            <th scope="col"  scope="col" class="manage-column rm-text-center"><span class="material-icons"> attach_file </span></th>
-                                            <th scope="col"  scope="col" class="manage-column rm-text-center"><span class="material-icons"> note </span></th>
-                                            <th scope="col"  scope="col" class="manage-column rm-text-center"><span class="material-icons"> email </span></th>
-                                        
-                                            <th scope="col"  scope="col" class="manage-column rm-text-center">Status</th>
-                                            <th scope="col"  scope="col" class="manage-column rm-text-center">Payment</th>
+                                            <th scope="col" scope="col" class="manage-column column-primary">Submission</th>
+                                            <?php if(empty($data->form_id)) { ?>
+                                            <th scope="col" scope="col" class="manage-column"><span class="title">Form</span> <span class="sorting-indicator"></span></th>
+                                            <?php } else {
+                                                $field_names = array();
+                                                $i = $j = 0;
+                                                for($i = 0; $j < 4; $i++):
+                                                    if ((isset($data->fields[$i]->field_type) && !in_array($data->fields[$i]->field_type, RM_Utilities::submission_manager_excluded_fields())) || !isset($data->fields[$i]->field_type))
+                                                    {
+                                                        $label = isset($data->fields[$i]->field_label) ? $data->fields[$i]->field_label : null; ?>
+                                                        <th><?php echo esc_html($label); ?></th>
+                                                        <?php
+                                                        $field_names[$j] = isset($data->fields[$i]->field_id) ? $data->fields[$i]->field_id : null;
+                                                        $j++;
+                                                    }
+                                                endfor;
+                                            } ?>
+                                            <th scope="col" scope="col" class="manage-column sorted <?php echo esc_attr(strtolower($data->filter->filters['sort_order'])); ?>"><a href="javascript:void(0)" onclick="rm_toggle_sort_order();"><span class="title">Received On</span> <span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
+                                            <th scope="col" scope="col" class="manage-column rm-text-center"><span class="material-icons"> attach_file </span></th>
+                                            <th scope="col" scope="col" class="manage-column rm-text-center"><span class="material-icons"> note </span></th>
+                                            <th scope="col" scope="col" class="manage-column rm-text-center"><span class="material-icons"> email </span></th>
+                                            <th scope="col" scope="col" class="manage-column rm-text-center">Status</th>
+                                            <th scope="col" scope="col" class="manage-column rm-text-center">Payment</th>
                                         </tr>
                                     </thead>
 
@@ -261,12 +274,64 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                                     <span class="rm-form-submission-delete trash"><a href="javascript:void(0)" class="submitdelete" aria-label="Delete Submission" onclick="rm_remove_submissions([<?php echo esc_attr($submission->submission_id); ?>]);">Delete</a> </span>
                                                 </div>
                                             </td>
+                                            <?php if(empty($data->form_id)) { ?>
                                             <td>
                                                 <a href="<?php echo admin_url('admin.php?page=rm_submission_manage&rm_form_id='.$submission->form_id); ?>"><?php echo esc_html($form->get_form_name()); ?></a>
                                             </td>
+                                            <?php } else {
+                                                for ($i = 0; $i < 4; $i++):
+                                                    $value = null;
+                                                    $type=null;
+
+                                                    if (is_array($sub_data) || is_object($sub_data))
+                                                        foreach ($sub_data as $key => $s_data)
+                                                            if ($key == $field_names[$i]) {
+                                                                $type =  isset($s_data->type)?$s_data->type:'';
+                                                                $meta =  isset($s_data->meta)?$s_data->meta:'';
+                                                                if($type=='Checkbox' || $type == 'Select' || $type == 'Radio')
+                                                                    $value = RM_Utilities::get_lable_for_option($key, $s_data->value);
+                                                                else
+                                                                    $value = $s_data->value;
+                                                            }
+                                            ?>
+                                            <td>
+                                            <?php if(is_array($value))
+                                                $value = implode(', ', $value);
+                                                $additional_fields = apply_filters('rm_additional_fields', array());
+                                                if(in_array($type, $additional_fields)){
+                                                    echo esc_html(do_action('rm_additional_fields_data',$type, $value));
+                                                } elseif($type=='Rating') {
+                                                    $r_sub = array('value' => $value,
+                                                        'readonly' => 1,
+                                                        'star_width' => 16,
+                                                        'max_stars' => 5,
+                                                        'star_face' => 'star',
+                                                        'star_color' => 'FBC326'
+                                                    );
+                                                    if(isset($meta) && is_object($meta)) {
+                                                        if(isset($meta->max_stars))
+                                                            $r_sub['max_stars'] = $meta->max_stars;
+                                                        if(isset($meta->star_face))
+                                                            $r_sub['star_face'] = $meta->star_face;
+                                                        if(isset($meta->star_color))
+                                                            $r_sub['star_color'] = $meta->star_color;
+                                                    }
+                                                    $rf = new Element_Rating("", "", $r_sub);
+                                                    $rf->render();
+                                                } elseif($type=='URL') {
+                                                    $url = esc_url(explode(",",$value)[1]);
+                                                    echo wp_kses_post("<a href='$url'>$url</a>");
+                                                } else {
+                                                    if(function_exists('mb_strimwidth'))
+                                                        echo esc_html(mb_strimwidth((string)$value, 0, 70, "..."));
+                                                    else
+                                                        echo esc_html($value);
+                                                } ?>
+                                            </td>
+                                            <?php endfor; ?>
+                                            <?php } ?>
                                             <td><?php echo esc_html(RM_Utilities::localize_time($submission->submitted_on)); ?></td>
-                                           
-                                            <td class='rm-text-center'><?php echo esc_html($attachs); ?><a  href="#" class="rm-download-attachment"><span class="material-icons">download</span></a></td>
+                                            <td class='rm-text-center'><?php echo esc_html($attachs); ?><a href="javascript:void(0)" class="rm-download-attachment"><span class="material-icons">download</span></a></td>
                                             <td class='rm-text-center'><?php echo esc_html($notes_nt); ?> </td>
                                             <td class='rm-text-center'><?php echo esc_html($notes_ms); ?></td>
                                           
@@ -278,7 +343,7 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                                         </div><?php 
                                                     } 
                                                 } else { ?>
-                                                ----
+                                                <span aria-hidden="true">—</span>
                                                 <?php }?>
                                              
                                             </td>
@@ -301,7 +366,7 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                                 </span>
                                             <?php  
                                             } else{
-                                                echo '----';
+                                                echo '<span aria-hidden="true">—</span>';
                                             } ?>
                                             </td>
                                         </tr>
@@ -346,8 +411,8 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                                                                 $rm_custom_page_id = $submission->submission_id.'-page-'.$form_page; ?>
                                                                             <div class="rm-form-page rm-bg-white rm-border rm-p-3 rm-mr-2 rm-mb-3 rm-rounded-1" id="<?php echo esc_html( $rm_custom_page_id ); ?>">
                                                                                 <h1 class="rm-text-muted rm-text-small rm-text-center rm-fw-bold rm-text-uppercase"><?php echo esc_html($form_options->form_pages[$form_page]); ?></h1>
-                                                                                <?php foreach($form_fields as $form_field) { 
-                                                                                    if(isset($sub_data[absint($form_field->field_id)]) && $form_field->page_no == $form_page+1) { ?>
+                                                                                <?php foreach($form_fields as $form_field) {
+                                                                                    if(!empty($form_field) && isset($sub_data[absint($form_field->field_id)]) && $form_field->page_no == $form_page+1) { ?>
                                                                                     <div class="rm-box-row rm-mb-3">
                                                                                     <div class="rm-box-col-12">
                                                                                         <div class="rm-submission-lable rm-fw-bold "><?php echo esc_html($sub_data[absint($form_field->field_id)]->label); ?></div>
@@ -356,8 +421,10 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                                                                         $sub_val = $sub_data[absint($form_field->field_id)]->value;
                                                                                         //if submitted data is array print it in more than one row.
                                                                                         if (is_array($sub_val)) {
-                                                                                            //If submitted data is a file.
-                                                                                            if (isset($sub_val['rm_field_type']) && $sub_val['rm_field_type'] == 'File') {
+                                                                                            $additional_fields = apply_filters('rm_additional_fields', array());
+                                                                                            if(in_array($sub_data[absint($form_field->field_id)]->type, $additional_fields)){
+                                                                                                echo wp_kses_post(do_action('rm_additional_fields_data',$sub_data[absint($form_field->field_id)]->type, $sub_data));
+                                                                                            }elseif (isset($sub_val['rm_field_type']) && $sub_val['rm_field_type'] == 'File') {
                                                                                                 unset($sub_val['rm_field_type']);
                                                                                                 foreach ($sub_val as $sub) {
                                                                                                     $att_path = get_attached_file($sub);
@@ -382,12 +449,15 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                                                                                     $sub .= '<b>'.__('Zip Code','custom-registration-form-builder-with-submission-manager').'</b> : ' . $sub_val['zip'] . '<br/>';
                                                                                                     $sub .= '<b>'.__('Country','custom-registration-form-builder-with-submission-manager').'</b> : ' . $sub_val['country'];
                                                                                                 }
-                                                                                                echo wp_kses_post($sub);
-                                                                                            }  elseif ($sub_data[absint($form_field->field_id)]->type == 'Time') {                                  
+                                                                                                echo wp_kses_post((string)$sub);
+                                                                                            } elseif ($sub_data[absint($form_field->field_id)]->type == 'Time') {
                                                                                                 //echo esc_html($sub_data['time']).", ".__("Timezone",'custom-registration-form-builder-with-submission-manager').": ".esc_html($sub_val['timezone']);
                                                                                                 echo esc_html(date('h:i a', strtotime($sub_val['time'])));
-                                                                                            } elseif ($sub_data[absint($form_field->field_id)]->type == 'Checkbox') {   
+                                                                                            } elseif ($sub_data[absint($form_field->field_id)]->type == 'Checkbox') {
                                                                                                 echo esc_html(implode(', ',RM_Utilities::get_lable_for_option($form_field->field_id, $sub_val)));
+                                                                                            } elseif ($sub_data[absint($form_field->field_id)]->type == 'URL') {
+                                                                                                $url = esc_url($sub_val['url']);
+                                                                                                echo wp_kses_post("<a href='$url'>$url</a>");
                                                                                             }
                                                                                             //If submitted data is a Star Rating.
                                                                                             else {
@@ -395,12 +465,12 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                                                                                 if($sub_data[absint($form_field->field_id)]->type=="Repeatable"):
                                                                                                     $field_data = '<pre>'.implode('<hr> ', $sub_val).'</pre>';
                                                                                                 endif;
-                                                                                                echo wp_kses_post($field_data);
+                                                                                                echo wp_kses_post((string)$field_data);
                                                                                             }
                                                                                         } else {
                                                                                             $additional_fields = apply_filters('rm_additional_fields', array());
                                                                                             if(in_array($sub_data[absint($form_field->field_id)]->type, $additional_fields)){
-                                                                                                echo do_action('rm_additional_fields_data',$sub_data[absint($form_field->field_id)]->type, $sub_data);
+                                                                                                echo wp_kses_post(do_action('rm_additional_fields_data',$sub_data[absint($form_field->field_id)]->type, $sub_data));
                                                                                             }
                                                                                             elseif($sub_data[absint($form_field->field_id)]->type == 'Rating')
                                                                                             {
@@ -408,10 +478,22 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                                                                             }
                                                                                             elseif ($sub_data[absint($form_field->field_id)]->type == 'Radio' || $sub_data[absint($form_field->field_id)]->type == 'Select') {   
                                                                                                 echo esc_html(RM_Utilities::get_lable_for_option($form_field->field_id, $sub_val));
+                                                                                            }elseif($sub_data[absint($form_field->field_id)]->type  == 'DigitalSign'){
+                                                                                                if(!empty($sub_val)){
+                                                                                                    $sign_url  = RM_BASE_URL . 'plus/signature/signature-access.php?file='.$sub_val;
+                                                
+                                                                                                    ?>
+                                                                                                        <div class="rm-submission-attachment">
+                                                                                                            <img src="<?php echo esc_url($sign_url);?>" style="max-width:100px;width:100px;">
+                                                                                                            <div class="rm-submission-attachment-field"><a href="<?php echo esc_url($sign_url); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
+                                                                                                        </div>
+
+                                                                                                    <?php
+                                                                                                }
                                                                                             }
                                                                                             else
                                                                                             {
-                                                                                            echo wp_kses_post(nl2br($sub_val));
+                                                                                            echo wp_kses_post((string)nl2br($sub_val));
                                                                                             }
                                                                                         }
                                                                                         ?>
@@ -441,10 +523,10 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                                 </div>
                                             <?php } ?>
                                     <?php } elseif($data->has_submissions && empty($data->filter->pagination->total_pages)) { ?>
-                                                <tr><td colspan="9"><?php _e('No submissions match your filter criteria', 'custom-registration-form-builder-with-submission-manager'); ?></td></tr>
+                                                <tr><td colspan="12"><?php _e('No submissions match your filter criteria', 'custom-registration-form-builder-with-submission-manager'); ?></td></tr>
                                     <?php } elseif(!$data->has_submissions) { ?>
                                         <tr>
-                                            <td colspan="9"> <?php _e('There are no submissions to display yet', 'custom-registration-form-builder-with-submission-manager'); ?></td>
+                                            <td colspan="12"> <?php _e('There are no submissions to display yet', 'custom-registration-form-builder-with-submission-manager'); ?></td>
                                         </tr>
                                     <?php } ?>
                                     </tbody>
@@ -454,7 +536,22 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                                 <label class="screen-reader-text" for="cb-select-all-1">Select All</label>
                                                 <input class="rm_checkbox_group" onclick="rm_submission_selection_toggle(this)" type="checkbox" name="rm_select_all"></td>
                                             <th scope="col" class="manage-column column-primary">Submission</th>
-                                            <th scope="col" class="manage-column"><span class="title">Form</span> <span class="sorting-indicator"></span></th>
+                                            <?php if(empty($data->form_id)) { ?>
+                                            <th scope="col" scope="col" class="manage-column"><span class="title">Form</span> <span class="sorting-indicator"></span></th>
+                                            <?php } else {
+                                                $field_names = array();
+                                                $i = $j = 0;
+                                                for($i = 0; $j < 4; $i++):
+                                                    if ((isset($data->fields[$i]->field_type) && !in_array($data->fields[$i]->field_type, RM_Utilities::submission_manager_excluded_fields())) || !isset($data->fields[$i]->field_type))
+                                                    {
+                                                        $label = isset($data->fields[$i]->field_label) ? $data->fields[$i]->field_label : null; ?>
+                                                        <th><?php echo esc_html($label); ?></th>
+                                                        <?php
+                                                        $field_names[$j] = isset($data->fields[$i]->field_id) ? $data->fields[$i]->field_id : null;
+                                                        $j++;
+                                                    }
+                                                endfor;
+                                            } ?>
                                             <th scope="col" class="manage-column sorted <?php echo esc_attr(strtolower($data->filter->filters['sort_order'])); ?>"><a href="javascript:void(0)" onclick="rm_toggle_sort_order();"><span class="title">Received On</span> <span class="sorting-indicators"><span class="sorting-indicator asc" aria-hidden="true"></span><span class="sorting-indicator desc" aria-hidden="true"></span></span></a></th>
                                             <th scope="col" class="manage-column rm-text-center"><span class="material-icons"> attach_file </span></th>
                                             <th scope="col" class="manage-column rm-text-center"><span class="material-icons"> note </span></th>
@@ -469,15 +566,15 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                             
                             <div class="tablenav bottom">
                                    <div class="alignleft actions bulkactions">
-                                        <label for="bulk-action-selector-bottom" class="screen-reader-text">Select bulk action</label>
+                                        <label for="bulk-action-selector-bottom" class="screen-reader-text"><?php esc_html_e('Select bulk action', 'custom-registration-form-builder-with-submission-manager'); ?></label>
                                         <select id="bulk-action-selector-bottom">
-                                            <option value="-1">Bulk actions</option>
-                                            <option value="delete">Delete</option>
+                                            <option value="-1"><?php esc_html_e('Bulk actions', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                                            <option value="delete"><?php esc_html_e('Delete', 'custom-registration-form-builder-with-submission-manager'); ?></option>
                                             <?php if(defined('REGMAGIC_ADDON')) { ?>
-                                            <option value="mark-read">Mark Read</option>
-                                            <option value="mark-unread">Mark Unread</option>
-                                            <?php if(isset($_GET['rm_form_id'])) { ?>
-                                            <option value="export">Export</option>
+                                            <option value="mark-read"><?php esc_html_e('Mark Read', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                                            <option value="mark-unread"><?php esc_html_e('Mark Unread', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                                            <?php if(!empty($data->form_id)) { ?>
+                                            <option value="export"><?php esc_html_e('Export', 'custom-registration-form-builder-with-submission-manager'); ?></option>
                                             <?php } } ?>
                                         </select>
                                         <input type="submit" id="rm-bulk-action-bottom" class="button action" value="Apply" onclick="rm_apply_bulk_action(this);">
@@ -558,6 +655,9 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                         <?php }
                                     }
                                     ?>
+                                    <?php if(defined('REGMAGIC_ADDON') && isset($data->form) && $data->form->form_options->form_is_unique_token) { ?>
+                                        <option value="token" <?php if ($data->filter->filters['rm_field_to_search'] === "token") echo esc_attr("selected"); ?>><?php esc_html_e('Unique Token', 'custom-registration-form-builder-with-submission-manager'); ?></option>
+                                    <?php } ?>
                                      </select>
                                       <div style="margin-top: -1px;">
                                         <input type="text" name="rm_value_to_search" class="rm-form-control rm-rounded-top-left-0 rm-rounded-top-right-0" value="<?php echo esc_attr($data->filter->filters['rm_value_to_search']); ?>">
@@ -577,7 +677,7 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                     if (!empty($form_options->custom_status)) {
                                         $search_cs = array();
                                         if (isset($_GET['custom_status_ind']) && $_GET['custom_status_ind'] != '') {
-                                            $search_cs = explode(',', sanitize_text_field($_GET['custom_status_ind']));
+                                            $search_cs = explode(',', sanitize_text_field((string)$_GET['custom_status_ind']));
                                         }
                                         foreach ($form_options->custom_status as $key => $value) {
                                             if (in_array($key, $search_cs)) {
@@ -602,7 +702,7 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                                         <span class="rm-ml-2"  style="visibility:hidden"><a href="javascript:void(0)">Clear</a></span>
                                     </label>
                                 <div>
-                                    <ul>
+                                    <ul class="rm-text-start">
                                         <li class="rm-form-check">
                                             <input class="rm-form-check-input rm_tag_filter_checkbox" type="checkbox" id="rm-filter-has-note" value="Has Note"<?php if (in_array('Has Note', $tag_array)) echo esc_attr(" checked"); ?>>
                                             <label class="rm-form-check-label" for="rm-filter-has-note"><?php _e('Has Note', 'custom-registration-form-builder-with-submission-manager'); ?></label>
@@ -657,7 +757,7 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                             <div class="rm-box-col-12">
                                 
                             <input type="submit" class="button button-primary rm-box-w-100 rm-mb-2 rm-py-1 <?php if(!defined('REGMAGIC_ADDON') && empty($data->filter->form_id)) { ?> rm-btn-disabled <?php } ?>" value="<?php _e('Filter', 'custom-registration-form-builder-with-submission-manager'); ?>">
-                            <button type="button" class="button rm-box-w-100 rm-py-1 rm-btn-disabled" onclick="rm_clear_all_filters();"><?php _e('Clear', 'custom-registration-form-builder-with-submission-manager'); ?></a></button>   
+                            <button type="button" class="button rm-box-w-100 rm-py-1" onclick="rm_clear_all_filters();"><?php _e('Clear', 'custom-registration-form-builder-with-submission-manager'); ?></a></button>   
                          
                             </div>
                         </div>
@@ -676,8 +776,8 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
                             <label class="rm-form-label"><?php _e('Save search as filter ', 'custom-registration-form-builder-with-submission-manager'); ?></label>
                             <input type="text" name="rm_save_filter" class="rm-form-control" value="" placeholder="Save Filter">
                                 <?php
-                                $criteria = explode("?", $_SERVER['REQUEST_URI']);
-                                $criteria[1] = explode("&rm_reqpage", $criteria[1]);
+                                $criteria = explode("?", (string)$_SERVER['REQUEST_URI']);
+                                $criteria[1] = explode("&rm_reqpage", (string)$criteria[1]);
                                 $gopts = new RM_Options;
                                 $custom_filters = $gopts->get_value_of('rm_submission_filters');
                                 $custom_filters = maybe_unserialize($custom_filters);
@@ -731,7 +831,7 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
     <script>
         jQuery(document).ready( function($) {
             $('#rm-advanced-filters, .rm-pannel-close-bt, .rm-slide-pannel-close,.rm-slide-pannel-overlay').click( function() {
-                $('#rm-slide-pannel').toggleClass('rm-pannel-show').slow();
+                $('#rm-slide-pannel').toggleClass('rm-pannel-show');
             });
             
             jQuery('#rm-save-filter-action').click( function() {
@@ -918,10 +1018,26 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
 
         function rm_apply_form_filter() {
             var selectedForm = jQuery('select#rm_submissions-all-forms').children("option:selected").val();
-            if(selectedForm == 'all')
-                window.location.href = '<?php echo admin_url('admin.php?page=rm_submission_manage'); ?>';
-            else
-                window.location.href = '<?php echo admin_url('admin.php?page=rm_submission_manage&rm_form_id='); ?>'+selectedForm;
+            //Disable send button to prevent multiple send requests.
+            jQuery("#rm-apply-form-filter").prop('disabled', true);
+            jQuery("#rm-apply-form-filter").prop('disabled', true);
+            jQuery("#rm-apply-form-filter i").show();
+            var data = {
+                'action': 'rm_save_default_inbox_form',
+                'rm_sec_nonce': '<?php echo wp_create_nonce('rm_ajax_secure'); ?>',
+                'form': selectedForm
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                if(response.success) {
+                    if(selectedForm == 'all') {
+                        window.location.href = '<?php echo admin_url('admin.php?page=rm_submission_manage'); ?>';
+                    } else {
+                        window.location.href = '<?php echo admin_url('admin.php?page=rm_submission_manage&rm_form_id='); ?>'+selectedForm;
+                    }
+                }
+                
+                jQuery("#rm-apply-form-filter i").hide();
+            });
         }
 
         function rm_toggle_sort_order() {
@@ -1072,6 +1188,7 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
          jQuery('.rm-quick-view-button').click(function () {
          var modalId = jQuery(this).data('submission-id');
          jQuery('#' + modalId).toggle();
+         jQuery('#' + modalId).addClass("rm-form-popup-show").removeClass("rm-form-popup-hide");
         jQuery('#' + modalId).children('.rm-box-modal-overlay').removeClass('rm-modal-overlay-fade-in').addClass('rm-modal-overlay-fade-out');
         jQuery('#' + modalId).children('.rm-box-modal-wrap').removeClass('rm-modal-out').addClass('rm-modal-in');
         jQuery('#' + modalId).children('.rm-box-modal-wrap').removeClass('rm-modal-out').addClass('rm-modal-in');
@@ -1083,6 +1200,7 @@ if(!empty($data->filter->filters['rm_dateupto'])) {
          jQuery('#' + modalId).toggle();
         jQuery('#' + modalId).children('.rm-box-modal-overlay').removeClass('rm-modal-overlay-fade-out').addClass('rm-modal-overlay-fade-in');
         jQuery('#' + modalId).children('.rm-box-modal-wrap').removeClass('rm-modal-in').addClass('rm-modal-out');
+         jQuery('#' + modalId).addClass("rm-form-popup-hide").removeClass("rm-form-popup-show");
          
           });
          

@@ -56,8 +56,8 @@ class View_UserRowsForm extends View {
 
         if ($element instanceof Element_Hidden || $element instanceof Element_HTML)
             $element->render();
-        elseif ($element instanceof Element_HTMLH || $element instanceof Element_HTMLP) {               
-            echo '<div class="'.$row_class.'">', $element->render(), '', $this->renderDescriptions($element), '</div>';            
+        elseif ($element instanceof Element_HTMLH || $element instanceof Element_HTMLP) {
+            echo '<div class="'.$row_class.'">', $element->render(), $element->add_condition(), '', $this->renderDescriptions($element), '</div>';            
         } elseif($element instanceof Element_Map) {
             $ele_id = $element->getAttribute('id');
             $unique_ele_id = $ele_id."_".$this->_form->getAttribute('id')."_".$this->_form->getAttribute('id');
@@ -66,12 +66,27 @@ class View_UserRowsForm extends View {
         } elseif($element instanceof Element_Captcha) {
             echo '<div class="'.$row_class.' rm_captcha_fieldrow">', $this->renderLabel($element), '<div class="'.$input_class.'">', $element->render(), '</div>', $this->renderDescriptions($element), '</div>';            
         } else {
-            echo '<div class="'.$row_class.'">', $this->renderLabel($element);
-            echo '<div class="'.$input_class.'">', $element->render();
-            if($ele_adv_opts['sub_element'] && $ele_adv_opts['sub_element'] instanceof Element && !($element instanceof Element_Checkbox))
-                $this->renderElement($ele_adv_opts['sub_element']);
-            echo '</div>';
-            echo $this->renderDescriptions($element), '</div>';
+            if($element instanceof Element_UserPassword && isset($element->_attributes['data-confirmpasspos']) && $element->_attributes['data-confirmpasspos'] == 'below') {
+                if(!isset($element->_attributes['id']) || $element->_attributes['id'] != 'rm_reg_form_pw_reentry')
+                    echo '<div class="'.$row_class.' rm-confirm-pass-below">', $this->renderLabel($element);
+                else
+                    echo '<div class="'.$row_class.'">', $this->renderLabel($element);
+                echo '<div class="'.$input_class.'">', $element->render();
+                if($ele_adv_opts['sub_element'] && $ele_adv_opts['sub_element'] instanceof Element && !($element instanceof Element_Checkbox))
+                    $this->renderElement($ele_adv_opts['sub_element']);
+                echo '</div>';
+                if(!isset($element->_attributes['id']) || $element->_attributes['id'] != 'rm_reg_form_pw_reentry')
+                    echo $this->renderDescriptions($element);
+                else
+                    echo $this->renderDescriptions($element), '</div>';
+            } else {
+                echo '<div class="'.$row_class.'">', $this->renderLabel($element);
+                echo '<div class="'.$input_class.'">', $element->render();
+                if($ele_adv_opts['sub_element'] && $ele_adv_opts['sub_element'] instanceof Element && !($element instanceof Element_Checkbox))
+                    $this->renderElement($ele_adv_opts['sub_element']);
+                echo '</div>';
+                echo $this->renderDescriptions($element), '</div>';
+            }
         }
     }
 
@@ -80,7 +95,7 @@ class View_UserRowsForm extends View {
         if (!empty($label)) {
             $field_class = trim("rmfield ".$element->getAdvanceAttr('exclass_field'));
             echo '<label class="'.$field_class.'" for="', $element->getAttribute("id"), '" style="',$element->getAttribute("labelstyle"),'">';
-            echo wp_kses_post($label);
+            echo wp_kses_post((string)$label);
             if ($element->isRequired()  && ($element->show_asterix()=='yes')) {                
                 echo '<sup class="required">&nbsp;*</sup>';                            
             }

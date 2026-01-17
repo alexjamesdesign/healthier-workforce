@@ -15,18 +15,18 @@ if($data->total_sub > 0):
 <table class="rm_user_submissions form-table">
   <tr>
     <th class="rm_user_sr">#</th>
-    <th class="rm_form_title"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FORM_TITLE'));?></th>
-    <th class="rm_submission_date"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DATE')); ?></th>
-    <th class="rm_form_payment"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PAYMENT')); ?></th> 
-    <th class="rm_view_submission"><?php //echo wp_kses_post(RM_UI_Strings::get('ACTION'); ?></th>
+    <th class="rm_form_title"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FORM_TITLE'));?></th>
+    <th class="rm_submission_date"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DATE')); ?></th>
+    <th class="rm_form_payment"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PAYMENT')); ?></th> 
+    <th class="rm_view_submission"><?php //echo wp_kses_post((string)RM_UI_Strings::get('ACTION'); ?></th>
   </tr>
   <?php  for($i=0; $i < $data->total_sub; $i++):?>
   <tr>
     <td class="rm_user_sr"><?php echo esc_html($i+1);?></td>
-    <td class="rm_form_title"><?php if($data->submissions[$i]->name) echo esc_html($data->submissions[$i]->name); else echo wp_kses_post(RM_UI_Strings::get('LABEL_FORM_DELETED')); ?></td>
+    <td class="rm_form_title"><?php if($data->submissions[$i]->name) echo esc_html($data->submissions[$i]->name); else echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FORM_DELETED')); ?></td>
     <td class="rm_submission_date"><?php echo esc_html($data->submissions[$i]->date);?></td>
-    <td class="rm_form_payment"><?php if($data->submissions[$i]->payment_status) echo esc_html($data->submissions[$i]->payment_status); else echo wp_kses_post(RM_UI_Strings::get('LABEL_NOT_APPLICABLE_ABB'));?></td>
-    <td class="rm_view_submission"><a href="<?php printf($data->view_action_link,$data->submissions[$i]->submission_id);?>"><?php echo wp_kses_post(RM_UI_Strings::get('VIEW')); ?></a></td>
+    <td class="rm_form_payment"><?php if($data->submissions[$i]->payment_status) echo esc_html($data->submissions[$i]->payment_status); else echo wp_kses_post((string)RM_UI_Strings::get('LABEL_NOT_APPLICABLE_ABB'));?></td>
+    <td class="rm_view_submission"><a href="<?php printf($data->view_action_link,$data->submissions[$i]->submission_id);?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('VIEW')); ?></a></td>
   </tr>
   <?php endfor;?>
 </table>

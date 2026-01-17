@@ -400,13 +400,13 @@ var rm_user_exists= function(el,url,data){
 var rm_get_state= function(el,url,data,conditions=''){ 
     jQuery.post(url, data, function(response) {
         elementId= jQuery(el).attr('id');
-        console.log(response);
+        //console.log(response);
         //console.log(data.state_field_id);
         var name = jQuery('#'+data.state_field_id+'_attrs').attr('data-name');
         var placeholder = jQuery('#'+data.state_field_id+'_attrs').attr('data-placeholder');
         var class_val = jQuery('#'+data.state_field_id+'_attrs').attr('data-class');
         var style = jQuery('#'+data.state_field_id+'_attrs').attr('data-style');
-        console.log('--'+style);
+        //console.log('--'+style);
         var required = jQuery('#'+data.state_field_id+'_attrs').attr('data-required');
         var required_attr = '';
         if(required!=''){
@@ -438,8 +438,6 @@ jQuery(document).ready(function () {
     jQuery(".rm_mapv_container").each(function() {
     if (jQuery(this).width() < 600) {
         jQuery(this).addClass("rm_mapvsm");
-
-
     } else {
         jQuery(this).addClass("rm_mapvlg");
 
@@ -507,7 +505,7 @@ function handle_data(email,first_name,type,token) {
 }
 
 jQuery(document).ready(function(){
-    jQuery(".rm_form_field_type_richtext").parent() .addClass("rm-richtext-fw");
+    jQuery(".rm_form_field_type_richtext").parent().addClass("rm-richtext-fw");
 });
 
 jQuery(document).ready(function(){
@@ -606,11 +604,71 @@ jQuery(document).ready(function () {
 
 });
 
+
 jQuery(document).ready(function () {
     jQuery('.rmagic-row').each(function () {
         if (jQuery(this).find('.rmagic-col-12 .rmagic-field[style*="display: none"]').length > 0) {
             jQuery(this).addClass('rm-hidden-row');
+ 
         }
+        
+        jQuery(this).find(".rmagic-field").each(function () {
+            if (jQuery(this).css("display") === "none") {
+                jQuery(this).closest(".rmagic-col").addClass("rmagic-col-hide");
+            }
+        });
+        
+        
     });
+    
+    
+    
+
+
+function RM_togglePasswordField(formID, selector, wrapperClass) {
+    const RM_field = jQuery(`${formID} .rmrow [name="${selector}"]`);
+    
+    if (RM_field.length > 0) {
+        RM_field.closest('div').addClass(wrapperClass).prepend('<span class="rm-togglePassword"></span>');
+        const RM_togglePassword = document.querySelector(`.${wrapperClass} .rm-togglePassword`);
+        const RM_passwordField = document.querySelector(`${formID} .rmrow [name='${selector}']`);
+        
+        RM_togglePassword.addEventListener("click", function () {
+            const RM_type = RM_passwordField.getAttribute("type") === "password" ? "text" : "password";
+            RM_passwordField.setAttribute("type", RM_type);
+            this.classList.toggle("rm-togglePassword-show");
+        });
+    }
+}
+
+// For #rm_reset_password_form
+RM_togglePasswordField("#rm_reset_password_form", "password", "rm-password-toggle-wrap");
+RM_togglePasswordField("#rm_reset_password_form", "confirm_password", "rm-c-password-toggle-wrap");
+
+// For #rm_reset_pass_form
+RM_togglePasswordField("#rm_reset_pass_form", "old_pass", "rm-password-toggle-wrap");
+RM_togglePasswordField("#rm_reset_pass_form", "new_pass", "rm-password-toggle-wrap");
+RM_togglePasswordField("#rm_reset_pass_form", "new_pass_repeat", "rm-password-toggle-wrap");
+ 
+// Old Builder form
+function RM_OldForm_togglePasswordField(formID, selector, wrapperClass) {
+    const RM_field = jQuery(`${formID} .rmagic-row [name="${selector}"]`);
+    
+    if (RM_field.length > 0) {
+        RM_field.closest('div').addClass(wrapperClass).prepend('<span class="rm-togglePassword"></span>');
+        
+        const RM_togglePassword = RM_field.siblings('.rm-togglePassword'); // Use jQuery for consistent targeting
+        
+        RM_togglePassword.on("click", function () {
+            const RM_type = RM_field.attr("type") === "password" ? "text" : "password";
+            RM_field.attr("type", RM_type);
+            jQuery(this).toggleClass("rm-togglePassword-show");
+        });
+    }
+}
+
+// Initialize for two fields
+RM_OldForm_togglePasswordField("form.rmagic-form", "pwd", "rm-password-toggle-wrap");
+RM_OldForm_togglePasswordField("form.rmagic-form", "password_confirmation", "rm-password-toggle-wrap");
 
 });

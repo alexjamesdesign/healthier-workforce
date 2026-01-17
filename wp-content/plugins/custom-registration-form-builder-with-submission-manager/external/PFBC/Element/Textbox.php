@@ -11,7 +11,7 @@ class Element_Textbox extends Element {
 		if(!empty($this->append))
 			$addons[] = "input-append";
 		if(!empty($addons))
-			echo '<div class="', wp_kses_post(implode(" ", $addons)), '">';
+			echo '<div class="', wp_kses_post((string)implode(" ", $addons)), '">';
 
 		$this->renderAddOn("prepend");
 		parent::render();
@@ -30,7 +30,7 @@ class Element_Textbox extends Element {
 			if($span)
 				echo '<span class="add-on">';
 
-			echo wp_kses_post($this->$type);
+			echo wp_kses_post((string)$this->$type);
 
 			if($span)
 				echo '</span>';

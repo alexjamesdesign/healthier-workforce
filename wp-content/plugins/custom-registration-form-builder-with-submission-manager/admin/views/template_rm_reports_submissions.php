@@ -56,7 +56,7 @@ else{
                                             <div class="rm-box-col-6">
                                                 <div class="rm-report-filter-attr">
                                                     <label><?php _e('Select Form', 'custom-registration-form-builder-with-submission-manager'); ?></label>
-                                                    <select class="" name="rm_form_id"><option value="all"><?php _e('All', 'custom-registration-form-builder-with-submission-manager'); ?></option><?php echo wp_kses($forms, RM_Utilities::expanded_allowed_tags()); ?></select>
+                                                    <select class="" name="rm_form_id"><option value="all"><?php _e('All', 'custom-registration-form-builder-with-submission-manager'); ?></option><?php echo wp_kses((string)$forms, RM_Utilities::expanded_allowed_tags()); ?></select>
                                                 </div>
                                             </div>
 
@@ -66,8 +66,8 @@ else{
                                 <div class="rm-box-col-1"></div>
                                 <div class="rm-box-col-3">
                                     <div class="rm-box-btn-wrap rm-box-text-right">  
-                                        <button type="submit" id="rm_submit_btn" class="rm_btn rm-btn rm-btn-primary"><?php _e('Search', 'custom-registration-form-builder-with-submission-manager'); ?></button>
-                                        <button type="button" id="rm_reset_btn" class="rm-btn-secondary rm-btn" onclick="window.location.href='<?php echo admin_url('?page=rm_reports_submissions'); ?>'"><?php _e('Reset', 'custom-registration-form-builder-with-submission-manager'); ?></button>
+                                        <button type="submit" id="rm_submit_btn" class="rm-btn rm-btn-primary"><?php _e('Search', 'custom-registration-form-builder-with-submission-manager'); ?></button>
+                                        <button type="button" id="rm_reset_btn" class="rm-btn-secondary rm-btn" onclick="window.location.href='<?php echo admin_url('admin.php?page=rm_reports_submissions'); ?>'"><?php _e('Reset', 'custom-registration-form-builder-with-submission-manager'); ?></button>
                                     </div>
                                 </div>
                             </div>
@@ -98,7 +98,7 @@ else{
                             <td><?php echo date('d M, Y',strtotime($submission->submitted_on));?></td>
                             <td><?php echo esc_html($submission->user_email);?></td>
                             <td><?php echo esc_html($submission->form_id);?></td>
-                            <td class="rm-reports-submission-view"><a target="__blank" href="<?php echo admin_url('?page=rm_submission_view&rm_submission_id='.$submission->submission_id);?>"><span class="material-icons"> open_in_new </span></a></td>
+                            <td class="rm-reports-submission-view"><a target="__blank" href="<?php echo admin_url('admin.php?page=rm_submission_view&rm_submission_id='.$submission->submission_id);?>"><span class="material-icons"> open_in_new </span></a></td>
                         </tr>
                         <?php endforeach;?>
                         </tbody>

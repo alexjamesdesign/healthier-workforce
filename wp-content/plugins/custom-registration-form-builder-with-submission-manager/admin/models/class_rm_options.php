@@ -29,22 +29,23 @@ class RM_Options
         //Initialize default values.
         $this->default['currency'] = 'USD';
         $this->default['admin_order'] = array(
-            array("rm_form_manage",__('All Forms','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_dashboard_widget_dashboard",__('Overview','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_submission_manage",__('Inbox','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_sent_emails_manage",__('Outbox','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"hidden","false"),
-            array("rm_attachment_manage",__('Attachments','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_analytics_show_form",__('Form Analytics','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_analytics_show_field",__('Field Analytics','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"hidden","false"),
-            array("rm_form_manage_cstatus",__('Custom Status','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_ex_chronos_manage_tasks",__('Automation','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_invitations_manage",__('Bulk Email','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_user_manage",__('User Manager','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_user_role_manage",__('User Roles','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_paypal_field_manage",__('Products','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_payments_manage",__('Payments','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
-            array("rm_reports_dashboard",__('Reports','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"hidden","false"),
-            array("rm_options_manage",__('Global Settings','custom-registration-form-builder-with-submission-manager'),array("administrator") ,"visible","false"),
+            array("rm_form_manage",'All Forms',array("administrator") ,"visible","false"),
+            array("rm_dashboard_widget_dashboard",'Overview',array("administrator") ,"hidden","false"),
+            array("rm_submission_manage",'Inbox',array("administrator") ,"visible","false"),
+            array("rm_sent_emails_manage",'Outbox',array("administrator") ,"hidden","false"),
+            array("rm_attachment_manage",'Attachments',array("administrator") ,"visible","false"),
+            array("rm_analytics_show_form",'Form Analytics',array("administrator") ,"visible","false"),
+            array("rm_analytics_show_field",'Field Analytics',array("administrator") ,"visible","false"),
+            array("rm_form_manage_cstatus",'Custom Status',array("administrator") ,"visible","false"),
+            array("rm_ex_chronos_manage_tasks",'Automation',array("administrator") ,"visible","false"),
+            array("rm_invitations_manage",'Bulk Email',array("administrator") ,"visible","false"),
+            array("rm_subscriptions",'Subscriptions',array("administrator") ,"visible","false"),
+            array("rm_user_manage",'User Manager',array("administrator") ,"visible","false"),
+            array("rm_user_role_manage",'User Roles',array("administrator") ,"visible","false"),
+            array("rm_paypal_field_manage",'Products',array("administrator") ,"visible","false"),
+            array("rm_payments_manage",'Payments',array("administrator") ,"visible","false"),
+            array("rm_reports_dashboard",'Reports',array("administrator") ,"hidden","false"),
+            array("rm_options_manage",'Global Settings',array("administrator") ,"visible","false"),
         );
         $this->default['enable_admin_order'] = 'no';
         $this->default['num_hidden_menus'] = 0;
@@ -58,12 +59,17 @@ class RM_Options
         $this->default['tax_type'] = 'fixed';
         $this->default['tax_fixed'] = 0;
         $this->default['tax_percentage'] = 0;
+        $this->default['tax_rename'] = 'Tax';
         $this->default['enable_captcha'] = 'no';
         $this->default['sub_limit_antispam'] = 20;
         $this->default['edd_notice'] = '1';
         $this->default['wc_notice'] = '1';
         $this->default['php_notice'] = '1';
         $this->default['php_8_notice'] = '1';
+        $this->default['ep_notice'] = '1';
+        $this->default['pg_notice'] = '1';
+        $this->default['rm_upgrade_notice'] = '1';
+        $this->default['rm_premium_notice'] = '1';
         $this->default['auto_generated_password'] = 'no';
         $this->default['user_auto_approval'] = 'yes';
         $this->default['admin_notification'] = 'no';
@@ -88,6 +94,7 @@ class RM_Options
         $this->default['enable_twitter'] = 'no';
         $this->default['enable_mailchimp'] = 'no';
         $this->default['send_password'] = 'yes';
+        $this->default['send_act_email'] = 'yes';
         $this->default['allowed_file_types'] = 'jpg|jpeg|png|gif|doc|pdf|docx|txt';
         $this->default['file_prefix'] = '';
         $this->default['file_size'] = 0;
@@ -129,10 +136,10 @@ class RM_Options
         $this->default['mailpoet_notice'] = '1';
         $this->default['acc_act_link_expiry'] = '';
         $this->default['submission_pdf_font'] = 'times';
-        $this->default['acc_act_notice'] = RM_UI_Strings::get('DEFAULT_ACC_ACT_VALUE');
-        $this->default['acc_invalid_act_code'] = RM_UI_Strings::get('DEFAULT_INVALID_ACC_ACT_CODE_VALUE');
-        $this->default['acc_act_link_exp_notice'] = RM_UI_Strings::get('DEFAULT_ACC_ACT_LINK_NOTICE_VALUE');
-        $this->default['login_error_message'] = RM_UI_Strings::get('DEFAULT_LOGIN_ERR_MSG_VALUE');
+        $this->default['acc_act_notice'] = 'You have successfully verified your email. Your account is now active. You can login below.';
+        $this->default['acc_invalid_act_code'] = 'Looks like the activation code is broken or incorrect. You can try pasting the activation code from your mail in input box below and manually verify it.';
+        $this->default['acc_act_link_exp_notice'] = 'Sorry, the verification link has expired. Click here to resend the link {{SEND_VERIFICATION_EMAIL}}.';
+        $this->default['login_error_message'] = 'Your account has not been activated yet. Please follow the link we sent to your registered email to activate your account. If you have not received it, click here to resend the link {{SEND_VERIFICATION_EMAIL}}.';
         $this->default['prov_act_acc'] = '';
         $this->default['prov_acc_act_criteria'] = '';
         $this->default['enable_gplus'] = 'no';
@@ -190,12 +197,17 @@ class RM_Options
             'tax_type' => null,
             'tax_fixed' => null,
             'tax_percentage' => null,
+            'tax_rename' => null,
             'enable_captcha' => 'sanitize_checkbox',
             'sub_limit_antispam' => 'sanitize_submission_limit_antispam',
             'edd_notice' => null,
             'wc_notice' => null,
             'php_notice' => null,
             'php_8_notice' => null,
+            'ep_notice' => null,
+            'pg_notice' => null,
+            'rm_upgrade_notice' => null,
+            'rm_premium_notice' => null,
             'public_key' => null,
             'private_key' => null,
             'public_key3' => null,
@@ -239,6 +251,7 @@ class RM_Options
             'mailchimp_double_optin' => 'sanitize_checkbox',
             'google_map_key' => null,
             'send_password' => 'sanitize_checkbox',
+            'send_act_email' => 'sanitize_checkbox',
             'allowed_file_types' => 'sanitize_allowed_file_types',
             'file_prefix' => null,
             'file_size' => null,
@@ -311,6 +324,10 @@ class RM_Options
             'ccavenue_access_code'=> null,
             'ccavenue_working_key'=> null,
             'ccavenue_test_mode'=> 'sanitize_checkbox',
+            'przelewy24_merchant_id'=> null,
+            'przelewy24_crc_code'=> null,
+            'przelewy24_reports_key'=> null,
+            'przelewy24_test_mode'=> 'sanitize_checkbox',
             'enable_invoice'=>'',
             'invoice_company_logo'=>'',
             'invoice_company_name'=>'',
@@ -326,6 +343,18 @@ class RM_Options
             'enable_user_invoice'=>'',
             'invoice_font'=>'',
             'enable_email_invoice'=>'',
+            'enable_turnstile'=>'',
+            'rm_turnstile_public_key'=>'',
+            'rm_turnstile_private_key'=>'',
+            'rm_turnstile_theme'=> '',
+            'rm_turnstile_size'=>'',
+            'rm_turnstile_message' => '',
+            'openai_api_key' =>'',
+            'response_length'=>'',
+            'openai_api_limit'=>'',
+            'gpt_model'=> '',
+            'openai_api_reset_limit'=> '',
+            'paypal_secret_key'=>'',
         );
     }
 
@@ -367,9 +396,9 @@ class RM_Options
         {
             if ($option === 'smtp_password' && $value)
                 $value = RM_Utilities::dec_str($value);
-            elseif ($option === 'admin_email' && trim($value) === '')
+            elseif ($option === 'admin_email' && trim((string)$value) === '')
                 $value = $this->default[$option];
-            elseif ($option === 'allowed_file_types' && trim($value) === '')
+            elseif ($option === 'allowed_file_types' && trim((string)$value) === '')
                 $value = $this->default[$option];
                 
             return $value;
@@ -463,6 +492,7 @@ class RM_Options
             'HKD' => '$',
             'HRK' => 'kn',
             'HUF' => 'Ft',
+            'IDR' => 'Rp',
             'ILS' => '₪',
             'JPY' => '¥',
             'MYR' => 'RM',
@@ -486,8 +516,9 @@ class RM_Options
             'ZMW' => 'ZK',
             'GHS' => 'GH&#x20B5;',
             'KES' => 'KSh',
-            'UGX' => 'USh',
-            'TZS' => 'TSh'
+            'UGX' => 'UGX',
+            'TZS' => 'TSh',
+            'OMR' => 'ريال'
             );
     }
 
@@ -522,14 +553,14 @@ class RM_Options
     public function sanitize_allowed_file_types($val)
     {
         //strip out all the whitespaces
-        $val = preg_replace('/\s+/', '', $val);
+        $val = preg_replace('/\s+/', '', (string)$val);
 
         //check the validity. Allowed chars: a-z,A-Z,0-9 and '|'.
-        $tmp = preg_replace('/[a-zA-Z\|0-9]*/', '', $val);
+        $tmp = preg_replace('/[a-zA-Z\|0-9]*/', '', (string)$val);
         //it $tmp is empty then it means the string matched completely.
 
         if ($tmp === '')
-            return trim(strtolower($val), '|');
+            return trim(strtolower((string)$val), '|');
         else
             return $this->default['allowed_file_types'];
     }
@@ -644,7 +675,7 @@ class RM_Options
     //removes any invalid email from a string of comma separated email addresses.
     public function sanitize_email_list($val)
     {
-        $emails = explode(',', $val);
+        $emails = explode(',', (string)$val);
         $processed_emails = array();
 
         foreach ($emails as $email)
@@ -671,12 +702,12 @@ class RM_Options
 
     public function sanitize_senders_display_name($val)
     {
-        return trim($val);
+        return trim((string)$val);
     }
     
     public function sanitize_an_senders_display_name($val)
     {
-        return trim($val);
+        return trim((string)$val);
     }
     
     public function sanitize_banned_ip($val)
@@ -690,10 +721,10 @@ class RM_Options
         else
         {
             $val = preg_replace('/\s+/', ' ',$val);
-            $val = trim($val);
+            $val = trim((string)$val);
             if($val == '')
             return array();
-            $ips = explode(' ', $val);
+            $ips = explode(' ', (string)$val);
         }
         
         $sanitized_ips = array();
@@ -707,7 +738,7 @@ class RM_Options
                 continue;
             }
                     
-            $ip_as_arr = explode('.', $val);
+            $ip_as_arr = explode('.', (string)$val);
 
             $c = count($ip_as_arr);
 
@@ -748,16 +779,16 @@ class RM_Options
             //remove multiple whitespaces and newline with single whitespace.
             $val = preg_replace('/\s+/', ' ',$val);
 
-            $val = trim($val);
+            $val = trim((string)$val);
 
             if($val == '')
                 return array();
 
-            $emails = explode(' ', $val);        
+            $emails = explode(' ', (string)$val);        
         }
         else{
             foreach($val as $e)
-                $emails[] = trim($e);
+                $emails[] = trim((string)$e);
         }
         return $emails;
     }

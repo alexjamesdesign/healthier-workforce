@@ -13,7 +13,7 @@ and open the template in the editor.
 
 form.rmagic-form .rmagic-row *:not(:where(.rm-togglePassword, .rmnote, .rmnote *, .intl-tel-input, .intl-tel-input *, .iti.iti--allow-dropdown, .iti.iti--allow-dropdown *,
 .rminput .rateit-font .rateit-range > div, .rminput .rateit, .rminput.rateit *, .rm-flip-clock-wrapper, .rm-flip-clock-wrapper *,
-.rmagic-row .rmagic-fields-wrap .rm_divider, i.rm_front_field_icon)) {
+.rmagic-row .rmagic-fields-wrap .rm_divider, i.rm_front_field_icon, i.rm_front_field_icon, .rmform-password-toggle-wrap)) {
       background: none;
     border: 0 none;
     border-radius: 0;
@@ -85,6 +85,11 @@ form.rmagic-form .rmagic-row .rmagic-subheading {
     line-height: 1.6;
     margin: 5px 0 0;
     border: 1px solid #F1E4E7;
+    display: inline-block;
+}
+
+.rmagic-row .rmagic-fields-wrap .rmagic-col .rmagic-field label.rm-form-field-invalid-msg:empty{
+    display: none !important;
 }
 
 .rmagic .rmcontent form.rmagic-form fieldset .rm-response-message.alert-error {
@@ -107,10 +112,9 @@ form.rmagic-form .rmagic-row .rmagic-subheading {
 .rmagic .rmagic-row .rmagic-field .rminput input[type="email"],
 .rmagic .rmagic-row .rmagic-field .rminput input[type="url"], 
 .rmagic .rmagic-row .rmagic-field .rminput input[type="file"], 
-.rmagic .rmagic-row .rmagic-field .rminput input[type="number"], 
+.rmagic .rmagic-row .rmagic-field .rminput input[type="number"],
 .rmagic .rmagic-row .rmagic-field .rminput textarea,
 .rmagic .rmagic-row .rmagic-field .rminput select{
-    
     background-color: #fff;
     background-color: rgba(255,255,255,0.33);
     box-sizing: border-box;
@@ -170,7 +174,8 @@ form.rmagic-form .rmagic-row .rmagic-subheading {
 
 .rmagic .rmagic-row .rmagic-field .rminput textarea {
     min-height: 100px;
-    resize: vertical;
+    height: auto;
+    resize: vertical;    
 }
 
 .rmagic .rmagic-row .rmagic-field .rminput input[type="email"][readonly="readonly"],
@@ -376,6 +381,7 @@ form.rmagic-form .rmagic-row .rmagic-subheading {
 
 .rmagic .rmagic-row .rmagic-fields-wrap .rmagic-col .rmnote{
     width: 100% !important;
+    font-size: 13px
 }
 
 /*---Field Notes End---*/

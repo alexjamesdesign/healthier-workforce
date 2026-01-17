@@ -89,7 +89,7 @@ class RM_Frontend_Form_Contact extends RM_Frontend_Form_Multipage//RM_Frontend_F
         if (count($this->fields) !== 0)
             $form->render();
         else
-            echo wp_kses_post(RM_UI_Strings::get('MSG_NO_FIELDS'));
+            echo wp_kses_post((string)RM_UI_Strings::get('MSG_NO_FIELDS'));
     }
 
     public function get_prepared_data_primary($request)

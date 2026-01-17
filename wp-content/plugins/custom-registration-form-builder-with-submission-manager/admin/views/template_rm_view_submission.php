@@ -14,22 +14,22 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
     <!-----Operations bar Start-->
 
     <div class="operationsbar">
-        <div class="rmtitle"><span class="rmtitle-from"><?php echo wp_kses_post(RM_UI_Strings::get('TEXT_FROM')).': </span>'. $data->submission->get_user_email(); ?></div>
+        <div class="rmtitle"><span class="rmtitle-from"><?php echo wp_kses_post((string)RM_UI_Strings::get('TEXT_FROM')).': </span>'. $data->submission->get_user_email(); ?></div>
         <div class="icons">
             <a href="?page=rm_options_manage"><img alt="" src="<?php echo esc_url(plugin_dir_url(dirname(dirname(__FILE__))) . 'images/global-settings.png'); ?>"></a>
 
         </div>
         <div class="nav">
             <ul>
-                <li><a href="<?php echo admin_url()."admin.php?page=rm_submission_manage"; ?>"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
-                <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_ADD_NOTE")); ?></a></li>
-                <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_PRINT")); ?></a></li>
-                <li><a href="javascript:void(0)" onclick="rm_delete_submission();"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_DELETE")); ?></a></li>
-                <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BLOCK_EMAIL")); ?></a></li>
-                <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_BLOCK_IP")); ?></a></li>
-                <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_SEND_MESSAGE")); ?></a></li>
+                <li><a href="<?php echo admin_url()."admin.php?page=rm_submission_manage"; ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BACK")); ?></a></li>
+                <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_ADD_NOTE")); ?></a></li>
+                <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_PRINT")); ?></a></li>
+                <li><a href="javascript:void(0)" onclick="rm_delete_submission();"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_DELETE")); ?></a></li>
+                <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BLOCK_EMAIL")); ?></a></li>
+                <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_BLOCK_IP")); ?></a></li>
+                <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_SEND_MESSAGE")); ?></a></li>
                 <?php if($data->related > 0){ ?>
-                <li><a href="?page=rm_submission_related&rm_user_email=<?php echo esc_attr($data->submission->get_user_email()); ?>&rm_submission_id=<?php echo esc_attr($data->submission->get_submission_id()); ?>"><?php echo wp_kses_post(RM_UI_Strings::get("LABEL_RELATED")).' ('.esc_html($data->related).')'; ?></a></li>
+                <li><a href="?page=rm_submission_related&rm_user_email=<?php echo esc_attr($data->submission->get_user_email()); ?>&rm_submission_id=<?php echo esc_attr($data->submission->get_submission_id()); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get("LABEL_RELATED")).' ('.esc_html($data->related).')'; ?></a></li>
                 <?php } else { ?>
                 <li><a class="rm_deactivated" href="javascript:void(0)"><?php echo RM_UI_Strings::get("LABEL_NO_RELATED"); ?></a></li>
                 <?php } ?>
@@ -60,7 +60,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                         <?php }
                         //echo '<pre>'; print_r($custom_statuses);echo '</pre>';
                     } else { ?>
-                        <div class="rm-no-status-assigned"><?php echo _e('No Status Assigned', 'registrationmagic-addon'); ?></div>
+                        <div class="rm-no-status-assigned"><?php echo _e('No Status Assigned', 'custom-registration-form-builder-with-submission-manager'); ?></div>
                     <?php } ?>
                 </div>
                 <div class="rm-submission-value rm-custom-status-lr">
@@ -88,7 +88,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
             {
                 ?>
                 <div class="rm-submission-field-row">
-                    <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_UNIQUE_TOKEN_SHORT')); ?> :</div>
+                    <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_UNIQUE_TOKEN_SHORT')); ?> :</div>
                     <div class="rm-submission-value rm-submission-metavalue"><?php echo esc_html($data->submission->get_unique_token()); ?></div>
                 </div>
                 <?php
@@ -96,17 +96,17 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
             ?>
 
             <div class="rm-submission-field-row">
-                <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_ENTRY_ID')); ?></div>
+                <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_ENTRY_ID')); ?></div>
                 <div class="rm-submission-value rm-submission-metavalue"><?php echo esc_html($data->submission->get_submission_id()); ?></div>
             </div>
 
             <div class="rm-submission-field-row">
-                <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_ENTRY_TYPE')); ?></div>
+                <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_ENTRY_TYPE')); ?></div>
                 <div class="rm-submission-value rm-submission-metavalue"><?php echo esc_html($data->form_type); ?></div>
             </div>
             
             <div class="rm-submission-field-row">
-                <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SUBMITTED_ON')); ?></div>
+                <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SUBMITTED_ON')); ?></div>
                 <div class="rm-submission-value rm-submission-metavalue"><?php echo esc_html(RM_Utilities::localize_time($data->submission->get_submitted_on())); ?></div>
             </div>
             
@@ -116,18 +116,18 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                 $user_roles_dd = RM_Utilities::user_role_dropdown();
                 ?>
                 <div class="rm-submission-field-row">
-                    <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DISPLAY_NAME')); ?></div>
+                    <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DISPLAY_NAME')); ?></div>
                     <div class="rm-submission-value"><?php echo esc_html($data->user->display_name); ?></div>
                 </div>
 
                 <div class="rm-submission-field-row">
-                    <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_USER_ROLES')); ?></div>
+                    <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_USER_ROLES')); ?></div>
                     <div class="rm-submission-value">
                         <?php
                         if(isset($data->user->roles[0],$user_roles_dd[$data->user->roles[0]]))
                             echo esc_html($user_roles_dd[$data->user->roles[0]]);
                         else
-                            echo "<em>".wp_kses_post(RM_UI_Strings::get('MSG_USER_ROLE_NOT_ASSIGNED'))."</em>";
+                            echo "<em>".wp_kses_post((string)RM_UI_Strings::get('MSG_USER_ROLE_NOT_ASSIGNED'))."</em>";
                         ?>
                     </div>
                 </div>
@@ -155,12 +155,12 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                         <div class="rm-submission-value">
                             <?php
                             //if submitted data is array print it in more than one row.
-                            
+
                             if (is_array($sub_data)) {
-
-                                //If submitted data is a file.
-
-                                if (isset($sub_data['rm_field_type']) && $sub_data['rm_field_type'] == 'File') {
+                                $additional_fields = apply_filters('rm_additional_fields', array());
+                                if(in_array($sub->type, $additional_fields)){
+                                    echo wp_kses_post(do_action('rm_additional_fields_data',$sub->type, $sub_data));
+                                }elseif (isset($sub_data['rm_field_type']) && $sub_data['rm_field_type'] == 'File') {
                                     unset($sub_data['rm_field_type']);
 
                                     foreach ($sub_data as $sub) {
@@ -171,7 +171,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                                         <div class="rm-submission-attachment">
                                             <?php echo wp_get_attachment_link($sub, 'thumbnail', false, true, false); ?>
                                             <div class="rm-submission-attachment-field"><?php echo esc_html(basename($att_path)); ?></div>
-                                            <div class="rm-submission-attachment-field"><a href="<?php echo esc_url($att_url); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
+                                            <div class="rm-submission-attachment-field"><a href="<?php echo esc_url($att_url); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
                                         </div>
 
                                         <?php
@@ -186,12 +186,15 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                                         $sub .= '<b>'.__('Zip Code','custom-registration-form-builder-with-submission-manager').'</b> : ' . $sub_data['zip'] . '<br/>';
                                         $sub .= '<b>'.__('Country','custom-registration-form-builder-with-submission-manager').'</b> : ' . $sub_data['country'];
                                     }
-                                    echo wp_kses_post($sub);
+                                    echo wp_kses_post((string)$sub);
                                 }  elseif ($sub->type == 'Time') {                                  
                                     //echo esc_html($sub_data['time']).", ".__("Timezone",'custom-registration-form-builder-with-submission-manager').": ".esc_html($sub_data['timezone']);
                                     echo esc_html(date('h:i a', strtotime($sub_data['time'])));
-                                } elseif ($sub->type == 'Checkbox') {   
-                                    echo esc_html(implode(', ',RM_Utilities::get_lable_for_option($field_id, $sub_data)));
+                                } elseif ($sub->type == 'Checkbox') {
+                                    echo wp_kses_post(implode('<br>',RM_Utilities::get_lable_for_option($field_id, $sub_data)));
+                                } elseif ($sub->type == 'URL') {
+                                    $url = esc_url($sub_data['url']);
+                                    echo wp_kses_post("<a href='$url'>$url</a>");
                                 }
                                 //If submitted data is a Star Rating.
                                 
@@ -203,23 +206,50 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                                         $field_data = '<pre>'.implode('<hr> ', $sub_data).'</pre>';
                                     endif;
                                     
-                                    echo wp_kses_post($field_data);
+                                    echo wp_kses_post((string)$field_data);
                                 }
                             } else {
                                 $additional_fields = apply_filters('rm_additional_fields', array());
                                 if(in_array($sub->type, $additional_fields)){
-                                    echo do_action('rm_additional_fields_data',$sub->type, $sub_data);
+                                    echo wp_kses_post(do_action('rm_additional_fields_data',$sub->type, $sub_data));
                                 }
                                 elseif($sub->type == 'Rating')
                                 {
-                                    echo '<div class="rateit" id="rateit5" data-rateit-min="0" data-rateit-max="5" data-rateit-value="'.esc_attr($sub->value).'" data-rateit-ispreset="true" data-rateit-readonly="true"></div>';
+                                    echo wp_kses_post((string)RM_Utilities::enqueue_external_scripts('script_rm_rating', RM_ADDON_BASE_URL . 'public/js/rating3/jquery.rateit.js'));
+                                    $r_sub = array('value' => $sub->value,
+                                                   'readonly' => 1,
+                                                   'max_stars' => 5,
+                                                   'star_face' => 'star',
+                                                   'star_color' => 'FBC326');
+                                    if(isset($sub->meta) && is_object($sub->meta)) {
+                                        if(isset($sub->meta->max_stars))
+                                            $r_sub['max_stars'] = $sub->meta->max_stars;
+                                        if(isset($sub->meta->star_face))
+                                            $r_sub['star_face'] = $sub->meta->star_face;
+                                        if(isset($sub->meta->star_color))
+                                            $r_sub['star_color'] = $sub->meta->star_color;
+                                    }
+                                    $rf = new Element_Rating("", "", $r_sub);
+                                    $rf->render();
                                 }
                                 elseif ($sub->type == 'Radio' || $sub->type == 'Select') {   
                                     echo esc_html(RM_Utilities::get_lable_for_option($field_id, $sub_data));
+                                }elseif($sub->type == 'DigitalSign'){
+                                    if(!empty($sub_data)){
+                                        $sign_url  = RM_BASE_URL . 'plus/signature/signature-access.php?file='.$sub_data;
+                                                
+                                        ?>
+                                            <div class="rm-submission-attachment">
+                                                <img src="<?php echo esc_url($sign_url);?>" style="max-width:100px;">
+                                                <div class="rm-submission-attachment-field"><a href="<?php echo esc_url($sign_url); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DOWNLOAD')); ?></a></div>
+                                            </div>
+
+                                        <?php
+                                    }
                                 }
                                 else
                                 {
-                                echo wp_kses_post(nl2br($sub_data));
+                                echo wp_kses_post((string)nl2br($sub_data));
                                 }
                             }
                             ?>
@@ -251,51 +281,51 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                 if ($data->payment->log):
                     ?>
                     <div class="rm-submission-field-row">
-                        <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PAYER_NAME')); ?></div>
+                        <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PAYER_NAME')); ?></div>
                         <div class="rm-submission-value"><?php if (isset($data->payment->log['first_name'])) echo esc_html($data->payment->log['first_name']);
             if (isset($data->payment->log['last_name'])) echo ' ' . esc_html($data->payment->log['last_name']); ?></div>
                     </div>
                     <div class="rm-submission-field-row">
-                        <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PAYER_EMAIL')); ?></div>
+                        <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PAYER_EMAIL')); ?></div>
                         <div class="rm-submission-value"><?php if (isset($data->payment->log['payer_email'])) echo esc_html($data->payment->log['payer_email']); ?></div>
                     </div>
                     <?php
                 endif;
                 ?>
                 <div class="rm-submission-field-row">
-                    <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_INVOICE')); ?></div>
+                    <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_INVOICE')); ?></div>
                     <div class="rm-submission-value"><?php if (isset($data->payment->invoice)) echo esc_html($data->payment->invoice); ?></div>
                 </div>
                 <div class="rm-submission-field-row">
-                    <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_TAXATION_ID')); ?></div>
+                    <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TAXATION_ID')); ?></div>
                     <div class="rm-submission-value"><?php if (isset($data->payment->txn_id)) echo esc_html($data->payment->txn_id); ?></div>
                 </div>
                 <div class="rm-submission-field-row">
-                    <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_STATUS_PAYMENT')); ?></div>
+                    <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_STATUS_PAYMENT')); ?></div>
                     <div class="rm-submission-value">
                         <?php if (isset($data->payment->status)) echo esc_html($display_status); ?>
                         <?php if (isset($data->payment->log) && $data->payment->log):?>
-                        <a href="javascript:void(0)" onclick="rm_toggle_pp_log_box()"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PAYPAL_TRANSACTION_LOG')); ?></a>
+                        <a href="javascript:void(0)" onclick="rm_toggle_pp_log_box()"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PAYPAL_TRANSACTION_LOG')); ?></a>
                         <div id="rm_sub_pp_log_detail" style="display:none;
                                                               height: 200px;
                                                               border: #dcdbdb 1px solid;
                                                               overflow-y: auto;
                                                               overflow-x: auto;">
-                            <?php echo wp_kses_post(RM_Utilities::var_to_html($data->payment->log)); ?>
+                            <?php echo wp_kses_post((string)RM_Utilities::var_to_html($data->payment->log)); ?>
                         </div>
                         <?php endif; ?> 
                     </div>
                 </div>
                 <div class="rm-submission-field-row">
-                    <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PAID_AMOUNT')); ?></div>
+                    <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_PAID_AMOUNT')); ?></div>
                     <div class="rm-submission-value"><?php if (isset($data->payment->total_amount)) echo esc_html($data->payment->total_amount); ?></div>
                 </div>
                 <div class="rm-submission-field-row">
-                    <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_PAID_TAX')); ?></div>
+                    <div class="rm-submission-label"><?php echo wp_kses_post((string)$data->tax_label); ?></div>
                     <div class="rm-submission-value"><?php if (isset($data->payment->tax)) echo esc_html($data->payment->tax); ?></div>
                 </div>
                 <div class="rm-submission-field-row">
-                    <div class="rm-submission-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DATE_OF_PAYMENT')); ?></div>
+                    <div class="rm-submission-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DATE_OF_PAYMENT')); ?></div>
                     <div class="rm-submission-value"><?php if (isset($data->payment->posted_date)) echo esc_html(RM_Utilities::localize_time($data->payment->posted_date, get_option('date_format'))); ?></div>
                 </div>
                 <?php
@@ -311,19 +341,19 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
         foreach ($data->notes as $note)
         {
             ?>
-            <div class="rm-submission-note" style="border-left: 4px solid #<?php echo wp_kses_post(maybe_unserialize($note->note_options)->bg_color); ?>">
-                <div class="rm-submission-note-text"><?php echo wp_kses_post($note->notes); ?></div>
+            <div class="rm-submission-note" style="border-left: 4px solid #<?php echo wp_kses_post((string)maybe_unserialize($note->note_options)->bg_color); ?>">
+                <div class="rm-submission-note-text"><?php echo wp_kses_post((string)$note->notes); ?></div>
                 <div class="rm-submission-note-attribute">
 
                     <?php
-                    echo wp_kses_post(RM_UI_Strings::get('LABEL_CREATED_BY')) . " <b>" . esc_html($note->author) . "</b> <em>" . esc_html(RM_Utilities::localize_time($note->publication_date)) . "</em>";
+                    echo wp_kses_post((string)RM_UI_Strings::get('LABEL_CREATED_BY')) . " <b>" . esc_html($note->author) . "</b> <em>" . esc_html(RM_Utilities::localize_time($note->publication_date)) . "</em>";
                     if ($note->editor)
-                        echo " (" . wp_kses_post(RM_UI_Strings::get('LABEL_EDITED_BY')) . " <b>" . esc_html($note->editor) . "</b> <em>" . esc_html(RM_Utilities::localize_time($note->last_edit_date)) . "</em>";
+                        echo " (" . wp_kses_post((string)RM_UI_Strings::get('LABEL_EDITED_BY')) . " <b>" . esc_html($note->editor) . "</b> <em>" . esc_html(RM_Utilities::localize_time($note->last_edit_date)) . "</em>";
                     ?>
                 </div>
 
-                <div class="rm-submission-note-attribute"><a href="?page=rm_note_add&rm_submission_id=<?php echo esc_attr($data->submission->get_submission_id()); ?>&rm_note_id=<?php echo esc_attr($note->note_id); ?>"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_EDIT')); ?></a>
-                    <a href="javascript:void(0)" onclick="document.getElementById('rmnotesectionform<?php echo esc_attr($note->note_id); ?>').submit()"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_DELETE')); ?></a>
+                <div class="rm-submission-note-attribute"><a href="?page=rm_note_add&rm_submission_id=<?php echo esc_attr($data->submission->get_submission_id()); ?>&rm_note_id=<?php echo esc_attr($note->note_id); ?>"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_EDIT')); ?></a>
+                    <a href="javascript:void(0)" onclick="document.getElementById('rmnotesectionform<?php echo esc_attr($note->note_id); ?>').submit()"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_DELETE')); ?></a>
                 </div>
                 <form method="post" id="rmnotesectionform<?php echo esc_attr($note->note_id); ?>">
                     <input type="hidden" name="rm_slug" value="rm_note_delete">
@@ -336,7 +366,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
     ?>
     <?php
     $rm_promo_banner_title = __('Unlock Additional Custom Status Features, Note, Print, Block Email/IP and Send Message options by upgrading','custom-registration-form-builder-with-submission-manager');
-    include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
+    //include RM_ADMIN_DIR.'views/template_rm_promo_banner_bottom.php';
     ?>
 </div>
 
@@ -428,7 +458,7 @@ function rm_status_delete(object,status_index){
         if(response=='delete'){
             jQuery(object).parent('div').remove();
             if(jQuery.trim(jQuery('.rm-submission-status-row .rm-submission-label').text())==''){
-                jQuery('.rm-submission-status-row .rm-submission-label').text('<?php _e('No Status Assigned', 'registrationmagic-addon') ?>');
+                jQuery('.rm-submission-status-row .rm-submission-label').text('<?php _e('No Status Assigned', 'custom-registration-form-builder-with-submission-manager') ?>');
             }
         }else{
             alert('<?php echo RM_UI_Strings::get("AJX_CUSTOM_STATUS_FAIL"); ?>');

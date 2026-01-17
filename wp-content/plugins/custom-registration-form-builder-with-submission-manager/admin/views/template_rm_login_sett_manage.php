@@ -25,12 +25,12 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
         <div class="rm-grid-title difl"><?php _e('Login Form', 'custom-registration-form-builder-with-submission-manager'); ?><span class="rm-login-form-guide"><a href="https://registrationmagic.com/wordpress-user-login-plugin-guide/" target="_blank"><?php _e('Login Form Guide', 'custom-registration-form-builder-with-submission-manager'); ?><span class="dashicons dashicons-book-alt"></span></a></span></div>
         <!--    Forms toggle-->
     <div class="rm-fd-form-toggle difr" id="rm_form_toggle">
-        <?php echo wp_kses_post(RM_UI_Strings::get('LABEL_TOGGLE_FORM')); ?>
+        <?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_TOGGLE_FORM')); ?>
         <select onchange="rm_fd_switch_form(jQuery(this).val())">
             <?php
             echo "<option selected value='rm_login_form'>".__('Login Form','custom-registration-form-builder-with-submission-manager')."</option>";
             foreach ($data->all_forms as $form_id => $form_name):
-                echo "<option value='".esc_attr($form_id)."'>".wp_kses_post($form_name)."</option>";
+                echo "<option value='".esc_attr($form_id)."'>".wp_kses_post((string)$form_name)."</option>";
             endforeach;
             ?>
         </select>
@@ -42,7 +42,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
         <div class="rm-grid-section dbfl" id="rm_tour_timewise_stats">
             <div class="rm-grid-section-title dbfl rm-box-title"><?php _e('Login Success vs. Failures Graph over time', 'custom-registration-form-builder-with-submission-manager'); ?></div>
             <div class="rm-timerange-toggle rm-fd-form-toggle rm-timerange-dashboard">
-                <?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SELECT_TIMERANGE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SELECT_TIMERANGE')); ?>
                 <select id="rm_stat_timerange" onchange="rm_refresh_stats()">
                     <?php
                     $trs = array(7,30,60,90);
@@ -61,7 +61,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
         
         <div class="rm-grid-section dbfl">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_1_TITLE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_1_TITLE')); ?>
             </div>
 
             <div class="rm-grid-icon difl" id="rm-customfields-icon">
@@ -70,7 +70,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                         <div class="rm-grid-icon-badge"><?php echo esc_html($data->field_count); ?></div>
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-custom-fields.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_LOGIN_FORM_FIELDS')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_LOGIN_FORM_FIELDS')); ?></div>
                 </a>
             </div>
 
@@ -79,7 +79,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>form-view.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_DESIGN')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_DESIGN')); ?></div>
                 </a>
             </div>
 
@@ -97,7 +97,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
         <!-- Configure  -->
         <div class="rm-grid-section dbfl" id="rm-general-icon">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_2_TITLE')); ?>               
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_2_TITLE')); ?>               
             </div>
 
             <div class="rm-grid-icon difl" id="rm-general-settings">
@@ -143,7 +143,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>dash-more-options.jpg">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
                 </a>
             </div>
         </div>
@@ -152,7 +152,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
         <!-- Publish Section -->
         <div class="rm-grid-section dbfl" id="rm-publish-section">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_4_TITLE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_4_TITLE')); ?>
             </div>            
 
             <div class="rm-grid-icon difl">
@@ -193,7 +193,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>dash-more-options.jpg">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
                 </a>
             </div>
         </div>
@@ -202,13 +202,13 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
         <!-- Integrate section -->
         <div class="rm-grid-section dbfl" id="rm-thirdparty-section">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_SEC_3_TITLE')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_SEC_3_TITLE')); ?>
             </div>
             
             <div class="rm-grid-icon difl">  
                 <a href="<?php echo admin_url('admin.php?page=rm_login_integrations&type=fb'); ?>" class="rm_fd_link">  
                     <div class="rm-grid-icon-area rm-grid-icon-fb dbfl">
-                        <i class="fa fa-facebook-square"></i>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512"><!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.--><path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64h98.2V334.2H109.4V256h52.8V222.3c0-87.1 39.4-127.5 125-127.5c16.2 0 44.2 3.2 55.7 6.4V172c-6-.6-16.5-1-29.6-1c-42 0-58.2 15.9-58.2 57.2V256h83.6l-14.4 78.2H255V480H384c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64z"/></svg>
                     </div>
                     <div class="rm-grid-icon-label dbfl"><?php _e('Facebook', 'custom-registration-form-builder-with-submission-manager'); ?></div>
 
@@ -220,7 +220,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_IMG_URL); ?>dash-more-options.jpg">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_MORE')); ?></div>
                 </a>
             </div>
         </div>
@@ -268,7 +268,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
             if($data->login_count == 0):
                 ?>
             <div class="rm-grid-sidebar-card dbfl">
-                <div class='rmnotice-container'><div class="rmnotice-container"><div class="rm-counter-box">0</div><div class="rm-counter-label"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_REGISTRATIONS')); ?></div></div></div>  
+                <div class='rmnotice-container'><div class="rmnotice-container"><div class="rm-counter-box">0</div><div class="rm-counter-label"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_REGISTRATIONS')); ?></div></div></div>  
             </div>
                 <?php
             endif;
@@ -277,12 +277,12 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                 <div class="rm-grid-sidebar-card dbfl">
                     <a href="javascript:void(0)" class="fd_sub_link">
                     <div class="rm-grid-card-profile-image dbfl">
-                        <?php echo get_avatar($login_detail->email)?get_avatar($login_detail->email):'<img src="'.esc_url(RM_IMG_URL).'default_person.png">'; ?>
+                        <?php echo get_avatar((string)$login_detail->email) ? wp_kses_post(get_avatar((string)$login_detail->email)) : '<img src="' . esc_url(RM_IMG_URL) . 'default_person.png">'; ?>
                     </div>
                     <div class="rm-grid-card-content difl">
-                        <?php $user = get_user_by( 'email', $login_detail->email ); ?>
-                        <div class="dbfl"><?php echo ($user)?esc_html($user->display_name):esc_html($login_detail->email); ?></div>
-                        <div class="rm-grid-card-content-subtext dbfl"><?php echo esc_html(date('F d Y @ g:i a',strtotime($login_detail->time))) ?></div></div>
+                        <?php $user = get_user_by( 'email', (string)$login_detail->email ); ?>
+                        <div class="dbfl"><?php echo $user ? esc_html((string)$user->display_name) : esc_html((string)$login_detail->email); ?></div>
+                        <div class="rm-grid-card-content-subtext dbfl"><?php echo esc_html(date('F d Y @ g:i a',strtotime((string)$login_detail->time))); ?></div></div>
                     </a>
                 </div>
                 <?php
@@ -291,7 +291,7 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
             <div class="rm-grid-quick-tasks dbfl">
                 <div class="rm-grid-sidebar-row dbfl">
                     <div class="rm-grid-sidebar-row-label difl">
-                        <a class="<?php echo $data->login_count ? '' : 'rm_deactivated'?>" href="?page=rm_login_analytics"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_VIEW_ALL')); ?></a>
+                        <a class="<?php echo $data->login_count ? '' : 'rm_deactivated'?>" href="?page=rm_login_analytics"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_VIEW_ALL')); ?></a>
                     </div>
                 </div>
             </div>
@@ -301,50 +301,50 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
     <div class="rm-grid-sidebar-2 difl">
         <div class="rm-grid-section dbfl">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_STATUS')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_STATUS')); ?>
                 <span class="rm-grid-section-toggle rm-collapsible"></span>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl" id="rm-sidebar-sc-icon">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>shortcode.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_FORM_SHORTCODE')); ?>:</div>
-                <div class="rm-grid-sidebar-row-value difl"><span id="rmformshortcode">[RM_Login]</span><a href="javascript:void(0)" onclick="rm_copy_to_clipboard(document.getElementById('rmformshortcode'))" id="rm-copy-sc"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_COPY')); ?></a>
+                <div class="rm-grid-sidebar-row-label difl"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_FORM_SHORTCODE')); ?>:</div>
+                <div class="rm-grid-sidebar-row-value difl"><span id="rmformshortcode">[RM_Login]</span><a href="javascript:void(0)" onclick="rm_copy_to_clipboard(document.getElementById('rmformshortcode'))" id="rm-copy-sc"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_COPY')); ?></a>
                     <div style="display:none" id="rm_msg_copied_to_clipboard"><?php _e('Copied to clipboard', 'custom-registration-form-builder-with-submission-manager'); ?></div><div style="display:none" id="rm_msg_not_copied_to_clipboard"><?php _e('Could not be copied. Please try manually.', 'custom-registration-form-builder-with-submission-manager'); ?></div></div>
             </div>
         </div>
 
         <div class="rm-grid-section dbfl">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_CONTENT')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_CONTENT')); ?>
                 <span class="rm-grid-section-toggle rm-collapsible"></span>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>field.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-fields"><?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_F_FIELDS')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-fields"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_F_FIELDS')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl"><?php echo isset($data->field_count)?esc_html($data->field_count):''; ?></div>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>submit.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-add-submit"><?php echo wp_kses_post(RM_UI_Strings::get('FD_FORM_SUBMIT_BTN_LABEL')); ?>:</div>
-               <div class="rm-grid-sidebar-row-value difl"><div class="difl" id="rm-submit-label"><?php echo isset($data->buttons->login_btn) ? esc_html($data->buttons->login_btn) : 'Submit'; ?></div><a href='javascript:;' onclick='edit_label()' ><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_FIELD_ICON_CHANGE')); ?></a></div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-add-submit"><?php echo wp_kses_post((string)RM_UI_Strings::get('FD_FORM_SUBMIT_BTN_LABEL')); ?>:</div>
+               <div class="rm-grid-sidebar-row-value difl"><div class="difl" id="rm-submit-label"><?php echo isset($data->buttons->login_btn) ? esc_html($data->buttons->login_btn) : 'Submit'; ?></div><a href='javascript:;' onclick='edit_label()' ><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_FIELD_ICON_CHANGE')); ?></a></div>
                 <div id="rm-submit-label-textbox" style="display:none"><input type="text" id="submit_label_textbox"/><div><input type="button" value ="Save" onclick="save_submit_label()"><input type="button" value ="Cancel" onclick="cancel_edit_label()"></div></div>
             </div>
         </div>
         <div class="rm-grid-section dbfl">
             <div class="rm-grid-section-title dbfl">
-                <?php echo wp_kses_post(RM_UI_Strings::get('FD_LABEL_STATS')); ?>
+                <?php echo wp_kses_post((string)RM_UI_Strings::get('FD_LABEL_STATS')); ?>
                 <span class="rm-grid-section-toggle rm-collapsible"></span>
             </div>
             <div class="rm-grid-sidebar-row dbfl">
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>submissions.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-submissions"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_RECORDS')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-submissions"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_RECORDS')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl"><?php echo isset($data->login_count)?esc_html($data->login_count):''; ?></div>
             </div>
 
@@ -352,14 +352,14 @@ wp_enqueue_style( 'rm_material_icons', RM_BASE_URL . 'admin/css/material-icons.c
                 <div class="rm-grid-sidebar-row-icon difl">
                     <img src="<?php echo esc_url(RM_IMG_URL); ?>conversion.png">
                 </div>
-                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-conversion"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_SUCCESS_RATE')); ?>:</div>
+                <div class="rm-grid-sidebar-row-label difl" id="rm-sidebar-conversion"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_SUCCESS_RATE')); ?>:</div>
                 <div class="rm-grid-sidebar-row-value difl"><?php echo isset($data->success_rate)?esc_html($data->success_rate):0; ?>%</div>
             </div>
 
             <div class="rm-grid-quick-tasks dbfl">
                 <div class="rm-grid-sidebar-row dbfl">
                     <div class="rm-grid-sidebar-row-label difl">
-                        <a id="rm-sidebar-reset" href="javascript:void(0)" onclick="jQuery.rm_do_action_with_alert('<?php _e('You are going to delete all stats for login form. Do you want to proceed?','custom-registration-form-builder-with-submission-manager'); ?>', 'rm_fd_action_form', 'rm_login_log_reset')"><?php echo wp_kses_post(RM_UI_Strings::get('LABEL_RESET')); ?></a>
+                        <a id="rm-sidebar-reset" href="javascript:void(0)" onclick="jQuery.rm_do_action_with_alert('<?php _e('You are going to delete all stats for login form. Do you want to proceed?','custom-registration-form-builder-with-submission-manager'); ?>', 'rm_fd_action_form', 'rm_login_log_reset')"><?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_RESET')); ?></a>
                     </div>
                 </div>
             </div>
@@ -530,23 +530,23 @@ $failure_data= json_encode($failure_data);
 <pre class='rm-pre-wrapper-for-script-tags'><script>
     function drawTimewiseStat()
     {
-        if('<?php echo wp_kses_post($show_chart); ?>'==0){
+        if('<?php echo wp_kses_post((string)$show_chart); ?>'==0){
             jQuery("#rm_subs_over_time_chart_div,#rm_tour_timewise_stats").remove();
             return;
         }
         
        var data = {
-           labels: <?php echo wp_kses_post($date_labels); ?>,
+           labels: <?php echo wp_kses_post((string)$date_labels); ?>,
            datasets:[{
                 label: 'Login Success',
-                data: <?php echo wp_kses_post($success_data); ?>,
+                data: <?php echo wp_kses_post((string)$success_data); ?>,
                 fill: false,
                 borderColor: 'rgb(53,167,227)',
                 backgroundColor: 'rgb(53,167,227)'
             },
             {
                 label: 'Login Failures',
-                data: <?php echo wp_kses_post($failure_data); ?>,
+                data: <?php echo wp_kses_post((string)$failure_data); ?>,
                 fill: false,
                 borderColor: 'rgb(72,84,104)',
                 backgroundColor: 'rgb(72,84,104)'

@@ -41,6 +41,7 @@ class RM_Options_Controller
 
             $options['auto_generated_password'] = isset($request->req['auto_generated_password']) ? "yes" : null;
             $options['send_password'] = isset($request->req['send_password']) ? "yes" : null;
+            $options['send_act_email'] = isset($request->req['send_act_email']) ? "yes" : null;
             if(defined('REGMAGIC_ADDON')) {
                 $options['user_auto_approval'] = isset($request->req['user_auto_approval']) ? $request->req['user_auto_approval'] : null;
                 $options['acc_act_link_expiry'] = $request->req['acc_act_link_expiry'];
@@ -190,6 +191,7 @@ class RM_Options_Controller
             $options['display_floating_action_btn'] = isset($request->req['display_floating_action_btn']) ? "yes" : null;
             $options['hide_magic_panel_styler'] = isset($request->req['hide_magic_panel_styler']) ? "yes" : null;
             $options['fab_icon'] = $request->req['fab_icon'];
+            $options['default_form_id'] = $request->req['default_form_id'];
            
             $service->set_model($model);
 
@@ -199,7 +201,7 @@ class RM_Options_Controller
         {
             $view = $this->mv_handler->setView('options_fab');
             $service->set_model($model);
-            $data = $service->get_options();            
+            $data = $service->get_options();
             $view->render($data);
         }
     }
@@ -240,7 +242,7 @@ class RM_Options_Controller
 
     public function autoresponder($model, $service, $request, $params)
     {
-        if ($this->mv_handler->validateForm("options_autoresponder"))
+        if ($this->mv_handler->validateForm("options_autoresponder") && wp_verify_nonce($request->req['rm_sec_nonce'], 'rm_sec_nonce'))
         {
             $options = array();
 
@@ -411,6 +413,8 @@ class RM_Options_Controller
                 $options['paypal_email'] = $request->req['paypal_email'];
             if(isset($request->req['paypal_client_id']))
                 $options['paypal_client_id'] = $request->req['paypal_client_id'];
+            if(isset($request->req['paypal_secret_key']))
+                $options['paypal_secret_key'] = isset($request->req['paypal_secret_key']) ? $request->req['paypal_secret_key'] : '';
             if(isset($request->req['paypal_btn_color']))
                 $options['paypal_btn_color'] = $request->req['paypal_btn_color'];
             $options['currency'] = $request->req['currency'];
@@ -420,6 +424,7 @@ class RM_Options_Controller
             $options['tax_type'] = $request->req['tax_type'];
             $options['tax_fixed'] = $request->req['tax_fixed'] > 0 ? round(floatval($request->req['tax_fixed']),2) : 0;
             $options['tax_percentage'] = $request->req['tax_percentage'] > 0 ? round(floatval($request->req['tax_percentage']),2) : 0;
+            $options['tax_rename'] = sanitize_text_field($request->req['tax_rename']);
             $options['default_payment_method'] = $request->req['default_payment_method'] ? $request->req['default_payment_method'] : 'paypal';
             
             $service->set_model($model);
@@ -441,6 +446,7 @@ class RM_Options_Controller
             $options_pp_pstyle = array("id" => "rm_pp_style_tb", "value" => $data['paypal_page_style'], "longDesc" => RM_UI_Strings::get('HELP_OPTIONS_PYMNT_PP_PAGESTYLE'));
             $options_pp_modern_enable = array("id"=> "rm_pp_modern_enable", "onclick" => "enable_paypal_modern_popup(this)", "value" => isset($data['paypal_modern_enable']) ? $data['paypal_modern_enable'] : '', "longDesc" => RM_UI_Strings::get('HELP_OPTIONS_PYMNT_PP_MODERN'));
             $options_pp_client_id = array("id"=> "rm_pp_modern_client_id", "value" => isset($data['paypal_client_id']) ? $data['paypal_client_id'] : '', "longDesc" => RM_UI_Strings::get('HELP_OPTIONS_PYMNT_PP_CLIENT_ID'));
+            $options_pp_secret_key = array("id"=> "rm_pp_modern_secret_key", "value" => isset($data['paypal_secret_key']) ? $data['paypal_secret_key'] : '',"longDesc" => RM_UI_Strings::get('HELP_OPTIONS_PYMNT_PP_SECRET_KEY'));
             $image_dir = plugin_dir_url(dirname(dirname(__FILE__))) . "images";
             $layout_checked_state = array('gold' => null, 'blue' => null, 'silver' => null, 'white'=> null, 'black'=> null);
             $selected_layout = isset($data['paypal_btn_color']) ? $data['paypal_btn_color'] : 'gold';
@@ -493,11 +499,14 @@ class RM_Options_Controller
             $pay_procs_configs = array("paypal" => array(
                                             new Element_Checkbox(RM_UI_Strings::get('LABEL_TEST_MODE'), "paypal_test_mode", array("yes" => ''), $options_pp_test_cb),
                                             new Element_Email(RM_UI_Strings::get('LABEL_PAYPAL_EMAIL'), "paypal_email", $options_pp_email),
+                                            new Element_HTML("<span id='rm_pp_email_error_msg' class='rm_pproc_error_msg' style='display:none;'>".esc_html__('PayPal account email is required', 'custom-registration-form-builder-with-submission-manager')."</span>"),
                                             new Element_Textbox(RM_UI_Strings::get('LABEL_PAYPAL_STYLE'), "paypal_page_style", $options_pp_pstyle),
                                             new Element_Checkbox(RM_UI_Strings::get('LABEL_PAYPAL_MODERN_ENABLE'), "paypal_modern_enable", array("yes" => ''), $options_pp_modern_enable),
                                             new Element_HTML('<div class="childfieldsrow" id="rm_pp_modern_enable_childfieldsrow" style="'.$enable_modern_paypal.'">'),
                                             new Element_Textbox(RM_UI_Strings::get('LABEL_PAYPAL_CLIENT_ID'), "paypal_client_id", $options_pp_client_id),
-                                            new Element_HTML("<span id='rm_pp_modern_client_error_msg' class='rm_pp_modern_client_error_msg' style='display:none;'>".__('Please fill the required field', 'custom-registration-form-builder-with-submission-manager')."</span>"),
+                                            new Element_HTML("<span id='rm_pp_modern_client_error_msg' class='rm_pproc_error_msg' style='display:none;'>".esc_html__('PayPal Client ID is required', 'custom-registration-form-builder-with-submission-manager')."</span>"),
+                                            new Element_Textbox(RM_UI_Strings::get('LABEL_PAYPAL_SECRET_KEY'), "paypal_secret_key", $options_pp_secret_key),
+                                            new Element_HTML("<span id='rm_pp_modern_secret_error_msg' class='rm_pproc_error_msg' style='display:none;'>".esc_html__('PayPal Secret Key is required', 'custom-registration-form-builder-with-submission-manager')."</span>"),
                                             new Element_HTML($paypal_btn_colorhtml),
                                             new Element_HTML('</div>')
                                             ),
@@ -551,7 +560,7 @@ class RM_Options_Controller
         
     }
     public function admin_menu($model, RM_Setting_Service $service, $request, $params){
-        if ($this->mv_handler->validateForm("options_admin_menu")){
+        if ($this->mv_handler->validateForm("options_admin_menu") && current_user_can('manage_options')) {
             if ($request->req['restore'] == 'false'){
                 $options = array();
                 $options['admin_order'] = "";
@@ -565,28 +574,28 @@ class RM_Options_Controller
                     $inbox_badge['inbox_badge'] = $request->req["rm_submission_manage_badge"];
                 }
                 $menu_order = array();
-                $menus = explode(",",$request->req['order']);
+                $menus = explode(",",(string)$request->req['order']);
                 $roles = wp_roles()->roles;
                 foreach ($menus as $slug) {
                     $accessible = array('administrator');
                     foreach ( $roles as $role_slug => $role ) {
-                        if ($role_slug != 'administrator'){
+                        if ($role_slug != 'administrator') {
                             if (isset($request->req[$slug."_".str_replace(' ', '_', $role['name'])])){
                                 array_push($accessible,$role_slug);
                             }
                         }
                     }
                 
-                    if (!isset($request->req[$slug."_hide"])){
-                        if(isset($request->req[$slug."_divider"])){
+                    if (!isset($request->req[$slug."_hide"])) {
+                        if(isset($request->req[$slug."_divider"])) {
                             $new_order = array($slug, $request->req[$slug."_title"], $accessible, "visible", "true");   
-                        }else{
+                        } else {
                             $new_order = array($slug, $request->req[$slug."_title"], $accessible, "visible","false");   
                         }
-                    }else{
-                        if(isset($request->req[$slug."_divider"])){
+                    } else {
+                        if(isset($request->req[$slug."_divider"])) {
                             $new_order = array($slug, $request->req[$slug."_title"], $accessible, "hidden", "true");
-                        }else{
+                        } else {
                             $new_order = array($slug, $request->req[$slug."_title"], $accessible, "hidden", "false");
                         }
                         $hidden_menu['num_hidden_menus'] += 1;
@@ -605,8 +614,8 @@ class RM_Options_Controller
                 $view = $this->mv_handler->setView('options_admin_menu');
                 $view->render($data);
                 $refresh_time = 0;
-                header("refresh:$refresh_time"); 
-            }else{
+                header("refresh:$refresh_time");
+            } else {
                 $service->set_model($model);
                 $service->reset_option('admin_order');
                 $service->reset_option('num_hidden_menus');
@@ -617,7 +626,7 @@ class RM_Options_Controller
                 $refresh_time = 0;
                 header("refresh:$refresh_time"); 
             }
-        }else{
+        } else {
             $service->set_model($model);
             $data = $service->get_options();
             $view = $this->mv_handler->setView('options_admin_menu');

@@ -3,9 +3,9 @@ Contributors: podpirate
 Donate link: https://www.msf.org/donate
 Tags: acf, quickedit, columns, bulk edit
 Requires at least: 4.7
-Tested up to: 6.2
+Tested up to: 6.7
 Requires PHP: 7.2
-Stable tag: 3.2.8
+Stable tag: 3.3.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,6 +21,11 @@ WordPress plugin which adds Quick Edit functionality to Advanced Custom Fields P
  - Supports Post, Term and User list tables
  - Scalar Columns (Like Text, Number, ...) can be made sortable
  - Edit ACF Field values in Quick edit and Bulk edit
+
+= Known Limitations =
+ - Bulk Edit seems to be incompatible with [Search & Filter Pro](https://searchandfilter.com/) @see [Issue #145](https://github.com/mcguffin/acf-quickedit-fields/issues/145)
+ - Might show a message if ACF Pro comes in bundle with another plugin. @see [Issue #146](https://github.com/mcguffin/acf-quickedit-fields/issues/145)
+ - The plugin is not tested against wooCommerce, so some issues may occur. @see [Issue #135](https://github.com/mcguffin/acf-quickedit-fields/issues/135), [Issue #173](https://github.com/mcguffin/acf-quickedit-fields/issues/173). I will happily accept pull request, fixing such issues.
 
 = Usage =
 
@@ -38,11 +43,19 @@ WordPress plugin which adds Quick Edit functionality to Advanced Custom Fields P
 
 **Editing**
 
-Toggle *QuickEdit* and *Bulk Edit* to enable Editing in the List table view.
+Toggle *QuickEdit* and *Bulk Edit* to enable Editing in the list table view.
+
+**Searching**
+
+Enable *Backend Search* to make a field searchable in the list table view.
 
 **Location Rules**
 
 The plugin follows ACFs location rule logic as far as possible. If you have a field group that is only applies to posts in a specific category or with a certain post starus, then columns and quick edit will only show up, if you have filtered the posts by that category ar post status.
+
+Negative rules (like “Post category *is not* equal to X”) will not work – simply because the WP does not provide an admin view for “Posts not in category X”.
+
+With the *Simplifed Location Rules* option enabled for a field group only the post type or taxonomy rules are applied. Any other rule ist skipped. This allows you to always show and edit the fields in list views, regardless of the current list filter. The downside is, that this can make even those fields editable, that are normally hidden in the pst editor.
 
 [Read more on the WikiPage](https://github.com/mcguffin/acf-quickedit-fields/wiki/Feature-Support-Matrix#acf-location-rules)
 
@@ -85,10 +98,11 @@ Please post an issue in the [GitHub-Repository](https://github.com/mcguffin/acf-
 
 
 == Screenshots ==
-1. Field group admin
-2. Column view and posts filter
-3. QuickEdit
-4. Bulk editor with bulk operations
+1. Field group admin with filter option (Select field)
+2. Field group admin with search option (Text field)
+3. Column view and posts filter
+4. QuickEdit
+5. Bulk editor with bulk operations
 
 == Upgrade Notice ==
 
@@ -96,7 +110,56 @@ Version 3.2.4 contains a security fix. Registered users who are able to edit pos
 
 == Changelog ==
 
-= 3.2.7 =
+= 3.3.8 =
+ - Fix: Messed up media library. Kudos to [tflight](https://github.com/tflight)
+ - Fix: Select values not loading after ACF Update
+ - Fix: Backend Search not working
+ - Fix: Some Bulk Operations not validating
+
+= 3.3.7 =
+ - Fix: Ajax loading broken with select fields on ACF 6.3.2+
+
+= 3.3.6 =
+ - Fix: PHP warning
+ - Fix: Post object column shows garbage
+
+= 3.3.5 =
+ - Fix: nested select fields now dispalyed with optgroups. (Notice: Won't work with UI)
+ - Fix: Custom Checkbox values not showing
+
+= 3.3.4 =
+ - Performance: Skip feature init on edit post
+ - Fix: PHP warning, None label not clickable in radio fields
+ - Fix: show no value in datetime fields
+
+= 3.3.3 =
+ - QuickEdit: add none-choice to nullable select fields
+ - Render `data-id` atrribute on field
+ - Fix: Default Taxonomy UI shown
+ - Fix: QuickEdit options visible if field is added for the first time
+ - Fix: Local JSON not saved immediately
+
+= 3.3.2 =
+ - Fix: Columns were gone if polylang is active
+
+= 3.3.1 =
+ - Fix: Search buttons disabled after quick edit
+ - FIx: Sorting broken if used together with filters
+ - Fix: Some PHP warnings
+ - Fix: Column View in media list view was gone
+ - Performance: Load admin class only if needed
+
+= 3.3.0 =
+ - Introduce simplified location rules
+
+= 3.2.9 =
+ - Styles: More compact lists with line clamp
+ - Fix: fix column sort by multiple keys
+ - Fix: Quick edit broken if sorting is enabled
+ - Fix: Fatal error with bulk edit operation on terms
+ - Fix: Show "(no value)" instead of "Post not found" in post object column
+
+= 3.2.8 =
  - Taxonomy column: terms link to filtered view instead of term editor
  - Fix: values not loaded on CPT for users not having `edit_posts` capability
  - Fix: ... a few more PHP 8.2 deprecation warnings

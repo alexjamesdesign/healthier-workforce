@@ -7,7 +7,7 @@ and open the template in the editor.
 
 <registration_magic>
     <requests>
-        <request slug="rm_form_" allowed_actions="add,remove,duplicate,manage,update,quick_add,export,import,add_new_form,add_new_form_template,manage_cstatus,add_cstatus,setup,add_setup,setup_finished"  controller="form_controller">
+        <request slug="rm_form_" allowed_actions="add,remove,duplicate,manage,update,quick_add,export,import,add_new_form,add_new_form_template,manage_cstatus,add_cstatus,setup,add_setup,setup_finished,preview"  controller="form_controller">
 
             <!--Action to handle create or edit forms-->
             <actions>
@@ -74,6 +74,10 @@ and open the template in the editor.
                     <service ref="services" />
                 </action>
                 <action name="setup_finished">
+                    <model ref="forms" />
+                    <service ref="services" />
+                </action>
+                <action name="preview">
                     <model ref="forms" />
                     <service ref="services" />
                 </action>
@@ -394,7 +398,7 @@ and open the template in the editor.
 
         </request>
 
-        <request slug="rm_user_" allowed_actions="role_manage,role_add,role_delete,role_edit"  controller="user_controller">
+        <request slug="rm_user_" allowed_actions="role_manage,role_add,role_delete,role_edit,block_user_email,unblock_user_email"  controller="user_controller">
 
             <actions>
 
@@ -416,12 +420,22 @@ and open the template in the editor.
                 <action name="role_edit">
                     <service ref="user_services" />
                 </action>
+                
+                <!--Block existing  user-->
+                <action name="unblock_user_email">
+                    <service ref="user_services" />
+                </action>
 
+                <!--Unblock existing  user-->
+                <action name="block_user_email">
+                    <service ref="user_services" />
+                </action>
+                
             </actions>
 
         </request>
         
-        <request slug="rm_user_" allowed_actions="exists,manage,add,deactivate,delete,activate,view,edit,widget"  controller="user_controller">
+        <request slug="rm_user_" allowed_actions="exists,manage,add,deactivate,delete,activate,view,edit,widget,additional_details"  controller="user_controller">
 
             <actions>
 
@@ -465,7 +479,10 @@ and open the template in the editor.
                 <action name="exists">
                     <service ref="front_form_service" />
                 </action>
-                
+                <!-- Additional Details Like total revenue,submissions and sent emails count  -->
+                <action name="additional_details">
+                    <service ref="user_services" />
+                </action>
             </actions>
 
         </request>

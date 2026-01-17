@@ -16,11 +16,6 @@ class RM_Chronos {
         /*if ( ! wp_next_scheduled( 'rm_chronos_task_exe_hook' ) ) {
             //wp_schedule_event( time(), 'rm_automation_interval', 'rm_chronos_task_exe_hook' );
         }*/
-        
-       
-        self::make_cron_actions();
-        self::cron_schedule_callback();
-        
     }
     
     public static function get_base_dir() {
@@ -41,11 +36,11 @@ class RM_Chronos {
     }
     
     
-    public static function make_cron_actions($task_id = null){
-        if(isset($task_id)){
+    public static function make_cron_actions($task_id = null, $tasks = null){
+        if(isset($task_id) && !empty($task_id)){
             self::schedule_cron($task_id);
         }else{
-            $tasks = self::get_tasks(null, 'active');
+            //$tasks = self::get_tasks(null, 'active');
             foreach($tasks as $task) { 
                 self::schedule_cron($task->task_id);
             }
@@ -66,16 +61,18 @@ class RM_Chronos {
                 }
             endif;
         endif;
+        self::cron_schedule_callback($task);
     }
-    public static function cron_schedule_callback(){
-        $tasks = self::get_tasks(null, 'active');    
-        $task_factory = new RM_Chronos_Task_Factory();
-        foreach($tasks as $task) {            
-            $task = $task_factory->create_task($task->task_id);
+    
+    public static function cron_schedule_callback($task = null){
+        //$tasks = self::get_tasks(null, 'active');    
+        //$task_factory = new RM_Chronos_Task_Factory();
+        //foreach($tasks as $task) {            
+            //$task = $task_factory->create_task($task->task_id);
             if(isset($task->meta['rmc_task_type']) && $task->meta['rmc_task_type'] == 'automatic' && $task->is_active ):
                 add_action( 'rm_automation_task_'.$task->task_id, 'RM_Chronos::excecute_cron_jobs',10,1);
             endif;
-        }
+        //}
     }
     
     public static function excecute_cron_jobs($task_id){ 
@@ -91,6 +88,8 @@ class RM_Chronos {
         add_action("rm_per_site_tables_created", "RM_Chronos::create_tables");
         add_action("rm_migration_finished", "RM_Chronos::db_migrate");
         add_action("registrationmagic_deactivated", "RM_Chronos::deactivate");
+        //add_action("plugins_loaded", "RM_Chronos::hooked_init");
+        add_action("init", "RM_Chronos::hooked_init");
         add_filter('cron_schedules', 'RM_Chronos::add_cron_interval');
         add_action('rm_chronos_task_exe_hook', 'RM_Chronos::run_tasks');
         add_action('wp_ajax_rm_chronos_ajax', 'RM_Chronos::handle_ajax_req');
@@ -98,8 +97,12 @@ class RM_Chronos {
         add_action('media_buttons', 'RM_Chronos::add_field_dropdown_to_editor');
         add_action("rm_formcard_menu_action_icon", "RM_Chronos::add_rm_formcard_menu", 10, 2);
         //add_action("update_edit_delete_cron", "RM_Chronos_Task_Controller::update_edit_delete_cron", 10, 2);
-        
-        
+    }
+
+    public static function hooked_init($network_wide) {
+        $tasks = self::get_tasks(null, 'active');
+        self::make_cron_actions(null, $tasks);
+        //self::cron_schedule_callback($tasks);
     }
     
     public static function add_cron_interval($schedules) {
@@ -129,7 +132,7 @@ class RM_Chronos {
         if((time() - (int)$rm_automation_intro_time) <= $thirty_days )
             $menu_title .= "";
         add_submenu_page("rm_form_manage",__('Automation','custom-registration-form-builder-with-submission-manager'), $menu_title, $value."manage_options", "rm_ex_chronos_manage_tasks",  "RM_Chronos::handle_request" );
-        add_submenu_page("","RM Chronos 3", __('RM Chronos 3','custom-registration-form-builder-with-submission-manager'), $value."manage_options", "rm_ex_chronos_edit_task",  "RM_Chronos::handle_request" );
+        add_submenu_page("rm_dummy_string", __("RM Chronos 3", 'custom-registration-form-builder-with-submission-manager'), __('RM Chronos 3','custom-registration-form-builder-with-submission-manager'), $value."manage_options", "rm_ex_chronos_edit_task",  "RM_Chronos::handle_request" );
     }
     
     public static function db_migrate() {
@@ -349,23 +352,23 @@ class RM_Chronos {
             
             switch(sanitize_text_field($_POST['rm_chronos_ajax_action'])) {
                 case 'trigger_task':
-                    echo wp_kses_post(self::run_single_task_ajax());
+                    echo wp_kses_post((string)self::run_single_task_ajax());
                     break;
                 
                 case 'delete_tasks_batch':
-                    echo wp_kses_post(self::delete_tasks_batch());
+                    echo wp_kses_post((string)self::delete_tasks_batch());
                     break;
                 
                 case 'duplicate_tasks_batch':
-                    echo wp_kses_post(self::duplicate_tasks_batch());
+                    echo wp_kses_post((string)self::duplicate_tasks_batch());
                     break;
                 
                 case 'set_state_tasks_batch':
-                    echo wp_kses_post(self::set_state_tasks_batch());
+                    echo wp_kses_post((string)self::set_state_tasks_batch());
                     break;
                 
                 case 'update_task_order':
-                    echo wp_kses_post(self::update_task_order());
+                    echo wp_kses_post((string)self::update_task_order());
                     break;
             }
         }
@@ -380,7 +383,7 @@ class RM_Chronos {
                     <div class="rm-grid-icon-area dbfl">
                         <img class="rm-grid-icon dibfl" src="<?php echo esc_url(RM_Chronos::get_base_url()); ?>images/automation.png">
                     </div>
-                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post(RM_Chronos_UI_Strings::get('LABEL_TASKS')); ?></div>
+                    <div class="rm-grid-icon-label dbfl"><?php echo wp_kses_post((string)RM_Chronos_UI_Strings::get('LABEL_TASKS')); ?></div>
                 </a>
             </div> 
         <?php
@@ -392,7 +395,7 @@ class RM_Chronos {
             <div class="rm-formcard-tab-item">
                 <a href="<?php echo esc_url($rm_task_manager_url); ?>" class="rm_fd_link">   
                     <img class="rm-formcard-icon" src="<?php echo esc_url(RM_Chronos::get_base_url()); ?>images/automation.png">
-                    <div class="rm-formcard-label"><?php echo wp_kses_post(RM_Chronos_UI_Strings::get('LABEL_TASKS')); ?></div>
+                    <div class="rm-formcard-label"><?php echo wp_kses_post((string)RM_Chronos_UI_Strings::get('LABEL_TASKS')); ?></div>
                 </a>
             </div>
         <?php
@@ -408,7 +411,7 @@ class RM_Chronos {
             return;
         
         $service = new RM_Chronos_Service;
-        $tmp = explode("_", $editor_id);
+        $tmp = explode("_", (string)$editor_id);
         $form_id = end($tmp);
         $fields = $service->get_all_form_fields($form_id);        
         ?>

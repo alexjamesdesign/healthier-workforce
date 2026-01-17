@@ -20,10 +20,14 @@ class RM_Field_Controller {
     }
 
     public function add($model, $service, $request, $params) {
-        if (isset($request->req['rm_form_id']) && is_numeric($request->req['rm_form_id']))
+        if (isset($request->req['rm_form_id']) && is_numeric($request->req['rm_form_id'])) {
             $fields_data = $service->get_all_form_fields($request->req['rm_form_id']);
-        else
-            die(RM_UI_Strings::get('MSG_NO_FORM_SELECTED'));
+        } else {
+            // Ninja Forms conflict fix
+            echo '<div class="rm-builder-notice"><div class="rmnotice">'.esc_html__('No form selected. Redirecting you back to the all forms page.','custom-registration-form-builder-with-submission-manager').'</div></div>';
+            echo "<script>window.setTimeout(function(){ window.location.href = '" . admin_url('admin.php?page=rm_form_manage') . "';}, 3000);</script>";
+            die;
+        }
         
         if (isset($request->req['rm_form_page_no']))
             $form_page_no = $request->req['rm_form_page_no'];
@@ -127,6 +131,14 @@ class RM_Field_Controller {
     }
     
     public function add_widget($model, $service, $request, $params){
+        if (isset($request->req['rm_form_id']) && is_numeric($request->req['rm_form_id'])) {
+            $fields_data = $service->get_all_form_fields($request->req['rm_form_id']);
+        } else {
+            // Ninja Forms conflict fix
+            echo '<div class="rm-builder-notice"><div class="rmnotice">'.esc_html__('No form selected. Redirecting you back to the all forms page.','custom-registration-form-builder-with-submission-manager').'</div></div>';
+            echo "<script>window.setTimeout(function(){ window.location.href = '" . admin_url('admin.php?page=rm_form_manage') . "';}, 3000);</script>";
+            die;
+        }
         if (isset($request->req['rm_form_page_no']))
             $form_page_no = $request->req['rm_form_page_no'];
         else
@@ -170,7 +182,13 @@ class RM_Field_Controller {
     
     public function manage($model, $service, $request, $params) {
         $data = new stdClass;
-        $request->req['rm_form_id']= absint($request->req['rm_form_id']);
+        if(isset($request->req['rm_form_id'])) {
+            $request->req['rm_form_id'] = absint($request->req['rm_form_id']);
+        } else {
+            // Ninja Forms conflict fix
+            echo '<div class="rm-builder-notice"><div class="rmnotice">'.esc_html__('No form selected. Redirecting you back to the all forms page.','custom-registration-form-builder-with-submission-manager').'</div></div>';
+            echo "<script>window.setTimeout(function(){ window.location.href = '" . admin_url('admin.php?page=rm_form_manage') . "';}, 3000);</script>";
+        }
         $data->active_step = isset($request->req['astep']) ? $request->req['astep'] : "build";
         $data->def_form_id = $service->get_setting('default_form_id');
         $fields_data= $service->get_all_form_fields($request->req['rm_form_id']);
@@ -178,10 +196,10 @@ class RM_Field_Controller {
         
         if(!empty($request->req['rm_field_type'])){
             if($request->req['rm_field_type']=='Username' && !$service->has_user_name($request->req['rm_form_id'])){
-                $service->create_default_username_field($request->req['rm_form_id']);
+                $service->create_default_username_field($request->req['rm_form_id'], true, $request->req['rm_row_id'], $request->req['rm_order_in_row']);
                 RM_Utilities::sync_username_hide_option($request->req['rm_form_id']);
             } else if($request->req['rm_field_type']=='UserPassword' && !$service->has_user_password($request->req['rm_form_id'])){
-                $service->create_default_password_field($request->req['rm_form_id']);
+                $service->create_default_password_field($request->req['rm_form_id'], true, $request->req['rm_row_id'], $request->req['rm_order_in_row']);
             }
         }
         
@@ -231,7 +249,7 @@ class RM_Field_Controller {
                     continue;
                 $cField->load_from_db($cf_id);
                 $cType= $cField->get_field_type();
-                $dField->field_options->conditions['rules']['c_'.$cf_id.'_'.$index]= array("controlling_field"=>$cf_id,"op"=>$request->req['op'][$index],"values"=>explode(',',$request->req['values'][$index]));	
+                $dField->field_options->conditions['rules']['c_'.$cf_id.'_'.$index]= array("controlling_field"=>$cf_id,"op"=>$request->req['op'][$index],"values"=>explode(',',(string)$request->req['values'][$index]));	
                 $dField->field_options->conditions['settings']= array('combinator'=> isset($request->req['combinator'])?$request->req['combinator']:'OR');	
                 $dField->field_options->conditions['action']= $request->req['action'];
                 $dField->update_into_db(); 
@@ -250,7 +268,7 @@ class RM_Field_Controller {
                 }
             }
         } else {
-            die(RM_UI_Strings::get('MSG_NO_FORM_SELECTED'));
+            die;
         }
        
         $data->theme = $options->get_value_of('theme');
@@ -277,7 +295,7 @@ class RM_Field_Controller {
         }
         
         $data->recent_forms = RM_Utilities::get_recent_forms($service);
-        $data->popular_forms = RM_Utilities::get_popular_forms($service);
+        //$data->popular_forms = RM_Utilities::get_popular_forms($service);
 
         if (!$fopts->form_pages) {
             $data->total_page = 1;
@@ -299,7 +317,7 @@ class RM_Field_Controller {
         
         $data->has_dismissed_first_time_instructions = RM_Utilities::has_action_occured('dismiss_field_manager_instructions');
         
-        $data->form_name = htmlentities(stripslashes($form->form_name));
+        $data->form_name = htmlentities(stripslashes((string)$form->form_name));
         // Submit field - button related config
         $data->form_options = $fopts;
         // End submit field        
@@ -364,8 +382,7 @@ class RM_Field_Controller {
                 $this->remove_field_from_row(intval($request->req['rm_row_id']),intval($request->req['rm_order_in_row']));
             }
             RM_DBManager::update_form_published_pages($request->req["rm_form_id"]);
-            if(defined('REGMAGIC_ADDON'))
-                RM_Utilities::sync_username_hide_option($request->req['rm_form_id']);
+            RM_Utilities::sync_username_hide_option($request->req['rm_form_id']);
         }
         else
             die(RM_UI_Strings::get('MSG_NO_FIELD_SELECTED'));

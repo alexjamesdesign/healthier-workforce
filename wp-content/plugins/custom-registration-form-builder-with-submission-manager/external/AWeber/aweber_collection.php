@@ -69,7 +69,7 @@ class AWeberCollection extends AWeberResponse implements ArrayAccess, Iterator, 
      * Returns NULL if no parent entry
      */
     public function getParentEntry(){
-        $url_parts = explode('/', $this->url);
+        $url_parts = explode('/', (string)$this->url);
         $size = count($url_parts);
 
         # Remove collection id and slash from end of url
@@ -93,7 +93,7 @@ class AWeberCollection extends AWeberResponse implements ArrayAccess, Iterator, 
      * @return void
      */
     protected function _type() {
-        $urlParts = explode('/', $this->url);
+        $urlParts = explode('/', (string)$this->url);
         $type = array_pop($urlParts);
         return $type;
     }
@@ -183,9 +183,9 @@ class AWeberCollection extends AWeberResponse implements ArrayAccess, Iterator, 
         $parsed = parse_url($this->data['next_collection_link']);
 
         # parse the query string to get params
-        $pairs = explode('&', $parsed['query']);
+        $pairs = explode('&', (string)$parsed['query']);
         foreach ($pairs as $pair) {
-            list($key, $val) = explode('=', $pair);
+            list($key, $val) = explode('=', (string)$pair);
             $params[$key] = $val;
         }
 
@@ -195,7 +195,7 @@ class AWeberCollection extends AWeberResponse implements ArrayAccess, Iterator, 
         $params['ws.start'] = $pagination_offset;
 
         # fetch data, exclude query string
-        $url_parts = explode('?', $this->url);
+        $url_parts = explode('?', (string)$this->url);
         $data = $this->adapter->request('GET', $url_parts[0], $params);
         $this->pageStart = $params['ws.start'];
         $this->pageSize = $params['ws.size'];

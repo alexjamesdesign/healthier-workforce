@@ -1,3 +1,19 @@
+.form-container {
+    overflow: visible;
+}
+
+.form-h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    text-decoration: underline;
+    color: $logodeepblue;
+    margin: 0.5em 0 0 0!important;
+}
+
+.nf-before-form-content {
+    margin-bottom: 1em;
+}
+
 nf-fields-wrap {
     display: flex;
     flex-wrap: wrap;
@@ -16,30 +32,8 @@ nf-fields-wrap {
         width: 100%;
 
         @include bp800 {
-            width: 50%;
+            width: 100%;
             float: left;
-        }
-        @include bp800 {
-
-            &:nth-of-type(odd) {
-                div {
-                    padding: 0px 3px 0px 0px;
-                }
-            }
-
-            &:nth-of-type(even) {
-                div {
-                    padding: 0px 0px 0px 3px;
-                }
-            }
-
-            &:nth-of-type(6), &:nth-of-type(5) {
-                width: 100%;
-
-                div {
-                    padding: 0;
-                }
-            }
         }
     }
 }

@@ -3,8 +3,8 @@ if (!defined('WPINC')) {
     die('Closed');
 }
 if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_ADMIN_DIR . 'views/template_rm_field_conditions.php'); else {
-$excluded_fields= array('HTMLP','HTMLH','File','Image','Repeatable','Price','Multi-Dropdown','Time','Divider','Spacing','Shortcode','Rating','Map','Address','RichText','Timer',"Link","YouTubeV","Facebook","Twitter","Instagram","Linked","VKontacte","Skype","SoundCloud","Language");
-//$fields_dd_options = addslashes(RM_Utilities::get_fields_dropdown(array('form_id' => $data->form_id,'ex_by_type'=>$excluded_fields)));
+$excluded_fields= array('HTMLP','HTMLH','File','Image','Repeatable','Price','Multi-Dropdown','Time','Divider','Spacing','Shortcode','Rating','Map','Address','RichText','Timer',"Link","YouTubeV","Facebook","Twitter","Instagram","Linked","VKontacte","Skype","SoundCloud","Language", 'DigitalSign');
+//$fields_dd_options = addslashes((string)RM_Utilities::get_fields_dropdown(array('form_id' => $data->form_id,'ex_by_type'=>$excluded_fields)));
 wp_enqueue_style('rm_jquery_ui_css', RM_BASE_URL . 'admin/css/jquery-ui.min.css'); 
 ?>
 <script type="text/javascript">
@@ -121,9 +121,10 @@ wp_enqueue_style('rm_jquery_ui_css', RM_BASE_URL . 'admin/css/jquery-ui.min.css'
         jQuery("#rm-conditional-modal.rm-modal-view, .rm-modal-overlay").toggle();
          jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').removeClass('rm-field-popup-out');
         jQuery('.rmagic .rm_field_row_setting_wrap.rm-select-row-setting').addClass('rm-field-popup-in');
+         jQuery('#rm-conditional-modal.rm-modal-view').addClass('rm-form-popup-show').removeClass('rm-form-popup-hide'); 
+        jQuery('#rm-conditional-modal .rm-modal-overlay').removeClass('rm-field-popup-overlay-fade-out');
+        jQuery('#rm-conditional-modal .rm-modal-overlay').addClass('rm-field-popup-overlay-fade-in');
 
-        jQuery('.rm-modal-overlay').removeClass('rm-field-popup-overlay-fade-out');
-        jQuery('.rm-modal-overlay').addClass('rm-field-popup-overlay-fade-in');
         
         if(fid>0)
         {
@@ -133,10 +134,10 @@ wp_enqueue_style('rm_jquery_ui_css', RM_BASE_URL . 'admin/css/jquery-ui.min.css'
     }
     function addConditionForm(fid)
     { 
-        var select_options= '<?php addslashes(RM_Utilities::get_fields_dropdown(array('form_id' => $data->form_id,'ex_by_type'=>$excluded_fields))); ?>';
+        var select_options= '<?php addslashes((string)RM_Utilities::get_fields_dropdown(array('form_id' => $data->form_id,'ex_by_type'=>$excluded_fields))); ?>';
         // Removing select field option from dropdown to avoid self condition
         var current_option = new RegExp('<option value="' + fid + '">(.*?)<\/option>');
-        var html = '<div class="rm-field-condition-row rm-box-row rm-box-center"><div class="rm-box-col-11"><div class="rm-box-col-wrap rm-di-flex"><div class="rm-controlling-atr"><div class="rminput"><select name="cfields[]" onchange="fieldChanged(this)"><option><?php _e('Select Field','custom-registration-form-builder-with-submission-manager'); ?></option><?php addslashes(RM_Utilities::get_fields_dropdown(array('form_id' => $data->form_id,'ex_by_type'=>$excluded_fields))); ?></select></div></div><div class="rm-controlling-atr"><div class="rminput"><select onchange="opChanged(this)" name="op[]"><?php addslashes(RM_Utilities::get_cond_op_dd()); ?></select></div></div><div class="rm-controlling-atr"><div class="rminput"><input type="text" name="values[]" placeholder="Value" maxlength="50" required></div></div></div></div><div class="rm-box-col-1"><div class="rm-controlling-atr rm-controlling-btn"> <div class="rminput"><a onclick="delete_dependency(this)" href="javascript:void(0)"><span class="material-icons">delete</span></a></div></div></div></div>';
+        var html = '<div class="rm-field-condition-row rm-box-row rm-box-center"><div class="rm-box-col-11"><div class="rm-box-col-wrap rm-di-flex"><div class="rm-controlling-atr"><div class="rminput"><select name="cfields[]" onchange="fieldChanged(this)" required><option value=""><?php _e('Select Field','custom-registration-form-builder-with-submission-manager'); ?></option><?php addslashes((string)RM_Utilities::get_fields_dropdown(array('form_id' => $data->form_id,'ex_by_type'=>$excluded_fields))); ?></select></div></div><div class="rm-controlling-atr"><div class="rminput"><select onchange="opChanged(this)" name="op[]"><?php addslashes((string)RM_Utilities::get_cond_op_dd()); ?></select></div></div><div class="rm-controlling-atr"><div class="rminput"><input type="text" name="values[]" placeholder="Value" required></div></div></div></div><div class="rm-box-col-1"><div class="rm-controlling-atr rm-controlling-btn"> <div class="rminput"><a onclick="delete_dependency(this)" href="javascript:void(0)"><span class="material-icons">delete</span></a></div></div></div></div>';
         html= html.replace(current_option,'');
         jQuery("#rm-container-field-"+fid).append(html);
         show_combinator(fid);
@@ -173,7 +174,7 @@ div#ui-datepicker-div {
     <div class="rm-modal-overlay rm-field-popup-overlay-fade-in" style="display:none" onClick="showConditionFormModal()"></div>
         <div class="rm_field_row_setting_wrap rm-select-row-setting rm-field-popup-out">
             <div class="rm-modal-titlebar">
-                <div class="rm-modal-title" style="display:none;">  <?php echo wp_kses_post(RM_UI_Strings::get('LABEL_CONDITIONS')); ?> for <span id="selected_field"></span></div>
+                <div class="rm-modal-title" style="display:none;">  <?php echo wp_kses_post((string)RM_UI_Strings::get('LABEL_CONDITIONS')); ?> for <span id="selected_field"></span></div>
                 <div class="rm-modal-title"><?php _e('Field Conditions','custom-registration-form-builder-with-submission-manager');?></div>
                 <span class="rm-modal-close" onClick="showConditionFormModal()">&times;</span>
               
@@ -196,7 +197,7 @@ div#ui-datepicker-div {
                         }
                         $display= empty($options->conditions['rules'])?'display:none':'';
                         ?>   
-                    <form method="post" id="rm-cond-form-<?php echo esc_attr($field->field_id); ?>">
+                    <form method="post" action="<?php echo esc_url(admin_url('admin.php?page=rm_field_manage&rm_form_id='.$data->form_id)); ?>" id="rm-cond-form-<?php echo esc_attr($field->field_id); ?>">
                         <div style="<?php echo esc_attr($display); ?>" class="rm-condition" id="rm_condition_<?php echo esc_attr($field->field_id); ?>" data-field-name="<?php echo ucwords(esc_attr($field->field_label)); ?>"> 
                                 <input type="hidden" name="dfield" value="<?php echo esc_attr($field->field_id); ?>" />
                                 
@@ -225,8 +226,8 @@ div#ui-datepicker-div {
                                         <div  class="rm-field-condition-container rm-combinator-container rm-box-border rm-box-white-bg rm-box-mb-25 rm-box-ptb" id="rm-container-field-<?php echo esc_attr($field->field_id); ?>">
                                             <div class="rm-match-condition-row">
                                                  <div class="rm-conditions-box-title rm-card-mb-16"><?php _e('Conditions','custom-registration-form-builder-with-submission-manager'); ?></div>
-                                                 <div class="rm-match-condition"><input type="radio" id="rm-match-all-condition" name="combinator" value="OR" <?php echo @$options->conditions['settings']['combinator'] != 'AND' ? 'checked' : '' ?>><label for="rm-match-all-condition" ><?php _e('OR ','custom-registration-form-builder-with-submission-manager'); ?> <span><?php _e('(when one of these conditions are true) ','custom-registration-form-builder-with-submission-manager'); ?></span></label></div>     
-                                                <div class="rm-match-condition"><input  type="radio" id="rm-match-one-condition" name="combinator" value="AND" <?php echo @$options->conditions['settings']['combinator'] == 'AND' ? 'checked' : '' ?>><label for="rm-match-one-condition" ><?php _e('AND ','custom-registration-form-builder-with-submission-manager'); ?> <span><?php _e('(when all of these conditions are true) ','custom-registration-form-builder-with-submission-manager'); ?></span></label></div> 
+                                                 <div class="rm-match-condition"><input type="radio" id="rm-match-all-condition" name="combinator" value="OR" <?php echo isset($options->conditions['settings']['combinator']) && @$options->conditions['settings']['combinator'] != 'AND' ? 'checked' : '' ?>><label for="rm-match-all-condition" ><?php _e('OR ','custom-registration-form-builder-with-submission-manager'); ?> <span><?php _e('(when one of these conditions are true) ','custom-registration-form-builder-with-submission-manager'); ?></span></label></div>     
+                                                <div class="rm-match-condition"><input  type="radio" id="rm-match-one-condition" name="combinator" value="AND" <?php echo isset($options->conditions['settings']['combinator']) && @$options->conditions['settings']['combinator'] == 'AND' ? 'checked' : '' ?>><label for="rm-match-one-condition" ><?php _e('AND ','custom-registration-form-builder-with-submission-manager'); ?> <span><?php _e('(when all of these conditions are true) ','custom-registration-form-builder-with-submission-manager'); ?></span></label></div> 
                                             </div>
 
                                         <?php
@@ -277,9 +278,9 @@ div#ui-datepicker-div {
                                                                 }
                                                                 $rule_count++;
                                                             ?>
-                                                            <input type="<?php echo esc_attr($field_type);?>" class="<?php echo esc_attr($calender_class);?><?php echo ($condition['op']=='_blank' || $condition['op']=='_not_blank')?'rm-block-input':''; ?>" value="<?php echo htmlspecialchars($values); ?>" name="values[]" placeholder="Value"  maxlength="50" />
+                                                            <input type="<?php echo esc_attr($field_type);?>" class="<?php echo esc_attr($calender_class);?><?php echo ($condition['op']=='_blank' || $condition['op']=='_not_blank')?'rm-block-input':''; ?>" value="<?php echo htmlspecialchars($values); ?>" name="values[]" placeholder="Value" />
                                                             <?php if($sel_field_type == 'date'):?>
-                                                            <script>initialiseCalender('<?php echo esc_attr($cl_active_class);?>', '<?php echo esc_html($date_format);?>', '<?php $values;?>');</script>
+                                                            <script>jQuery(document).ready(function() { initialiseCalender('<?php echo esc_attr($cl_active_class);?>', '<?php echo esc_html($date_format);?>', '<?php $values;?>'); });</script>
                                                             <?php endif;?>
                                                         </div>
                                                     </div></div></div>

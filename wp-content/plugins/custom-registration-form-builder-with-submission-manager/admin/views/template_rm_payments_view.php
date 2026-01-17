@@ -20,14 +20,14 @@ $form_type_status = $data->form_type_status;
     if(isset($data->payment->id)):
     ?>
     <div class="rmagic rm-payment-report-main">
-        <div class="rm-payment-view-id"><?php _e('Payment ID ','custom-registration-form-builder-with-submission-manager'); echo wp_kses_post($data->payment->id);?></div>
+        <div class="rm-payment-view-id"><?php _e('Payment ID ','custom-registration-form-builder-with-submission-manager'); echo wp_kses_post((string)$data->payment->id);?></div>
         <!-- First Block-->
         <div class="rm-veiw-payments-card rm-box-border rm-box-white-bg rm-box-mb-25 rm-box-p">
             <div class="rm-payments-header-rows rm-box-row rm-box-py-3">
                 <div class="rm-payments-header-col rm-payments-header-column-1 rm-box-col-9">
                     <div class="rm-payments-header-top">
                         <div class="rm-payments-total">
-                            <div class="rm-total-price"><?php _e('Total Price: ','custom-registration-form-builder-with-submission-manager');?> <span><?php echo wp_kses_post($data->payment->total_amount);?></span></div>
+                            <div class="rm-total-price"><?php _e('Total Price: ','custom-registration-form-builder-with-submission-manager');?> <span><?php echo wp_kses_post((string)$data->payment->total_amount);?></span></div>
                             <div class="rm-total-price"></div>
                         </div>
                         <!-- Products Name --->
@@ -83,7 +83,7 @@ $form_type_status = $data->form_type_status;
                         <div class="rm-payments-status-transc rm-box-row rm-mt-3">
                             <div class="rm-payments-gateway rm-box-col-3 rm-di-flex rm-box-center">
                                 <div class="rm-payment-title rm-payment-gatway-title"><?php _e('GATEWAY: ','custom-registration-form-builder-with-submission-manager');?></div>
-                                <div class="rm-payments-value rm-payment-type-<?php echo wp_kses_post($data->payment->pay_proc);?>"><a href="<?php echo admin_url('admin.php?page=rm_options_payment'); ?>" target="_blank"><?php echo wp_kses_post($data->payment->pay_proc);?></a></div>
+                                <div class="rm-payments-value rm-payment-type-<?php echo wp_kses_post((string)$data->payment->pay_proc);?>"><a href="<?php echo admin_url('admin.php?page=rm_options_payment'); ?>" target="_blank"><?php echo wp_kses_post((string)$data->payment->pay_proc);?></a></div>
                             </div>
                             <div class="rm-payments-trans-id rm-box-col-3 rm-di-flex rm-box-center">
                                 <div class="rm-payment-title"><?php _e('ID: ','custom-registration-form-builder-with-submission-manager');?></div>
@@ -94,10 +94,10 @@ $form_type_status = $data->form_type_status;
                                 <?php 
                                 $status = strtolower($data->payment->status); 
                                 if($status == 'completed' || $status == 'succeeded'){
-                                    echo '<div class="rm-payments-value payment-status-completed">'.wp_kses_post('Completed').'</div>';
+                                    echo '<div class="rm-payments-value payment-status-completed">'.wp_kses_post((string)'Completed').'</div>';
                                 }
                                 else{
-                                    echo '<div class="rm-payments-value payment-status-'.$status.'">'.wp_kses_post(ucfirst($status)).'</div>';
+                                    echo '<div class="rm-payments-value payment-status-'.$status.'">'.wp_kses_post((string)ucfirst($status)).'</div>';
                                 }
                                 ?>
                             </div>
@@ -114,11 +114,11 @@ $form_type_status = $data->form_type_status;
                                 <div class="rm-box-col-6">
                                     <div class="rm-payments-form-name rm-d-flex rm-box-text-right">
                                         <div class="rm-di-flex rm-box-center rm-payment-title"><?php _e('FORM: ','custom-registration-form-builder-with-submission-manager');?></div>
-                                        <div class="rm-di-flex rm-box-center rm-payments-value"><a href="<?php echo admin_url('admin.php?page=rm_form_sett_manage&rm_form_id='.$data->form_id); ?>" target="_blank"><?php echo wp_kses_post($data->form_name);?></a></div>
+                                        <div class="rm-di-flex rm-box-center rm-payments-value"><a href="<?php echo admin_url('admin.php?page=rm_form_sett_manage&rm_form_id='.$data->form_id); ?>" target="_blank"><?php echo wp_kses_post((string)$data->form_name);?></a></div>
                                     </div>
                                     <div class="rm-payments-submission-id rm-d-flex rm-box-text-right">
                                         <div class="rm-di-flex rm-box-center rm-payment-title"><?php _e('SUBMISSION ID: ','custom-registration-form-builder-with-submission-manager');?></div>
-                                        <div class="rm-di-flex rm-box-center rm-payments-value"><a href="<?php echo admin_url('admin.php?page=rm_submission_view&rm_submission_id='.$data->submission->submission_id); ?>" target="_blank"><?php echo wp_kses_post($data->submission->submission_id);?></a></div>
+                                        <div class="rm-di-flex rm-box-center rm-payments-value"><a href="<?php echo admin_url('admin.php?page=rm_submission_view&rm_submission_id='.$data->submission->submission_id); ?>" target="_blank"><?php echo wp_kses_post((string)$data->submission->submission_id);?></a></div>
                                     </div>
                                     <div class="rm-payments-submission-date rm-d-flex rm-box-text-right">
                                         <div class="rm-di-flex rm-box-center rm-payment-title"><?php _e('SUBMISSION DATE: ','custom-registration-form-builder-with-submission-manager');?></div>
@@ -132,10 +132,10 @@ $form_type_status = $data->form_type_status;
                                             <?php echo get_avatar($data->submission->user_email)?get_avatar($data->submission->user_email):'<img src="'.RM_IMG_URL.'default_person.png">'; ?>
                                                 <?php if($user_id):?>
                                                 <a href="<?php echo admin_url('admin.php?page=rm_user_view&user_id='.$user_id); ?>" target="_blank">
-                                                    <?php echo wp_kses_post($data->submission->user_email);?>
+                                                    <?php echo wp_kses_post((string)$data->submission->user_email);?>
                                                 </a>
                                                 <?php else:
-                                                    echo wp_kses_post($data->submission->user_email);
+                                                    echo wp_kses_post((string)$data->submission->user_email);
                                                 endif;?>
                                         </div>
                                     </div> 
@@ -143,21 +143,21 @@ $form_type_status = $data->form_type_status;
                                         <div class="rm-payment-title rm-di-flex rm-box-center"><?php _e('USER STATUS: ','custom-registration-form-builder-with-submission-manager');?></div>
                                         <?php 
                                         if($form_type_status && !$user_type){
-                                            echo '<div  class="rm-payments-value rm-di-flex rm-box-center rm-payment-user-activated">'.wp_kses_post('Activated ','custom-registration-form-builder-with-submission-manager').'</div>';
+                                            echo '<div  class="rm-payments-value rm-di-flex rm-box-center rm-payment-user-activated">'.wp_kses_post((string)'Activated ','custom-registration-form-builder-with-submission-manager').'</div>';
                                         }elseif (!$form_type_status && !$user_type) {
-                                            echo '<div  class="rm-payments-value rm-di-flex rm-box-center rm-payment-user-existing">'.wp_kses_post('Existing User','custom-registration-form-builder-with-submission-manager').'</div>';        
+                                            echo '<div  class="rm-payments-value rm-di-flex rm-box-center rm-payment-user-existing">'.wp_kses_post((string)'Existing User','custom-registration-form-builder-with-submission-manager').'</div>';        
                                         }
                                         elseif($user_type == 'guest'){
-                                            echo '<div class="rm-payments-value rm-di-flex rm-box-center rm-payment-user-guest rm-payment-disabled">'.wp_kses_post('Guest','custom-registration-form-builder-with-submission-manager').'</div>';
+                                            echo '<div class="rm-payments-value rm-di-flex rm-box-center rm-payment-user-guest rm-payment-disabled">'.wp_kses_post((string)'Guest','custom-registration-form-builder-with-submission-manager').'</div>';
                                         }
                                         else{
-                                            echo '<div class="rm-payments-value rm-di-flex rm-box-center rm-payment-user-pending">'.wp_kses_post('Deactivated','custom-registration-form-builder-with-submission-manager').'</div>';
+                                            echo '<div class="rm-payments-value rm-di-flex rm-box-center rm-payment-user-pending">'.wp_kses_post((string)'Deactivated','custom-registration-form-builder-with-submission-manager').'</div>';
                                         }
                                         ?>
                                     </div> 
                                     <div class="rm-payments-user-revenue rm-d-flex rm-box-text-right">
                                         <div class="rm-payment-title rm-di-flex"><?php _e('LIFETIME REVENUE: ','custom-registration-form-builder-with-submission-manager');?></div>
-                                        <div class="rm-payments-value rm-di-flex rm-box-center"><?php echo wp_kses_post(RM_Utilities::get_formatted_price($data->total_revenue));?></div>
+                                        <div class="rm-payments-value rm-di-flex rm-box-center"><?php echo wp_kses_post((string)RM_Utilities::get_formatted_price($data->total_revenue));?></div>
                                     </div> 
                                 </div>
                             </div>
@@ -288,7 +288,7 @@ $form_type_status = $data->form_type_status;
                     <?php 
                     foreach( $data->latest_payments as $latest_payment ){ ?>
                     <tr>
-                        <td><?php echo wp_kses_post(RM_Utilities::localize_time($latest_payment->submitted_on,'j M, Y'));?></td>
+                        <td><?php echo wp_kses_post((string)RM_Utilities::localize_time($latest_payment->submitted_on,'j M, Y'));?></td>
                         <td><?php 
                             $similar_products = array();
                             $similar_bill = unserialize($latest_payment->bill);
@@ -301,17 +301,17 @@ $form_type_status = $data->form_type_status;
                                     $similar_products = implode(', ',$similar_products);
                                 }
                                 if (function_exists('mb_strimwidth')){
-                                    echo wp_kses_post(mb_strimwidth($similar_products, 0, 20, "..."));
+                                    echo wp_kses_post((string)mb_strimwidth((string)$similar_products, 0, 20, "..."));
                                 }
                             }
                             ?></td>
-                        <td><?php echo wp_kses_post($latest_payment->user_email);?></td>
-                        <td><?php echo wp_kses_post(RM_Utilities::get_formatted_price($latest_payment->total_amount));?></td>
+                        <td><?php echo wp_kses_post((string)$latest_payment->user_email);?></td>
+                        <td><?php echo wp_kses_post((string)RM_Utilities::get_formatted_price($latest_payment->total_amount));?></td>
                         <td><?php 
                             if(strtolower($latest_payment->status) == 'succeeded'){
-                                echo _e('Completed','registrationmagic-addon');
+                                echo _e('Completed','custom-registration-form-builder-with-submission-manager');
                             }else{
-                                echo wp_kses_post($latest_payment->status);
+                                echo wp_kses_post((string)$latest_payment->status);
                             }
                         ?></td>
                         <td><a target="_blank" href="<?php echo admin_url('admin.php?page=rm_payments_view&rm_submission_id='.$latest_payment->submission_id);?>"><span class="material-icons"> launch </span></a></td>
@@ -344,7 +344,7 @@ $form_type_status = $data->form_type_status;
                     <?php 
                     foreach( $data->user_payments as $user_payment ){ ?>
                     <tr>
-                        <td><?php echo wp_kses_post(RM_Utilities::localize_time($user_payment->submitted_on,'j M, Y'));?></td>
+                        <td><?php echo wp_kses_post((string)RM_Utilities::localize_time($user_payment->submitted_on,'j M, Y'));?></td>
                         <td><?php 
                             $other_products = array();
                             $other_bill = unserialize($user_payment->bill);
@@ -357,17 +357,17 @@ $form_type_status = $data->form_type_status;
                                     $other_products = implode(', ',$other_products);
                                 }
                                 if (function_exists('mb_strimwidth')){
-                                    echo wp_kses_post(mb_strimwidth($other_products, 0, 20, "..."));
+                                    echo wp_kses_post((string)mb_strimwidth((string)$other_products, 0, 20, "..."));
                                 }
                             }
                             ?></td>
-                        <td><?php echo wp_kses_post($user_payment->form_name);?></td>
-                        <td><?php echo wp_kses_post(RM_Utilities::get_formatted_price($user_payment->total_amount));?></td>
+                        <td><?php echo wp_kses_post((string)$user_payment->form_name);?></td>
+                        <td><?php echo wp_kses_post((string)RM_Utilities::get_formatted_price($user_payment->total_amount));?></td>
                         <td><?php 
                             if(strtolower($user_payment->status) == 'succeeded'){
-                                echo _e('Completed','registrationmagic-addon');
+                                echo _e('Completed','custom-registration-form-builder-with-submission-manager');
                             }else{
-                                echo wp_kses_post($user_payment->status);
+                                echo wp_kses_post((string)$user_payment->status);
                             }
                         ?></td>
                         <td><a target="_blank" href="<?php echo admin_url('admin.php?page=rm_payments_view&rm_submission_id='.$user_payment->submission_id);?>"><span class="material-icons"> launch </span></a></td>
@@ -393,7 +393,7 @@ $form_type_status = $data->form_type_status;
                 ?>
             
                 <div class="rm-pm-note" style="border-left: 4px solid #<?php echo maybe_unserialize($note->note_options)->bg_color; ?>">
-                    <div class="rm-submission-note-text"><?php echo $note->notes; ?></div>
+                    <div class="rm-submission-note-text"><?php echo wp_kses_post((string)$note->notes); ?></div>
                     <div class="rm-submission-note-attribute">
 
                         <?php
@@ -455,20 +455,20 @@ $form_type_status = $data->form_type_status;
                                     $logs = $data->payment->log;
                                     foreach($logs as $key=>$log):?>
                                     <tr>
-                                        <td><?php echo wp_kses_post($key);?></td>
+                                        <td><?php echo wp_kses_post((string)$key);?></td>
                                         <td><?php 
                                             if(is_array($log) || is_object($log)):?>
                                             <table class="table-logs-<?php echo $key;?>">
-                                            <?php foreach($log as $ky => $log_a):?>
+                                            <?php foreach($log as $ky => $log_a): ?>
                                                 <tr>
-                                                    <td><?php echo wp_kses_post($ky);?></td>
-                                                    <td><?php echo esc_html($log_a);?></td>
+                                                    <td><?php echo wp_kses_post((string)$ky); ?></td>
+                                                    <td><?php echo is_array($log_a) ? implode(', ', array_map('esc_html', $log_a)) : esc_html($log_a); ?></td>
                                                 </tr>
                                             <?php endforeach; ?>
                                             </table>
                                             <?php
                                             else:
-                                                echo wp_kses_post($log);
+                                                echo wp_kses_post((string)$log);
                                             endif;
                                         ?></td>
                                     </tr>
@@ -508,10 +508,10 @@ $form_type_status = $data->form_type_status;
                             <tbody>
                                 <?php foreach($billing as $product):?>
                                 <tr>
-                                    <td><?php echo wp_kses_post($product->label);?></td>
-                                    <td><?php echo wp_kses_post($product->qty);?></td>
-                                    <td><?php echo wp_kses_post(RM_Utilities::get_formatted_price($product->price));?></td>
-                                    <td><?php echo wp_kses_post(RM_Utilities::get_formatted_price($product->price * $product->qty));?></td>
+                                    <td><?php echo wp_kses_post((string)$product->label);?></td>
+                                    <td><?php echo wp_kses_post((string)$product->qty);?></td>
+                                    <td><?php echo wp_kses_post((string)RM_Utilities::get_formatted_price($product->price));?></td>
+                                    <td><?php echo wp_kses_post((string)RM_Utilities::get_formatted_price($product->price * $product->qty));?></td>
                                 </tr>
                                 <?php
                                  endforeach;?>
@@ -553,16 +553,16 @@ $form_type_status = $data->form_type_status;
                                         </div>
                                 </div>
                                 <div class="rm_pms_edit_payment_row">
-                                    <label class="rm_sub_edit_label"><?php _e( 'Note', 'registrationmagic-addon' ) ?></label>
+                                    <label class="rm_sub_edit_label"><?php _e( 'Note', 'custom-registration-form-builder-with-submission-manager' ) ?></label>
                                         <div class="rm_sub_edit_input">
-                                            <textarea id="rm_pms_payment_note" placeholder="<?php _e( 'Enter details such as Check number etc. These notes will show up in transaction details.', 'registrationmagic-addon' ) ?>"></textarea>
+                                            <textarea id="rm_pms_payment_note" placeholder="<?php _e( 'Enter details such as Check number etc. These notes will show up in transaction details.', 'custom-registration-form-builder-with-submission-manager' ) ?>"></textarea>
                                         </div>
                                 </div>
                                 <div class="rm_pms_edit_payment_row">
                                     <label>&nbsp;</label>
                                     <div class="rm_sub_edit_input">
-                                        <button id="rm_payment_status_update" type="button" onclick="rm_update_payment_details_psm(<?php echo $data->payment->id; ?>,'<?php _e("Status Successfully Updated.","registrationmagic-addon"); ?>','<?php _e("Error Occured","registrationmagic-addon"); ?>')"><?php _e("Update","registrationmagic-addon"); ?></button>
-                                        <button type="button" id="rm_pms_status_update_popup_close"><?php _e("Cancel","registrationmagic-addon"); ?></button>
+                                        <button id="rm_payment_status_update" type="button" onclick="rm_update_payment_details_psm(<?php echo $data->payment->id; ?>,'<?php _e("Status Successfully Updated.","custom-registration-form-builder-with-submission-manager"); ?>','<?php _e("Error Occured","custom-registration-form-builder-with-submission-manager"); ?>')"><?php _e("Update","custom-registration-form-builder-with-submission-manager"); ?></button>
+                                        <button type="button" id="rm_pms_status_update_popup_close"><?php _e("Cancel","custom-registration-form-builder-with-submission-manager"); ?></button>
                                         </div>
                                     </div>
 

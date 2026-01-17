@@ -82,7 +82,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'views/template
                         if ($field_data->field_type == 'Select')
                         {
                             $options = array();
-                            $tmp_options = RM_Utilities::trim_array(explode(',', $field_data->field_value));
+                            $tmp_options = RM_Utilities::trim_array(explode(',', (string)$field_data->field_value));
                             foreach ($tmp_options as $val)
                                 $options[$val] = $val;
                         } elseif ($field_data->field_type == 'Radio' || $field_data->field_type == 'Checkbox' || $field_data->field_type == 'Terms')
@@ -234,7 +234,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'views/template
 
             if ($data->expired)
                 if ($data->form->form_options->form_message_after_expiry)
-                    echo wp_kses_post($data->form->form_options->form_message_after_expiry);
+                    echo wp_kses_post((string)$data->form->form_options->form_message_after_expiry);
                 else
                     echo RM_UI_Strings::get('MSG_FORM_EXPIRY');
             else
@@ -270,7 +270,7 @@ if(defined('REGMAGIC_ADDON')) include_once(RM_ADDON_PUBLIC_DIR . 'views/template
                     }
 
                     $exp_str .= '</div>';
-                    echo wp_kses_post($exp_str);
+                    echo wp_kses_post((string)$exp_str);
                 }
                 /*                 * ****** End expiry drama ************ */
 

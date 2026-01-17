@@ -231,9 +231,12 @@
     overflow: hidden;
     text-overflow: ellipsis;
 }
+.rmagic table.rm-user-data td.rm-submission-download-col  {
+      padding-left: 1.5em; 
+}
 
 .rmagic table.rm-user-data td i {
-    padding-left: 1.5em;
+
     cursor: pointer;
 }
 
@@ -253,6 +256,12 @@
     float: left;
     width: calc(100% - 10em);
 }
+
+
+.rmagic .rm-submission-download-col a {
+    text-decoration: none !important;
+}
+
 /*Submission Page Custom CSS*/
 .rmagic .rm-user-card img { height: 10em; width: auto; float: left; border-radius: 0px; border: none; padding: 0px; animation: rm-circle 1s linear 1; margin: 0px;}
 .rmagic .rm-user-card .rm-user-name {
@@ -305,3 +314,27 @@
 /*---Theme Fixes---*/
 .rmagic {}
 /*---Theme Fixes End---*/
+
+.rm-submission-status {
+    padding: 1px 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    display: inline-block;
+    font-size: 12px;
+    line-height: 24px;
+}
+
+.rm-submission-status.rm-submission-pending {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.rm-submission-status.rm-submission-approved{
+    background-color: #d1e7dd;
+    color: #155724;
+}
+
+.rm-submission-status.rm-submission-rejected{
+    background-color: #f8d7da;
+    color: #721c24;
+}

@@ -16,6 +16,8 @@ trait ColumnLists {
 		$value = $this->get_value( $object_id, false );
 		if ( is_object( $value ) && isset( $value->id ) ) {
 			$value = $value->id;
+		} else if  ( is_array( $value ) && isset( $value['id'] ) ) {
+			$value = $value['id'];
 		}
 		$value = (array) $value;
 		$value = array_filter( $value );
@@ -24,7 +26,7 @@ trait ColumnLists {
 
 		if ( $is_multiple && is_array( $value ) && count( $value ) > 0 ) {
 
-			$output .= '<ul>'.PHP_EOL;
+			$output .= '<ul class="qef-list">'.PHP_EOL;
 			foreach ( $value as $val ) {
 				$output .= sprintf(
 					'<li>%s</li>'.PHP_EOL,
@@ -109,17 +111,16 @@ trait ColumnLists {
 	}
 
 	/**
-	 *	@param int $value User ID
+	 *	@param int $value Term ID
 	 */
 	protected function render_list_column_item_value_term( $value ) {
 
 		$term_obj = get_term( $value, $this->acf_field['taxonomy'] );
-
-		$is_term = is_a( $term_obj, '\WP_Term' );
+		$is_term  = is_a( $term_obj, '\WP_Term' );
 
 		if ( ! $is_term ) {
 			/* translators: Term ID */
-			return sprintf( esc_html__( '(Term ID %d not found)', 'acf-quickedit-fields' ), $term );
+			return sprintf( esc_html__( '(Term ID %d not found)', 'acf-quickedit-fields' ), $value );
 		} else if ( trim( $term_obj->name ) !== '' ) {
 			$label =  $term_obj->name;
 		} else if ( trim( $term_obj->slug ) !== '' ) {
@@ -127,15 +128,20 @@ trait ColumnLists {
 		} else {
 			$label =  $term_obj->id;
 		}
+		$link = null;
 
-		$link = add_query_arg( $term_obj->taxonomy, $term_obj->slug );
-		foreach ( array_keys( $_GET ) as $param ) {
-			if ( $term_obj->taxonomy !== $param && taxonomy_exists( $param ) ) {
-				$link = remove_query_arg( $param, $link );
+		if ( $post_type = get_post_type() ) {
+			$args = [];
+
+			if ( $term_obj->taxonomy ) {
+				$args['category_name'] = $term_obj->slug;
+			} else {
+				$args[$term_obj->taxonomy] = $term_obj->slug;
 			}
-		}
-		if ( is_wp_error( $link ) ) {
-			$link = null;
+			if ( 'post' !== $post_type ) {
+				$args['post_type'] = $post_type;
+			}
+			$link = esc_url( add_query_arg( $args, 'edit.php' ) );
 		}
 
 		if ( ! is_null( $link ) ) {
