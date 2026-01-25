@@ -1,68 +1,70 @@
 <?php
-	// Template Name: Assoicates Form New
-    get_header();
-    get_template_part('_parts/hero-bgcover');
+// Template Name: Assoicates Form New
+get_header();
+get_template_part('_parts/hero-bgcover');
 ?>
 <div class="separator page-icon">
 
-	<?php $logoimage = get_field('page_icon');
+    <?php $logoimage = get_field('page_icon');
 
-        if( !empty($logoimage) ): ?>
+    if (!empty($logoimage)): ?>
 
         <img class="animated rubberBand" src="<?php echo $logoimage['url']; ?>" />
 
-	<?php endif; ?>
+    <?php endif; ?>
 
-	<?php get_template_part('_parts/theme-parts/hero-usps'); ?>
+    <?php get_template_part('_parts/theme-parts/hero-usps'); ?>
 
 </div>
 
 <div class="container flexbox800" role="main">
 
-	<div class="container flexbox800" role="main">
+    <div class="container flexbox800" role="main">
 
-		<article class="grid grid6_12 box box--no-pad box-lightoffwhite">
+        <article class="grid grid6_12 box box--no-pad box-lightoffwhite">
 
-			<?php if ( have_posts() ) while ( have_posts() ) : the_post(); ?>
+            <?php if (have_posts())
+                while (have_posts()):
+                    the_post(); ?>
 
-				<?php if(is_user_logged_in()) { ?>
+                    <?php if (is_user_logged_in()) { ?>
 
-					<div class="grid grid12_12 box box-fadedsandyyellow">
+                        <div class="grid grid12_12 box box-fadedsandyyellow">
 
-						<?php the_field("logged_in_content"); ?>
+                            <?php the_field("logged_in_content"); ?>
 
-					</div>
+                        </div>
 
-					<div class="grid grid12_12 box box-lightoffwhite box--registration">
+                        <div class="grid grid12_12 box box-lightoffwhite box--registration">
 
-						<h3>Your Profile</h3>
-						<br />
+                            <h3>Your Profile</h3>
+                            <br />
 
-						<?php echo do_shortcode("[RM_Front_Submissions]"); ?>
+                            <?php echo do_shortcode("[RM_Front_Submissions]"); ?>
 
-					</div>
+                        </div>
 
-				<?php } else { ?>
+                    <?php } else { ?>
 
-					<div class="grid grid12_12 box box-fadedsandyyellow">
+                        <div class="grid grid12_12 box box-fadedsandyyellow">
 
-						<?php the_content(); ?>
+                            <?php the_content(); ?>
 
-					</div>
+                        </div>
 
-				<?php } ?>
+                    <?php } ?>
 
-			<?php endwhile; ?>
+                <?php endwhile; ?>
 
-		</article>
+        </article>
 
-		<div class="grid grid6_12 independent-image independent-image-1">
+        <div class="grid grid6_12 independent-image independent-image-1">
 
-			<?php if(is_user_logged_in()) { ?>
+            <?php if (is_user_logged_in()) { ?>
 
-				<div class="grid grid12_12 box box--registration">
+                <div class="grid grid12_12 box box--registration">
 
-					<h2>Join our successful team by completing the information below</h2>
+                    <h2>Join our successful team by completing the information below</h2>
 
                     <div class="role-selector prominent-role-selector">
                         <h3>What is your role?</h3>
@@ -77,14 +79,16 @@
                             <option value="oh-physio-therapist">OH Physio Therapist</option>
                             <option value="therapist-cbt">Therapist (CBT)</option>
                         </select>
+                        <p>Elements of this form can only be completed using a laptop, if you are on a mobile device, please
+                            visit this page whilst on a laptop.</p>
                     </div>
 
                     <div class="role-forms">
                         <div class="role-form" data-role="template-form" style="display:none;">
-                            <?php echo do_shortcode( '[ninja_form id=5]' ); ?>
+                            <?php echo do_shortcode('[ninja_form id=5]'); ?>
                         </div>
                         <div class="role-form" data-role="oha" style="display:none;">
-                            <?php echo do_shortcode( '[ninja_form id=6]' ); ?>
+                            <?php echo do_shortcode('[ninja_form id=6]'); ?>
                         </div>
                         <div class="role-form" data-role="ohn" style="display:none;">
                             <!-- Example: <?php // echo do_shortcode( '[ninja_form id=7]' ); ?> -->
@@ -104,66 +108,68 @@
                     </div>
 
                     <style>
-                    .prominent-role-selector {
-                        margin: 2em 0 2em 0;
-                        padding: 1.5em;
-                        background: #f9f9e7;
-                        border: 2px solid #ffe066;
-                        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-                        font-size: 1.1em;
-                    }
-                    .prominent-role-selector select {
-                        font-size: 1.0em;
-                        font-weight: 600;
-                        padding: 0.5em 1em;
-                        border-radius: 5px;
-                        border: 1.5px solid #ffe066;
-                        background: #fffbe6;
-                        margin-top: 0.75em;
-                    }
-                    .role-forms {
-                        margin-top: 2em;
-                    }
+                        .prominent-role-selector {
+                            margin: 2em 0 2em 0;
+                            padding: 1.5em;
+                            background: #f9f9e7;
+                            border: 2px solid #ffe066;
+                            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+                            font-size: 1.1em;
+                        }
+
+                        .prominent-role-selector select {
+                            font-size: 1.0em;
+                            font-weight: 600;
+                            padding: 0.5em 1em;
+                            border-radius: 5px;
+                            border: 1.5px solid #ffe066;
+                            background: #fffbe6;
+                            margin-top: 0.75em;
+                        }
+
+                        .role-forms {
+                            margin-top: 2em;
+                        }
                     </style>
 
-				</div>
+                </div>
 
-			<?php } else { ?>
+            <?php } else { ?>
 
-				<div class="grid grid12_12 box box--registration">
+                <div class="grid grid12_12 box box--registration">
 
-					<?php the_field("secondary_content"); ?>
+                    <?php the_field("secondary_content"); ?>
 
-					<?php echo do_shortcode("[RM_Form id='1']"); ?>
+                    <?php echo do_shortcode("[RM_Form id='1']"); ?>
 
-				</div>
+                </div>
 
-			<?php } ?>
+            <?php } ?>
 
-		</div>
+        </div>
 
-	</div>
+    </div>
 
 </div>
 
 
 <div class="container flexbox800">
 
-	<div class="grid grid12_12 flexbox800">
+    <div class="grid grid12_12 flexbox800">
 
-		<div class="grid grid6_12 box box-logodeepblue">
+        <div class="grid grid6_12 box box-logodeepblue">
 
-			<?php get_template_part('_parts/theme-parts/why-choose-us'); ?>
+            <?php get_template_part('_parts/theme-parts/why-choose-us'); ?>
 
-		</div>
+        </div>
 
-		<div class="grid grid6_12 box box-sandyyellow">
+        <div class="grid grid6_12 box box-sandyyellow">
 
-			<?php get_template_part('_parts/free-quotation-advice'); ?>
+            <?php get_template_part('_parts/free-quotation-advice'); ?>
 
-		</div>
+        </div>
 
-	</div>
+    </div>
 
 </div>
 
@@ -171,20 +177,20 @@
 
 <div class="container flexbox800">
 
-	<div class="grid grid6_12 box box-logodeepblue get-in-touch">
+    <div class="grid grid6_12 box box-logodeepblue get-in-touch">
 
-		<?php get_template_part('_parts/cta-bottom'); ?>
+        <?php get_template_part('_parts/cta-bottom'); ?>
 
-	</div>
+    </div>
 
-	<div class="grid grid6_12 box box-logodeepblue map">
+    <div class="grid grid6_12 box box-logodeepblue map">
 
-	<?php get_template_part('_parts/map'); ?>
+        <?php get_template_part('_parts/map'); ?>
 
-	</div>
+    </div>
 
 </div><!-- /.main-->
 
 <?php get_template_part('_parts/separator'); ?>
-	
+
 <?php get_footer(); ?>

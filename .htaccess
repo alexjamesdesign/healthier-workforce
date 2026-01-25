@@ -14,3 +14,18 @@ RewriteRule . /index.php [L]
 </IfModule>
 
 # END WordPress
+
+# Block public access to Ninja Forms uploads
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+  Order allow,deny
+  Deny from all
+</IfModule>
+
+# Allow admins to download via WordPress (optional, if you later build a secure download endpoint)
+<FilesMatch "\.(pdf|png|jpe?g|gif|doc|docx)$">
+  Require all denied
+</FilesMatch>
