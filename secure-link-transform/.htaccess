@@ -13,3 +13,8 @@ RewriteEngine Off
 </IfModule>
 
 DirectoryIndex index.php
+
+# Prevent search engine indexing
+<IfModule mod_headers.c>
+    Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>

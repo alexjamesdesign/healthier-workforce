@@ -4,15 +4,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
     <title>Secure Link Transformer</title>
     <style>
         :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg: #f8fafc;
+            --primary: #004666;
+            /* Client Blue */
+            --primary-hover: #00334d;
+            --bg: #fdf4dc;
+            /* Client Cream */
             --card-bg: #ffffff;
-            --text-main: #1e293b;
-            --text-muted: #64748b;
+            --text-main: #004666;
+            /* Client Blue */
+            --text-muted: #536b78;
             --border: #e2e8f0;
             --radius: 12px;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
@@ -40,6 +44,14 @@
             box-shadow: var(--shadow);
             border: 1px solid var(--border);
             margin-top: 4vh;
+            text-align: center;
+            /* Center logo and headers */
+        }
+
+        .logo {
+            max-width: 250px;
+            margin-bottom: 2rem;
+            display: inline-block;
         }
 
         h1 {
@@ -47,7 +59,7 @@
             font-weight: 700;
             margin-bottom: 0.5rem;
             letter-spacing: -0.025em;
-            color: #0f172a;
+            color: var(--primary);
         }
 
         p.subtitle {
@@ -58,6 +70,8 @@
 
         .input-group {
             margin-bottom: 2rem;
+            text-align: left;
+            /* Keep input labels left-aligned */
         }
 
         label {
@@ -80,12 +94,14 @@
             transition: border-color 0.2s, box-shadow 0.2s;
             box-sizing: border-box;
             background-color: #fafafa;
+            color: #333;
+            /* Keep input text readable/standard */
         }
 
         textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 4px rgba(0, 70, 102, 0.1);
             background-color: #fff;
         }
 
@@ -100,13 +116,13 @@
             cursor: pointer;
             transition: all 0.2s;
             width: 100%;
-            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 70, 102, 0.2);
         }
 
         button:hover {
             background-color: var(--primary-hover);
             transform: translateY(-1px);
-            box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
+            box-shadow: 0 6px 8px -1px rgba(0, 70, 102, 0.3);
         }
 
         button:active {
@@ -118,6 +134,8 @@
             padding-top: 2rem;
             border-top: 2px solid var(--border);
             display: none;
+            text-align: left;
+            /* Keep results left-aligned */
         }
 
         #output-area.visible {
@@ -134,7 +152,7 @@
         .output-heading h2 {
             font-size: 1.25rem;
             margin: 0;
-            color: #0f172a;
+            color: var(--primary);
         }
 
         .result-list {
@@ -174,7 +192,9 @@
 <body>
 
     <div class="container">
-        <h1>Link Transformer</h1>
+        <img src="https://www.healthier-workforce.co.uk/wp-content/themes/healthier-workforce/_static/images/logo.svg"
+            alt="Healthier Workforce" class="logo">
+        <h1>Healthier Workforce - Secure Link Transformer</h1>
         <p class="subtitle">Paste HTML from your spreadsheet below to generate secure download links.</p>
 
         <div class="input-group">
