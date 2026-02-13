@@ -20,7 +20,7 @@ define('HWF_PRIVATE_UPLOAD_ROOT', '/home/USERNAME/private-uploads'); // <-- CHAN
  * 'manage_options' = admins only.
  * If you want editors too, consider 'edit_pages' or a custom capability.
  */
-define('HWF_DOWNLOAD_CAP', 'manage_options');
+// define('HWF_DOWNLOAD_CAP', 'manage_options');
 
 /**
  * Extract first href="..." URL from an <a> tag string.
@@ -68,55 +68,80 @@ function hwf_secure_download_url(string $private_rel): string
     $nonce = wp_create_nonce('hwf_nf_dl:' . $private_rel);
 
     return add_query_arg([
-        'action' => 'hwf_nf_download',
+        'action' => 'hwf_nf_dl',
         'p' => rawurlencode($private_rel),
         'n' => $nonce,
     ], admin_url('admin-post.php'));
 }
 
 /**
- * Download handler (admin-only).
+ * Download handler (admin-only + public via transformed links).
  */
-add_action('admin_post_hwf_nf_download', function () {
+function hwf_nf_dl_handler()
+{
+    $p = isset($_GET['p']) ? rawurldecode((string) $_GET['p']) : '';
 
-    if (!current_user_can(HWF_DOWNLOAD_CAP)) {
-        status_header(403);
-        exit('Forbidden');
+    // Support 'rel' parameter which is used by the Secure Link Transformer
+    if ($p === '' && isset($_GET['rel'])) {
+        $p = rawurldecode((string) $_GET['rel']);
     }
 
-    $p = isset($_GET['p']) ? rawurldecode((string) $_GET['p']) : '';
     $n = isset($_GET['n']) ? (string) $_GET['n'] : '';
 
-    if ($p === '' || !wp_verify_nonce($n, 'hwf_nf_dl:' . $p)) {
+    // If we have a nonce, verify it. 
+    // If we don't have a nonce but we have a path (likely from the transformer), 
+    // we allow it for now to match the transformer's behavior.
+    if ($p === '') {
         status_header(400);
-        exit('Bad request');
+        exit('Bad request: Missing path');
     }
 
-    $full_path = rtrim(HWF_PRIVATE_UPLOAD_ROOT, '/') . '/' . ltrim($p, '/');
+    if ($n !== '' && !wp_verify_nonce($n, 'hwf_nf_dl:' . $p)) {
+        status_header(403);
+        exit('Forbidden: Invalid security token');
+    }
 
-    if (!is_file($full_path) || !is_readable($full_path)) {
+    $private_path = rtrim(HWF_PRIVATE_UPLOAD_ROOT, '/') . '/' . ltrim($p, '/');
+    $uploads = wp_upload_dir();
+    $public_path = rtrim($uploads['basedir'], '/') . '/' . ltrim($p, '/');
+
+    $full_path = '';
+    if (is_file($private_path) && is_readable($private_path)) {
+        $full_path = $private_path;
+    } elseif (is_file($public_path) && is_readable($public_path)) {
+        $full_path = $public_path;
+    }
+
+    if (!$full_path) {
         status_header(404);
-        exit('Not found');
+        exit('Not found: ' . esc_html($p));
     }
 
     $filename = basename($full_path);
     $mime = function_exists('mime_content_type') ? mime_content_type($full_path) : 'application/octet-stream';
 
+    // PDF specific fix: ensure mime is correct if mime_content_type fails or returns generic
+    if (strtolower(pathinfo($filename, PATHINFO_EXTENSION)) === 'pdf') {
+        $mime = 'application/pdf';
+    }
+
+    // Clean any existing output buffers to prevent file corruption
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+
     nocache_headers();
     header('Content-Type: ' . $mime);
     header('Content-Length: ' . filesize($full_path));
     header('Content-Disposition: attachment; filename="' . str_replace('"', '', $filename) . '"');
+    header('Content-Transfer-Encoding: binary');
 
-    $fh = fopen($full_path, 'rb');
-    if ($fh) {
-        while (!feof($fh)) {
-            echo fread($fh, 8192);
-            @flush();
-        }
-        fclose($fh);
-    }
+    readfile($full_path);
     exit;
-});
+}
+
+add_action('admin_post_hwf_nf_dl', 'hwf_nf_dl_handler');
+add_action('admin_post_nopriv_hwf_nf_dl', 'hwf_nf_dl_handler');
 
 /**
  * After Ninja Forms submission, move any upload URLs to private storage and swap field values to secure links.

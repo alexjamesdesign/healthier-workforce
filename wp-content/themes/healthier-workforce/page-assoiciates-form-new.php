@@ -71,40 +71,50 @@ get_template_part('_parts/hero-bgcover');
                         <p>First, please select the role you are applying for so we can show you the relevant questions.</p>
                         <select id="roleSelect">
                             <option value="">Select your role</option>
-                            <option value="template-form">Template Form</option>
+                            <?php /* <option value="template-form">Template Form</option> */ ?>
+                            <option value="oha-specialist">OHA Specialist</option>
                             <option value="oha">OHA</option>
                             <option value="ohn">OHN</option>
                             <option value="oht">OHT</option>
                             <option value="ohp">OHP</option>
-                            <option value="oh-physio-therapist">OH Physio Therapist</option>
-                            <option value="therapist-cbt">Therapist (CBT)</option>
+                            <?php /*
+                          <option value="oh-physio-therapist">OH Physio Therapist</option>
+                          <option value="therapist-cbt">Therapist (CBT)</option>
+                          */ ?>
                         </select>
                         <p>Elements of this form can only be completed using a laptop, if you are on a mobile device, please
                             visit this page whilst on a laptop.</p>
                     </div>
 
                     <div class="role-forms">
+                        <?php /*
                         <div class="role-form" data-role="template-form" style="display:none;">
                             <?php echo do_shortcode('[ninja_form id=5]'); ?>
                         </div>
-                        <div class="role-form" data-role="oha" style="display:none;">
+                        */ ?>
+                        <div class="role-form" data-role="oha-specialist" style="display:none;">
                             <?php echo do_shortcode('[ninja_form id=6]'); ?>
                         </div>
+                        <div class="role-form" data-role="oha" style="display:none;">
+                            <?php echo do_shortcode('[ninja_form id=7]'); ?>
+                        </div>
                         <div class="role-form" data-role="ohn" style="display:none;">
-                            <!-- Example: <?php // echo do_shortcode( '[ninja_form id=7]' ); ?> -->
+                            <?php echo do_shortcode('[ninja_form id=8]'); ?>
                         </div>
                         <div class="role-form" data-role="oht" style="display:none;">
-                            <!-- Example: <?php // echo do_shortcode( '[ninja_form id=8]' ); ?> -->
+                            <?php echo do_shortcode('[ninja_form id=9]'); ?>
                         </div>
                         <div class="role-form" data-role="ohp" style="display:none;">
-                            <!-- Example: <?php // echo do_shortcode( '[ninja_form id=9]' ); ?> -->
+                            <?php echo do_shortcode('[ninja_form id=10]'); ?>
                         </div>
-                        <div class="role-form" data-role="oh-physio-therapist" style="display:none;">
-                            <!-- Example: <?php // echo do_shortcode( '[ninja_form id=10]' ); ?> -->
-                        </div>
-                        <div class="role-form" data-role="therapist-cbt" style="display:none;">
-                            <!-- Example: <?php // echo do_shortcode( '[ninja_form id=11]' ); ?> -->
-                        </div>
+                        <?php /*
+                      <div class="role-form" data-role="oh-physio-therapist" style="display:none;">
+                          <?php echo do_shortcode('[ninja_form id=11]'); ?>
+                      </div>
+                      <div class="role-form" data-role="therapist-cbt" style="display:none;">
+                          <?php echo do_shortcode('[ninja_form id=12]'); ?>
+                      </div>
+                      */ ?>
                     </div>
 
                     <style>
