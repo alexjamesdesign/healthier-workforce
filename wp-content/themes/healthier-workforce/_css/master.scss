@@ -1344,6 +1344,60 @@ div[role="main"] {
 
             }
         }
+
+        .vacancy-card-description,
+        .vacancy-post-info {
+            width: 100%;
+            text-align: center;
+        }
+
+        .post-info {
+            width: 100%;
+
+            span {
+                width: 100%;
+            }
+        }
+
+        .vacancy-card-description {
+            margin: 0 0 10px 0;
+        }
+
+        .vacancy-card-button {
+            margin: .5em auto 0 auto;
+            align-self: flex-start;
+        }
+    }
+
+    &.vacancies-list {
+        article {
+            justify-content: flex-start;
+            align-content: flex-start;
+            align-items: flex-start;
+        }
+    }
+}
+
+.vacancy-key-job-info {
+    margin: 0 0 1.5em 0;
+
+    ul {
+        list-style: disc;
+        margin: .75em 0 1em 1.25em;
+        padding: 0;
+    }
+
+    ul li {
+        padding: 0 0 .35em 0;
+
+        &:before {
+            display: none;
+            content: none;
+        }
+    }
+
+    p:last-child {
+        margin-bottom: 0;
     }
 }
 

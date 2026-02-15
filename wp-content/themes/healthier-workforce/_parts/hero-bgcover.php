@@ -129,6 +129,24 @@ Resource centre
 </div>
 
 
+<?php } elseif (is_post_type_archive('vacancies')) {
+
+/* -----------------------------------------------------------------
+Vacancies
+----------------------------------------------------------------- */
+
+?>
+
+<div class="hero no-bg resources">
+	<div class="container">
+		<div class="hero-content fadeLeft fadeLeft__4">
+			<h1>Vacancies</h1>
+			<p class="secondary">Explore current roles at Healthier Workforce and click through to view the full job specification.</p>
+		</div>
+	</div>
+</div>
+
+
 <?php } else { ?>
 
 	<div class="hero-outer">

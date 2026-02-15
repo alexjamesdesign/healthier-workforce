@@ -483,6 +483,204 @@ function resource_centre() {
 }
 add_action( 'init', 'resource_centre', 0 );
 
+/* ========================================================================================================================
+
+Vacancies
+
+======================================================================================================================== */
+
+// Register Custom Post Type
+function vacancies_post_type() {
+
+	$labels = array(
+		'name'                  => _x( 'Vacancies', 'Post Type General Name', 'text_domain' ),
+		'singular_name'         => _x( 'Vacancy', 'Post Type Singular Name', 'text_domain' ),
+		'menu_name'             => __( 'Vacancies', 'text_domain' ),
+		'name_admin_bar'        => __( 'Vacancies', 'text_domain' ),
+		'archives'              => __( 'Vacancy Archives', 'text_domain' ),
+		'parent_item_colon'     => __( 'Parent Vacancy:', 'text_domain' ),
+		'all_items'             => __( 'All Vacancies', 'text_domain' ),
+		'add_new_item'          => __( 'Add New Vacancy', 'text_domain' ),
+		'add_new'               => __( 'Add New', 'text_domain' ),
+		'new_item'              => __( 'New Vacancy', 'text_domain' ),
+		'edit_item'             => __( 'Edit Vacancy', 'text_domain' ),
+		'update_item'           => __( 'Update Vacancy', 'text_domain' ),
+		'view_item'             => __( 'View Vacancy', 'text_domain' ),
+		'search_items'          => __( 'Search Vacancies', 'text_domain' ),
+		'not_found'             => __( 'Not found', 'text_domain' ),
+		'not_found_in_trash'    => __( 'Not found in Trash', 'text_domain' ),
+		'featured_image'        => __( 'Featured Image', 'text_domain' ),
+		'set_featured_image'    => __( 'Set featured image', 'text_domain' ),
+		'remove_featured_image' => __( 'Remove featured image', 'text_domain' ),
+		'use_featured_image'    => __( 'Use as featured image', 'text_domain' ),
+		'insert_into_item'      => __( 'Insert into item', 'text_domain' ),
+		'uploaded_to_this_item' => __( 'Uploaded to this item', 'text_domain' ),
+		'items_list'            => __( 'Items list', 'text_domain' ),
+		'items_list_navigation' => __( 'Items list navigation', 'text_domain' ),
+		'filter_items_list'     => __( 'Filter items list', 'text_domain' ),
+	);
+	$rewrite = array(
+		'slug'                  => 'vacancies',
+		'with_front'            => false,
+		'pages'                 => true,
+		'feeds'                 => true,
+	);
+	$args = array(
+		'label'                 => __( 'Vacancy', 'text_domain' ),
+		'description'           => __( 'Current job vacancies at Healthier Workforce.', 'text_domain' ),
+		'labels'                => $labels,
+		'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt' ),
+		'taxonomies'            => array(),
+		'hierarchical'          => false,
+		'public'                => true,
+		'show_ui'               => true,
+		'show_in_menu'          => true,
+		'menu_position'         => 5,
+		'menu_icon'             => 'dashicons-businessperson',
+		'show_in_admin_bar'     => true,
+		'show_in_nav_menus'     => true,
+		'can_export'            => true,
+		'has_archive'           => true,
+		'exclude_from_search'   => false,
+		'publicly_queryable'    => true,
+		'rewrite'               => $rewrite,
+		'capability_type'       => 'page',
+	);
+	register_post_type( 'vacancies', $args );
+
+}
+add_action( 'init', 'vacancies_post_type', 0 );
+
+/* ========================================================================================================================
+
+Vacancies ACF Fields
+
+======================================================================================================================== */
+
+function hwf_register_vacancies_acf_fields() {
+	if ( ! function_exists( 'acf_add_local_field_group' ) ) {
+		return;
+	}
+
+	acf_add_local_field_group( array(
+		'key' => 'group_hwf_vacancy_fields',
+		'title' => 'Vacancy Details',
+		'fields' => array(
+			array(
+				'key' => 'field_hwf_vacancy_card_description',
+				'label' => 'Card Description',
+				'name' => 'vacancy_card_description',
+				'type' => 'textarea',
+				'instructions' => 'Short summary shown on the Vacancies listing card.',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'maxlength' => 260,
+				'rows' => 3,
+				'new_lines' => '',
+			),
+			array(
+				'key' => 'field_hwf_vacancy_key_job_info',
+				'label' => 'Key Job Info',
+				'name' => 'vacancy_key_job_info',
+				'type' => 'wysiwyg',
+				'instructions' => 'Content shown in the Key Job Info box at the top of the vacancy page.',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'default_value' => '',
+				'tabs' => 'all',
+				'toolbar' => 'full',
+				'media_upload' => 1,
+				'delay' => 0,
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param' => 'post_type',
+					'operator' => '==',
+					'value' => 'vacancies',
+				),
+			),
+		),
+		'menu_order' => 0,
+		'position' => 'acf_after_title',
+		'style' => 'default',
+		'label_placement' => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen' => '',
+		'active' => true,
+		'description' => '',
+	) );
+
+	acf_add_local_field_group( array(
+		'key' => 'group_hwf_vacancy_options_fields',
+		'title' => 'Vacancies Settings',
+		'fields' => array(
+			array(
+				'key' => 'field_hwf_vacancy_settings_tab',
+				'label' => 'Vacancies Settings',
+				'name' => '',
+				'type' => 'tab',
+				'placement' => 'top',
+				'endpoint' => 0,
+			),
+			array(
+				'key' => 'field_hwf_vacancies_associates_image',
+				'label' => 'Associates Card Image',
+				'name' => 'vacancies_associates_image',
+				'type' => 'image',
+				'instructions' => 'Shown on the Associates card within the Vacancies listing.',
+				'required' => 0,
+				'conditional_logic' => 0,
+				'wrapper' => array(
+					'width' => '',
+					'class' => '',
+					'id' => '',
+				),
+				'return_format' => 'array',
+				'preview_size' => 'thumbnail',
+				'library' => 'all',
+				'min_width' => '',
+				'min_height' => '',
+				'min_size' => '',
+				'max_width' => '',
+				'max_height' => '',
+				'max_size' => '',
+				'mime_types' => '',
+			),
+		),
+		'location' => array(
+			array(
+				array(
+					'param' => 'options_page',
+					'operator' => '==',
+					'value' => 'site-specific',
+				),
+			),
+		),
+		'menu_order' => 200,
+		'position' => 'normal',
+		'style' => 'default',
+		'label_placement' => 'top',
+		'instruction_placement' => 'label',
+		'hide_on_screen' => '',
+		'active' => true,
+		'description' => '',
+	) );
+}
+add_action( 'acf/init', 'hwf_register_vacancies_acf_fields' );
+
 // Resource Centre Taxonomy
 function resource_centre_taxonomy() {
 
