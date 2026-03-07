@@ -144,6 +144,10 @@ ga('require', 'linkid', 'linkid.js');
 
 			$heroType = "hero-case-study";
 
+		} elseif (is_singular('vacancies')) {
+
+			$heroType = "hero-archive no-bg";
+
 		} elseif ( is_home() || is_single()) {
 
 			$heroType = "hero-archive";

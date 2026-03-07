@@ -16,15 +16,10 @@
                 <?php if (!empty($vacancy_key_job_info)) : ?>
                     <div class="vacancy-key-job-info box box-fadedsandyyellow">
                         <p class="title">Role Details</p>
+                        <span>Posted: <?php echo get_the_date(); ?></span>
                         <?php echo wp_kses_post($vacancy_key_job_info); ?>
                     </div>
                 <?php endif; ?>
-
-	            <h1><?php the_title(); ?></h1>
-
-                <div class="post-info">
-                    <span><?php echo get_the_date(); ?></span>
-                </div>
 
 				<?php the_content(); ?>
 
