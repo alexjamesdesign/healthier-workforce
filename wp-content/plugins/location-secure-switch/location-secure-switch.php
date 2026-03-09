@@ -238,7 +238,7 @@ function lss_map_resolve_display(): string {
   }
 
   // Fallback
-  return $o['fallback_location'] ?: 'your area';
+  return $o['fallback_location'] ?: 'UK';
 }
 
 /* ------------------------------------------------------------------
@@ -247,7 +247,7 @@ function lss_map_resolve_display(): string {
 if (!class_exists('LSS_Base_Safe')) {
   class LSS_Base_Safe {
     const COOKIE = 'lss_loc_base';
-    private $fallback_name = 'your area';
+    private $fallback_name = 'UK';
     private $cookie_days   = 90;
     private $resolved      = null;
 
