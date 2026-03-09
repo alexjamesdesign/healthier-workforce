@@ -7,7 +7,7 @@
  *
  * Provides additional helper functionality to WordPress helper functions.
  */
-final class WPN_Helper
+class WPN_Helper
 {
 
     /**
@@ -30,10 +30,41 @@ final class WPN_Helper
         if ( is_array( $input ) )    {
             return array_map( 'WPN_Helper::utf8_encode' , $input );
         } elseif ( function_exists( 'utf8_encode' ) ) {
-            return utf8_encode( $input );
+            return static::iso8859_1_to_utf8( $input );
         } else {
             return $input;
         }
+    }
+
+    /**
+     * Replace utf8_encode with mimicked functionaliy
+     * 
+     * Deprecated in PHP8 and removed in PHP9
+     * 
+     * Replacement credit: https://php.watch/versions/8.2/utf8_encode-utf8_decode-deprecated
+     * and https://github.com/symfony/polyfill-php72/blob/v1.26.0/Php72.php#L32-39
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function iso8859_1_to_utf8( $s) {
+        
+        if(!is_string($s)){
+            return $s;
+        }
+
+        $s .= $s;
+        $len = \strlen($s);
+    
+        for ($i = $len >> 1, $j = 0; $i < $len; ++$i, ++$j) {
+            switch (true) {
+                case $s[$i] < "\x80": $s[$j] = $s[$i]; break;
+                case $s[$i] < "\xC0": $s[$j] = "\xC2"; $s[++$j] = $s[$i]; break;
+                default: $s[$j] = "\xC3"; $s[++$j] = \chr(\ord($s[$i]) - 64); break;
+            }
+        }
+    
+        return substr($s, 0, $j);
     }
 
     /**
@@ -44,12 +75,57 @@ final class WPN_Helper
         if ( is_array( $input ) )    {
             return array_map( 'WPN_Helper::utf8_decode' , $input );
         } elseif ( function_exists( 'utf8_decode' ) ) {
-            return utf8_decode( $input );
+            return self::utf8_to_iso8859_1( $input );
         } else {
             return $input;
         }
     }
     
+    /**
+     * Replace utf8_decode with mimicked functionaliy
+     * 
+     * Deprecated in PHP8 and removed in PHP9
+     * 
+     * Replacement credit: https://php.watch/versions/8.2/utf8_encode-utf8_decode-deprecated
+     * and https://github.com/symfony/polyfill-php72/blob/v1.26.0/Php72.php#L40-69
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function utf8_to_iso8859_1( $string)
+    {        
+        if(!is_string($string)){
+            return $string;
+        }
+
+        $s = (string) $string;
+        $len = \strlen($s);
+    
+        for ($i = 0, $j = 0; $i < $len; ++$i, ++$j) {
+            switch ($s[$i] & "\xF0") {
+                case "\xC0":
+                case "\xD0":
+                    $c = (\ord($s[$i] & "\x1F") << 6) | \ord($s[++$i] & "\x3F");
+                    $s[$j] = $c < 256 ? \chr($c) : '?';
+                    break;
+    
+                case "\xF0":
+                    ++$i;
+                    // no break
+    
+                case "\xE0":
+                    $s[$j] = '?';
+                    $i += 2;
+                    break;
+    
+                default:
+                    $s[$j] = $s[$i];
+            }
+        }
+    
+        return substr($s, 0, $j);
+    }
+
     /**
      * Function to clean json data before json_decode.
      * @since 3.2
@@ -197,7 +273,7 @@ final class WPN_Helper
                     case "NULL":     $_spFormat = ''; break;
                     case "boolean":  $_spFormat = ($workArray[$i] == true) ? 'true': 'false'; break;
                     // Make sure sprintf has a good datatype to work with
-                    case "integer":  $_spFormat = '%i'; break;
+                    case "integer":  $_spFormat = '%d'; break;
                     case "double":   $_spFormat = '%0.2f'; break;
                     case "string":   $_spFormat = '%s'; $workArray[$i] = str_replace("$enclosure", "$enclosure$enclosure", $workArray[$i]); break;
                     // Unknown or invalid items for a csv - note: the datatype of array is already handled above, assuming the data is nested
@@ -325,11 +401,21 @@ final class WPN_Helper
      * @since 3.4.0
      */
     public static function get_stage() {
-        $ver = Ninja_Forms::$db_version;
+        $ver = static::getNfDbVersion();
         $stack = explode( '.', $ver );
         return intval( array_pop( $stack ) );
     }
         
+    /**
+     * Provide the current Ninja Forms database version.
+     *
+     * @return string
+     */
+    protected static function getNfDbVersion(  ):string {
+        $ver = Ninja_Forms::$db_version;
+        return $ver;
+    }
+
     /**
      * Function to build our form cache from the table.
      * 
@@ -366,7 +452,7 @@ final class WPN_Helper
             }
         }
         
-        WPN_Helper::update_nf_cache( $id, $form_cache );
+        static::update_nf_cache( $id, $form_cache );
 
         return $form_cache;
     }
@@ -555,7 +641,7 @@ final class WPN_Helper
 
         if( in_array( $key, ["element_class", "container_class"] ) ) {
             $value = self::sanitize_classes($value);
-        } else if( in_array( $key, ["label"] )){
+        } else if( in_array( $key, ["label", "default"] )){
             $value = self::sanitize_text_field($value);
         }
 
@@ -587,6 +673,7 @@ final class WPN_Helper
     */
     public static function maybe_disallow_unfiltered_html_for_escaping():bool {
 
+        // Default intentinally left set to false to avoid breaking countless pre-existing forms using this feature.
         $disallow_unfiltered_html = defined( 'DISALLOW_UNFILTERED_HTML' ) ? DISALLOW_UNFILTERED_HTML : false;
 
         return $disallow_unfiltered_html;
@@ -599,6 +686,14 @@ final class WPN_Helper
      * @return String
      */
     public static function maybe_escape_csv_column( $value ):string {
+        if (!is_string($value) && !is_numeric($value)) {
+            if(is_array($value)){
+                $value = implode(' ', $value);
+            }else{
+                throw new Exception('Incoming value to maybe_escape_csv_column is neither string nor array');
+            }
+        }
+
         if( 0 < strlen($value ) ) {
             $first_char = substr( $value, 0, 1 );
             if( in_array( $first_char, array( '=', '@', '+', '-' ) ) ) {

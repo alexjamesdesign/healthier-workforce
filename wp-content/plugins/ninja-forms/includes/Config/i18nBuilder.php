@@ -75,21 +75,23 @@ return apply_filters( 'ninja_forms_i18n_builder', array(
                                                 esc_html__( 'Fr', 'ninja-forms' ),
                                                 esc_html__( 'Sa', 'ninja-forms' )
                                             ),
-	'fieldDataDeleteMsg'   => sprintf( esc_html__( '%sThis will also DELETE all submission data associated with this field.%sYou will not be able to retrieve this data later!%s' ), '<p>', '</p><p>', '</p><br />' ),
-	'delete'    => esc_html__( 'Delete' ),
-	'cancel'    => esc_html__( 'Cancel' ),
-    'minVal'    => esc_html__( 'Min Value' ),
-    'maxVal'    => esc_html__( 'Max Value' ),
+	'fieldDataDeleteMsg'   => sprintf( esc_html__( '%sThis will also DELETE all submission data associated with this field.%sYou will not be able to retrieve this data later!%s', 'ninja-forms' ), '<p>', '</p><p>', '</p><br />' ),
+	'delete'    => esc_html__( 'Delete', 'ninja-forms' ),
+	'cancel'    => esc_html__( 'Cancel', 'ninja-forms' ),
+    'minVal'    => esc_html__( 'Min Value', 'ninja-forms' ),
+    'maxVal'    => esc_html__( 'Max Value', 'ninja-forms' ),
     'valueChars' => esc_html__( 'In order to prevent errors, values may only contain'
 		. ' a specific subset of characters ( a-z, 0-9, -, _, @, space ). You'
 		. ' can use the option label in your success message(s) or email action(s) by adding'
 		. ' the :label attribute to your list field merge tags. For example:'
         . ' {field:key:label}', 'ninja-forms' ),
-        
+    'calcValueChars' => esc_html__( 'The value that will be used for this field in any Calculation on this form.', 'ninja-forms' ),
     'paymentsActionNicename' => esc_html__( 'Accept Payments & Donations', 'ninja-forms' ),
     'marketingActionNicename' => esc_html__( 'Connect to Your Email Marketing or CRM Account', 'ninja-forms' ),
     'managementActionNicename' => esc_html__( 'Manage Your Users Better', 'ninja-forms' ),
     'workflowActionNicename' => esc_html__( 'Document & Workflow Management', 'ninja-forms' ),
     'notificationsActionNicename' => esc_html__( 'Send SMS Form Notifications', 'ninja-forms' ),
     'miscActionNicename' => esc_html__( 'Integrate with 1000+ More Services', 'ninja-forms' ),
+    'htmlDetectedError' => esc_html__('HTML classes only allow - _ and alphanumeric characters.', 'ninja-forms'),
+    'titleLabelsErrorMessage'   => esc_html__('This character is forbidden. Title and labels must not contain / " < > ` characters.', 'ninja-forms')
 ));

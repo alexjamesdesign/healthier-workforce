@@ -40,7 +40,7 @@ class LDController extends Controller
         add_action('ld_location', [$this, 'showLocation'], 10);
         add_action('ld_mobile_top', [$this, 'showMobile'], 10);
     }
-    
+
     /**
      * Create the shortcodes
      *
@@ -73,7 +73,7 @@ class LDController extends Controller
                 echo '<script type="text/javascript">var adiInit="'. $insightID .'",adiRVO=!0,adiFunc=null;!function(){var t=document.createElement("script");t.type="text/javascript",t.async=!0,t.src=("https:"==document.location.protocol?"https://static-ssl":"http://static-cdn")+".responsetap.com/static/scripts/rTapTrack.min.js";var a=document.getElementsByTagName("script")[0];a.parentNode.insertBefore(t,a)}();</script>';
             }
         }
-         
+
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -87,7 +87,7 @@ class LDController extends Controller
      * @return void
      */
     public function showDefaultShortcode($atts = null)
-    {            
+    {
         $calltag = (isset($atts['calltag'])) ? filter_var($atts['calltag'], FILTER_VALIDATE_BOOLEAN) : true;
 
         return $this->showDefault($calltag, true);
@@ -100,18 +100,18 @@ class LDController extends Controller
      * @return void
      */
     public function showDefault($calltag = true, $isShortcode = false)
-    {     
+    {
         $isShortcode = (is_array($isShortcode)) ? false : boolval($isShortcode);
 
         ob_start();
 
         echo $this->numberEngine(
-            LD_DEFAULT, 
+            LD_DEFAULT,
             [
                 'calltag'   => $calltag,
             ]
         );
-         
+
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -146,15 +146,15 @@ class LDController extends Controller
         } else {
 
             echo $this->numberEngine(
-                LD_SINGLE, 
+                LD_SINGLE,
                 [
                     'location'  => $location,
                     'calltag'   => $calltag
                 ]
             );
-                
+
         }
-         
+
         $content = ob_get_contents();
         ob_end_clean();
 
@@ -170,7 +170,7 @@ class LDController extends Controller
      * @return void
      */
     public function showListShortcode($atts = null)
-    {        
+    {
         $type = (isset($atts['type'])) ? filter_var($atts['type'], FILTER_SANITIZE_STRIPPED) : 'dropdown';
         $label = (isset($atts['label'])) ? filter_var($atts['label'], FILTER_SANITIZE_STRIPPED) : 'Other Numbers';
 
@@ -183,21 +183,23 @@ class LDController extends Controller
      * Param 1: PPC or List Type
      * Param 2: List Type or List Label
      * Param 3; List Label
-     * 
+     *
      * @param [type] $param1
      * @param string $param2
      * @param string $param3
      * @return void
      */
-    public function listRouter($param1 = null, $param2 = null, $param3 = null) 
+    public function listRouter($param1 = null, $param2 = null, $param3 = null)
     {
-        ob_start();
+	    $isShortcode = strtolower($param1) != 'dropdown';
 
-        if (is_bool($param1)) {
-            echo ($param3 == null) ? $this->showList($param2) : $this->showList($param2, $param3);
-        } else {
-            echo ($param2 == null) ? $this->showList($param1) : $this->showList($param1, $param2);
-        }
+	    ob_start();
+
+	    if (is_bool($param1)) {
+		    echo ($param3 == null) ? $this->showList($param2) : $this->showList($param2, $param3, $isShortcode);
+	    } else {
+		    echo ($param2 == null) ? $this->showList($param1) : $this->showList($param1, $param2, $isShortcode);
+	    }
 
         $content = ob_get_contents();
         ob_end_clean();
@@ -246,7 +248,7 @@ class LDController extends Controller
 
     /**
      * Show the location from a query string or default location
-     * 
+     *
      * TODO: Add a check for the default location
      *
      * @return void
@@ -263,7 +265,7 @@ class LDController extends Controller
                 echo $number->location_label;
             }
         } else {
-            echo 'the UK';
+            echo 'UK';
         }
 
         $content = ob_get_contents();
@@ -338,17 +340,17 @@ class LDController extends Controller
                 return View::render('front/ld/list.twig', $data);
                 break;
 
-            case LD_LOCATION:                
+            case LD_LOCATION:
                 break;
 
             case LD_MOBILE:
                 if ($this->getCookie() === false && $numbers->count() != 1) {
                     echo "<a class='js-toggle-location-numbers'>" . $data['label'] . "</a>";
                 } else {
-                    echo $this->showDefault(false);   
-                }            
+                    echo $this->showDefault(false);
+                }
                 break;
-            
+
             default:
                 echo 'default phone number';
                 break;

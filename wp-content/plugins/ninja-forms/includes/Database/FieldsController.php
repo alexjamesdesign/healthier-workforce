@@ -1,8 +1,8 @@
 <?php
-final class NF_Database_FieldsController
+class NF_Database_FieldsController
 {
     private $db;
-    private $factory;
+    private $form_id;
     private $fields_data;
     private $new_field_ids;
     private $insert_fields;
@@ -62,7 +62,7 @@ final class NF_Database_FieldsController
         'personally_identifiable',
     );
 
-    public function __construct( $form_id, $fields_data )
+    public function __construct( int $form_id, $fields_data )
     {
         global $wpdb;
         $this->db = $wpdb;
@@ -124,7 +124,7 @@ final class NF_Database_FieldsController
     }
     private function parse_fields()
     {
-        foreach( $this->fields_data as $field_data ){
+        foreach( $this->fields_data as &$field_data ){
             $field_id = $field_data[ 'id' ];
 
             /**
@@ -139,10 +139,15 @@ final class NF_Database_FieldsController
                 if( isset( $field_data[ 'settings' ][ $setting_name ] ) ) {
                     // If the setting value is numeric, make sure it's intval'd.
                     if ( is_numeric( $field_data[ 'settings' ][ $setting_name ] ) ) {
-                        $value = intval( $field_data[ 'settings' ][ $setting_name ]  );
-                    } else {
-                        $value = $field_data[ 'settings' ][ $setting_name ];
+                        $field_data[ 'settings' ][ $setting_name ] = intval( $field_data[ 'settings' ][ $setting_name ]  );
                     }
+
+                    //Sanitize string settings if disallow_unfiltered_html is true
+                    if(is_string($field_data[ 'settings' ][ $setting_name ]) && WPN_Helper::maybe_disallow_unfiltered_html_for_sanitization()) {
+                        $field_data[ 'settings' ][ $setting_name ] = WPN_Helper::sanitize_string_setting_value($setting_name, $field_data[ 'settings' ][ $setting_name ]);
+                    }
+
+                    $value = $field_data[ 'settings' ][ $setting_name ];
                 }
 
                 if ( in_array( $column_name, $this->db_bit_columns ) ) {
@@ -382,7 +387,7 @@ final class NF_Database_FieldsController
     | UPDATE (EXISTING) FIELDS
     |--------------------------------------------------------------------------
     */
-    private function update_field( $field_id, $settings )
+    public function update_field( $field_id, $settings )
     {
         foreach ( $settings as $setting => $value ) {
             $line = "WHEN `id` = '{$field_id}' ";

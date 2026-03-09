@@ -4,7 +4,7 @@
  * Plugin Name: 	Adtrak Advanced Location Dynamics
  * Plugin URI: 		
  * Description: 	An advanced version of Location Dynamics.
- * Version: 		0.9.10
+ * Version: 		0.9.14
  * Author: 			Adtrak
  * Author URI: 		https://adtrak.co.uk
  * License: 		GPL-2.0+
@@ -27,7 +27,7 @@ $license_key = trim(get_option('adv-ld_license'));
 
 // setup the updater
 $edd_updater = new EDD_SL_Plugin_Updater(ADTK_HOME_URL, __FILE__, array(
-    'version'       => '0.9.10',        // current version number
+    'version'       => '0.9.14',        // current version number
     'license'       => $license_key,    // license key (used get_option above to retrieve from DB)
     'item_name'     => 'Advanced Location Dynamics',    // name of this plugin
     'author'        => 'Adtrak'        // author of this plugin

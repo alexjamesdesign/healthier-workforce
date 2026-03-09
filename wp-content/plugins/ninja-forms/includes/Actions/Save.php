@@ -1,55 +1,93 @@
-<?php if ( ! defined( 'ABSPATH' ) ) exit;
+<?php
+
+use NinjaForms\Includes\Abstracts\SotAction;
+use NinjaForms\Includes\Traits\SotGetActionProperties;
+use NinjaForms\Includes\Interfaces\SotAction as InterfacesSotAction;
+
+if (! defined('ABSPATH')) exit;
 
 /**
  * Class NF_Action_Save
  */
-final class NF_Actions_Save extends NF_Abstracts_Action
+class NF_Actions_Save extends SotAction implements InterfacesSotAction
 {
-    /**
-    * @var string
-    */
-    protected $_name  = 'save';
+    use SotGetActionProperties;
 
     /**
-    * @var array
-    */
+     * @var array
+     */
     protected $_tags = array();
 
     /**
-    * @var string
-    */
-    protected $_timing = 'late';
-
-    /**
-    * @var int
-    */
-    protected $_priority = '-1';
-
-    /**
-    * Constructor
-    */
+     * Constructor
+     */
     public function __construct()
     {
         parent::__construct();
 
-        $this->_nicename = esc_html__( 'Record Submission', 'ninja-forms' );
+        $this->_name  = 'save';
+        $this->_timing = 'late';
+        $this->_priority = '-1';
+        $this->_documentation_url = 'https://ninjaforms.com/docs/record-submission-action/';
+        $this->_group = 'core';
 
-        $settings = Ninja_Forms::config( 'ActionSaveSettings' );
+        add_action('init', [$this, 'initHook']);
+    }
 
-        $this->_settings = array_merge( $this->_settings, $settings );
+    public function initHook()
+    {
+        $this->_nicename = esc_html__('Record Submission', 'ninja-forms');
 
+        $settings = Ninja_Forms::config('ActionSaveSettings');
+
+        $this->_settings = array_merge($this->_settings, $settings);
     }
 
     /*
     * PUBLIC METHODS
     */
 
-    public function save( $action_settings )
+    /** @inheritDoc */
+    public function save(array $action_settings)
     {
-        if( ! isset( $_POST[ 'form' ] ) ) return;
         // Get the form data from the Post variable and send it off for processing.
-        $form = json_decode( stripslashes( $_POST[ 'form' ] ) );
-        $this->submission_expiration_processing( $action_settings, $form->id );
+        $formId = $this->extractFormIdFromPost();
+
+        if($formId===0) {
+            // If we can't extract the form ID do not proceed
+            return;
+        }
+
+        $this->submission_expiration_processing($action_settings, $formId);
+    }
+
+    /**
+     * Extract Form ID from Post
+     * 
+     * Can be either from complete POSTed form or from chunked POST data.
+     *
+     * @return integer
+     */
+    protected function extractFormIdFromPost(): int
+    {
+        $return = 0;
+
+        $action = filter_input(INPUT_POST, 'action');
+
+        if ($action == 'nf_save_form') {
+
+            $formPost = $_POST['form'];
+            $form = json_decode(stripslashes($formPost));
+
+            $return = (int)$form->id;
+        } else if ($action == 'nf_batch_process') {
+
+            $chunkedPost = $_POST['data'];
+
+            $return = (int)$chunkedPost['form_id'];
+        }
+
+        return $return;
     }
 
     /**
@@ -62,190 +100,194 @@ final class NF_Actions_Save extends NF_Abstracts_Action
      *
      * @return void
      */
-    public function submission_expiration_processing( $action_settings, $form_id )
+    public function submission_expiration_processing($action_settings, $form_id)
     {
         /*
          * Comma separated value of the form id and action setting.
          * Example: 5,90
          */
-        $expiration_value = $form_id . ',' . $action_settings[ 'subs_expire_time' ];
+        $expiration_value = $form_id . ',' . $action_settings['subs_expire_time'];
 
-        // Check for option value...
-        $option = get_option( 'nf_sub_expiration', array() );
+        // Get our expiration option.
+        $option = $this->getOption('nf_sub_expiration', array());
 
-        // If our expiration setting is turned on...
-        if( 1 == $action_settings[ 'set_subs_to_expire' ] ) {
-            // Send our data to the compare method to be added to the expiration option
-            $this->compare_expiration_option( $expiration_value, $option );
-        } else {
-            // Otherwise send the data to be removed from the expiration option.
-            $this->remove_expiration_option( $expiration_value, $option );
+        // Check if form is already listed in the option and remove it if it is
+        $expiration_option = $this->clean_form_option($expiration_value, $option);
+
+        // If our expiration setting is turned on, add current cron interval to the form entry in the option.
+        if (1 == $action_settings['set_subs_to_expire']) {
+            $expiration_option[] = $expiration_value;
         }
+
+        // Update our option.
+        $this->updateOption('nf_sub_expiration', $expiration_option);
     }
 
     /**
+     * Retrieve a stored option
+     *
+     * @codeCoverageIgnore
+     * @param string $key
+     * @param mixed $default
+     * @return mixed
+     */
+    protected function getOption(string $key, $default)
+    {
+        $return = get_option($key, $default);
+
+        return $return;
+    }
+
+    /**
+     * Update a stored value in option table
+     *
+     * @codeCoverageIgnore
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    protected function updateOption(string $key, $value): void
+    {
+        update_option($key, $value);
+    }
+    /**
      * Compare Expiration Option
      * Accepts $expiration_data and checks to see if the values already exist in the array.
-     * @since 3.3.2
+     * This allows to resave the option with new cron interval if it is set and just remove the form from the option if it is not set
+     * @since 3.6.35
      *
-     * @param array $expiration_value - key/value pair
+     * @param string $expiration_value - key/value pair
      *      $expiration_value[ 'form_id' ]      = form_id(int)
      *      $expiration_value[ 'expire_time' ]  = subs_expire_time(int)
      * @param array $expiration_option - list of key/value pairs of the expiration options.
      *
-     * @return void
+     * @return array $expiration_option without current saved form 
      */
-    public function compare_expiration_option( $expiration_value, $expiration_option )
+    public function clean_form_option($expiration_value, $expiration_option)
     {
         /*
          * Breaks a part our options.
          *      $value[ 0 ] - ( int ) Form ID
          *      $value[ 1 ] - ( int ) Expiration time in days
          */
-        $values = explode( ',', $expiration_value );
+        $values = explode(',', $expiration_value);
 
         // Find the position of the value we are tyring to update.
-        $array_position = array_search( ( int ) $values[ 0 ], $expiration_option );
-
-        /*
-         * TODO: Refactor this to only run when needed.
-         * Remove this value from the array.
-         */
-        if( isset( $array_position ) ) {
-            unset( $expiration_option[ $array_position ] );
+        //This checks if this form is already in the expiration options, removes the form from the option's array and adds it again with the new expiration time
+        foreach ($expiration_option as $index => $form_option) {
+            $form_option = explode(',', $form_option);
+            if ($form_option[0] == $values[0]) {
+                unset($expiration_option[$index]);
+            }
         }
 
-        // Check for our value in the options and then add it if it doesn't exist.
-        if( ! in_array( $expiration_value, $expiration_option ) ) {
-            $expiration_option[] = $expiration_value;
-        }
-
-        // Update our option.
-        update_option( 'nf_sub_expiration', $expiration_option  );
+        return $expiration_option;
     }
 
-    /**
-     * Remove Expiration Option
-     * If the expiration action setting is turned off this helper method
-     * removes the form id and expiration time from the option.
-     *
-     * @param array $expiration_value - key/value pair
-     *      $expiration_value[ 'form_id' ]      = form_id(int)
-     *      $expiration_value[ 'expire_time' ]  = subs_expire_time(int)
-     * @param array $expiration_option - list of key/value pairs of the expiration options.
-     *
-     * @return void
-     */
-    public function remove_expiration_option( $expiration_value, $expiration_option )
-    {
-        $values = explode( ',', $expiration_value );
-
-        // Find the position of the value we are tyring to update.
-        $array_position = array_search( ( int ) $values[ 0 ], $expiration_option );
-
-        /*
-         * TODO: Refactor this to only run when needed.
-         * Remove this value from the array.
-         */
-        if( isset( $array_position ) ) {
-            unset( $expiration_option[ $array_position ] );
-        }
-
-        // Update our option.
-        update_option( 'nf_sub_expiration', $expiration_option  );
-    }
-
-    public function process( $action_settings, $form_id, $data )
+    /** @inheritDoc */
+    public function process(array $action_settings, int $form_id, array $data): array
     {
 
-        if( isset( $data['settings']['is_preview'] ) && $data['settings']['is_preview'] ){
+        if (isset($data['settings']['is_preview']) && $data['settings']['is_preview']) {
             return $data;
         }
 
-        if( ! apply_filters ( 'ninja_forms_save_submission', true, $form_id ) ) return $data;
+        if (! apply_filters('ninja_forms_save_submission', true, $form_id)) return $data;
 
-        $sub = Ninja_Forms()->form( $form_id )->sub()->get();
+        $sub = Ninja_Forms()->form($form_id)->sub()->get();
 
-        $hidden_field_types = apply_filters( 'nf_sub_hidden_field_types', array() );
+        $hidden_field_types = apply_filters('nf_sub_hidden_field_types', array());
 
         // For each field on the form...
-        foreach( $data['fields'] as $field ){
+        foreach ($data['fields'] as $field) {
 
             // If this is a "hidden" field type.
-            if( in_array( $field[ 'type' ], array_values( $hidden_field_types ) ) ) {
+            if (in_array($field['type'], array_values($hidden_field_types))) {
                 // Do not save it.
-                $data[ 'actions' ][ 'save' ][ 'hidden' ][] = $field[ 'type' ];
+                $data['actions']['save']['hidden'][] = $field['type'];
                 continue;
             }
 
-            $field[ 'value' ] = apply_filters( 'nf_save_sub_user_value', $field[ 'value' ], $field[ 'id' ] );
+            $field['value'] = apply_filters('nf_save_sub_user_value', $field['value'], $field['id']);
+            
+            // Sanitize signature field values before saving
+            if ('signature' === $field['type']) {
+                $field_class = Ninja_Forms()->fields[$field['type']];
+                if (is_object($field_class) && method_exists($field_class, 'sanitize_field_value')) {
+                    $field['value'] = $field_class->sanitize_field_value($field['value']);
+                }
+            }
 
-            $save_all_none = $action_settings[ 'fields-save-toggle' ];
+            $save_all_none = $action_settings['fields-save-toggle'];
             $save_field = true;
 
             // If we were told to save all fields...
-            if( 'save_all' == $save_all_none ) {
-            	$save_field = true;
+            if ('save_all' == $save_all_none) {
+                $save_field = true;
                 // For each exception to that rule...
-            	foreach( $action_settings[ 'exception_fields' ] as $exception_field ) {
+                foreach ($action_settings['exception_fields'] as $exception_field) {
                     // Remove it from the list.
-            		if( $field[ 'key' ] == $exception_field[ 'field'] ) {
-            			$save_field = false;
-            			break;
-		            }
-	            }
+                    if ($field['key'] == $exception_field['field']) {
+                        $save_field = false;
+                        break;
+                    }
+                }
             } // Otherwise... (We were told to save no fields.)
-            else if( 'save_none' == $save_all_none ) {
-            	$save_field = false;
+            else if ('save_none' == $save_all_none) {
+                $save_field = false;
                 // For each exception to that rule...
-	            foreach( $action_settings[ 'exception_fields' ] as
-		            $exception_field ) {
+                foreach (
+                    $action_settings['exception_fields'] as
+                    $exception_field
+                ) {
                     // Add it to the list.
-		            if( $field[ 'key' ] == $exception_field[ 'field'] ) {
-			            $save_field = true;
-			            break;
-		            }
-	            }
+                    if ($field['key'] == $exception_field['field']) {
+                        $save_field = true;
+                        break;
+                    }
+                }
             }
 
             // If we're supposed to save this field...
-            if( $save_field ) {
+            if ($save_field) {
                 // Do so.
-	            $sub->update_field_value( $field[ 'id' ], $field[ 'value' ] );
+                $sub->update_field_value($field['id'], $field['value']);
             } // Otherwise...
             else {
                 // If this field is not a list...
                 // AND If this field is not a checkbox...
                 // AND If this field is not a product...
                 // AND If this field is not a termslist...
-                if ( false == strpos( $field[ 'type' ], 'list' ) &&
-                    false == strpos( $field[ 'type' ], 'checkbox' ) &&
-                    'products' !== $field[ 'type' ] &&
-                    'terms' !== $field[ 'type' ] ) {
+                if (
+                    false == strpos($field['type'], 'list') &&
+                    false == strpos($field['type'], 'checkbox') &&
+                    'products' !== $field['type'] &&
+                    'terms' !== $field['type']
+                ) {
                     // Anonymize it.
-                    $sub->update_field_value( $field[ 'id' ], '(redacted)' );
+                    $sub->update_field_value($field['id'], '(redacted)');
                 }
             }
         }
 
         // If we have extra data...
-        if( isset( $data[ 'extra' ] ) ) {
-            
-            $data['extra']=$this->validateExtraData($data['extra'], $form_id);
+        if (isset($data['extra'])) {
+
+            $data['extra'] = $this->validateExtraData($data['extra'], $form_id);
 
             // Save that.
-            $sub->update_extra_values( $data[ 'extra' ] );
+            $sub->update_extra_values($data['extra']);
         }
 
-        do_action( 'nf_before_save_sub', $sub->get_id() );
+        do_action('nf_before_save_sub', $sub->get_id());
 
         $sub->save();
 
-        do_action( 'nf_save_sub', $sub->get_id() );
-        do_action( 'nf_create_sub', $sub->get_id() );
-        do_action( 'ninja_forms_save_sub', $sub->get_id() );
+        do_action('nf_save_sub', $sub->get_id());
+        do_action('nf_create_sub', $sub->get_id());
+        do_action('ninja_forms_save_sub', $sub->get_id());
 
-        $data[ 'actions' ][ 'save' ][ 'sub_id' ] = $sub->get_id();
+        $data['actions']['save']['sub_id'] = $sub->get_id();
 
         return $data;
     }
@@ -263,23 +305,22 @@ final class NF_Actions_Save extends NF_Abstracts_Action
      * @param int $form_id
      * @return array
      */
-    protected function validateExtraData( $dataExtra, $form_id): array
+    protected function validateExtraData($dataExtra, $form_id): array
     {
         return $dataExtra;
         $return = [];
-        
-        if(!is_array($dataExtra)){
+
+        if (!is_array($dataExtra)) {
             return $return;
         }
 
-        $maxCount = apply_filters('ninja_forms_max_extra_data_count',200,$form_id);
+        $maxCount = apply_filters('ninja_forms_max_extra_data_count', 200, $form_id);
 
-        if($maxCount<count($dataExtra)){
+        if ($maxCount < count($dataExtra)) {
 
-            $return['extraDataOverflowOnSave']=json_encode($dataExtra);
+            $return['extraDataOverflowOnSave'] = json_encode($dataExtra);
         }
 
         return $return;
-
     }
 }

@@ -4,7 +4,7 @@ Contributors: wpexpertsio
 Tags: smtp, gmail smtp, email,  email logs, office 365
 Requires at least: 5.6.0
 Tested up to: 6.9
-Stable tag: 3.7.0
+Stable tag: 3.8.0
 Requires PHP: 7.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -41,7 +41,7 @@ On top of that, most email clients, such as Outlook (Office 365 / Microsoft365),
 That's why you need to install the Post SMTP plugin on your WordPress site to configure the SMTP mailer of your choice with one-click SMTP setup for Gmail, Microsoft 365, and more.
 
 == How Does Post SMTP Work? ==
-Post SMTP allows you to easily replace the default PHP mail function (wp_mail) of your WordPress site with the SMTP mailer of your choice, like [Microsoft 365](https://postmansmtp.com/extensions/office-365-extension-for-post-smtp/?utm_source=wp_org&utm_medium=read_me)(Office 365), Brevo, Zoho, [SendGrid](https://postmansmtp.com/configure-wordpress-with-sendgrid/), [Mailgun SMTP](https://postmansmtp.com/setup-mailgun-for-wordpress/), Gmail [(Gmail SMTP Server)](https://postmansmtp.com/how-to-configure-post-smtp-with-gmailgsuite-using-oauth/), Post Mark, Amazon SES etc., which in turn improves WordPress email deliverability.
+Post SMTP allows you to easily replace the default PHP mail function (wp_mail) of your WordPress site with the SMTP mailer of your choice, like [Microsoft 365 (Office 365)](https://postmansmtp.com/extensions/office-365-extension-for-post-smtp/?utm_source=wp_org&utm_medium=read_me), Brevo, Zoho, [SendGrid](https://postmansmtp.com/configure-wordpress-with-sendgrid/), [Mailgun SMTP](https://postmansmtp.com/setup-mailgun-for-wordpress/), Gmail [(Gmail SMTP Server)](https://postmansmtp.com/how-to-configure-post-smtp-with-gmailgsuite-using-oauth/), Post Mark, Amazon SES etc., which in turn improves WordPress email deliverability.
 
 **This WordPress mail SMTP plugin provides detailed email logs, email open tracking, email alerts, and a mobile app to monitor WordPress email deliverability.**
 
@@ -94,11 +94,13 @@ Preview Any Email: You can preview your emails and see how it looks.
 == SMTP Mailer Options for Post SMTP ==
 With Post SMTP, you get many SMTP mailer options, such as:
 
+* [Sweego SMTP](https://postmansmtp.com/docs/mailers/how-to-setup-sweego-with-post-smtp/?utm_source=wp_org&utm_medium=read_me) - **Newly Added**
+
 * [Mailtrap SMTP](https://postmansmtp.com/docs/mailers/how-to-setup-mailtrap-with-post-smtp/?utm_source=wp_org&utm_medium=read_me) - **Newly Added**
 
-* [Emailit SMTP](https://postmansmtp.com/docs/mailers/how-to-setup-emailit-with-post-smtp/?utm_source=wp_org&utm_medium=read_me) - **Newly Added**
+* [Emailit SMTP](https://postmansmtp.com/docs/mailers/how-to-setup-emailit-with-post-smtp/?utm_source=wp_org&utm_medium=read_me) 
 
-* [Resend SMTP](https://postmansmtp.com/docs/mailers/how-to-setup-resend-with-post-smtp/?utm_source=wp_org&utm_medium=read_me) - **Newly Added**
+* [Resend SMTP](https://postmansmtp.com/docs/mailers/how-to-setup-resend-with-post-smtp/?utm_source=wp_org&utm_medium=read_me) 
 
 * [MailerSend SMTP](https://postmansmtp.com/documentation/sockets-addons/how-to-setup-mailersend-with-post-smtp/?utm_source=wp_org&utm_medium=read_me)
 
@@ -150,6 +152,8 @@ Connect your Zoho mail personal or business account with WordPress via Post SMTP
 
 == ⚡ Added Benefits of Getting Post SMTP Pro ==
 The Post SMTP Pro gives you an edge that makes your WordPress email management and performance reporting a breeze! With Post SMTP Pro, you get the following additional perks:
+
+✅ **Microsoft 365 One-Click Setup:** Upgrade to unlock a smooth and effortless Microsoft email setup. Just enable Microsoft 365 One-Click Setup. With a single toggle, Post SMTP automatically configures everything needed for secure and reliable Outlook / Office 365 email delivery no manual settings required, no technical steps to worry about.
 
 ✅ **Google (Gmail) SMTP One-Click:** Upgrade now for a worry-free Gmail SMTP integration. Activate Gmail One-Click Setup and let Post SMTP Setup Wizard handle all the API-related technicalities.
 
@@ -217,6 +221,31 @@ In short, our Expert Assistance is your one-stop destination for all your WordPr
 * Email Templates
 
 .. and every other plugin that uses the WordPress API wp_mail to send mail!
+
+== Try Our Other Awesome WordPress Plugins ==
+
+* **[Gutena Forms](https://wordpress.org/plugins/gutena-forms/)** – Create modern, responsive contact forms directly in the Gutenberg block editor. Add advanced fields, protect against spam with reCAPTCHA and Cloudflare Turnstile, manage form entries, and more.
+
+* **[Password Protected](https://wordpress.org/plugins/password-protected/)** – Secure your WordPress site, posts, pages, and categories with simple password protection.
+
+* **[WP EasyPay](https://wordpress.org/plugins/wp-easypay/)** – Accept Square payments and donations easily on your WordPress site.
+
+* **[WC Shop Sync](https://wordpress.org/plugins/wc-shop-sync/)** – Add Square payments and sync WooCommerce products, customers, and orders with your Square POS.
+
+* **[Advanced File Manager](https://wordpress.org/plugins/file-manager-advanced/)** – Easily manage and organize your WordPress files directly from the dashboard.
+
+* **[CF7 Apps](https://wordpress.org/plugins/cf7-apps/)** – Add honeypot, hCaptcha, and database entries to Contact Form 7. New extensions are continuously added.
+
+* **[myCred](https://wordpress.org/plugins/mycred/)** – Add gamification, rewards, ranks, badges, and points management systems to your WordPress website.
+
+* **[New User Approve](https://wordpress.org/plugins/new-user-approve/)** – Control user registrations by manually approving or denying new signups.
+
+* **[Bookify](https://wordpress.org/plugins/bookify/)** – Your go-to online bookings and appointment scheduling plugin for WordPress.
+
+* **[All In One Login](https://wordpress.org/plugins/all-in-one-login/)** – Secure your WordPress login page, change the wp-login.php URL, and add social logins like Google, Facebook, Microsoft, LINE, and more.
+
+* **[WPExperts WooCommerce Store](https://store.wpexperts.io/woocommerce/)** – Explore premium WooCommerce plugins and professional solutions by WPExperts.
+
 
 == Requirements == 
 * WordPress v6.2 and above is recommended
@@ -297,6 +326,14 @@ You can report security bugs through the Patchstack Vulnerability Disclosure Pro
 Important: If you are using version 2.8.7 or lower of our plugin, please update to the latest version as soon as possible. This update contains an urgent security fix that prevents potential vulnerabilities and attacks. We apologize for any inconvenience this may cause you and we appreciate your cooperation. Thank you for using our plugin.
 
 == Changelog ==
+
+= 3.8.0 – Jan 20, 2026 =
+* NEW – Added [Sweego](https://www.sweego.io/) as an email service provider.
+* NEW – Introduced the "Send Test Notification" feature for Post SMTP failure alerts.
+* TWEAK – Added a hide option for wp_mail conflict notice.
+* FIX – PHPMailer with "Log Only" mode was sending emails.
+* FIX – Corrected improper call to the function _load_textdomain_just_in_time.
+* FIX – Fixed redirection issue that incorrectly navigated users to the Post SMTP settings page.
 
 = 3.7.0 - Dec 24, 2025 =
 * NEW – Added Mailtrap.io as an email service provider.

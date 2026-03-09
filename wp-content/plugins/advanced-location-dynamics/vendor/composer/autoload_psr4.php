@@ -29,6 +29,7 @@ return array(
     'Composer\\CaBundle\\' => array($vendorDir . '/composer/ca-bundle/src'),
     'Bugsnag\\' => array($vendorDir . '/bugsnag/bugsnag/src'),
     'Billy\\Framework\\' => array($vendorDir . '/getbilly/framework/Framework'),
+    'Bamarni\\Composer\\Bin\\' => array($vendorDir . '/bamarni/composer-bin-plugin/src'),
     'Adtrak\\AdvancedLocationDynamics\\' => array($baseDir . '/app'),
     '' => array($vendorDir . '/nesbot/carbon/src'),
 );

@@ -51,14 +51,14 @@ return apply_filters( 'ninja_forms_plugin_settings_advanced', array(
     'builder_dev_mode' => array(
         'id'    => 'builder_dev_mode',
         'type'  => 'checkbox',
-        'label' => esc_html__( 'Form Builder "Dev Mode"', 'ninja-forms' ),
+        'label' => esc_html__( 'Form Builder "Dev Mode"', 'ninja-forms' ) . ' <a href="https://ninjaforms.com/docs/developer-mode/?utm_source=Ninja+Forms+Plugin&utm_medium=Settings&utm_campaign=Documentation&utm_content=Dev+Mode+Documentation" target="_blank"><img src="' . Ninja_Forms::$url . 'assets/img/help_icon.png" alt="Documentation Link" width="25" height="25"></a>',
     ),
 
     'load_legacy_submissions' => array(
         'id'    => 'load_legacy_submissions',
         'type'  => 'checkbox',
         'label' => esc_html__( 'Show Legacy Submissions Page', 'ninja-forms' ),
-        'desc'  => sprintf( esc_html__( 'This setting is used to see the "old" submissions page. If you are experiencing issues with your submissions page, please notify us at %s.%sPlease refresh your settings page after saving this setting before navigating to the submissions page.' ), '<a href="https://ninjaforms.com/contact" target="_blank">https://ninjaforms.com/contact</a>', '<br /><br />' ),
+        'desc'  => sprintf( esc_html__( 'This setting is used to see the "old" submissions page. If you are experiencing issues with your submissions page, please notify us at %s.%sPlease refresh your settings page after saving this setting before navigating to the submissions page.', 'ninja-forms' ), '<a href="https://ninjaforms.com/contact" target="_blank">https://ninjaforms.com/contact</a>', '<br /><br />' ),
     ),
 
     /*

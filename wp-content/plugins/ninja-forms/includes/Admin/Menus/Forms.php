@@ -190,6 +190,19 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
 
             /*
+             * ONBOARDING
+             */
+
+            $onboarding_step = apply_filters( 'nf_onboarding_step_now', 0 );
+            if(1 === $onboarding_step || 2 === $onboarding_step) {
+                wp_enqueue_style( 'nf-onboarding', Ninja_Forms::$url . 'assets/css/nfOnboarding.css' );
+                wp_register_script( 'nf-onboarding', Ninja_Forms::$url . 'assets/js/lib/nfOnboarding.js', array('jquery', 'nf-jBox'), FALSE, TRUE);
+                wp_localize_script( 'nf-onboarding', 'nfOBi18n', Ninja_Forms::config('i18nOnboarding'));
+                wp_enqueue_script( 'nf-onboarding');
+                Ninja_Forms::template( 'admin-onboarding.html.php');
+            }
+            
+            /*
              * DASHBOARD
              */
             $dash_items = Ninja_Forms()->config('DashboardMenuItems');
@@ -211,15 +224,19 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
 
             $promotions = get_option( 'nf_active_promotions' );
             $promotions = json_decode( $promotions, true );
+            $surveyPromo = new NF_Admin_SurveyPromo();
+            if($surveyPromo->shouldShow() && $surveyPromo->isDashboard()) $promotions = array();
 
             if( ! empty( $promotions ) ) {
                 wp_localize_script( 'nf-dashboard', 'nfPromotions', array_values( $promotions[ 'dashboard' ] ) );
             }
 
             wp_localize_script( 'nf-dashboard', 'nfAdmin', array(
+                'ajax_url'          => admin_url( 'admin-ajax.php' ),
                 'ajaxNonce'         => wp_create_nonce( 'ninja_forms_dashboard_nonce' ),
                 'batchNonce'        => wp_create_nonce( 'ninja_forms_batch_nonce' ),
                 'updateNonce'       => wp_create_nonce( 'ninja_forms_required_update_nonce' ),
+                'nf_optin_nonce'    => wp_create_nonce( 'nf_optin_nonce' ),
                 'formTelemetry'     => ( get_option( 'nf_form_tel_sent' ) ) ? 0 : 1,
                 'showOptin'         => ( get_option( 'ninja_forms_do_not_allow_tracking' ) ||
                                          get_option( 'ninja_forms_allow_tracking' ) ) ? 0 : 1,
@@ -228,6 +245,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
                 'builderURL'        => admin_url( 'admin.php?page=ninja-forms&form_id=' ),
                 'sendwpInstallNonce'       => wp_create_nonce( 'ninja_forms_sendwp_remote_install' ),
                 'disconnectNonce'         => wp_create_nonce( 'nf-oauth-disconnect' ),
+                'onboardingStep' => $onboarding_step,
             ) );
 
             $nfDashInlineVars = [
@@ -309,9 +327,11 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
          */
         wp_enqueue_style( 'wp-color-picker' );
         wp_enqueue_style( 'jBox', Ninja_Forms::$url . 'assets/css/jBox.css' );
-        wp_enqueue_style( 'summernote', Ninja_Forms::$url . 'assets/css/summernote.css' );
         wp_enqueue_style( 'codemirror', Ninja_Forms::$url . 'assets/css/codemirror.css' );
         wp_enqueue_style( 'codemirror-monokai', Ninja_Forms::$url . 'assets/css/monokai-theme.css' );
+        wp_enqueue_style( 'quill-core', Ninja_Forms::$url . 'assets/css/quill.core.css' );
+        wp_enqueue_style( 'quill-snow', Ninja_Forms::$url . 'assets/css/quill.snow.css' );
+        wp_enqueue_style( 'quill-custom', Ninja_Forms::$url . 'assets/css/quill-custom.css' );
 
         /**
          * JS Libraries
@@ -334,7 +354,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
         wp_enqueue_script( 'codemirror', Ninja_Forms::$url . 'assets/js/lib/codemirror.min.js', array( 'jquery', 'nf-builder-deps' ) );
         wp_enqueue_script( 'codemirror-xml', Ninja_Forms::$url . 'assets/js/lib/codemirror-xml.min.js', array( 'jquery', 'codemirror' ) );
         wp_enqueue_script( 'codemirror-formatting', Ninja_Forms::$url . 'assets/js/lib/codemirror-formatting.min.js', array( 'jquery', 'codemirror' ) );
-        wp_enqueue_script( 'summernote', Ninja_Forms::$url . 'assets/js/lib/summernote.min.js', array( 'jquery', 'nf-builder-deps' ) );
+        wp_enqueue_script( 'quill', Ninja_Forms::$url . 'assets/js/lib/quill.min.js', array( 'jquery', 'nf-builder-deps' ) );
 
 
         wp_enqueue_script( 'nf-builder', Ninja_Forms::$url . 'assets/js/min/builder.js', array( 'jquery', 'jquery-ui-core', 'jquery-ui-draggable', 'jquery-ui-droppable', 'jquery-ui-sortable', 'jquery-effects-bounce', 'wp-color-picker' ), $this->ver );
@@ -375,6 +395,7 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
             'home_url_host'     => $home_url[ 'host' ],
             'publicLinkStructure' => $public_link_structure,
             'devMode'           => (bool) $dev_mode,
+            'onboardingStep' => apply_filters( 'nf_onboarding_step_now', 0 ),
             'filter_esc_status'  =>    json_encode( WPN_Helper::maybe_disallow_unfiltered_html_for_escaping() ),
         ));
 
@@ -390,6 +411,18 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
             "mergeTags"             =>  $this->mergeTags
         ];
         wp_localize_script( 'nf-builder', 'nfDashInlineVars', $nfDashInlineVars );
+
+        /*
+        * ONBOARDING
+        */
+
+        if(false !== strpos( apply_filters('nf_onboarding_page_now', ''), 'page=ninja-forms&form_id=' ) ) {
+            wp_enqueue_style( 'nf-onboarding', Ninja_Forms::$url . 'assets/css/nfOnboarding.css' );
+            wp_register_script( 'nf-onboarding', Ninja_Forms::$url . 'assets/js/lib/nfOnboarding.js', array('jquery'), FALSE, TRUE);
+            wp_localize_script( 'nf-onboarding', 'nfOBi18n', Ninja_Forms::config('i18nOnboarding'));
+            wp_enqueue_script( 'nf-onboarding');
+            Ninja_Forms::template( 'admin-onboarding.html.php');
+        }
 
         do_action( 'nf_admin_enqueue_scripts' );
     }
@@ -642,7 +675,9 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
             $field_type_settings[ $id ][ 'section' ] = 'saved';
 
             $defaults = $field_type_settings[ $id ][ 'settingDefaults' ];
-            $defaults = array_merge( $defaults, $settings );
+            if(is_array($defaults)){
+                $defaults = array_merge( $defaults, $settings );
+            }
             $defaults[ 'saved' ] = TRUE;
 
             $field_type_settings[ $id ][ 'settingDefaults' ] = $defaults;
@@ -674,6 +709,8 @@ final class NF_Admin_Menus_Forms extends NF_Abstracts_Menu
             $action_type_settings[ $name ] = array(
                 'id' => $name,
                 'section' => $action->get_section(),
+                'docUrl' => $action->get_doc_url(),
+                'group' => $action->get_group(),
                 'nicename' => $action->get_nicename(),
                 'image' => $action->get_image(),
                 'settingGroups' => $settings_groups,

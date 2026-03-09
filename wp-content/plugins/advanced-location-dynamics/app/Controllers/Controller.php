@@ -16,10 +16,10 @@ class Controller
     {
         if (!is_admin()) {
             if (boolval(get_option('ald_advanced')) === true) {
-                if (isset($_GET['physical_loc'])) {
+                if (!empty($_GET['physical_loc'])) {
                     return filter_var($_GET['physical_loc'], FILTER_SANITIZE_STRING);
                 }
-                if (isset($_GET['interest_loc'])) {
+                if (!empty($_GET['interest_loc'])) {
                     return filter_var($_GET['interest_loc'], FILTER_SANITIZE_STRING);
                 }
             }
@@ -39,7 +39,7 @@ class Controller
     public function checkForAdvancedCookie()
     {
         if (!is_admin()) {
-            if ((isset($_COOKIE['area']) && is_numeric($_COOKIE['area'])) || isset($_GET['physical_loc']) || isset($_GET['interest_loc'])) {
+            if ((isset($_COOKIE['area']) && is_numeric($_COOKIE['area'])) || (isset($_GET['physical_loc']) && $_GET['physical_loc'] != '') || (isset($_GET['interest_loc']) && $_GET['interest_loc'] != '')) {
                 return true;
             } else {
                 return false;

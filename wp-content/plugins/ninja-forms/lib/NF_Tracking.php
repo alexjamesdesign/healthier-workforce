@@ -27,8 +27,8 @@ final class NF_Tracking
     public function __construct()
     {
 
-        // Temporary: Report previously opted-in users that were not already reported. @todo Remove after a couple of versions.
-//        add_action( 'admin_init', array( $this, 'report_optin' ) );
+        // Recover email addresses that were not properly fed to Active Campaign.
+        add_action( 'admin_init', array( $this, 'recover_optin_email' ) );
         
         // Ajax call handled in 'maybe_opt_in' in this file
         add_action( 'wp_ajax_nf_optin', array( $this, 'maybe_opt_in' ) );
@@ -44,6 +44,11 @@ final class NF_Tracking
      */
     public function maybe_opt_in()
     {
+        // Verify nonce for CSRF protection
+        if ( ! isset( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'nf_optin_nonce' ) ) {
+            wp_die( 'Security check failed' );
+        }
+
         if( $this->can_opt_in() ) {
 
             $opt_in_action = htmlspecialchars( $_POST[ self::FLAG ] );
@@ -75,10 +80,34 @@ final class NF_Tracking
         ) );
 
         Ninja_Forms()->dispatcher()->send( 'optin', $data );
-        Ninja_Forms()->dispatcher()->update_environment_vars();
+        Ninja_Forms()->dispatcher()->sendTelemetryData();
 
         // Debounce opt-in dispatch.
         update_option( 'ninja_forms_optin_reported', 1 );
+        // Debounce email recovery dispatch.
+        update_option( 'ninja_forms_optin_email_recovered', 1 );
+    }
+
+    function recover_optin_email()
+    {
+        // Only send if we haven't already done so.
+        if( get_option( 'ninja_forms_optin_email_recovered', 0 ) ) return;
+
+        // Only send if initial opt-in has been reported.
+        if( ! get_option( 'ninja_forms_optin_reported', 0 ) ) return;
+
+        // Only send if an email was provided.
+        if( $email = get_option('ninja_forms_optin_email', false) ) {
+            $data = array(
+                'send_email' => 1,
+                'user_email' => $email
+            );
+
+            Ninja_Forms()->dispatcher()->send( 'optin', $data );
+        }
+
+        // Debounce email recovery dispatch.
+        update_option( 'ninja_forms_optin_email_recovered', 1 );
     }
 
     /**
@@ -121,7 +150,7 @@ final class NF_Tracking
         /**
          * Send updated environment variables.
          */
-        Ninja_Forms()->dispatcher()->update_environment_vars();
+        Ninja_Forms()->dispatcher()->sendTelemetryData();
 
         /**
          * Send our optin event

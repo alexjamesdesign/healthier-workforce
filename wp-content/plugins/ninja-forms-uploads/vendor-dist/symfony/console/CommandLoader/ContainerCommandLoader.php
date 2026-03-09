@@ -1,0 +1,49 @@
+<?php
+
+namespace NF_FU_VENDOR\Symfony\Component\Console\CommandLoader;
+
+use NF_FU_VENDOR\Psr\Container\ContainerInterface;
+use NF_FU_VENDOR\Symfony\Component\Console\Exception\CommandNotFoundException;
+/**
+ * Loads commands from a PSR-11 container.
+ *
+ * @author Robin Chalas <robin.chalas@gmail.com>
+ */
+class ContainerCommandLoader implements \NF_FU_VENDOR\Symfony\Component\Console\CommandLoader\CommandLoaderInterface
+{
+    private $container;
+    private $commandMap;
+    /**
+     * @param ContainerInterface $container  A container from which to load command services
+     * @param array              $commandMap An array with command names as keys and service ids as values
+     */
+    public function __construct(\NF_FU_VENDOR\Psr\Container\ContainerInterface $container, array $commandMap)
+    {
+        $this->container = $container;
+        $this->commandMap = $commandMap;
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function get($name)
+    {
+        if (!$this->has($name)) {
+            throw new \NF_FU_VENDOR\Symfony\Component\Console\Exception\CommandNotFoundException(\sprintf('Command "%s" does not exist.', $name));
+        }
+        return $this->container->get($this->commandMap[$name]);
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function has($name)
+    {
+        return isset($this->commandMap[$name]) && $this->container->has($this->commandMap[$name]);
+    }
+    /**
+     * {@inheritdoc}
+     */
+    public function getNames()
+    {
+        return \array_keys($this->commandMap);
+    }
+}

@@ -7,6 +7,21 @@ jQuery( document ).ready(function() {
         jQuery( this ).find( '.ps-wizard-socket-tick-container' ).css( { 'opacity': 1 } );
         
     } )
+	
+	   var enabled_gmail = jQuery('.ps-enable-gmail-one-click').is(':checked');
+        if (enabled_gmail) {
+           jQuery('.gmail_api-outer').addClass('gmail-enabled');
+       }
+
+   		var enabled_office = jQuery('.ps-enable-office365-one-click').is(':checked');
+        if (enabled_office) {
+           jQuery('.office365_api-outer').addClass('office-enabled');
+       }
+       
+       jQuery(document).on('click', 'table tr:last-child .ps-wizard-edit', function (e) {
+            e.preventDefault();
+            jQuery('.ps-wizard-outer').addClass('ps-wizard-send-email');
+        });
 
     /**
      * Refresh the wizard to show the current step
@@ -156,7 +171,7 @@ jQuery( document ).ready(function() {
                         jQuery( '.ps-wizard-error' ).html( '' );
                         nextStep( stepID );
                         var _element = jQuery( '.ps-wizard-outer' ).removeClass();
-                        jQuery( _element ).addClass( 'ps-wizard-outer' );
+                        jQuery( _element ).addClass( 'ps-wizard-outer ps-wizard-send-email' );
 
                     },
                     error: function( response ) {
@@ -281,6 +296,15 @@ jQuery( document ).ready(function() {
             nextStep( stepID );
 
         }
+        var enabled_gmail = jQuery('.ps-enable-gmail-one-click').is(':checked');
+        if (enabled_gmail) {
+           jQuery('.gmail_api-outer').addClass('gmail-enabled');
+       }
+
+   		var enabled_office = jQuery('.ps-enable-office365-one-click').is(':checked');
+        if (enabled_office) {
+           jQuery('.office365_api-outer').addClass('office-enabled');
+       }
 
     } );
 
@@ -314,6 +338,16 @@ jQuery( document ).ready(function() {
         }
 
         switchStep( stepID );
+
+        var enabled_gmail = jQuery('.ps-enable-gmail-one-click').is(':checked');
+        if (enabled_gmail) {
+           jQuery('.gmail_api-outer').addClass('gmail-enabled');
+        }
+
+   		var enabled_office = jQuery('.ps-enable-office365-one-click').is(':checked');
+        if (enabled_office) {
+           jQuery('.office365_api-outer').addClass('office-enabled');
+         }
 
     } );
 
@@ -693,7 +727,7 @@ jQuery( document ).ready(function() {
             placeholder = 'Zoho Mailer?';
         }
         if(placeholder == "Microsoft 365") {
-            placeholder = 'Microsoft 365 Mailer?';
+            placeholder = 'Microsoft 365 One-Click / Manual Setup?';
         }
 
         jQuery( '.ps-pro-for-img' ).attr( 'src', imgSrc );
@@ -703,16 +737,13 @@ jQuery( document ).ready(function() {
 
     } );
 
+
     jQuery(document).on('click', '.ps-enable-gmail-one-click', function (e) {
     	
         if (jQuery(this).hasClass('disabled')) {
             e.preventDefault();
             var data = jQuery('#ps-one-click-data').val();
             var parsedData = JSON.parse(data);
-            console.log(parsedData);
-
-            
-
             jQuery('.ps-pro-for-img').attr('src', parsedData.url);
             jQuery('.ps-pro-product-url').attr('href', parsedData.product_url);
             jQuery('.ps-pro-for').html(parsedData.transport_name);
@@ -726,11 +757,13 @@ jQuery( document ).ready(function() {
         var enabled = jQuery(this).is(':checked');
         if (enabled) {
             jQuery('.ps-disable-gmail-setup').show();
+            jQuery('.gmail_api-outer').addClass('gmail-enabled');
             jQuery('.ps-disable-one-click-setup').hide();
             jQuery('.ps-gmail-api-client-id').removeAttr('required');
             jQuery('.ps-gmail-api-client-secret').removeAttr('required')
 			jQuery('#ps-gmail-auth-buttons').show();
         } else {
+            jQuery('.gmail_api-outer').removeClass('gmail-enabled');
             jQuery('.ps-disable-one-click-setup').show();
             jQuery('.ps-disable-gmail-setup').hide();
             jQuery('.ps-gmail-api-client-id').attr('required', 'required');
@@ -786,15 +819,145 @@ jQuery( document ).ready(function() {
     });
 
     const gmail_icon = PostSMTPWizard.gmail_icon;
+    const office365_icon = PostSMTPWizard.office365_icon;
+
     const css = `
       .ps-gmail-btn::before {
-          background-image: url( ${gmail_icon} );
+          background-image: url(${gmail_icon});
       }
-      `;
+      .ps-office365-btn::before {
+          background-image: url(${office365_icon});
+      }
+    `;
+
     const style = jQuery('<style>').text(css);
     jQuery('head').append(style);
+});
 
-} );
+
+jQuery(document).on('click', '.ps-enable-office365-one-click', function (e) {
+    
+    // Check if this is a disabled checkbox due to business plan requirement
+    if (jQuery(this).is(':disabled') || jQuery(this).closest('.ps-office365-upgrade-required').length > 0) {
+        e.preventDefault();
+        return false;
+    }
+    	   
+    var enabled = jQuery(this).is(':checked');
+    if (enabled) {
+        jQuery('.ps-disable-one-click-setup').hide();
+		 jQuery('.office365_api-outer').addClass('office-enabled');
+        jQuery('.ps-disable-office365-setup').show();
+		jQuery('.ps-office365-client-id').removeAttr('required');
+        jQuery('.ps-office365-client-secret').removeAttr('required')
+    } else {
+		jQuery('.office365_api-outer').removeClass('office-enabled');
+        jQuery('.ps-disable-office365-setup').hide();
+        jQuery('.ps-disable-one-click-setup').show();
+		jQuery('.ps-office365-client-id').attr('required', 'required');
+	    jQuery('.ps-office365-client-secret').attr('required', 'required');
+    }
+
+    jQuery.ajax({
+        url: ajaxurl,
+        type: 'POST',
+        async: true,
+        data: {
+            action: 'update_post_smtp_pro_option_office365',
+            enabled: enabled ? 'microsoft-one-click' : '',
+            _wpnonce: (typeof PostSMTPWizard !== 'undefined' && PostSMTPWizard.pro_option_nonce) ? PostSMTPWizard.pro_option_nonce : ''
+        },
+        success: function(response) {
+            if (response.success) {
+                console.log('Option updated successfully!');
+                
+                // Handle office_365-require field based on access token and email availability
+                if ( response.data && ( typeof response.data.has_access_token !== 'undefined' || typeof response.data.has_email !== 'undefined' ) ) {
+                    var hasAccessToken = !!response.data.has_access_token;
+                    var hasEmail = !!response.data.has_email;
+                    var office365RequireField = jQuery('.office_365-require');
+
+                    // If one-click is enabled, require authentication unless both token and email are present
+                    if ( enabled ) {
+                        if ( hasAccessToken && hasEmail ) {
+                            // One-click enabled and fully authenticated (token + email) - no validation required
+                            office365RequireField.removeAttr( 'required' );
+                            office365RequireField.removeAttr( 'data-error' );
+                            office365RequireField.val( '1' );
+                        } else {
+                            // One-click enabled but missing token or email - require authentication
+                            office365RequireField.attr( 'required', 'required' );
+                            office365RequireField.attr( 'data-error', 'Please authenticate by clicking Connect to Office 365 API' );
+                            office365RequireField.val( '' );
+                        }
+                    } else {
+                        // One-click disabled (normal setup) - always require authentication.
+                        // Even if a stored email/token exists, user must explicitly authenticate when one-click is off.
+                        office365RequireField.attr( 'required', 'required' );
+                        office365RequireField.attr( 'data-error', 'Please authenticate by clicking Connect to Office 365' );
+                        office365RequireField.val( '' );
+                    }
+                }
+            } else {
+                console.log('Failed to update option.');
+            }
+        }
+    });
+
+});
+
+// Handle Office 365 upgrade required click
+jQuery(document).on('click', '.ps-office365-upgrade-required', function (e) {
+    e.preventDefault();
+    
+    // Check if this is a version warning or business plan requirement
+    if (jQuery('.ps-version-warning-notice').length > 0) {
+        // Prefer the Step 2 wizard error container (the one shown for mailer settings)
+        var $errorSection = jQuery('.ps-wizard-step-2 .ps-wizard-error');
+
+        // Fallback to the first visible wizard error container if Step 2 one is not found
+        if (!$errorSection.length) {
+            $errorSection = jQuery('.ps-wizard-error:visible').first();
+        }
+
+        // As a last resort, fall back to any wizard error container
+        if (!$errorSection.length) {
+            $errorSection = jQuery('.ps-wizard-error').first();
+        }
+
+        if ($errorSection.length) {
+            // Show version update message in the resolved error area instead of popup
+            $errorSection.html('<span class="dashicons dashicons-warning"></span> <strong>Post SMTP Pro Update Required!</strong><br> Office 365 One-Click Setup requires the latest version of Post SMTP Pro (v1.5.0 or higher).<br>Please update your Post SMTP Pro plugin to use this feature.');
+            
+            // Scroll to the resolved error message container
+            jQuery('html, body').animate({
+                scrollTop: $errorSection.offset().top - 100
+            }, 500);
+        }
+        
+        return false;
+    }
+    
+    // Get data for the popup (business plan upgrade case)
+    var data = jQuery('#ps-one-click-data-office365').val();
+    var parsedData = JSON.parse(data);
+    
+    // Set popup content for Office 365
+    var office365Img = parsedData.url;
+    // Convert to popup image (replace .png with -popup.png)
+    office365Img = office365Img.replace('.png', '-popup.png');
+    
+    var upgradeUrl = parsedData.product_url;
+    var serviceName = parsedData.transport_name;
+    
+    jQuery('.ps-pro-for-img').attr('src', office365Img);
+    jQuery('.ps-pro-product-url').attr('href', upgradeUrl);
+    jQuery('.ps-pro-for').html(serviceName);
+    jQuery('.ps-pro-popup-overlay').fadeIn();
+    
+    return false;
+});
+
 
 jQuery(document).ready(function ($) {
     const toggleFields = () => {
@@ -809,8 +972,22 @@ jQuery(document).ready(function ($) {
             .toggle(!isChecked);
     };
 
+    // Initialize Office 365 validation based on current state
+    const initOffice365Validation = () => {
+        const office365OneClickEnabled = $('.ps-enable-office365-one-click').is(':checked');
+        const office365RequireField = jQuery('.office_365-require');
+        
+        // Don't override the PHP-set validation state on page load
+        // The PHP already sets the correct 'required' attribute based on access token existence
+        // Only set validation if one-click is currently enabled but we need to handle dynamic changes
+        
+        // If one-click is enabled, we might need to check access token status via AJAX
+        // For normal setup, trust the PHP-set validation state
+    };
+
     // Initialize visibility on page load
     toggleFields();
+    initOffice365Validation();
 
     // Listen for changes on the checkbox
     jQuery('.ps-enable-gmail-one-click').on('change', toggleFields);
@@ -847,6 +1024,42 @@ jQuery(document).ready(function($) {
             $p.html($p.data("short-text") + ' <a href="#" class="ps-toggle-text">Show More</a>');
         }
     });
+    jQuery( document ).on( 'click', '.ps-gmail-btn', function( e ) {
+        e.preventDefault();
+		var redirectURI = jQuery( this ).attr( 'href' );
+        jQuery.ajax( {
+            url: ajaxurl,
+            type: 'POST',
+            async: true,
+            data: {
+                action: 'ps-save-wizard',
+                FormData: jQuery( '#ps-wizard-form' ).serialize(),
+            },
+            success: function( response ) {
+                window.location.assign( redirectURI );
+
+            },
+
+        });
+    });
+
+	jQuery( document ).on( 'click', '.ps-office365-btn', function( e ) {
+        e.preventDefault();
+		var redirectURI = jQuery( this ).attr( 'href' );
+        jQuery.ajax( {
+            url: ajaxurl,
+            type: 'POST',
+            async: true,
+            data: {
+                action: 'ps-save-wizard',
+                FormData: jQuery( '#ps-wizard-form' ).serialize(),
+            },
+            success: function( response ) {
+                window.location.assign( redirectURI );
+
+            },
+
+        } );
+    });
+
 });
-
-

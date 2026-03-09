@@ -6,6 +6,7 @@ use WPSEO_Admin_Asset_Manager;
 use Yoast\WP\SEO\Conditionals\Admin_Conditional;
 use Yoast\WP\SEO\Helpers\Options_Helper;
 use Yoast\WP\SEO\Helpers\Product_Helper;
+use Yoast\WP\SEO\Helpers\Short_Link_Helper;
 use Yoast\WP\SEO\Integrations\Integration_Interface;
 
 /**
@@ -28,6 +29,13 @@ class Installation_Success_Integration implements Integration_Interface {
 	protected $product_helper;
 
 	/**
+	 * The shortlinker.
+	 *
+	 * @var Short_Link_Helper
+	 */
+	private $shortlinker;
+
+	/**
 	 * {@inheritDoc}
 	 */
 	public static function get_conditionals() {
@@ -37,12 +45,14 @@ class Installation_Success_Integration implements Integration_Interface {
 	/**
 	 * Installation_Success_Integration constructor.
 	 *
-	 * @param Options_Helper $options_helper The options helper.
-	 * @param Product_Helper $product_helper The product helper.
+	 * @param Options_Helper    $options_helper The options helper.
+	 * @param Product_Helper    $product_helper The product helper.
+	 * @param Short_Link_Helper $shortlinker    The shortlinker.
 	 */
-	public function __construct( Options_Helper $options_helper, Product_Helper $product_helper ) {
+	public function __construct( Options_Helper $options_helper, Product_Helper $product_helper, Short_Link_Helper $shortlinker ) {
 		$this->options_helper = $options_helper;
 		$this->product_helper = $product_helper;
+		$this->shortlinker    = $shortlinker;
 	}
 
 	/**
@@ -113,6 +123,8 @@ class Installation_Success_Integration implements Integration_Interface {
 
 	/**
 	 * Enqueue assets on the Installation success page.
+	 *
+	 * @return void
 	 */
 	public function enqueue_assets() {
 		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Date is not processed or saved.
@@ -122,21 +134,27 @@ class Installation_Success_Integration implements Integration_Interface {
 
 		$asset_manager = new WPSEO_Admin_Asset_Manager();
 		$asset_manager->enqueue_script( 'installation-success' );
-		$asset_manager->enqueue_style( 'tailwind' );
+		$asset_manager->enqueue_style( 'installation-success' );
 		$asset_manager->enqueue_style( 'monorepo' );
+
+		$ftc_url = \esc_url( \admin_url( 'admin.php?page=wpseo_dashboard#/first-time-configuration' ) );
 
 		$asset_manager->localize_script(
 			'installation-success',
 			'wpseoInstallationSuccess',
 			[
 				'pluginUrl'                 => \esc_url( \plugins_url( '', \WPSEO_FILE ) ),
-				'firstTimeConfigurationUrl' => \esc_url( \admin_url( 'admin.php?page=wpseo_dashboard#top#first-time-configuration' ) ),
+				'firstTimeConfigurationUrl' => $ftc_url,
+				'dashboardUrl'              => \esc_url( \admin_url( 'admin.php?page=wpseo_dashboard' ) ),
+				'explorePremiumUrl'         => $this->shortlinker->build( 'https://yoa.st/ftc-premium-link' ),
 			]
 		);
 	}
 
 	/**
 	 * Renders the installation success page.
+	 *
+	 * @return void
 	 */
 	public function render_page() {
 		echo '<div id="wpseo-installation-successful-free" class="yoast"></div>';
@@ -144,6 +162,8 @@ class Installation_Success_Integration implements Integration_Interface {
 
 	/**
 	 * Wrap the `exit` function to make unit testing easier.
+	 *
+	 * @return void
 	 */
 	public function terminate_execution() {
 		exit;

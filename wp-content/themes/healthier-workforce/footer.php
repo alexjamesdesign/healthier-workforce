@@ -67,6 +67,7 @@
         <li>&copy; <?php the_field('company_name', 'option'); ?> <?php echo date('Y'); ?>. All Rights Reserved</li>
         <li><a href="<?php echo site_url(); ?>/terms-of-contract">Terms of Contract</a></li>
         <li><a href="<?php echo site_url(); ?>/environmental-policy">Environmental Policy</a></li>
+		<li><a href="<?php echo site_url(); ?>/data-protection-and-privacy-policy/">Data Protection &amp; Privacy Policy</a></li>
         </ul>
     </div><!-- /.container -->
 

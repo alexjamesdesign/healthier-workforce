@@ -22,3 +22,15 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home4/iamsiuk/healthier-workforce.co.uk/wp-content/themes/healthier-workforce/index.php on line 2
+[10-Sep-2025 10:05:22 Europe/London] PHP Fatal error:  Uncaught Error: Call to undefined function get_header() in /home4/iamsiuk/healthier-workforce.co.uk/wp-content/themes/healthier-workforce/index.php:2
+Stack trace:
+#0 {main}
+  thrown in /home4/iamsiuk/healthier-workforce.co.uk/wp-content/themes/healthier-workforce/index.php on line 2
+[05-Dec-2025 05:35:07 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function get_header() in /home/iamsiuk/healthier-workforce.co.uk/wp-content/themes/healthier-workforce/index.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/iamsiuk/healthier-workforce.co.uk/wp-content/themes/healthier-workforce/index.php on line 2
+[27-Feb-2026 18:00:47 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function get_header() in /home/iamsiuk/healthier-workforce.co.uk/wp-content/themes/healthier-workforce/index.php:2
+Stack trace:
+#0 {main}
+  thrown in /home/iamsiuk/healthier-workforce.co.uk/wp-content/themes/healthier-workforce/index.php on line 2

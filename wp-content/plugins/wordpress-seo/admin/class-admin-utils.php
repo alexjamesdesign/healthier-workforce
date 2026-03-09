@@ -36,7 +36,7 @@ class WPSEO_Admin_Utils {
 	 * @return string The activation URL. Empty string if the current user doesn't have the proper capabilities.
 	 */
 	public static function get_activation_url( $slug ) {
-		if ( ! current_user_can( 'install_plugins' ) ) {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
 			return '';
 		}
 
@@ -75,6 +75,7 @@ class WPSEO_Admin_Utils {
 	public static function get_new_tab_message() {
 		return sprintf(
 			'<span class="screen-reader-text">%s</span>',
+			/* translators: Hidden accessibility text. */
 			esc_html__( '(Opens in a new browser tab)', 'wordpress-seo' )
 		);
 	}

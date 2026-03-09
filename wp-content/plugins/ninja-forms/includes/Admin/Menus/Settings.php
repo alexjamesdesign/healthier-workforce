@@ -99,7 +99,12 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
 
             foreach( $settings as $id => $setting ){
 
-                $value = ( isset( $setting_defaults[ $id ] ) ) ? $setting_defaults[$id] : '';
+                $value = '';
+                if(isset($setting_defaults[$id])) {
+                    $value = $setting_defaults[$id];
+                } elseif(isset($setting['value'])) {
+                    $value = $setting['value'];
+                }
 
                 $grouped_settings[$group][$id]['id'] = $this->prefix( $grouped_settings[$group][$id]['id'] );
                 $grouped_settings[$group][$id]['value'] = $value;
@@ -127,11 +132,13 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
 
             $saved_field_id = $saved_field->get_id();
 
+            $label = esc_html( $saved_field->get_setting( 'label' ) ); 
+
             $grouped_settings[ 'saved_fields'][] = array(
                 'id' => '',
                 'type' => 'html',
                 'html' => '<a class="js-delete-saved-field button button-secondary" data-id="' . $saved_field_id . '">' . esc_html__( 'Delete', 'ninja-forms' ) . '</a>',
-                'label' => $saved_field->get_setting( 'label' ),
+                'label' => $label,
 
             );
         }
@@ -194,6 +201,7 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
                 'trashExpiredSubsButtonSecondary'  => esc_html__( 'Cancel', 'ninja-forms' ),
             ),
             'allow_telemetry' => $allow_tel,
+            'nf_optin_nonce' => wp_create_nonce( 'nf_optin_nonce' ),
         ));
         wp_enqueue_script( 'nf-ninja-modal', Ninja_Forms::$url . 'assets/js/lib/ninjaModal.js' );
         wp_enqueue_script( 'nf-ninja-batch-processor', Ninja_Forms::$url . 'assets/js/lib/batch-processor.js' );
@@ -251,6 +259,8 @@ final class NF_Admin_Menus_Settings extends NF_Abstracts_Submenu
         return apply_filters( 'ninja_forms_plugin_settings', array(
             'general' => Ninja_Forms()->config( 'PluginSettingsGeneral' ),
             'recaptcha' => Ninja_Forms()->config( 'PluginSettingsReCaptcha' ),
+            'turnstile' => Ninja_Forms()->config( 'PluginSettingsTurnstile' ),
+            'hcaptcha' => Ninja_Forms()->config( 'PluginSettingsHcaptcha' ),
             'advanced' => Ninja_Forms()->config( 'PluginSettingsAdvanced' ),
         ));
     }

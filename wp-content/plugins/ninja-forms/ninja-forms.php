@@ -1,9 +1,9 @@
 <?php
 /*
 Plugin Name: Ninja Forms
-Plugin URI: http://ninjaforms.com/?utm_source=Ninja+Forms+Plugin&utm_medium=readme
+Plugin URI: http://ninjaforms.com/?utm_source=WordPress&utm_medium=readme
 Description: Ninja Forms is a webform builder with unparalleled ease of use and features.
-Version: 3.6.34.1
+Version: 3.14.1
 Author: Saturday Drive
 Author URI: http://ninjaforms.com/?utm_source=Ninja+Forms+Plugin&utm_medium=Plugins+WP+Dashboard
 Text Domain: ninja-forms
@@ -43,14 +43,14 @@ final class Ninja_Forms
      * @since 3.0
      */
 
-    const VERSION = '3.6.34.1';
+    const VERSION = '3.14.1';
 
     /**
      * @since 3.4.0
      */
     const DB_VERSION = '1.4';
 
-    const WP_MIN_VERSION = '5.0';
+    const WP_MIN_VERSION = '6.4';
 
     /**
      * @var Ninja_Forms
@@ -149,7 +149,7 @@ final class Ninja_Forms
     /**
      * Dispatcher
      *
-     * @var string
+     * @var NF_Dispatcher
      */
     protected $_dispatcher = '';
 
@@ -168,6 +168,15 @@ final class Ninja_Forms
      * @var NF_Handlers_FieldsetRepeater
      */
     public $fieldsetRepeater;
+
+    /**
+     * Abilities API Integration
+     *
+     * @since 3.13.0
+     * @var NF_Abilities_Integration
+     */
+    public $abilities;
+
     /**
      * Plugin Settings
      *
@@ -269,8 +278,8 @@ final class Ninja_Forms
             self::$instance->settings = apply_filters( 'ninja_forms_settings', get_option( 'ninja_forms_settings' ) );
 
             /*
-                * Admin Menus
-                */
+             * Admin Menus
+             */
             self::$instance->menus[ 'forms' ]           = new NF_Admin_Menus_Forms();
             self::$instance->menus[ 'dashboard' ]       = new NF_Admin_Menus_Dashboard();
             self::$instance->menus[ 'add-new' ]         = new NF_Admin_Menus_AddNew();
@@ -282,6 +291,7 @@ final class Ninja_Forms
             self::$instance->menus[ 'add-ons' ]         = new NF_Admin_Menus_Addons();
             self::$instance->menus[ 'divider']          = new NF_Admin_Menus_Divider();
             self::$instance->menus[ 'mock-data']        = new NF_Admin_Menus_MockData();
+            self::$instance->menus[ 'welcome' ]         = new NF_Admin_Menus_Welcome();
 
             /*
                 * AJAX Controllers
@@ -296,6 +306,7 @@ final class Ninja_Forms
             self::$instance->controllers[ 'deletealldata' ] = new NF_AJAX_Controllers_DeleteAllData();
             self::$instance->controllers[ 'jserror' ]       = new NF_AJAX_Controllers_JSError();
             self::$instance->controllers[ 'dispatchpoints' ] = new NF_AJAX_Controllers_DispatchPoints();
+            self::$instance->controllers[ 'onboarding' ] = new NF_AJAX_Controllers_Onboarding();
 
             /*
                 * REST Controllers
@@ -307,12 +318,12 @@ final class Ninja_Forms
             *   API Routes
             */
             self::$instance->routes[ 'submissions' ] = new NF_Routes_Submissions();
+            self::$instance->routes[ 'telemetry' ] = new NF_Routes_Telemetry();
 
             /*
                 * Async Requests
                 */
             require_once Ninja_Forms::$dir . 'includes/Libraries/BackgroundProcessing/classes/wp-async-request.php';
-            self::$instance->requests[ 'delete-field' ] = new NF_AJAX_Requests_DeleteField();
 
             /*
                 * Background Processes
@@ -361,10 +372,6 @@ final class Ninja_Forms
 
             require_once Ninja_Forms::$dir . 'blocks/ninja-forms-blocks.php';
 
-            /*
-                * Submission Metabox
-                */
-            new NF_Admin_Metaboxes_Calculations();
 
             /*
                 * User data requests ( GDPR actions )
@@ -381,15 +388,6 @@ final class Ninja_Forms
                 */
             self::$instance->_dispatcher = new NF_Dispatcher();
 
-            /*
-                * Merge Tags
-                */
-            self::$instance->merge_tags[ 'wp' ] = new NF_MergeTags_WP();
-            self::$instance->merge_tags[ 'fields' ] = new NF_MergeTags_Fields();
-            self::$instance->merge_tags[ 'calcs' ] = new NF_MergeTags_Calcs();
-            self::$instance->merge_tags[ 'form' ] = new NF_MergeTags_Form();
-            self::$instance->merge_tags[ 'other' ] = new NF_MergeTags_Other();
-            self::$instance->merge_tags[ 'deprecated' ] = new NF_MergeTags_Deprecated();
 
             /*
                 * Add Form Modal
@@ -416,6 +414,11 @@ final class Ninja_Forms
             self::$instance->tracking = new NF_Tracking();
 
             /*
+                * Abilities API Integration
+                */
+            self::$instance->abilities = new NF_Abilities_Integration();
+
+            /*
                 * Fieldset Repeater Handler
                 */
             self::$instance->fieldsetRepeater =  new NF_Handlers_FieldsetRepeater();
@@ -428,14 +431,7 @@ final class Ninja_Forms
                 */
             register_activation_hook( __FILE__, array( self::$instance, 'activation' ) );
 
-            self::$instance->metaboxes[ 'append-form' ] = new NF_Admin_Metaboxes_AppendAForm();
 
-            /*
-                * Email Telemetry
-                */
-
-            $email_telemetry = new NF_EmailTelemetry( get_option( 'ninja_forms_optin_reported' ) );
-            $email_telemetry->setup();
 
             /*
                 * Require EDD auto-update file
@@ -467,8 +463,15 @@ final class Ninja_Forms
 
         add_action( 'ninja_forms_available_actions', array( self::$instance, 'scrub_available_actions' ) );
 
+        add_action( 'init', array( self::$instance, 'instantiateTranslatableObjects' ), 5 );
         add_action( 'init', array( self::$instance, 'init' ), 5 );
         add_action( 'admin_init', array( self::$instance, 'admin_init' ), 5 );
+        add_action( 'admin_enqueue_scripts', function() {
+            if(apply_filters('ninja_forms_current_user_is_onboarding', 0)) {
+                wp_register_script( 'nf-heartbeat', self::$url . 'assets/js/admin-heartbeat.js', array('jquery') );
+                wp_enqueue_script('nf-heartbeat');
+            }
+        });
 
         add_action( 'nf_weekly_promotion_update', array( self::$instance, 'nf_run_promotion_manager' ) );
         add_action( 'activated_plugin', array( self::$instance, 'nf_bust_promotion_cache_on_plugin_activation' ), 10, 2 );
@@ -497,6 +500,38 @@ final class Ninja_Forms
         flush_rewrite_rules();
     }
 
+    public function instantiateTranslatableObjects(): void
+    {        
+        new NF_Admin_Metaboxes_Calculations();
+
+        /*
+            * Merge Tags
+            */
+        self::$instance->merge_tags['wp'] = new NF_MergeTags_WP();
+        self::$instance->merge_tags['fields'] = new NF_MergeTags_Fields();
+        self::$instance->merge_tags['calcs'] = new NF_MergeTags_Calcs();
+        self::$instance->merge_tags['form'] = new NF_MergeTags_Form();
+        self::$instance->merge_tags['other'] = new NF_MergeTags_Other();
+        self::$instance->merge_tags['deprecated'] = new NF_MergeTags_Deprecated();
+
+        self::$instance->metaboxes['append-form'] = new NF_Admin_Metaboxes_AppendAForm();
+
+
+        /*
+            * Field Class Registration
+            */
+        self::$instance->fields = apply_filters('ninja_forms_register_fields', self::load_classes('Fields'));
+
+        if (! apply_filters('ninja_forms_enable_credit_card_fields', false)) {
+            unset(self::$instance->fields['creditcard']);
+            unset(self::$instance->fields['creditcardcvc']);
+            unset(self::$instance->fields['creditcardexpiration']);
+            unset(self::$instance->fields['creditcardfullname']);
+            unset(self::$instance->fields['creditcardnumber']);
+            unset(self::$instance->fields['creditcardzip']);
+        }
+    }
+    
     public function register_rewrite_rules()
     {
         add_rewrite_tag('%nf_public_link%', '([a-zA-Z0-9]+)');
@@ -546,6 +581,17 @@ final class Ninja_Forms
             // Record that there are no required updates.
             update_option( 'ninja_forms_needs_updates', 0 );
         }
+
+        //Enqueue forms scripts for WP bakery frontend editor
+        if(isset($_GET['vc_action']) && $_GET['vc_action'] === "vc_inline"){
+            $forms_list = Ninja_Forms()->form()->get_forms();
+            if ( ! empty( $forms_list ) ) {
+                foreach ( $forms_list as $form ) {
+                    NF_Display_Render::enqueue_scripts($form->get_id());
+                }
+            }
+        }
+
     }
 
     function maybe_load_public_form($template) {
@@ -651,6 +697,16 @@ final class Ninja_Forms
             );
         }
 
+        $onboarding_step = apply_filters( 'nf_onboarding_step_now', 0 );
+        if ( 1 === $onboarding_step || 2 === $onboarding_step ) {
+            unset(
+                $items[ 'apps' ],
+                $items[ 'memberships' ],
+                $items[ 'services' ],
+                $items[ 'user_access' ]
+            );
+        }
+
         return $items;
     }
 
@@ -734,22 +790,11 @@ final class Ninja_Forms
 
     public function plugins_loaded()
     {
-        unload_textdomain('ninja-forms');
+        unload_textdomain('ninja-forms',true);
+        
         load_plugin_textdomain( 'ninja-forms', false, basename( dirname( __FILE__ ) ) . '/lang' );
 
-        /*
-            * Field Class Registration
-            */
-        self::$instance->fields = apply_filters( 'ninja_forms_register_fields', self::load_classes( 'Fields' ) );
 
-        if( ! apply_filters( 'ninja_forms_enable_credit_card_fields', false ) ){
-            unset( self::$instance->fields[ 'creditcard' ] );
-            unset( self::$instance->fields[ 'creditcardcvc' ] );
-            unset( self::$instance->fields[ 'creditcardexpiration' ] );
-            unset( self::$instance->fields[ 'creditcardfullname' ] );
-            unset( self::$instance->fields[ 'creditcardnumber' ] );
-            unset( self::$instance->fields[ 'creditcardzip' ] );
-        }
 
         /*
             * Form Action Registration
@@ -839,6 +884,11 @@ final class Ninja_Forms
         return $this->_logger;
     }
 
+    /**
+     * Return dispatcher
+     *
+     * @return NF_Dispatcher
+     */
     public function dispatcher()
     {
         return $this->_dispatcher;
@@ -942,10 +992,31 @@ final class Ninja_Forms
 
         Ninja_Forms()->template( 'display-noscript-message.html.php', array( 'message' => $noscript_message ) );
 
-        if( ! $preview ) {
-            NF_Display_Render::localize($form_id);
+        //Detect Page builder editor
+        $visual_composer_screen = isset( $_GET['vcv-ajax'] );
+        $elementor_screen = isset($_GET['elementor-preview']) || (isset($_GET['action']) && $_GET['action'] === 'elementor') || (isset($_POST['action']) && $_POST['action'] === 'elementor_ajax');
+        //Set a list of conditions that would lead to loading the iFrame
+        $set_load_iframe_condition = $visual_composer_screen || $elementor_screen;
+        //Filter the current result of the conditions
+        $load_iframe = apply_filters("ninja_forms_display_iframe",  $set_load_iframe_condition, $form_id);
+
+        //Detect cases when page needs to refresh and load the iFrame onlmy on that first load
+        $wp_bakery_frontend_first_display = isset( $_POST['action'] ) && $_POST['action'] === "vc_load_shortcode";
+        //Set list of condition that would lead to refresh page needed
+        $set_refresh_page_needed_condition = $wp_bakery_frontend_first_display;
+        //Filter the current result of the conditions
+        $refresh_page_needed = apply_filters("ninja_forms_display_reload_page_message", $set_refresh_page_needed_condition, $form_id);
+        
+        if( $load_iframe  ) {
+            NF_Display_Render::localize_iframe($form_id);
+        } else if( $refresh_page_needed ) {
+            NF_Display_Render::localize_iframe($form_id);
         } else {
-            NF_Display_Render::localize_preview($form_id);
+            if( ! $preview ) {
+                NF_Display_Render::localize($form_id);
+            } else {
+                NF_Display_Render::localize_preview($form_id);
+            }
         }
     }
 
@@ -1050,7 +1121,7 @@ final class Ninja_Forms
         Ninja_Forms()->flush_rewrite_rules();
 
         // Enable "Light" Opinionated Styles for new installtion.
-        Ninja_Forms()->update_setting('opinionated_styles', 'light');
+        // Ninja_Forms()->update_setting('opinionated_styles', 'light'); //issue 7271
 
         // Disable "Dev Mode" for new installation.
         Ninja_Forms()->update_setting('builder_dev_mode', 0);
@@ -1060,6 +1131,9 @@ final class Ninja_Forms
 
         // Setup our add-on feed wp cron so that our add-on list is up to date on a weekly basis.
         nf_marketing_feed_cron_job();
+
+        // Disable the survey promo for 7 days on new installations.
+        set_transient('ninja_forms_disable_survey_promo', 1, DAY_IN_SECONDS * 7);
     }
 
     /**
@@ -1164,13 +1238,10 @@ register_uninstall_hook( __FILE__, 'ninja_forms_uninstall' );
 
 function ninja_forms_uninstall(){
 
-    if( Ninja_Forms()->get_setting( 'delete_on_uninstall' ) ) {
-        require_once plugin_dir_path(__FILE__) . '/includes/Database/Migrations.php';
-        $migrations = new NF_Database_Migrations();
-        $migrations->nuke(TRUE, TRUE);
-        $migrations->nuke_settings(TRUE, TRUE);
-        $migrations->nuke_deprecated(TRUE, TRUE);
-    }
+    /**
+     *  Nothing to see here.
+     */
+
 }
 
 // Scheduled Action Hook
@@ -1178,16 +1249,12 @@ function nf_optin_update_environment_vars() {
     /**
      * Send updated environment variables.
      */
-    Ninja_Forms()->dispatcher()->update_environment_vars();
+    Ninja_Forms()->dispatcher()->sendTelemetryData();
 
     /**
      * Make sure that we've reported our opt-in.
      */
-    if( get_option( 'ninja_forms_optin_reported', 0 ) ) return;
-
-    Ninja_Forms()->dispatcher()->send( 'optin', array( 'send_email' => 1 ) );
-    // Debounce opt-in dispatch.
-    update_option( 'ninja_forms_optin_reported', 1 );
+    Ninja_Forms()->tracking->report_optin();
 }
 add_action( 'nf_optin_cron', 'nf_optin_update_environment_vars' );
 
@@ -1228,7 +1295,7 @@ function nf_update_marketing_feed() {
     // Fetch our addon data.
     $data = wp_remote_get( 'http://api.ninjaforms.com/feeds/?fetch=addons' );
     // If we got a valid response...
-    if ( 200 == $data[ 'response' ][ 'code' ] ) {
+    if ( is_array($data) && 200 == $data[ 'response' ][ 'code' ] ) {
         // Save the data to our option.
         $data = wp_remote_retrieve_body( $data );
         update_option( 'ninja_forms_addons_feed', $data, false );
@@ -1246,3 +1313,28 @@ function nf_marketing_feed_cron_job() {
         wp_schedule_event( current_time( 'timestamp' ), 'nf-weekly', 'nf_marketing_feed_cron' );
     }
 }
+
+/**
+ * Make sure the marketing feed is updated after an update
+ *
+ * @since 3.8.1
+ */
+add_action("upgrader_process_complete", function($upgrader_object, $options){
+    if(
+        $options["type"] === "plugin" && 
+        $options["action"] === "update" && 
+        $upgrader_object->result["destination_name"] === "ninja-forms" &&
+        function_exists("nf_update_marketing_feed")
+    ){
+        nf_update_marketing_feed();
+    }
+}, 10, 2);
+
+
+/**
+ * Call our survey promo on relevant pages.
+ */
+add_action( 'in_admin_header', function() {
+    $surveyPromo = new NF_Admin_SurveyPromo();
+    $surveyPromo->show();
+});

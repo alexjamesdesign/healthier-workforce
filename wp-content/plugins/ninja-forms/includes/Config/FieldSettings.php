@@ -151,7 +151,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'width' => 'one-half',
         'group' => 'primary',
         'value' => 'unchecked',
-
+        'help' => esc_html__( 'Choose here whether the checkbox will be checked or unchecked by default when the user first views the form.', 'ninja-forms' ),
     ),
 
     /*
@@ -170,6 +170,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
                 'label' => esc_html__( 'Checked Value', 'ninja-forms' ),
                 'value' => esc_textarea( __( 'Checked', 'ninja-forms' ) ),
                 'width' => 'one-half',
+                'help' => esc_html__( 'Text entered here will display in submissions for this form if the user checks the box.', 'ninja-forms' ),
             ),
             array(
                 'name'  => 'unchecked_value',
@@ -177,6 +178,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
                 'label' => esc_html__( 'Unchecked Value', 'ninja-forms' ),
                 'value' => esc_textarea( __( 'Unchecked', 'ninja-forms' ) ),
                 'width' => 'one-half',
+                'help' => esc_html__( 'Text entered here will display in submissions for this form if the user does not check the box.', 'ninja-forms' ),
             ),
         ),
     ),
@@ -195,6 +197,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
         ),
         'label' => esc_html__( 'List Orientation', 'ninja-forms' ),
         'value' => 'horizontal',
+        'help' => esc_html__( 'Enter text you would like displayed in the field before a user enters any data.', 'ninja-forms' ),
     ),
 
     /*
@@ -480,6 +483,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
                 'fields'
             )
         ),
+        'help' => esc_html__( 'Text entered here will display in the field by default but can be deleted by the user.', 'ninja-forms' ),
     ),
 
     /*
@@ -538,7 +542,6 @@ return apply_filters( 'ninja_forms_field_settings', array(
                 'value' => 'date_and_time',
             ),
         ),
-        'help' => '',
         'default' => 'date_only',
         'value' => 'date_only',
     ),
@@ -556,7 +559,6 @@ return apply_filters( 'ninja_forms_field_settings', array(
                 'label' => esc_html__( '24 Hour Input', 'ninja-forms' ),
                 'width' => 'one-half',
                 'group' => 'primary',
-                'help' => '',
                 'default' => 0,
                 'value' => 0,
             ),
@@ -566,7 +568,6 @@ return apply_filters( 'ninja_forms_field_settings', array(
                 'label' => esc_html__( 'Minute Increment', 'ninja-forms' ),
                 'width' => 'full',
                 'group' => 'primary',
-                'help' => '',
                 'default' => 5,
                 'value' => 5,
                 'min_val' => 1,
@@ -747,11 +748,11 @@ return apply_filters( 'ninja_forms_field_settings', array(
      */
 
     'help'           => array(
-        'name'              => 'help',
+        'name'              => 'help_text',
         'type'              => 'fieldset',
         'label'             => esc_html__( 'Help Text', 'ninja-forms' ),
         'group'             => 'display',
-        'help'              => esc_html__( 'Shown to users as a hover.', 'ninja-forms' ),
+        'help'              => esc_html__( 'Entering text here will display an informational icon next to the field label. When a user hovers over it, a small window will appear containing this text.', 'ninja-forms' ),
         'settings'          => array(
             /*
              * HELP TEXT
@@ -778,6 +779,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'type'              => 'fieldset',
         'label'             => esc_html__( 'Description', 'ninja-forms' ),
         'group'             => 'display',
+        'help'              => esc_html__( 'Any text entered here will appear between the label and the field.', 'ninja-forms' ),
         'settings'          => array(
             /*
              * DESCRIPTION TEXT
@@ -808,13 +810,13 @@ return apply_filters( 'ninja_forms_field_settings', array(
     ),
 
     'personally_identifiable'   => array(
-	    'name'           => 'personally_identifiable',
-	    'type'           => 'toggle',
-	    'group'          => 'advanced',
-	    'label'          => esc_html__( 'This Field Is Personally Identifiable Data', 'ninja-forms' ),
-	    'width'          => 'full',
-	    'value'          => '',
-	    'help'           => esc_html__( 'This option helps with privacy regulation compliance', 'ninja-forms' ),
+        'name'           => 'personally_identifiable',
+        'type'           => 'toggle',
+        'group'          => 'advanced',
+        'label'          => esc_html__( 'This Field Is Personally Identifiable Data', 'ninja-forms' ),
+        'width'          => 'full',
+        'value'          => '',
+        'help'           => esc_html__( 'This option helps with privacy regulation compliance', 'ninja-forms' ),
     ),
 
     /*
@@ -831,6 +833,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'width' => 'one-half',
         'group' => 'advanced',
         'value' => 5,
+        'help'  => esc_html__( 'Adjusts the number of list option selections that are viewable by the user at one time without scrolling through the list.', 'ninja-forms' ),
     ),
 
     /*
@@ -934,6 +937,19 @@ return apply_filters( 'ninja_forms_field_settings', array(
     ),
 
     /*
+     * Custom Autocomplete Value
+     */
+
+    'custom_autocomplete' => array(
+        'name' => 'custom_autocomplete',
+        'type' => 'textbox',
+        'label' => esc_html__( 'Custom Autocomplete Value', 'ninja-forms' ),
+        'width' => 'full',
+        'group' => 'advanced',
+        'help' => esc_html__( 'Set a custom autocomplete value (e.g., tel, email, given-name).', 'ninja-forms' ),
+    ),
+
+    /*
      * Disable input
      */
 
@@ -943,6 +959,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'label'     => esc_html__( 'Disable Input', 'ninja-forms' ),
         'width'     => 'full',
         'group'     => 'restrictions',
+        'help'      => esc_html__( 'Prevents users from typing into the field.', 'ninja-forms' ),
     ),
 
     //TODO: Ask about the list of states and countries.
@@ -1053,7 +1070,7 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'label' => esc_html__( 'Processing Label', 'ninja-forms' ),
         'width' => 'full',
         'group' => 'primary',
-        'value' => esc_textarea( __( 'Processing', 'ninja-forms' ) )
+        'value' => esc_html__( 'Processing', 'ninja-forms' )
     ),
 
     /*
@@ -1309,6 +1326,199 @@ return apply_filters( 'ninja_forms_field_settings', array(
         'group' => 'administration',
         'value' => FALSE,
         'help' => esc_html__( 'Used for marking a field for processing.', 'ninja-forms' ),
+    ),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Signature Field Settings
+    |--------------------------------------------------------------------------
+    */
+
+    /*
+     * Signature Method
+     */
+
+    'signature_method' => array(
+        'name' => 'signature_method',
+        'type' => 'select',
+        'label' => esc_html__( 'Signature Method', 'ninja-forms' ),
+        'width' => 'full',
+        'group' => 'primary',
+        'value' => 'both',
+        'options' => array(
+            array(
+                'label' => esc_html__( 'Typed Only', 'ninja-forms' ),
+                'value' => 'typed'
+            ),
+            array(
+                'label' => esc_html__( 'Drawn Only', 'ninja-forms' ),
+                'value' => 'drawn'
+            ),
+            array(
+                'label' => esc_html__( 'Both Options', 'ninja-forms' ),
+                'value' => 'both'
+            ),
+        ),
+        'help' => esc_html__( 'Choose whether users can type their name, draw their signature, or have both options.', 'ninja-forms' )
+    ),
+
+    /*
+     * Signature Font
+     */
+
+    'signature_font' => array(
+        'name' => 'signature_font',
+        'type' => 'select',
+        'label' => esc_html__( 'Typed Signature Font', 'ninja-forms' ),
+        'width' => 'full',
+        'group' => 'primary',
+        'value' => 'dancing-script',
+        'options' => array(
+            array(
+                'label' => 'Dancing Script',
+                'value' => 'dancing-script'
+            ),
+            array(
+                'label' => 'Satisfy',
+                'value' => 'satisfy'
+            ),
+            array(
+                'label' => 'Cursive (System)',
+                'value' => 'cursive'
+            ),
+        ),
+        'deps' => array(
+           'settings' => array(
+                array( 'name' => 'signature_method', 'value' => 'typed' ),
+                array( 'name' => 'signature_method', 'value' => 'both' ),
+            ),
+            'match' => 'any',
+        ),
+        'help' => esc_html__( 'Select the font to use for typed signatures.', 'ninja-forms' )
+    ),
+
+    /*
+     * Typed Signature Placeholder
+     */
+
+    'typed_placeholder' => array(
+        'name' => 'typed_placeholder',
+        'type' => 'textbox',
+        'label' => esc_html__( 'Typed Signature Placeholder', 'ninja-forms' ),
+        'width' => 'full',
+        'group' => 'primary',
+        'value' => esc_html__( 'John Doe', 'ninja-forms' ),
+        'help' => esc_html__( 'Placeholder text for the typed signature input field.', 'ninja-forms' ),
+        'deps' => array(
+           'settings' => array(
+                array( 'name' => 'signature_method', 'value' => 'typed' ),
+                array( 'name' => 'signature_method', 'value' => 'both' ),
+            ),
+            'match' => 'any',
+        ),
+    ),
+
+    /*
+     * Drawn Signature Placeholder
+     */
+
+    'drawn_placeholder' => array(
+        'name' => 'drawn_placeholder',
+        'type' => 'textbox',
+        'label' => esc_html__( 'Drawn Signature Placeholder', 'ninja-forms' ),
+        'width' => 'full',
+        'group' => 'primary',
+        'value' => esc_html__( 'Sign here', 'ninja-forms' ),
+        'help' => esc_html__( 'Placeholder text for the drawn signature canvas area.', 'ninja-forms' ),
+        'deps' => array(
+           'settings' => array(
+                array( 'name' => 'signature_method', 'value' => 'drawn' ),
+                array( 'name' => 'signature_method', 'value' => 'both' ),
+            ),
+            'match' => 'any',
+        ),
+    ),
+
+    /*
+     * Canvas Width
+     */
+
+    'canvas_width' => array(
+        'name' => 'canvas_width',
+        'type' => 'number',
+        'label' => esc_html__( 'Canvas Width (px)', 'ninja-forms' ),
+        'width' => 'one-half',
+        'group' => 'primary',
+        'value' => 400,
+        'help' => esc_html__( 'Width of the signature drawing area in pixels.', 'ninja-forms' ),
+        'deps' => array(
+           'settings' => array(
+                array( 'name' => 'signature_method', 'value' => 'drawn' ),
+                array( 'name' => 'signature_method', 'value' => 'both' ),
+            ),
+            'match' => 'any',
+        ),
+    ),
+
+    /*
+     * Canvas Height
+     */
+
+    'canvas_height' => array(
+        'name' => 'canvas_height',
+        'type' => 'number',
+        'label' => esc_html__( 'Canvas Height (px)', 'ninja-forms' ),
+        'width' => 'one-half',
+        'group' => 'primary',
+        'value' => 150,
+        'help' => esc_html__( 'Height of the signature drawing area in pixels.', 'ninja-forms' ),
+        'deps' => array(
+           'settings' => array(
+                array( 'name' => 'signature_method', 'value' => 'drawn' ),
+                array( 'name' => 'signature_method', 'value' => 'both' ),
+            ),
+            'match' => 'any',
+        ),
+    ),
+
+    /*
+     * Pen Color
+     */
+
+    'pen_color' => array(
+        'name' => 'pen_color',
+        'type' => 'color',
+        'label' => esc_html__( 'Pen Color', 'ninja-forms' ),
+        'width' => 'one-half',
+        'group' => 'primary',
+        'value' => '#000000',
+         'deps' => array(
+           'settings' => array(
+                array( 'name' => 'signature_method', 'value' => 'drawn' ),
+                array( 'name' => 'signature_method', 'value' => 'both' ),
+            ),
+            'match' => 'any',
+        ),
+    ),
+
+    /*
+     * Background Color
+     */
+
+    'background_color' => array(
+        'name' => 'background_color',
+        'type' => 'color',
+        'label' => esc_html__( 'Background Color', 'ninja-forms' ),
+        'width' => 'one-half',
+        'group' => 'primary',
+        'value' => '#ffffff',
+        'deps' => array(
+           'settings' => array(
+                array( 'name' => 'signature_method', 'value' => 'drawn' ),
+                array( 'name' => 'signature_method', 'value' => 'both' ),
+            ),
+            'match' => 'any',
+        ),
     ),
 
 ));

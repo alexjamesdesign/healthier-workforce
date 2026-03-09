@@ -65,6 +65,7 @@ class ComposerStaticInit21011f60f64f4b4d51d6de6e7e4463ed
         array (
             'Bugsnag\\' => 8,
             'Billy\\Framework\\' => 16,
+            'Bamarni\\Composer\\Bin\\' => 21,
         ),
         'A' => 
         array (
@@ -164,6 +165,10 @@ class ComposerStaticInit21011f60f64f4b4d51d6de6e7e4463ed
         'Billy\\Framework\\' => 
         array (
             0 => __DIR__ . '/..' . '/getbilly/framework/Framework',
+        ),
+        'Bamarni\\Composer\\Bin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/bamarni/composer-bin-plugin/src',
         ),
         'Adtrak\\AdvancedLocationDynamics\\' => 
         array (

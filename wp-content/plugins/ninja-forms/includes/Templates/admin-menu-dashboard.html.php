@@ -68,7 +68,7 @@
 		<div class="widget widget-forms"></div>
 </script>
 
-<!-- Section: Services -->
+<!-- Section: Services -- !!!!!!!!!!!!!  Replaced by a WP element loaded via dashboard.js !!!!!!!!!!!!-->
 <script id="tmpl-nf-services" type="text/template">
 	<div class="services"></div>
 </script>
@@ -116,8 +116,7 @@
 	</div>
 </script>
 
-
-<!-- Section: apps and Integrations -->
+<!-- Section: apps and Integrations !!!!!!!!!!!!!  Replaced by a WP element loaded via dashboard.js !!!!!!!!!!!! -->
 <script id="tmpl-nf-apps" type="text/template">
 
 		<div class="widget widget-plan-notice">
@@ -125,7 +124,7 @@
 				<p>
 				Our membership plans have been designed to bring commonly needed features into one affordable package. Whether you're building forms for yourself, your clients, or your company, there's a plan that will fit your needs... and your budget.
 				</p>
-				<a class="nf-button primary feature-list-link" href="https://ninjaforms.com/pricing/?utm_source=Ninja+Forms+Plugin&utm_medium=Apps+and+Integrations&utm_campaign=Dashboard+Features+Link" target="_blank" rel="noopener">View Memberships&nbsp;<i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
+				<a class="nf-button primary feature-list-link" href="https://ninjaforms.com/pricing/?utm_source=Ninja+Forms+Plugin&utm_medium=Add-ons&utm_campaign=Add-ons+Memberships&utm_content=Dashboard+Membership" target="_blank" rel="noopener">View Memberships&nbsp;<i class="fa fa-chevron-circle-right" aria-hidden="true"></i></a>
 		</div>
 
 		<?php Ninja_Forms()->menus[ 'add-ons']->display(); ?>

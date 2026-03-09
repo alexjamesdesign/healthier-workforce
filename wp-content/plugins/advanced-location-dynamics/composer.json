@@ -13,5 +13,8 @@
     	"psr-4": {
 			"Adtrak\\AdvancedLocationDynamics\\": "app/"
 		}
+	},
+	"require-dev": {
+		"bamarni/composer-bin-plugin": "^1.4"
 	}
 }

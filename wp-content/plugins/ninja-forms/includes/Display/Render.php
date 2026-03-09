@@ -31,6 +31,8 @@ class NF_Display_Render
     public static $use_test_values = FALSE;
 
     protected static $form_uses_recaptcha      = array();
+    protected static $form_uses_turnstile      = array();
+    protected static $form_uses_hcaptcha       = array();
     protected static $form_uses_datepicker     = array();
     protected static $form_uses_inputmask      = array();
     protected static $form_uses_currencymask   = array();
@@ -38,6 +40,7 @@ class NF_Display_Render
     protected static $form_uses_textarea_media = array();
     protected static $form_uses_helptext       = array();
     protected static $form_uses_starrating     = array();
+    protected static $form_uses_react_fields   = array();
 
     protected static $thread_id      = 1;
     protected static $recorded_forms       = [];
@@ -66,7 +69,7 @@ class NF_Display_Render
 
         $settings = $form->get_settings();
 
-        foreach( $settings as $name => $value ){
+        foreach( $settings as $name => &$value ){
             if( ! in_array(
                 $name,
                 array(
@@ -83,7 +86,10 @@ class NF_Display_Render
                 )
             ) ) continue;
 
-            if( $value ) continue;
+            if( $value ) {
+                $value = esc_html($value);
+                continue;
+            }
 
             unset( $settings[ $name ] );
         }
@@ -162,7 +168,6 @@ class NF_Display_Render
 
             // TODO: Replace unique field key checks with a refactored model/factory.
             $unique_field_keys = array();
-            $cache_updated = false;
 
             foreach ($form_fields as $field) {
 
@@ -183,25 +188,6 @@ class NF_Display_Render
                 $field_key = $field[ 'settings' ][ 'key' ];
 
                 if( in_array( $field_key, $unique_field_keys ) || '' == $field_key ){
-
-                    // Delete the field.
-                    Ninja_Forms()->request( 'delete-field' )->data( array( 'field_id' => $field_id ) )->dispatch();
-
-                    // Remove the field from cache.
-                    if( $form_cache ) {
-                        if( isset( $form_cache[ 'fields' ] ) ){
-                            foreach( $form_cache[ 'fields' ] as $cached_field_key => $cached_field ){
-                                if( ! isset( $cached_field[ 'id' ] ) ) continue;
-                                if( $field_id != $cached_field[ 'id' ] ) continue;
-
-                                // Flag cache to update.
-                                $cache_updated = true;
-
-                                unset( $form_cache[ 'fields' ][ $cached_field_key ] ); // Remove the field.
-                            }
-                        }
-                    }
-
                     continue; // Skip the duplicate field.
                 }
                 array_push( $unique_field_keys, $field_key ); // Log unique key.
@@ -227,7 +213,7 @@ class NF_Display_Render
                 }
 
                 $field= self::ensureFieldArrayStructureValidity($field,$fieldBeforeFilters);
-                
+
                 // Copy field ID into the field settings array for use in localized data.
                 $field[ 'settings' ][ 'id' ] = $field[ 'id' ];
 
@@ -300,17 +286,23 @@ class NF_Display_Render
                 $currencySymbol = Ninja_Forms()->get_setting('currency_symbol');
 
                 $settings = static::ensureProductRelatedCostLocalizeSettings($settings,$decimal_point,$thousands_sep,$currencySymbol);
-                
+
                 $settings['element_templates'] = $templates;
                 $settings['old_classname'] = $field_class->get_old_classname();
                 $settings['wrap_template'] = $field_class->get_wrap_template();
 
                 $settings['label']=\wp_kses_post(Sanitizer::preventScriptTriggerInHtmlOutput($settings['label']));
-                
+
                 $fields[] = apply_filters( 'ninja_forms_localize_field_settings_' . $field_type, $settings, $form );
 
                 if( 'recaptcha' == $field[ 'settings' ][ 'type' ] ){
                     array_push( self::$form_uses_recaptcha, $form_id );
+                }
+                if( 'turnstile' == $field[ 'settings' ][ 'type' ] ){
+                    array_push( self::$form_uses_turnstile, $form_id );
+                }
+                if( 'hcaptcha' == $field[ 'settings' ][ 'type' ] ){
+                    array_push( self::$form_uses_hcaptcha, $form_id );
                 }
                 if( 'date' == $field[ 'settings' ][ 'type' ] || self::checkRepeaterChildType($field, 'date') ){
                     array_push( self::$form_uses_datepicker, $form_id );
@@ -330,16 +322,19 @@ class NF_Display_Render
                 if( isset( $field[ 'settings' ][ 'textarea_media' ] ) && $field[ 'settings' ][ 'textarea_media' ] || self::checkRepeaterChildSetting($field, "textarea_media", null) ){
                     array_push( self::$form_uses_textarea_media, $form_id );
                 }
+                // Check if field contains help text, this helps prevent jBox to be enqueued if there isn't a field using it.
                 // strip all tags except image tags
-                if( isset( $field[ 'settings' ][ 'help_text' ] ) &&
+                if( self::checkRepeaterChildSetting($field, "help_text", null) ||
+                    isset( $field[ 'settings' ][ 'help_text' ] ) &&
                     strip_tags( $field[ 'settings' ][ 'help_text' ], '<img>'
                     ) ){
                     array_push( self::$form_uses_helptext, $form_id );
                 }
-            }
-
-            if( $cache_updated ) {
-                WPN_Helper::update_nf_cache( $form_id, $form_cache ); // Update form cache without duplicate fields.
+                
+                // Check if field uses React components
+                if( self::is_react_field( $field[ 'settings' ][ 'type' ] ) || self::checkRepeaterChildReactField( $field ) ){
+                    array_push( self::$form_uses_react_fields, $form_id );
+                }
             }
         }
 
@@ -454,7 +449,7 @@ class NF_Display_Render
      *
      * Property types are not declared because we cannot guarantee what is
      * returned from apply_filters.
-     * 
+     *
      * @param array $field
      * @param string $field_type
      * @return array
@@ -493,6 +488,10 @@ class NF_Display_Render
             $return = self::ensureRecaptchaFieldStructureValidity($return);
         }
 
+        if ('turnstile' === $field['settings']['type']) {
+            $return = self::ensureTurnstileFieldStructureValidity($return);
+        }
+
         return $return;
     }
 
@@ -510,9 +509,32 @@ class NF_Display_Render
 
         // Hide the label on invisible reCAPTCHA fields
         if (
-            'recaptcha' === $field['settings']['type'] 
+            'recaptcha' === $field['settings']['type']
             && isset($field['settings']['size'])
             && 'invisible' === $field['settings']['size']) {
+
+            $return['settings']['label_pos'] = 'hidden';
+        }
+
+        return $return;
+    }
+
+    /**
+     * Ensure that Turnstile field array structure is correct
+     *
+     * @param array $field
+     * @return array
+     */
+    protected static function ensureTurnstileFieldStructureValidity(array $field): array
+    {
+        // initialize return value to incoming value
+        $return = $field;
+
+        // Hide the label when label_visibility is set to 'hide'
+        if (
+            'turnstile' === $field['settings']['type']
+            && isset($field['settings']['label_visibility'])
+            && 'invisible' === $field['settings']['label_visibility']) {
 
             $return['settings']['label_pos'] = 'hidden';
         }
@@ -532,7 +554,7 @@ class NF_Display_Render
         if(!is_string($currency)){
             return '';
         }
-        
+
         $return = isset( $currencySymbolLookup[ $currency ] ) ? $currencySymbolLookup[ $currency ] : '';
 
         return $return;
@@ -559,7 +581,18 @@ class NF_Display_Render
                 } else {
                     array_push( $return, isset( $child[ $setting ] ) && $child[ $setting ] );
                 }
-                
+
+            }
+        }
+        return in_array(true, $return, true);
+    }
+
+    public static function checkRepeaterChildReactField($field)
+    {
+        $return = [];
+        if($field["settings"]["type"] === "repeater" && !empty($field["settings"]["fields"])){
+            foreach($field["settings"]["fields"] as $child){
+                array_push( $return, isset( $child[ 'type' ] ) && self::is_react_field( $child[ 'type' ] ) );
             }
         }
         return in_array(true, $return, true);
@@ -717,6 +750,57 @@ class NF_Display_Render
         self::enqueue_scripts( $form_id, true );
     }
 
+    /**
+     * Set root element that will insert the WP element
+     *
+     * @since 3.7.4
+     *
+     * @param string Form ID
+     *
+     * @return void
+     */
+    public static function localize_iframe( $form_id )
+    {
+        //Render root div
+        echo "<div id='nf_form_iframe_" . (int)$form_id . "'></div>";
+        //Enqueue WP element
+       static::enqueue_iframe_scripts( $form_id );
+
+    }
+
+    /**
+     * Enqueue scripts and localize data needed to insert the iFrame
+     *
+     * @since 3.7.4
+     *
+     * @param string Form ID
+     *
+     * @return void
+     */
+    public static function enqueue_iframe_scripts( $form_id ) {
+         //Get Dependencies and Version from build asset.php generated by wp-scripts
+         $dashboard_asset_php = [
+            "dependencies" => [],
+            "version"   => false
+        ];
+        if( file_exists( Ninja_Forms::$dir . "build/displayFrame.asset.php" ) ){
+            $asset_php = include( Ninja_Forms::$dir . "build/displayFrame.asset.php" );
+            $dashboard_asset_php["dependencies"] = array_merge( $dashboard_asset_php["dependencies"], $asset_php["dependencies"]);
+            $dashboard_asset_php["version"] = $asset_php["version"];
+        }
+         //Register displayFrame script
+         wp_register_script( 'ninja_forms_form_iframe', Ninja_Forms::$url . 'build/displayFrame.js',  $dashboard_asset_php["dependencies"], $dashboard_asset_php["version"], false );
+         wp_enqueue_script( 'ninja_forms_form_iframe' );
+
+         //Set parameters needed in the script
+         wp_localize_script('ninja_forms_form_iframe', 'ninja_forms_form_iframe_data', [
+            'formID'        =>  $form_id,
+            'homeUrl'       => esc_url_raw( home_url() ),
+            'previewToken'  => wp_create_nonce('nf_iframe' ),
+            'isBlock'       => false
+         ]);
+    }
+
     protected static function ensureProductRelatedCostPreviewFormats(array $field, string $currencySymbol): array
     {
         // TODO: Find a better way to do this.
@@ -730,7 +814,7 @@ class NF_Display_Render
             $field['settings']['product_price'] = (float)str_replace($currencySymbol, '', $field['settings']['product_price']);
             $field['settings']['product_price'] = number_format((float)$field['settings']['product_price'], 2);
         } elseif ('total' == $field['settings']['type']) {
-            
+
             if (!isset($field['settings']['value'])) $field['settings']['value'] = 0;
             $field['settings']['value'] = number_format((float)$field['settings']['value'], 2);
         }
@@ -753,8 +837,6 @@ class NF_Display_Render
 
     public static function enqueue_scripts( $form_id, $is_preview = false )
     {
-        global $wp_locale;
-
         $ver     = Ninja_Forms::VERSION;
         $js_dir  = Ninja_Forms::$url . 'assets/js/min/';
         $css_dir = Ninja_Forms::$url . 'assets/css/';
@@ -764,6 +846,14 @@ class NF_Display_Render
         if( $is_preview || in_array( $form_id, self::$form_uses_recaptcha ) ) {
             $recaptcha_lang = Ninja_Forms()->get_setting('recaptcha_lang');
             wp_enqueue_script('nf-google-recaptcha', 'https://www.google.com/recaptcha/api.js?hl=' . $recaptcha_lang . '&onload=nfRenderRecaptcha&render=explicit', array( 'jquery', 'nf-front-end-deps' ), $ver, TRUE );
+        }
+
+        if( $is_preview || in_array( $form_id, self::$form_uses_turnstile ) ) {
+            wp_enqueue_script('nf-cloudflare-turnstile', 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit', array( 'jquery', 'nf-front-end-deps' ), null, TRUE );
+        }
+
+        if( $is_preview || in_array( $form_id, self::$form_uses_hcaptcha ) ) {
+            wp_enqueue_script('nf-hcaptcha', 'https://js.hcaptcha.com/1/api.js?render=explicit', array( 'jquery', 'nf-front-end-deps' ), null, TRUE );
         }
 
         if( $is_preview || in_array( $form_id, self::$form_uses_datepicker ) ) {
@@ -784,7 +874,9 @@ class NF_Display_Render
                 wp_enqueue_media();
             }
 
-            wp_enqueue_style( 'summernote',         $css_dir . 'summernote.css'   , $ver );
+            wp_enqueue_style( 'quill-core',         $css_dir . 'quill.core.css'   , $ver );
+            wp_enqueue_style( 'quill-snow',         $css_dir . 'quill.snow.css'   , $ver );
+            wp_enqueue_style( 'quill-custom',       $css_dir . 'quill-custom.css' , $ver );
             wp_enqueue_style( 'codemirror',         $css_dir . 'codemirror.css'   , $ver );
             wp_enqueue_style( 'codemirror-monokai', $css_dir . 'monokai-theme.css', $ver );
             wp_enqueue_script('nf-front-end--rte', $js_dir . 'front-end--rte.min.js', array( 'jquery' ), $ver );
@@ -798,6 +890,11 @@ class NF_Display_Render
         if( $is_preview || in_array( $form_id, self::$form_uses_starrating ) ) {
             wp_enqueue_style( 'rating', $css_dir . 'rating.css', Ninja_Forms::VERSION );
             wp_enqueue_script('nf-front-end--starrating', $js_dir . 'front-end--starrating.min.js', array( 'jquery' ), $ver );
+        }
+        
+        // Enqueue React field assets when needed
+        if( $is_preview || in_array( $form_id, self::$form_uses_react_fields ) ) {
+            self::enqueue_react_field_assets();
         }
 
         wp_enqueue_script( 'nf-front-end-deps', $js_dir . 'front-end-deps.js', array( 'jquery', 'backbone' ), $ver );
@@ -892,6 +989,89 @@ class NF_Display_Render
     protected static function is_template_loaded( $template_name )
     {
         return ( in_array( $template_name, self::$loaded_templates ) ) ? TRUE : FALSE ;
+    }
+    
+    /**
+     * Check if a field type uses React components
+     * 
+     * @param string $field_type
+     * @return bool
+     */
+    protected static function is_react_field( $field_type )
+    {
+        // List of field types that use React components
+        $react_fields = array(
+            'signature', // Signature field uses React
+            // Add other React-based fields here as they are developed
+        );
+        
+        return in_array( $field_type, $react_fields );
+    }
+    
+    /**
+     * Enqueue React field assets (fields.js and fields.css)
+     * 
+     * This method is called when a form contains React-based fields
+     * like the signature field.
+     */
+    protected static function enqueue_react_field_assets()
+    {
+        // Get dependencies and version from build asset.php files generated by wp-scripts
+        $fields_js_asset = [
+            'dependencies' => [ 'nf-front-end', 'wp-element', 'wp-components', 'wp-i18n' ],
+            'version' => Ninja_Forms::VERSION
+        ];
+        
+        // Load JavaScript asset file if it exists
+        if ( file_exists( Ninja_Forms::$dir . 'build/fields.js.asset.php' ) ) {
+            $js_asset = include( Ninja_Forms::$dir . 'build/fields.js.asset.php' );
+            $fields_js_asset['dependencies'] = array_merge( [ 'nf-front-end' ], $js_asset['dependencies'] );
+            $fields_js_asset['version'] = $js_asset['version'];
+        }
+
+        // Get CSS asset version
+        $fields_css_version = Ninja_Forms::VERSION;
+        if ( file_exists( Ninja_Forms::$dir . 'build/fields.scss.asset.php' ) ) {
+            $css_asset = include( Ninja_Forms::$dir . 'build/fields.scss.asset.php' );
+            $fields_css_version = $css_asset['version'];
+        }
+
+        // Always enqueue signature fonts when React fields are used
+        wp_enqueue_style(
+            'nf-signature-fonts',
+            Ninja_Forms::$url . 'assets/fonts/signature/google-fonts.css',
+            [],
+            Ninja_Forms::VERSION
+        );
+
+        // Enqueue React field styles (from build)
+        wp_enqueue_style(
+            'nf-fields',
+            Ninja_Forms::$url . 'build/fields.scss.css',
+            [],
+            $fields_css_version
+        );
+
+        // Add RTL support
+        wp_style_add_data( 'nf-fields', 'rtl', 'replace' );
+
+        // Enqueue React field script (built from React components)
+        wp_enqueue_script(
+            'nf-fields',
+            Ninja_Forms::$url . 'build/fields.js',
+            $fields_js_asset['dependencies'],
+            $fields_js_asset['version'],
+            true
+        );
+
+        // Set script translations
+        wp_set_script_translations( 'nf-fields', 'ninja-forms', Ninja_Forms::$dir . 'lang' );
+
+        // Localize script with necessary data
+        wp_localize_script( 'nf-fields', 'nfFields', [
+            'nonce' => wp_create_nonce( 'nf-signature' ),
+            'ajaxurl' => admin_url( 'admin-ajax.php' ),
+        ] );
     }
 
 } // End Class NF_Display_Render

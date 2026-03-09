@@ -1,0 +1,6 @@
+<?php
+
+namespace NF_FU_VENDOR;
+
+// This file was auto-generated from sdk-root/src/data/chime/2018-05-01/paginators-1.json
+return ['pagination' => ['ListAccounts' => ['input_token' => 'NextToken', 'output_token' => 'NextToken', 'limit_key' => 'MaxResults'], 'ListPhoneNumberOrders' => ['input_token' => 'NextToken', 'output_token' => 'NextToken', 'limit_key' => 'MaxResults'], 'ListPhoneNumbers' => ['input_token' => 'NextToken', 'output_token' => 'NextToken', 'limit_key' => 'MaxResults'], 'ListUsers' => ['input_token' => 'NextToken', 'output_token' => 'NextToken', 'limit_key' => 'MaxResults'], 'ListVoiceConnectors' => ['input_token' => 'NextToken', 'output_token' => 'NextToken', 'limit_key' => 'MaxResults']]];

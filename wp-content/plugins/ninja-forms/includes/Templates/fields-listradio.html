@@ -1,5 +1,5 @@
 <script id="tmpl-nf-field-listradio" type="text/template">
-    <ul aria-describedby="nf-error-{{{ data.id }}}">
+    <ul aria-describedby="<# if( data.desc_text ) { #>nf-description-{{{ data.id }}} <# } #>nf-error-{{{ data.id }}}">
         {{{ data.renderOptions() }}}
     </ul>
 </script>
@@ -12,7 +12,6 @@
                name="nf-field-{{{ data.fieldID }}}"
                class="{{{ data.classes }}} nf-element {{{ ( data.value == data.currentValue  || 1 == data.selected ) ? 'nf-checked' : '' }}}" value="{{{ data.value }}}" {{{ ( data.value == data.currentValue  || 1 == data.selected ) ? 'checked="checked"' : '' }}}
             aria-labelledby="nf-label-class-field-{{{ data.fieldID }}}-{{{ data.index }}}"
-            tabindex="0"
             <# if( data.required ) { #>
 			required aria-required="true"
 			<# } #>

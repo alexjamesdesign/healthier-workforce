@@ -131,6 +131,14 @@ class NF_Admin_CPT_Submission
             array( 'jquery', 'jquery-ui-datepicker' ) );
 
         wp_localize_script( 'subs-cpt', 'nf_sub', array( 'form_id' => $form_id ) );
+
+        // Enqueue signature fonts for proper display in admin submissions
+        wp_enqueue_style(
+            'nf-signature-fonts',
+            Ninja_Forms::$url . 'assets/fonts/signature/google-fonts.css',
+            [],
+            Ninja_Forms::VERSION
+        );
     }
 
     public function post_row_actions( $actions, $sub )
@@ -199,6 +207,8 @@ class NF_Admin_CPT_Submission
         if( 'nf_sub' != get_post_type() ) {
             return;
         }
+        
+        static $fields;
 
         $sub = Ninja_Forms()->form()->get_sub( $sub_id );
 
@@ -209,9 +219,7 @@ class NF_Admin_CPT_Submission
         $form_id = absint( $_GET[ 'form_id' ] );
 
         if(Ninja_Forms()->fieldsetRepeater->isRepeaterFieldByFieldReference($column)){
-    
-            static $fields;
-            
+               
             if( ! isset( $fields[ $column ] ) ) {
                 
                 $parsedField = Ninja_Forms()->fieldsetRepeater
@@ -242,7 +250,6 @@ class NF_Admin_CPT_Submission
         }elseif( is_numeric( $column ) ){
             $value = $sub->get_field_value( $column );
 
-            static $fields;
             if( ! isset( $fields[ $column ] ) ) {
                 $fields[$column] = Ninja_Forms()->form( $form_id )->get_field( $column );
             }
