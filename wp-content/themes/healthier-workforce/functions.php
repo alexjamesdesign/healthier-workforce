@@ -740,3 +740,35 @@ function change_tax_num_of_posts( $wp_query ) {
         $wp_query->set('posts_per_page', 12);
     }
 }
+
+function hw_ninja_email_template( $message, $intro_text, $footer_text = 'The submission has been logged in the Associates spreadsheet.' ) {
+    return '
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+  <tbody>
+    <tr><td align="center" bgcolor="#fff" style="padding:15px 0;"><img src="http://healthier-workforce.co.uk/email-resources/email-logo.jpg" alt="Your message has been sent" width="300" height="95" style="display:block;margin:0 auto;"></td></tr>
+    <tr><td align="center" bgcolor="#0085BD" style="padding:20px;font-size:20px;font-weight:400;font-family:Arial,sans-serif;color:#fff;">Keeping your workforce healthy</td></tr>
+    <tr><td align="center" bgcolor="#004666" style="padding:30px 25px;font-size:17px;line-height:27px;font-weight:300;font-family:Arial,sans-serif;color:#fff;">' . $intro_text . '</td></tr>
+    <tr><td bgcolor="#ffffff" style="padding:30px;font-size:15px;line-height:24px;font-family:Arial,sans-serif;color:#333;">{all_fields_table}</td></tr>
+    <tr><td align="center" style="padding:20px;font-family:Arial,sans-serif;font-size:14px;">' . $footer_text . '</td></tr>
+  </tbody>
+</table>';
+}
+
+add_filter( 'ninja_forms_action_email_message', function( $message, $action_settings ) {
+    $form_id = $action_settings['form_id'] ?? 0;
+
+    $forms = [
+        7  => 'A new OHA Form has been received via your website.',
+        6  => 'A new OHA Specialist Form has been received via your website.',
+        8  => 'A new OHN Form has been received via your website.',
+        10 => 'A new OHP Form has been received via your website.',
+        9  => 'A new OHT Form has been received via your website.',
+    ];
+
+    if ( isset( $forms[ $form_id ] ) ) {
+        return hw_ninja_email_template( $message, $forms[ $form_id ] );
+    }
+
+    return $message;
+
+}, 10, 2 );

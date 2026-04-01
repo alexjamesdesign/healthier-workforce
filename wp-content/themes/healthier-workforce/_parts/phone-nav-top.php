@@ -8,9 +8,9 @@
         
 
             <?php if ( ( do_shortcode('[ctm_set]') )) : ?>
-                <?php echo ucfirst($ld_location); ?> <?php do_action('ald_single', $ld_location, false); ?>
+                <?php get_template_part('_parts/location-name'); ?> <?php do_action('ald_single', $ld_location, false); ?>
             <?php else: ?>
-                <?php do_action('ald_single', $ld_location, false); ?>
+                <?php get_template_part('_parts/location-name'); ?> <?php do_action('ald_single', $ld_location, false); ?>
             <?php endif; ?>
 
         </span>
@@ -19,9 +19,9 @@
 
         <span class="stickyheader-left stickyheader-btn"><i class="fa fa-mobile" aria-hidden="true"></i> 
             <?php if ( ( do_shortcode('[ctm_set]') )) : ?>
-                <?php echo do_action('ctm_location'); ?> <?php do_action('ald_default'); ?>
+                <?php get_template_part('_parts/location-name'); ?> <?php do_action('ald_default'); ?>
             <?php else: ?>
-                <?php do_action('ald_default'); ?>
+                <?php get_template_part('_parts/location-name'); ?> <?php do_action('ald_default'); ?>
             <?php endif; ?>
         </span>
 	

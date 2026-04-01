@@ -32,7 +32,7 @@
 
 				<?php the_content(); ?>
 
-				<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <span class="ld-calltag"><?php the_field('default_phone_tag', 'option'); ?></span> <?php do_action('ald_default'); ?></p>
+				<p class="phone"><i class="fa fa-mobile" aria-hidden="true"></i> <span class="ld-calltag"><?php get_template_part('_parts/location-name'); ?></span> <?php do_action('ald_default'); ?></p>
 
 				<p>Email: <a href="mailto:<?php the_field('company_email_address', 'option'); ?>"><?php the_field('company_email_address', 'option'); ?></a></p>
 
