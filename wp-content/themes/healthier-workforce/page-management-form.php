@@ -75,6 +75,7 @@
 					<div class="grid grid12_12 box box--registration">
 						<p>To make additional management referrals, please log in to our Apollo system.</p>
 						<a href="https://healthierworkforce.apollo.direct/dashboard/" class="btn btn-sandyyellow">Log in to Apollo</a>
+						<br /><br />
 						<h3>Apollo - How To</h3>
 						<p><a href="https://www.healthier-workforce.co.uk/wp-content/uploads/2026/04/Submitting-a-New-Referral-on-Apollo.pdf" target="_blank">Submitting a New Referral on Apollo</a></p>
 						<p><a href="https://www.healthier-workforce.co.uk/wp-content/uploads/2026/04/Accessing-Reports-on-Apollo.pdf" target="_blank">Accessing Reports on Apollo</a></p>
