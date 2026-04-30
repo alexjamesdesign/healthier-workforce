@@ -60,17 +60,34 @@
 
 		<div class="grid grid6_12 independent-image independent-image-1">
 
-			<?php if(is_user_logged_in()) { ?>
+			<?php if(is_user_logged_in()) :
+				global $wpdb;
+				$current_user = wp_get_current_user();
+				$is_management = in_array('Management', (array) $current_user->roles);
+				$has_submission = (int) $wpdb->get_var($wpdb->prepare(
+					"SELECT COUNT(*) FROM {$wpdb->prefix}rm_submissions WHERE form_id = %d AND user_email = %s AND child_id = 0",
+					4,
+					$current_user->user_email
+				)) >= 1;
+			?>
 
-				<div class="grid grid12_12 box box--registration">
+				<?php if($is_management && $has_submission) : ?>
+					<div class="grid grid12_12 box box--registration">
+						<p>To make additional management referrals, please log in to our Apollo system.</p>
+						<a href="https://healthierworkforce.apollo.direct/dashboard/" class="btn btn-sandyyellow">Log in to Apollo</a>
+						<h3>Apollo - How To</h3>
+						<p><a href="https://www.healthier-workforce.co.uk/wp-content/uploads/2026/04/Submitting-a-New-Referral-on-Apollo.pdf" target="_blank">Submitting a New Referral on Apollo</a></p>
+						<p><a href="https://www.healthier-workforce.co.uk/wp-content/uploads/2026/04/Accessing-Reports-on-Apollo.pdf" target="_blank">Accessing Reports on Apollo</a></p>
+					</div>
 
-					<h2>Management Application Form</h2>
+				<?php else : ?>
+					<div class="grid grid12_12 box box--registration">
+						<h2>Management Application Form</h2>
+						<?php echo do_shortcode("[RM_Form id='4']"); ?>
+					</div>
+				<?php endif; ?>
 
-					<?php echo do_shortcode("[RM_Form id='4']"); ?>
-
-				</div>
-
-			<?php } else { ?>
+			<?php else : ?>
 
 				<div class="grid grid12_12 box box--registration">
 
@@ -81,7 +98,7 @@
 					</article>
 				</div>
 
-			<?php } ?>
+			<?php endif; ?>
 
 		</div>
 
