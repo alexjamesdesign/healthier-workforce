@@ -74,7 +74,7 @@
 				<?php if($is_management && $has_submission) : ?>
 					<div class="grid grid12_12 box box--registration">
 						<p>To make additional management referrals, please log in to our Apollo system.</p>
-						<a href="#apollo-url" class="btn btn-sandyyellow">Log in to Apollo</a>
+						<a href="https://healthierworkforce.apollo.direct/dashboard/" class="btn btn-sandyyellow">Log in to Apollo</a>
 					</div>
 
 				<?php else : ?>
