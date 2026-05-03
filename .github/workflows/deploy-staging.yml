@@ -52,3 +52,12 @@ jobs:
             "echo '$HTPASSWD_HASH' > $HTPASSWD_FILE && \
              sed -i '/# BEGIN staging-auth/,/# END staging-auth/d' $HTACCESS_FILE && \
              printf '# BEGIN staging-auth\nAuthType Basic\nAuthName \"Staging Environment\"\nAuthUserFile $HTPASSWD_FILE\nRequire valid-user\n# END staging-auth\n' | cat - $HTACCESS_FILE > /tmp/.htaccess_tmp && mv /tmp/.htaccess_tmp $HTACCESS_FILE"
+
+      - name: Block search engines on staging
+        env:
+          SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+        run: |
+          ssh -i ~/.ssh/deploy_key -p 65002 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST \
+            "printf 'User-agent: *\nDisallow: /\n' > /home/u970633187/domains/staging.alexjamesstudio.com/public_html/hw/robots.txt"
