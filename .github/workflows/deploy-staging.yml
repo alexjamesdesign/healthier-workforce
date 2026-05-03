@@ -44,7 +44,7 @@ jobs:
           AUTH_USER: ${{ secrets.STAGING_AUTH_USER }}
           AUTH_PASS: ${{ secrets.STAGING_AUTH_PASS }}
         run: |
-          HTPASSWD_HASH=$(htpasswd -nb "$AUTH_USER" "$AUTH_PASS")
+          HTPASSWD_HASH="${AUTH_USER}:$(openssl passwd -apr1 "$AUTH_PASS")"
           HTPASSWD_FILE="/home/u970633187/.htpasswd_staging"
           HTACCESS_FILE="/home/u970633187/domains/staging.alexjamesstudio.com/public_html/hw/.htaccess"
 
