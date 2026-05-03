@@ -29,22 +29,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy to production via SSH
+      - name: Install lftp
+        run: sudo apt-get install -y lftp
+
+      - name: Deploy to production via FTPS
         env:
-          SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
-          SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
-          SSH_USER: ${{ secrets.PROD_SSH_USER }}
+          FTP_SERVER: ${{ secrets.PROD_FTP_SERVER }}
+          FTP_USER: ${{ secrets.PROD_FTP_USERNAME }}
+          FTP_PASS: ${{ secrets.PROD_FTP_PASSWORD }}
         run: |
-          mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -p 65002 $SSH_HOST >> ~/.ssh/known_hosts
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -p 65002 -o StrictHostKeyChecking=no" \
-            --exclude .git/ \
-            --exclude .github/ \
-            --exclude wp-content/uploads/ \
-            --exclude wp-content/ai1wm-backups/ \
-            --exclude wp-config.php \
-            ./ \
-            $SSH_USER@$SSH_HOST:/home/PROD_USER/domains/PROD_DOMAIN/public_html/
+          lftp -c "
+            set ssl:verify-certificate false;
+            set ftp:ssl-force true;
+            set ftp:passive-mode true;
+            set net:timeout 30;
+            set net:max-retries 3;
+            open -u \"$FTP_USER\",\"$FTP_PASS\" ftps://$FTP_SERVER:21;
+            mirror -R --delete --verbose \
+              --exclude .git/ \
+              --exclude .github/ \
+              --exclude wp-content/uploads/ \
+              --exclude wp-content/ai1wm-backups/ \
+              --exclude wp-config.php \
+              ./ /;
+            bye
+          "
