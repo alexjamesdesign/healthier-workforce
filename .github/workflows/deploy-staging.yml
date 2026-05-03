@@ -24,6 +24,8 @@ jobs:
           echo "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p 65002 $SSH_HOST >> ~/.ssh/known_hosts
+          ssh -i ~/.ssh/deploy_key -p 65002 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST \
+            "mkdir -p /home/u970633187/domains/staging.alexjamesstudio.com/public_html/hw"
           rsync -avz --delete \
             -e "ssh -i ~/.ssh/deploy_key -p 65002 -o StrictHostKeyChecking=no" \
             --exclude .git/ \
