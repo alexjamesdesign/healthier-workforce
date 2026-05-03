@@ -32,7 +32,7 @@ jobs:
             --exclude wp-content/ai1wm-backups/ \
             --exclude wp-config.php \
             ./ \
-            $SSH_USER@$SSH_HOST:/home/u970633187/domains/hw.staging.alexjamesstudio.com/public_html/
+            $SSH_USER@$SSH_HOST:/home/u970633187/domains/staging.alexjamesstudio.com/public_html/hw/
 
       - name: Password protect staging
         env:
@@ -44,7 +44,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -p 65002 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST bash << 'EOF'
             HTPASSWD_FILE="/home/u970633187/.htpasswd_staging"
-            HTACCESS_FILE="/home/u970633187/domains/hw.staging.alexjamesstudio.com/public_html/.htaccess"
+            HTACCESS_FILE="/home/u970633187/domains/staging.alexjamesstudio.com/public_html/hw/.htaccess"
 
             # Create/update .htpasswd with hashed password
             htpasswd -cb "$HTPASSWD_FILE" "$AUTH_USER" "$AUTH_PASS"
