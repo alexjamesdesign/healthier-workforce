@@ -1,9 +1,9 @@
 ##### Edit Below This Line #####
 
 # Ignore node_modules, dist folder and composer
-wp-content/themes/THEME-NAME/node_modules/*
-wp-content/themes/THEME-NAME/vendor/*
-wp-content/themes/THEME-NAME/dist/*
+wp-content/themes/healthier-workforce/node_modules/*
+wp-content/themes/healthier-workforce/vendor/*
+wp-content/themes/healthier-workforce/dist/*
 
 ##### DO NOT EDIT BELOW THIS LINE #####
 
@@ -37,10 +37,8 @@ Thumbs.db
 *.sql
 *.sqlite
 
-<<<<<<< HEAD
 # ignore wp-config 
 wp-config.php
-=======
 # ignore compiled files
 *.com
 *.class
@@ -58,4 +56,3 @@ wp-config.php
 *.rar
 *.tar
 *.zip
->>>>>>> 2d04a0a3 (Fresh pull from FTP)
