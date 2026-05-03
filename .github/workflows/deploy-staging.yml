@@ -42,21 +42,11 @@ jobs:
           AUTH_USER: ${{ secrets.STAGING_AUTH_USER }}
           AUTH_PASS: ${{ secrets.STAGING_AUTH_PASS }}
         run: |
-          ssh -i ~/.ssh/deploy_key -p 65002 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST bash << 'EOF'
-            HTPASSWD_FILE="/home/u970633187/.htpasswd_staging"
-            HTACCESS_FILE="/home/u970633187/domains/staging.alexjamesstudio.com/public_html/hw/.htaccess"
+          HTPASSWD_HASH=$(htpasswd -nb "$AUTH_USER" "$AUTH_PASS")
+          HTPASSWD_FILE="/home/u970633187/.htpasswd_staging"
+          HTACCESS_FILE="/home/u970633187/domains/staging.alexjamesstudio.com/public_html/hw/.htaccess"
 
-            # Create/update .htpasswd with hashed password
-            htpasswd -cb "$HTPASSWD_FILE" "$AUTH_USER" "$AUTH_PASS"
-
-            # Remove any existing auth block from .htaccess
-            sed -i '/# BEGIN staging-auth/,/# END staging-auth/d' "$HTACCESS_FILE"
-
-            # Prepend auth block to .htaccess
-            echo "# BEGIN staging-auth
-          AuthType Basic
-          AuthName \"Staging Environment\"
-          AuthUserFile $HTPASSWD_FILE
-          Require valid-user
-          # END staging-auth" | cat - "$HTACCESS_FILE" > /tmp/.htaccess_tmp && mv /tmp/.htaccess_tmp "$HTACCESS_FILE"
-          EOF
+          ssh -i ~/.ssh/deploy_key -p 65002 -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST \
+            "echo '$HTPASSWD_HASH' > $HTPASSWD_FILE && \
+             sed -i '/# BEGIN staging-auth/,/# END staging-auth/d' $HTACCESS_FILE && \
+             printf '# BEGIN staging-auth\nAuthType Basic\nAuthName \"Staging Environment\"\nAuthUserFile $HTPASSWD_FILE\nRequire valid-user\n# END staging-auth\n' | cat - $HTACCESS_FILE > /tmp/.htaccess_tmp && mv /tmp/.htaccess_tmp $HTACCESS_FILE"
