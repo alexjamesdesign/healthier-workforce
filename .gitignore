@@ -1,29 +1,9 @@
-<<<<<<< HEAD
-# ignore everything in the root except the "wp-content" directory.
-!wp-content/
-
-# ignore everything in the "wp-content" directory, except:
-# "mu-plugins", "plugins", "themes" directory
-wp-content/*
-!wp-content/mu-plugins/
-!wp-content/plugins/
-!wp-content/themes/
-
-# ignore these plugins
-wp-content/plugins/hello.php
-
-# ignore specific themes
-wp-content/themes/twenty*/
-
-# ignore node dependency directories
-node_modules/
-=======
 ##### Edit Below This Line #####
 
 # Ignore node_modules, dist folder and composer
-wp-content/themes/THEME-NAME/node_modules/*
-wp-content/themes/THEME-NAME/vendor/*
-wp-content/themes/THEME-NAME/dist/*
+wp-content/themes/healthier-workforce/node_modules/*
+wp-content/themes/healthier-workforce/vendor/*
+wp-content/themes/healthier-workforce/dist/*
 
 ##### DO NOT EDIT BELOW THIS LINE #####
 
@@ -41,6 +21,7 @@ wp-content/ai1wm-backups/*
 !.gitignore
 !.htaccess
 !.env.ald
+!.github
 
 # ignore OS generated files
 ehthumbs.db
@@ -50,17 +31,14 @@ Thumbs.db
 *.sublime-project
 *.sublime-workspace
 *.komodoproject
->>>>>>> 2d04a0a3 (Fresh pull from FTP)
 
 # ignore log files and databases
 *.log
 *.sql
 *.sqlite
 
-<<<<<<< HEAD
 # ignore wp-config 
 wp-config.php
-=======
 # ignore compiled files
 *.com
 *.class
@@ -78,4 +56,3 @@ wp-config.php
 *.rar
 *.tar
 *.zip
->>>>>>> 2d04a0a3 (Fresh pull from FTP)
