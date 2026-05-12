@@ -42,9 +42,10 @@ jobs:
             set ssl:verify-certificate false;
             set ftp:ssl-force true;
             set ftp:passive-mode true;
+            set ssl:priority 'NORMAL:-VERS-TLS1.3:-VERS-TLS1.1:-VERS-TLS1.0:+VERS-TLS1.2';
             set net:timeout 30;
             set net:max-retries 3;
-            open -u \"$FTP_USER\",\"$FTP_PASS\" ftps://$FTP_SERVER:21;
+            open -u \"$FTP_USER\",\"$FTP_PASS\" ftp://$FTP_SERVER:21;
             mirror -R --delete --verbose \
               --exclude .git/ \
               --exclude .github/ \
