@@ -24,8 +24,13 @@ wp-content/ai1wm-backups/*
 !.github
 
 # ignore OS generated files
+.DS_Store
 ehthumbs.db
 Thumbs.db
+
+# ignore local tool config and logs
+prepros-6.config
+error_log
 
 # ignore Editor files
 *.sublime-project
